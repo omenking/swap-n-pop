@@ -1,8 +1,8 @@
 const {app, BrowserWindow, ipcMain: ipc} = require('electron')
+const Replay = require('./src/main/replay')(__dirname)
 
 const path = require('path')
 const url  = require('url')
-const fs   = require('fs')
 
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
@@ -32,28 +32,13 @@ function test(){
   console.log('Testing to see if this calls main')
 }
 
+console.log('replay2',Replay)
 function ready(){
   create_window()
 
+  console.log('replay2',Replay)
   ipc.on('game-over', (event, {inputs}) => {
-    var path_replay = path.join(__dirname,'replays',`${Date.now()}.replay`)
-    var replay      = fs.createWriteStream(path_replay, {flags: 'a'})
-    const len = inputs[0].length + inputs[1].length
-    for (i = 0; i < len; i++) {
-      if (inputs[0].length === 0 && inputs[1].length > 0) {
-        replay.write("1,"+inputs[1].shift().join(',')+"\n")
-      }
-      else if (inputs[0].length > 0 && inputs[1].length === 0) {
-        replay.write("0,"+inputs[0].shift().join(',')+"\n")
-      }
-      else if (inputs[1][0][0] >= inputs[0][0][0].length) {
-        replay.write("0,"+inputs[0].shift().join(',')+"\n")
-      }
-      else {
-        replay.write("1,"+inputs[1].shift().join(',')+"\n")
-      }
-    }
-    replay.end()
+    Replay.save(inputs)
   });
 }
 
