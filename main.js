@@ -32,13 +32,11 @@ function test(){
   console.log('Testing to see if this calls main')
 }
 
-console.log('replay2',Replay)
 function ready(){
   create_window()
 
-  console.log('replay2',Replay)
   ipc.on('game-over', (event, {inputs}) => {
-    Replay.save(`${Date.now()}.replay`,inputs)
+    Replay.save(`${Date.now()}`,inputs,function(err,data){})
   });
 }
 

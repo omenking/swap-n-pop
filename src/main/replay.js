@@ -16,19 +16,16 @@ module.exports = function(root_path){
     const file = fs.createWriteStream(filename, {flags: 'a'})
     const len = inputs[0].length + inputs[1].length
 
+    // We want to iterate through the inputs of player 1 and 2
+    // and insert them based on frame(tick) so the .replay file
+    // is garunteed to be sorted by frame data.
     for (i = 0; i < len; i++) {
-      if (inputs[0].length === 0 && inputs[1].length > 0) {
-        file.write("1,"+inputs[1].shift().join(',')+"\n")
-      }
-      else if (inputs[0].length > 0 && inputs[1].length === 0) {
-        file.write("0,"+inputs[0].shift().join(',')+"\n")
-      }
-      else if (inputs[1][0][0] >= inputs[0][0][0].length) {
-        file.write("0,"+inputs[0].shift().join(',')+"\n")
-      }
-      else {
-        file.write("1,"+inputs[1].shift().join(',')+"\n")
-      }
+      let pi;
+      if      (inputs[0].length === 0 && inputs[1].length > 0) { pi = 1 } //cond2
+      else if (inputs[1].length === 0 && inputs[0].length > 0) { pi = 0 } //cond1
+      else if (inputs[0][0][0] <  inputs[1][0][0])             { pi = 0 } //cond3
+      else                                                     { pi = 1 } //cond4
+      file.write(`${pi},`+inputs[pi].shift().join(',')+"\n")
     }
     file.end()
     file.on('error', function(err) {
