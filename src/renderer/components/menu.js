@@ -26,13 +26,13 @@ module.exports = function(game){
       return this.cursor.update();
     }
     mode_1p_vs_2p_local() {
-      return game.state.start('mode_1p_vs_2p_local');
+      return game.state.start('mode_vs',true,false)
     }
     mode_1p_vs_2p_online() {
-      return game.state.start('mode_1p_vs_2p_online');
+      return game.state.start('mode_vs',true,false)
     }
     mode_1p_vs_cpu() {
-      return game.state.start('mode_1p_vs_cpu');
+      return game.state.start('mode_vs',true,false)
     }
     mode_improve() {
       return game.state.start('mode_puzzle',true,false,
