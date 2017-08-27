@@ -7,6 +7,7 @@ module.exports = function(root_path){
     const filename = path.join(dir,`${name}.replay`)
 
     if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
+    fs.unlink(filename)
 
     const file = fs.createWriteStream(filename, {flags: 'a'})
     const len = inputs[0].length + inputs[1].length
