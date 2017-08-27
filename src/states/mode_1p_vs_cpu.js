@@ -17,7 +17,7 @@ module.exports = function(game){
       this.playfield2 = new ComponentPlayfield(2);
     }
     create_bg() {
-      this.bg = game.add.sprite(0,0, 'playfield_vs_bg');
+      this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
     }
     create_frame(offset){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
@@ -35,7 +35,7 @@ module.exports = function(game){
       this.msx_stage          = game.add.audio('msx_stage');
       this.msx_stage_critical = game.add.audio('msx_stage_critical');
 
-      const offset = 89;
+      const offset = 0;
       this.create_bg();
       this.playfield1.create(this, {push: true, x: offset+8  , y: 24});
       this.playfield2.create(this, {push: true, x: offset+152, y: 24});
