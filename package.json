@@ -19,6 +19,7 @@
     "mocha": "^3.5.0"
   },
   "dependencies": {
+    "glob": "^7.1.2",
     "phaser-ce": "^2.8.4"
   }
 }

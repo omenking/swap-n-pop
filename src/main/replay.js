@@ -1,6 +1,7 @@
 module.exports = function(root_path){
   const path = require('path')
   const fs   = require('fs')
+  const glob = require('glob')
 
   function save(name,org_inputs,callback) {
     //need to clone because we are shifting and want to keep
@@ -49,8 +50,17 @@ module.exports = function(root_path){
     })
   }
 
+  function last(callback){
+    var name = null
+    glob(path.join(root_path,'replays','*.replay'),{},function(err,files){
+      name = path.basename(files[files.length-1],'.replay')
+      callback(err,name)
+    })
+  }
+
   return {
     save: save,
-    load: load
+    load: load,
+    last: last
   }
 }

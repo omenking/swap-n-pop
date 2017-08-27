@@ -35,9 +35,18 @@ function test(){
 function ready(){
   create_window()
 
-  ipc.on('game-over', (event, {inputs}) => {
+  ipc.on('replay-save', (event, {inputs}) => {
     Replay.save(`${Date.now()}`,inputs,function(err,data){})
   });
+  ipc.on('replay-load', (event) => {
+    console.log('main replay load')
+    Replay.last(function(err,name){
+      Replay.load(name,function(err,data){
+        win.webContents.send('replay-load',{inputs: data})
+      })
+    })
+  })
+
 }
 
 

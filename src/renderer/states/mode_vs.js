@@ -116,7 +116,7 @@ module.exports = function(game){
       this.playfield2.resume()
     }
     game_over() {
-      ipc.send('game-over', {inputs: this.inputs});
+      ipc.send('replay-save', {inputs: this.inputs});
       this.stage_music('results')
       this.playfield1.game_over()
       this.playfield2.game_over()

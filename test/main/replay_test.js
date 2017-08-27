@@ -77,3 +77,17 @@ describe('replay.load(name)' ,function(){
     })
   })
 })
+
+describe('replay.last()' ,function(){
+  const inputs = [[[12,0,'100100']],[[11,5,'101001']]]
+  before(function(done) {
+    Replay.save('zzz_last',inputs,function(){done()})
+  })
+  it('return last filname', function(done){
+    Replay.last(function(err,data){
+      if (err) { done(err) }
+      data.should.eql('zzz_last')
+      done()
+    })
+  })
+})

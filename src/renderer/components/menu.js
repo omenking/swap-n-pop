@@ -1,6 +1,7 @@
 module.exports = function(game){
   const {PUZZLE} = require('./../core/data')
   const ComponentMenuCursor = require('./menu_cursor')(game)
+  const {ipcRenderer: ipc} = require('electron')
   class controller {
     constructor() {
       this.create = this.create.bind(this);
@@ -11,6 +12,10 @@ module.exports = function(game){
       this.mode_improve = this.mode_improve.bind(this);
       this.mode_option = this.mode_option.bind(this);
       this.cursor = new ComponentMenuCursor();
+      ipc.on('replay-load', (event, {inputs}) => {
+        console.log('replay-load',inputs)
+        return game.state.start('mode_vs',true,false, {inputs: inputs})
+      })
     }
     create() {
       this.sprite = game.add.sprite(40, 40, 'menu');
@@ -39,7 +44,9 @@ module.exports = function(game){
         PUZZLE.skill_chain_demo_2.demo_4
       );
     }
-    mode_option() {}
+    mode_option() {
+      ipc.send('replay-load', {inputs: this.inputs});
+    }
   };
 
   return controller
