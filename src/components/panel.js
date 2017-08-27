@@ -257,7 +257,7 @@ module.exports = function(game){
             this.set_counter(this.under.counter);
             this.set_chain(this.under.chain);
           } else if (this.under.is_empty()) {
-            console.log('undercheck', this.x, this.y, this.chain);
+            //console.log('undercheck', this.x, this.y, this.chain);
             this.set_state(HANG);
           } else {
             this.set_chain(false);
@@ -390,7 +390,7 @@ module.exports = function(game){
       this.set_chain(false);
       if (this.above && (this.above.i !== null)) {
         this.above.set_chain(true);
-        return console.log('above', this.above.x, this.above.y, this.above.chain);
+        //return console.log('above', this.above.x, this.above.y, this.above.chain);
       }
     }
     popping(i){

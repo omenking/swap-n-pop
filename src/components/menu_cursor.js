@@ -24,8 +24,8 @@ module.exports = function(game){
       this.sprite = game.make.sprite(this.x, this.y+(this.index*UNIT), 'menu_cursor');
       this.menu.sprite.addChild(this.sprite);
 
+      this.map_controls(0);
       this.map_controls(1);
-      this.map_controls(2);
     }
     map_controls(pi){
       return game.controls.map(pi, {

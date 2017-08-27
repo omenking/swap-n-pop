@@ -14,7 +14,6 @@ module.exports = function(game){
     }
     create() {
       this.sprite = game.add.sprite(40, 40, 'menu');
-      console.log('Cursor',this.cursor)
       return this.cursor.create(this, 26, 39, [
         this.mode_1p_vs_2p_local,
         this.mode_1p_vs_2p_online,

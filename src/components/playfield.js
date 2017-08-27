@@ -178,13 +178,13 @@ module.exports = function(game){
       for (i = 0; i < this.stack.length; i++) { panel = this.stack[i]; panel.check_dead(i, is_dead); }
       for (i = 0; i < this.newline.length; i++) { panel = this.newline[i]; panel.check_dead(i, is_dead); }
       this.running = false;
-      console.log('gameover',
-        this.stack[0].i,
-        this.stack[1].i,
-        this.stack[2].i,
-        this.stack[3].i,
-        this.stack[4].i,
-        this.stack[5].i);
+      //console.log('gameover',
+        //this.stack[0].i,
+        //this.stack[1].i,
+        //this.stack[2].i,
+        //this.stack[3].i,
+        //this.stack[4].i,
+        //this.stack[5].i);
       this.pushCounter = 0;
     }
     //grid of blocks
@@ -277,7 +277,7 @@ module.exports = function(game){
     chain_over() {
       let chain = true;
       for (let panel of Array.from(this.stack)) {
-        if (panel.chain) { console.log('chained!'); }
+        //if (panel.chain) { console.log('chained!'); }
         if (panel.chain) { chain = false; }
       }
       return chain;
@@ -370,17 +370,17 @@ module.exports = function(game){
     }
     score_current(cnc){
       if (cnc[0] > 0) {
-        console.log('combo is ', cnc);
+        //console.log('combo is ', cnc);
         this.score += cnc[0] * 10;
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
-          console.log('chain is ', this.chain + 1);
+          //console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
           this.score += this.score_chain(this.chain + 1);
         }
-        return console.log('Score: ', this.score);
+        //console.log('Score: ', this.score);
       }
     }
     update_stack() {

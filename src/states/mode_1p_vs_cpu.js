@@ -1,5 +1,6 @@
 module.exports = function(game){
   const ComponentPlayfield = require('./../components/playfield')(game)
+  const {ipcRenderer: ipc} = require('electron')
   class controller {
     constructor() {
       this.create_bg = this.create_bg.bind(this);
@@ -10,11 +11,12 @@ module.exports = function(game){
       this.resume = this.resume.bind(this);
       this.game_over = this.game_over.bind(this);
       this.danger_check = this.danger_check.bind(this);
+      this.update_input = this.update_input.bind(this);
       this.update_replay = this.update_replay.bind(this);
       this.update = this.update.bind(this);
       this.shutdown = this.shutdown.bind(this);
-      this.playfield1 = new ComponentPlayfield(1);
-      this.playfield2 = new ComponentPlayfield(2);
+      this.playfield1 = new ComponentPlayfield(0);
+      this.playfield2 = new ComponentPlayfield(1);
     }
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
@@ -26,6 +28,12 @@ module.exports = function(game){
       game.stage.backgroundColor = 0x000000;
 
       this.tick   = -1;
+      // input history for replay.
+      // [tick, times, key inputs]
+      this.inputs = [
+        [[-1,0,'000000']],
+        [[-1,0,'000000']]
+      ];
       this.replay = [{},{}];
 
       this.state_music = 'none';
@@ -98,20 +106,20 @@ module.exports = function(game){
       }
     }
     pause(pi){
-      console.log('stage pause', pi);
-      this.stage_music('pause');
-      this.playfield1.pause(pi);
-      this.playfield2.pause(pi);
+      this.stage_music('pause')
+      this.playfield1.pause(pi)
+      this.playfield2.pause(pi)
     }
     resume() {
-      this.stage_music('resume');
-      this.playfield1.resume();
-      this.playfield2.resume();
+      this.stage_music('resume')
+      this.playfield1.resume()
+      this.playfield2.resume()
     }
     game_over() {
-      this.stage_music('results');
-      this.playfield1.game_over();
-      this.playfield2.game_over();
+      ipc.send('game-over', {inputs: this.inputs});
+      this.stage_music('results')
+      this.playfield1.game_over()
+      this.playfield2.game_over()
     }
     danger_check() {
       const d1 = this.playfield1.is_danger(1);
@@ -129,27 +137,37 @@ module.exports = function(game){
         return this.danger = false;
       }
     }
+    update_input(pi){
+      const bitset = game.controls.seralize(pi)
+      if (bitset === this.inputs[pi][this.inputs[pi].length-1][2]) {
+        this.inputs[pi][this.inputs[pi].length-1][1]++
+      } else {
+        this.inputs[pi].push([this.tick,0,bitset])
+      }
+    }
     update_replay() {
-      let i, panel;
-      let stack   = [];
-      let newline = [];
-      for (i = 0; i < this.playfield1.stack.length;   i++) { stack[i].push(stack[i].get_data()); }
-      for (i = 0; i < this.playfield1.newline.length; i++) { newline[i].push(stack[i].get_data()); }
-      this.replay[0][this.tick] = {
-        playfield: this.playfield1.get_data(),
-        stack,
-        newline
-      };
+      this.update_input(0)
+      this.update_input(1)
+      //let i, panel;
+      //let stack   = [];
+      //let newline = [];
+      //for (i = 0; i < this.playfield1.stack.length;   i++) { stack[i].push(stack[i].get_data()); }
+      //for (i = 0; i < this.playfield1.newline.length; i++) { newline[i].push(stack[i].get_data()); }
+      //this.replay[0][this.tick] = {
+        //playfield: this.playfield1.get_data(),
+        //stack,
+        //newline
+      //};
 
-      stack   = [];
-      newline = [];
-      for (i = 0; i < this.playfield2.stack.length; i++  ) { stack[i].push(stack[i].get_data()); }
-      for (i = 0; i < this.playfield2.newline.length; i++) { newline[i].push(stack[i].get_data()); }
-      this.replay[1][this.tick]({
-        playfield: this.playfield2.get_data(),
-        stack,
-        newline
-      });
+      //stack   = [];
+      //newline = [];
+      //for (i = 0; i < this.playfield2.stack.length; i++  ) { stack[i].push(stack[i].get_data()); }
+      //for (i = 0; i < this.playfield2.newline.length; i++) { newline[i].push(stack[i].get_data()); }
+      //this.replay[1][this.tick]({
+        //playfield: this.playfield2.get_data(),
+        //stack,
+        //newline
+      //});
     }
     update() {
       this.tick++;
@@ -160,7 +178,7 @@ module.exports = function(game){
 
       this.playfield1.render();
       this.playfield2.render();
-      //this.update_replay();
+      this.update_replay();
     }
     shutdown() {
       this.stage_music('none');
