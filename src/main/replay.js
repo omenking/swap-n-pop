@@ -2,12 +2,16 @@ module.exports = function(root_path){
   const path = require('path')
   const fs   = require('fs')
 
-  function save(name,inputs) {
+  function save(name,org_inputs,callback) {
+    //need to clone because we are shifting and want to keep
+    //the data passed in, entact.
+    var inputs = JSON.parse(JSON.stringify(org_inputs))
+
     const dir      = path.join(root_path,'replays')
     const filename = path.join(dir,`${name}.replay`)
 
     if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
-    fs.unlink(filename)
+    fs.unlink(filename,function(){})
 
     const file = fs.createWriteStream(filename, {flags: 'a'})
     const len = inputs[0].length + inputs[1].length
@@ -27,7 +31,12 @@ module.exports = function(root_path){
       }
     }
     file.end()
-    return filename;
+    file.on('error', function(err) {
+      callback(err,filename);
+    });
+    file.on('finish', function() {
+      callback(null,filename);
+    });
   }
 
   function load(name,callback){

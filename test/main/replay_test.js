@@ -7,12 +7,17 @@ const root_path = path.join(__dirname,'..','..')
 const Replay    = require(path.join(root_path,'src','main','replay'))(root_path)
 
 describe('replay.save(name,inputs)' ,function(){
-  var filename = null;
-  before(function() {
-    filename = Replay.save('replay_spec',[
-      [[-1,0,'000000']],
-      [[-1,0,'000000']]
-    ])
+  var filename = 'ee';
+  const inputs = [
+    [[-1,0,'000000']],
+    [[-1,0,'000000']]
+  ]
+  before(function(done) {
+    Replay.save('replay_spec',inputs, function(err,data){
+      if (err) { done(err) }
+      filename = data
+      done()
+    })
   });
 
   it('should return filename', function(){
@@ -30,22 +35,25 @@ describe('replay.save(name,inputs)' ,function(){
       done()
     })
   })
+  after(function() {
+    fs.unlink(filename,function(){})
+  });
 })
 
 describe('replay.load(name)' ,function(){
-  before(function() {
-    Replay.save('replay_spec',[
-      [[-1,0,'100000']],
-      [[-1,0,'000000']]
-    ])
-  });
+  const name   = 'replay_spec'
+  const inputs = [
+    [[-1,0,'100000']],
+    [[-1,0,'000000']]
+  ]
+  before(function(done) {
+    Replay.save(name,inputs,function(){done()})
+  })
+
   it('should return an array of arrays', function(done){
-    Replay.load('replay_spec',function(err,inputs){
+    Replay.load(name,function(err,data){
       if (err) { done(err) }
-      inputs.should.eql([
-        [[-1,0,'100000']],
-        [[-1,0,'000000']]
-      ])
+      data.should.eql(inputs)
       done()
     })
   })
