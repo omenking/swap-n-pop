@@ -38,7 +38,7 @@ function ready(){
 
   console.log('replay2',Replay)
   ipc.on('game-over', (event, {inputs}) => {
-    Replay.save(inputs)
+    Replay.save(`${Date.now()}.replay`,inputs)
   });
 }
 

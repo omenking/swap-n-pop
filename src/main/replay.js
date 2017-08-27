@@ -2,9 +2,9 @@ module.exports = function(root_path){
   const path = require('path')
   const fs   = require('fs')
 
-  function save(inputs) {
+  function save(name,inputs) {
     const dir      = path.join(root_path,'replays')
-    const filename = path.join(dir,`${Date.now()}.replay`)
+    const filename = path.join(dir,`${name}.replay`)
 
     if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
 
@@ -26,6 +26,7 @@ module.exports = function(root_path){
       }
     }
     file.end()
+    return filename;
   }
 
   return {
