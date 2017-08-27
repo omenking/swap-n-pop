@@ -30,7 +30,21 @@ module.exports = function(root_path){
     return filename;
   }
 
+  function load(name,callback){
+    const dir      = path.join(root_path,'replays')
+    const filename = path.join(dir,`${name}.replay`)
+    var   inputs   = [[],[]]
+    fs.readFile(filename, 'utf8', function(err,data){
+      for (line of data.trim().split("\n")) {
+        let arr = line.split(',')
+        inputs[parseInt(arr[0])].push([parseInt(arr[1]),parseInt(arr[2]),arr[3]])
+      }
+      callback(err,inputs)
+    })
+  }
+
   return {
-    save: save
+    save: save,
+    load: load
   }
 }

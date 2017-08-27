@@ -31,3 +31,22 @@ describe('replay.save(name,inputs)' ,function(){
     })
   })
 })
+
+describe('replay.load(name)' ,function(){
+  before(function() {
+    Replay.save('replay_spec',[
+      [[-1,0,'100000']],
+      [[-1,0,'000000']]
+    ])
+  });
+  it('should return an array of arrays', function(done){
+    Replay.load('replay_spec',function(err,inputs){
+      if (err) { done(err) }
+      inputs.should.eql([
+        [[-1,0,'100000']],
+        [[-1,0,'000000']]
+      ])
+      done()
+    })
+  })
+})
