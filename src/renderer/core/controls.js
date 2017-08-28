@@ -29,7 +29,6 @@ module.exports = function(game){
       this.keys.pl1_start = game.input.keyboard.addKey(Phaser.Keyboard.P);
     }
     map(pi,opts){
-      console.log("map player_num",pi)
       const keys = "up down left right a b l r start".split(' ');
       Array.from(keys).map((key) =>
         this.map_key(pi,key,opts));

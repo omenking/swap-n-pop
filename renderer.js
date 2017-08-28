@@ -1,9 +1,10 @@
 function attach_state(klass){
   var state = new klass()
   return {
-    create: state.create,
-    update: state.update,
-    init:   state.init
+    init:     state.init,
+    create:   state.create,
+    update:   state.update,
+    shutdown: state.shutdown
   }
 }
 

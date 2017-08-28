@@ -195,6 +195,7 @@ module.exports = function(game){
       this.update_replay();
     }
     shutdown() {
+      console.log('shutdown')
       this.stage_music('none');
       this.playfield1.shutdown();
     }
