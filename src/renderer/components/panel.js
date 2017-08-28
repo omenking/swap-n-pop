@@ -211,9 +211,6 @@ module.exports = function(game){
         case 'unique':
           this.nocombo();
           break;
-        case 'random':
-          this.set_i(ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng())[0]);
-          break;
         default:
           this.set_i(i);
       }
@@ -445,10 +442,10 @@ module.exports = function(game){
       }
     }
     update_neighbours(i){
-      this.left  = ((i+1) % COLS) === 1  ? this.playfield.blank : this.playfield.stack[i-1];
-      this.right = ((i+1) % COLS) === 0  ? this.playfield.blank : this.playfield.stack[i+1];
+      this.left  = ((i+1) % COLS) === 1   ? this.playfield.blank : this.playfield.stack[i-1];
+      this.right = ((i+1) % COLS) === 0   ? this.playfield.blank : this.playfield.stack[i+1];
       this.under = (i+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[i+COLS];
-      return this.above = (i+1) <= COLS          ? this.playfield.blank : this.playfield.stack[i-COLS];
+      return this.above = (i+1) <= COLS   ? this.playfield.blank : this.playfield.stack[i-COLS];
     }
     update(i,is_danger){
       if (!this.playfield.running) { return; }

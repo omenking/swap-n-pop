@@ -154,7 +154,7 @@ module.exports = function(game){
       }
 
       this.stack = stack;
-      this.create_newline('random');
+      this.create_newline('unique');
 
       if (this.cursor.y > 1) { this.cursor.y--; }
       return 1;
@@ -222,7 +222,6 @@ module.exports = function(game){
           for (i = offset, end = offset+size, asc = offset <= end; asc ? i < end : i > end; asc ? i++ : i--) {
             switch (mode) {
               case 'unique': stack[i].set('unique'); break;
-              case 'random': stack[i].set('random'); break;
               default:
                 stack[i].set(mode[i]);
             }

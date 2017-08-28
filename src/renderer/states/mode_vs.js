@@ -1,4 +1,5 @@
 module.exports = function(game){
+  const Stack = require('./../core/stack')(game)
   const ComponentPlayfield = require('./../components/playfield')(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
@@ -55,8 +56,11 @@ module.exports = function(game){
 
       const offset = 0;
       this.create_bg();
-      this.playfield1.create(this, {push: true, x: offset+8  , y: 24});
-      this.playfield2.create(this, {push: true, x: offset+152, y: 24});
+
+      const stack = new Stack(this.rng)
+
+      this.playfield1.create(this, {push: true, x: offset+8  , y: 24, panels: stack.panels});
+      this.playfield2.create(this, {push: true, x: offset+152, y: 24, panels: stack.panels});
       this.create_frame(offset);
       this.playfield1.create_after();
       this.playfield2.create_after();
