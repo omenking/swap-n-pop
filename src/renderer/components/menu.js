@@ -12,8 +12,11 @@ module.exports = function(game){
       this.mode_improve = this.mode_improve.bind(this);
       this.mode_option = this.mode_option.bind(this);
       this.cursor = new ComponentMenuCursor();
-      ipc.on('replay-load', (event, {inputs}) => {
-        return game.state.start('mode_vs',true,false, {inputs: inputs})
+      ipc.on('play-vs', (event, {seed}) => {
+        return game.state.start('mode_vs',true,false, {seed: seed})
+      })
+      ipc.on('replay-load', (event, {seed,inputs}) => {
+        return game.state.start('mode_vs',true,false, {seed: seed, inputs: inputs})
       })
     }
     create() {
@@ -30,13 +33,13 @@ module.exports = function(game){
       return this.cursor.update();
     }
     mode_1p_vs_2p_local() {
-      return game.state.start('mode_vs',true,false)
+      ipc.send('play-vs');
     }
     mode_1p_vs_2p_online() {
-      return game.state.start('mode_vs',true,false)
+      ipc.send('play-vs');
     }
     mode_1p_vs_cpu() {
-      return game.state.start('mode_vs',true,false)
+      ipc.send('play-vs');
     }
     mode_improve() {
       return game.state.start('mode_puzzle',true,false,

@@ -1,7 +1,7 @@
 module.exports = function(game){
   const ComponentPlayfield = require('./../components/playfield')(game)
   const {ipcRenderer: ipc} = require('electron')
-  const Replay = require('./src/main/replay')(__dirname)
+  const seedrandom         = require('seedrandom')
   class controller {
     constructor() {
       this.init   = this.init.bind(this);
@@ -21,6 +21,12 @@ module.exports = function(game){
       this.playfield2 = new ComponentPlayfield(1);
     }
     init(data){
+      this.seed = data.seed
+      this.rng  = seedrandom(this.seed)
+      if (data.inputs) {
+        this.replay = true
+        this.inputs = data.inputs
+      }
     }
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
@@ -31,7 +37,6 @@ module.exports = function(game){
     create() {
       game.stage.backgroundColor = 0x000000;
 
-      this.seed = Replay.random_seed()
       this.tick   = -1;
       // input history for replay.
       // [tick, times, key inputs]

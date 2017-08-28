@@ -23,6 +23,7 @@ module.exports = function(game){
     TIME_FALL
   } = require('./../core/data')
   const _f = require('./../core/filters')
+  const ss = require('shuffle-seed')
 
   class controller {
     constructor() {
@@ -211,7 +212,7 @@ module.exports = function(game){
           this.nocombo();
           break;
         case 'random':
-          this.set_i(game.rnd.integerInRange(0 , 5));
+          this.set_i(ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng())[0]);
           break;
         default:
           this.set_i(i);
@@ -409,7 +410,7 @@ module.exports = function(game){
       return [1, this.chain];
     }
     nocombo() {
-      let values = _f.shuffle([0, 1, 2, 3, 4]);
+      let values = ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng());
       return this.i = values.find((i)=> {
         return this.matched(i) === false;
       })
