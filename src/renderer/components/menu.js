@@ -47,7 +47,7 @@ module.exports = function(game){
       );
     }
     mode_option() {
-      ipc.send('replay-load', {inputs: this.inputs});
+      ipc.send('replay-load')
     }
   };
 
