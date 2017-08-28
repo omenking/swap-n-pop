@@ -1,13 +1,16 @@
 module.exports = function(game){
   class controller {
     constructor() {
-      this.map      = this.map.bind(this);
-      this.map_key  = this.map_key.bind(this);
-      this.seralize = this.seralize.bind(this);
-      this.execute  = this.execute.bind(this);
+      this.map      = this.map.bind(this)
+      this.map_key  = this.map_key.bind(this)
+      this.seralize = this.seralize.bind(this)
+      this.execute  = this.execute.bind(this)
+      this.execute_key = this.execute_key.bind(this)
+      this.is_down  = this.is_down.bind(this)
     }
     create() {
       this.callbacks = {}
+      this.simulated_down = {}
       this.keys = game.input.keyboard.createCursorKeys();
       //player 1
       this.keys.pl0_up    = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -30,6 +33,10 @@ module.exports = function(game){
       this.keys.pl1_r     = game.input.keyboard.addKey(Phaser.Keyboard.J);
       this.keys.pl1_start = game.input.keyboard.addKey(Phaser.Keyboard.P);
     }
+    is_down(pi,key){
+      const name = `pl${pi}_${key}`
+      return this.keys[name].isDown || this.simulated_down[name]
+    }
     map(pi,opts){
       const keys = "up down left right a b l r start".split(' ');
       for (let key of keys) {
@@ -42,6 +49,7 @@ module.exports = function(game){
       this.keys[name].onDown.removeAll();
       this.keys[name].onDown.add(fun, this);
       this.callbacks[name] = fun
+      this.simulated_down[name] = false
     }
     seralize(pi){
       var bitset = ''
@@ -54,14 +62,21 @@ module.exports = function(game){
       return bitset
     }
     execute(pi,bitset){
-      if      (bitset.charAt(0) === '1') { this.callbacks[`pl${pi}_up`]()   }
-      else if (bitset.charAt(1) === '1') { this.callbacks[`pl${pi}_down`]() }
-
-      if      (bitset.charAt(2) === '1') { this.callbacks[`pl${pi}_left`]()  }
-      else if (bitset.charAt(3) === '1') { this.callbacks[`pl${pi}_right`]() }
-
-      if      (bitset.charAt(4) === '1') { this.callbacks[`pl${pi}_a`]() }
-
+      this.execute_key(bitset,pi,0,'up')
+      this.execute_key(bitset,pi,1,'down')
+      this.execute_key(bitset,pi,2,'left')
+      this.execute_key(bitset,pi,3,'right')
+      this.execute_key(bitset,pi,4,'a')
+      this.execute_key(bitset,pi,5,'r')
+    }
+    execute_key(bitset,pi,at,key){
+      const name = `pl${pi}_${key}`
+      if (bitset.charAt(at) === '1') {
+        this.callbacks[name]()
+        this.simulated_down[name] = true
+      } else {
+        this.simulated_down[name] = false
+      }
     }
   };
 

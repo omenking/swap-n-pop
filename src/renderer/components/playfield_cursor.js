@@ -82,17 +82,17 @@ module.exports = function(game){
       return this.playfield.swap(this.x, this.y);
     }
     can_push() {
-      return (game.controls.keys[`pl${this.playfield.pi}_l`].isDown ||
-      game.controls.keys[`pl${this.playfield.pi}_r`].isDown) &&
-      this.playfield.running &&
-      (this.state === 'active');
+      return (game.controls.is_down(this.playfield.pi,'l') ||
+              game.controls.is_down(this.playfield.pi,'r')) &&
+              this.playfield.running &&
+              (this.state === 'active')
     }
     update() {
       let diff = (UNIT / 16) * 3;
       let y    = this.playfield.should_push ? this.y : this.y+1;
       const x    = (this.x * UNIT) - diff;
       y    = (y * UNIT)  - diff;
-      
+
       if ((this.state === 'entering') || (this.state === 'preactive')) {
         this.counter_flicker++;
         if (this.counter_flicker > 1) {
