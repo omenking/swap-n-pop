@@ -1,8 +1,10 @@
 module.exports = function(game){
   const ComponentPlayfield = require('./../components/playfield')(game)
   const {ipcRenderer: ipc} = require('electron')
+  const Replay = require('./src/main/replay')(__dirname)
   class controller {
     constructor() {
+      this.init   = this.init.bind(this);
       this.create_bg = this.create_bg.bind(this);
       this.create_frame = this.create_frame.bind(this);
       this.create = this.create.bind(this);
@@ -18,6 +20,8 @@ module.exports = function(game){
       this.playfield1 = new ComponentPlayfield(0);
       this.playfield2 = new ComponentPlayfield(1);
     }
+    init(data){
+    }
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
     }
@@ -27,6 +31,7 @@ module.exports = function(game){
     create() {
       game.stage.backgroundColor = 0x000000;
 
+      this.seed = Replay.random_seed()
       this.tick   = -1;
       // input history for replay.
       // [tick, times, key inputs]
@@ -116,7 +121,7 @@ module.exports = function(game){
       this.playfield2.resume()
     }
     game_over() {
-      ipc.send('replay-save', {inputs: this.inputs});
+      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs});
       this.stage_music('results')
       this.playfield1.game_over()
       this.playfield2.game_over()

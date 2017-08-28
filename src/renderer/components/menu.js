@@ -13,7 +13,6 @@ module.exports = function(game){
       this.mode_option = this.mode_option.bind(this);
       this.cursor = new ComponentMenuCursor();
       ipc.on('replay-load', (event, {inputs}) => {
-        console.log('replay-load',inputs)
         return game.state.start('mode_vs',true,false, {inputs: inputs})
       })
     }

@@ -10,7 +10,7 @@ describe('replay.save(name,inputs)' ,function(){
   var filename = null;
   before(function(done) {
     const inputs = [[[-1,0,'000000']],[[-1,0,'000000']]]
-    Replay.save('replay_spec',inputs, function(err,data){
+    Replay.save('replay_spec','seed',inputs, function(err,data){
       if (err) { done(err) }
       filename = data
       done()
@@ -25,21 +25,21 @@ describe('replay.save(name,inputs)' ,function(){
       err ? done(err) : done()
     })
   })
-  it('file should contain two records', function(done){
+  it('file should contain seed and two records', function(done){
     fs.readFile(filename, 'utf8', function(err,data){
       if (err) { done(err) }
-      data.should.equal("1,-1,0,000000\n0,-1,0,000000\n")
+      data.should.equal("seed\n1,-1,0,000000\n0,-1,0,000000\n")
       done()
     })
   })
 
   it('cond2 when p1 empty', function(done){
     const inputs1 = [[[-1,0,'100001']],[]]
-    Replay.save('replay_spec',inputs1, function(err,fname){
+    Replay.save('replay_spec','seed',inputs1, function(err,fname){
       if (err) { done(err) }
       fs.readFile(fname, 'utf8', function(err,data){
         if (err) { done(err) }
-        data.should.equal("0,-1,0,100001\n")
+        data.should.equal("seed\n0,-1,0,100001\n")
         done()
       })
     })
@@ -47,11 +47,11 @@ describe('replay.save(name,inputs)' ,function(){
 
   it('cond1 when p2 empty', function(done){
     const inputs1 = [[],[[-1,0,'001001']]]
-    Replay.save('replay_spec',inputs1, function(err,fname){
+    Replay.save('replay_spec','seed',inputs1, function(err,fname){
       if (err) { done(err) }
       fs.readFile(fname, 'utf8', function(err,data){
         if (err) { done(err) }
-        data.should.equal("1,-1,0,001001\n")
+        data.should.equal("seed\n1,-1,0,001001\n")
         done()
       })
     })
@@ -63,25 +63,31 @@ describe('replay.save(name,inputs)' ,function(){
 })
 
 describe('replay.load(name)' ,function(){
+  var filename = null;
   const name   = 'replay_spec'
   const inputs = [[[-1,0,'100000']],[[-1,0,'000000']]]
   before(function(done) {
-    Replay.save(name,inputs,function(){done()})
+    Replay.save(name,'seed',inputs,function(err,data){filename = data;done()})
   })
 
-  it('should return an array of arrays', function(done){
+  it('should return seed and inputs', function(done){
     Replay.load(name,function(err,data){
       if (err) { done(err) }
-      data.should.eql(inputs)
+      data.seed.should.eql('seed')
+      data.inputs.should.eql(inputs)
       done()
     })
   })
+  after(function() {
+    fs.unlink(filename,function(){})
+  });
 })
 
 describe('replay.last()' ,function(){
+  var filename = null;
   const inputs = [[[12,0,'100100']],[[11,5,'101001']]]
   before(function(done) {
-    Replay.save('zzz_last',inputs,function(){done()})
+    Replay.save('zzz_last','seed',inputs,function(err,data){filename = data; done()})
   })
   it('return last filname', function(done){
     Replay.last(function(err,data){
@@ -90,4 +96,7 @@ describe('replay.last()' ,function(){
       done()
     })
   })
+  after(function() {
+    fs.unlink(filename,function(){})
+  });
 })

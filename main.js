@@ -1,6 +1,8 @@
 const {app, BrowserWindow, ipcMain: ipc} = require('electron')
 const Replay = require('./src/main/replay')(__dirname)
 
+const seedrandom = require('seedrandom')
+
 const path = require('path')
 const url  = require('url')
 
@@ -35,11 +37,10 @@ function test(){
 function ready(){
   create_window()
 
-  ipc.on('replay-save', (event, {inputs}) => {
-    Replay.save(`${Date.now()}`,inputs,function(err,data){})
+  ipc.on('replay-save', (event, {seed,inputs}) => {
+    Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
   });
   ipc.on('replay-load', (event) => {
-    console.log('main replay load')
     Replay.last(function(err,name){
       Replay.load(name,function(err,data){
         win.webContents.send('replay-load',{inputs: data})
