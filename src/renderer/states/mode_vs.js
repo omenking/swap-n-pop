@@ -15,6 +15,7 @@ module.exports = function(game){
       this.game_over = this.game_over.bind(this);
       this.danger_check = this.danger_check.bind(this);
       this.update_input = this.update_input.bind(this);
+      this.replay_input = this.replay_input.bind(this);
       this.update_replay = this.update_replay.bind(this);
       this.update = this.update.bind(this);
       this.shutdown = this.shutdown.bind(this);
@@ -22,11 +23,19 @@ module.exports = function(game){
       this.playfield2 = new ComponentPlayfield(1);
     }
     init(data){
+      this.tick = -1
       this.seed = data.seed
       this.rng  = seedrandom(this.seed)
       if (data.inputs) {
         this.replay = true
+        this.replaying = [null,null]
         this.inputs = data.inputs
+      } else {
+        this.replay    = false
+        this.inputs = [
+          [[-1,0,'000000']],
+          [[-1,0,'000000']]
+        ]
       }
     }
     create_bg() {
@@ -37,16 +46,6 @@ module.exports = function(game){
     }
     create() {
       game.stage.backgroundColor = 0x000000;
-
-      this.tick   = -1;
-      // input history for replay.
-      // [tick, times, key inputs]
-      this.inputs = [
-        [[-1,0,'000000']],
-        [[-1,0,'000000']]
-      ];
-      this.replay = [{},{}];
-
       this.state_music = 'none';
 
       this.danger = false;
@@ -148,7 +147,7 @@ module.exports = function(game){
         if (this.danger === true) {
           this.stage_music('active');
         }
-        return this.danger = false;
+        return this.danger = false
       }
     }
     update_input(pi){
@@ -159,29 +158,28 @@ module.exports = function(game){
         this.inputs[pi].push([this.tick,0,bitset])
       }
     }
+    replay_input(pi){
+      if (this.replaying[pi] === null) {
+        this.replaying[pi] = this.inputs[pi].shift()
+      }
+      if ((this.replaying[pi][0]+this.replaying[pi][1]) < this.tick){
+        while((this.replaying[pi][0]+this.replaying[pi][1]) < this.tick){
+          this.replaying[pi] = this.inputs[pi].shift()
+        }
+        console.log('+',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
+        game.controls.execute(pi,this.replaying[pi][2])
+      } else {
+        //console.log('~',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
+      }
+    }
     update_replay() {
-      this.update_input(0)
-      this.update_input(1)
-      //let i, panel;
-      //let stack   = [];
-      //let newline = [];
-      //for (i = 0; i < this.playfield1.stack.length;   i++) { stack[i].push(stack[i].get_data()); }
-      //for (i = 0; i < this.playfield1.newline.length; i++) { newline[i].push(stack[i].get_data()); }
-      //this.replay[0][this.tick] = {
-        //playfield: this.playfield1.get_data(),
-        //stack,
-        //newline
-      //};
-
-      //stack   = [];
-      //newline = [];
-      //for (i = 0; i < this.playfield2.stack.length; i++  ) { stack[i].push(stack[i].get_data()); }
-      //for (i = 0; i < this.playfield2.newline.length; i++) { newline[i].push(stack[i].get_data()); }
-      //this.replay[1][this.tick]({
-        //playfield: this.playfield2.get_data(),
-        //stack,
-        //newline
-      //});
+      if (this.replay){
+        this.replay_input(0)
+        this.replay_input(1)
+      } else {
+        this.update_input(0)
+        this.update_input(1)
+      }
     }
     update() {
       this.tick++;
@@ -195,7 +193,6 @@ module.exports = function(game){
       this.update_replay();
     }
     shutdown() {
-      console.log('shutdown')
       this.stage_music('none');
       this.playfield1.shutdown();
     }

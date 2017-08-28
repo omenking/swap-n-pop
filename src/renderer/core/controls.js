@@ -1,11 +1,13 @@
 module.exports = function(game){
   class controller {
     constructor() {
-      this.map = this.map.bind(this);
-      this.map_key = this.map_key.bind(this);
+      this.map      = this.map.bind(this);
+      this.map_key  = this.map_key.bind(this);
       this.seralize = this.seralize.bind(this);
+      this.execute  = this.execute.bind(this);
     }
     create() {
+      this.callbacks = {}
       this.keys = game.input.keyboard.createCursorKeys();
       //player 1
       this.keys.pl0_up    = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -30,13 +32,16 @@ module.exports = function(game){
     }
     map(pi,opts){
       const keys = "up down left right a b l r start".split(' ');
-      Array.from(keys).map((key) =>
-        this.map_key(pi,key,opts));
+      for (let key of keys) {
+        this.map_key(pi,key,opts)
+      }
     }
     map_key(pi,key,opts){
       const fun = opts[key] ? opts[key] : function() {};
-      this.keys[`pl${pi}_${key}`].onDown.removeAll();
-      this.keys[`pl${pi}_${key}`].onDown.add(fun, this);
+      var name = `pl${pi}_${key}`
+      this.keys[name].onDown.removeAll();
+      this.keys[name].onDown.add(fun, this);
+      this.callbacks[name] = fun
     }
     seralize(pi){
       var bitset = ''
@@ -47,6 +52,16 @@ module.exports = function(game){
       bitset += this.keys[`pl${pi}_b`].isDown || this.keys[`pl${pi}_a`].isDown ? '1' : '0'
       bitset += this.keys[`pl${pi}_r`].isDown || this.keys[`pl${pi}_l`].isDown ? '1' : '0'
       return bitset
+    }
+    execute(pi,bitset){
+      if      (bitset.charAt(0) === '1') { this.callbacks[`pl${pi}_up`]()   }
+      else if (bitset.charAt(1) === '1') { this.callbacks[`pl${pi}_down`]() }
+
+      if      (bitset.charAt(2) === '1') { this.callbacks[`pl${pi}_left`]()  }
+      else if (bitset.charAt(3) === '1') { this.callbacks[`pl${pi}_right`]() }
+
+      if      (bitset.charAt(4) === '1') { this.callbacks[`pl${pi}_a`]() }
+
     }
   };
 

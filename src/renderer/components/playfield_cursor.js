@@ -48,7 +48,7 @@ module.exports = function(game){
       return this.state          = 'entering';
     }
     map_controls() {
-      return game.controls.map(this.playfield.pi, {
+      game.controls.map(this.playfield.pi, {
         up   : this.up,
         down : this.down,
         left : this.left,
@@ -56,27 +56,26 @@ module.exports = function(game){
         a    : this.swap,
         b    : this.swap,
         start: this.pause
-      }
-      );
+      });
     }
     pause() {
-      return this.playfield.stage.pause(this.playfield.pi);
+      this.playfield.stage.pause(this.playfield.pi);
     }
     up() {
       this.sfx_select.play();
-      if (this.y > 0) { return this.y--; }
+      if (this.y > 0) { this.y--; }
     }
     down() {
       this.sfx_select.play();
-      if (this.y < (ROWS - 1)) { return this.y++; }
+      if (this.y < (ROWS - 1)) { this.y++; }
     }
     left() {
       this.sfx_select.play();
-      if (this.x > 0) { return this.x--; }
+      if (this.x > 0) { this.x--; }
     }
     right() {
       this.sfx_select.play();
-      if (this.x < (COLS - 2)) { return this.x++; }
+      if (this.x < (COLS - 2)) { this.x++; }
     }
     swap() {
       if (!this.playfield.running || (this.state !== 'active')) { return; }
