@@ -1,0 +1,16 @@
+environment:
+  nodejs_version: "8"
+
+platform:
+  - x64
+
+branches:
+  only:
+    - master
+
+install:
+  - cd app
+  - npm install
+
+test_script:
+  - npm test
