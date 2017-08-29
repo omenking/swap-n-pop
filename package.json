@@ -1,27 +1,29 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "Push2Pop",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
+	"name": "swap-n-pop",
+  "productName": "swap-n-pop",
+  "license": "MIT",
+	"description": "Puzzle Game",
+	"version": "0.0.1",
+	"author": "Andrew Brown",
+  "repository": {
+    "url": "https://github.com/omenking/swap-n-pop"
   },
-  "repository": "https://github.com/omenking/push2pop",
-  "keywords": [
-    "Electron",
-    "Puzzle Game"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
-  "devDependencies": {
-    "chai": "^4.1.1",
-    "electron": "~1.6.2",
-    "mocha": "^3.5.0"
-  },
-  "dependencies": {
-    "glob": "^7.1.2",
-    "phaser-ce": "^2.8.4",
-    "seedrandom": "^2.4.3",
-    "shuffle-seed": "^1.1.6"
-  }
+
+	"devDependencies": {
+		"electron-builder": "^19.26.3"
+	},
+
+	"build": {
+		"appId": "com.swap-n-pop.app",
+		"mac": {
+			"category": "public.app-category.games"
+		}
+	},
+
+	"scripts": {
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder"
+	},
+
+	"postinstall": "electron-builder install-app-deps"
 }
