@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/omenking/swap-n-pop.svg?branch=master)](https://travis-ci.org/omenking/swap-n-pop) ![Test](https://ci.appveyor.com/api/projects/status/github/omenking/swap-n-pop?branch=master&svg=true)
