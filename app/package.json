@@ -23,5 +23,8 @@
     "phaser-ce": "^2.8.4",
     "seedrandom": "^2.4.3",
     "shuffle-seed": "^1.1.6"
+  },
+  "scripts":{
+    "test": "mocha --recursive"
   }
 }

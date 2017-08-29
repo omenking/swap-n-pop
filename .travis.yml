@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "8"
+before_script: cd app/src
+script: npm test
+os:
+  - osx
+branches:
+  only:
+    - master
