@@ -16,13 +16,19 @@
 	"build": {
 		"appId": "com.swap-n-pop.app",
 		"mac": {
-			"category": "public.app-category.games"
-		}
+			"category": "public.app-category.games",
+      "publish": ["github"]
+		},
+    "win": {
+      "target": "nsis",
+      "publish": ["github"]
+    }
 	},
 
 	"scripts": {
 		"pack": "electron-builder --dir",
-		"dist": "electron-builder"
+		"dist": "electron-builder",
+    "release": "build"
 	},
 
 	"postinstall": "electron-builder install-app-deps"
