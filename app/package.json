@@ -23,6 +23,7 @@
   "dependencies": {
     "electron-store": "^1.2.0",
     "glob": "^7.1.2",
+    "keycode": "^2.1.9",
     "phaser-ce": "^2.8.4",
     "seedrandom": "^2.4.3",
     "shuffle-seed": "^1.1.6"

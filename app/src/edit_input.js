@@ -2,6 +2,7 @@ const m = require('../node_modules/mithril/mithril.min.js')
 const {ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
+const keycode = require('keycode')
 
 var setting = null
 var inputs  = store.get('inputs')
@@ -23,7 +24,7 @@ function inputclass(key){
 function textfield(key,label){
   return m('tr.text_field',[
     m('td.lbl',label),
-    m('td.val',m(".input",{ className: inputclass(key), onclick: setkey(key) }, inputs[key]))
+    m('td.val',m(".input",{ className: inputclass(key), onclick: setkey(key) }, keycode(inputs[key])))
   ])
 }
 
