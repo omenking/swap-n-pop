@@ -58,26 +58,32 @@ module.exports = function(game){
         start: this.pause
       });
     }
-    pause() {
+    pause(tick) {
+      if (tick > 0) { return }
       this.playfield.stage.pause(this.playfield.pi);
     }
-    up() {
+    up(tick) {
+      if (tick > 0) { return }
       this.sfx_select.play();
       if (this.y > 0) { this.y--; }
     }
-    down() {
+    down(tick) {
+      if (tick > 0) { return }
       this.sfx_select.play();
       if (this.y < (ROWS - 1)) { this.y++; }
     }
-    left() {
+    left(tick) {
+      if (tick > 0) { return }
       this.sfx_select.play();
       if (this.x > 0) { this.x--; }
     }
-    right() {
+    right(tick) {
+      if (tick > 0) { return }
       this.sfx_select.play();
       if (this.x < (COLS - 2)) { this.x++; }
     }
-    swap() {
+    swap(tick) {
+      if (tick > 0) { return }
       if (!this.playfield.running || (this.state !== 'active')) { return; }
       return this.playfield.swap(this.x, this.y);
     }

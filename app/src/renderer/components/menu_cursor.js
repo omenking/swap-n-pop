@@ -36,7 +36,8 @@ module.exports = function(game){
         start: this.confirm
       });
     }
-    up() {
+    up(tick) {
+      if (tick > 0) { return }
       if (this.index !== 0) {
         this.sfx_select.play();
         this.counter = 0;
@@ -44,7 +45,8 @@ module.exports = function(game){
         return this.index--;
       }
     }
-    down() {
+    down(tick) {
+      if (tick > 0) { return }
       if (this.index !== (this.menu_items.length-1)) {
         this.sfx_select.play();
         this.counter = 0;
@@ -52,11 +54,13 @@ module.exports = function(game){
         return this.index++;
       }
     }
-    confirm() {
+    confirm(tick) {
+      if (tick > 0) { return }
       this.sfx_confirm.play();
       return this.menu_items[this.index]();
     }
-    cancel() {
+    cancel(tick) {
+      if (tick > 0) { return }
       return console.log('cancel');
     }
     update() {

@@ -32,6 +32,7 @@ module.exports = function(game){
       return build.anchor.setTo(0, 1);
     }
     update() {
+      game.controls.update()
       this.menu.update();
       this.bg.tilePosition.y += 0.5;
       return this.bg.tilePosition.x -= 0.5;

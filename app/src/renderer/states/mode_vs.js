@@ -183,6 +183,7 @@ module.exports = function(game){
     }
     update() {
       this.tick++;
+      game.controls.update()
       this.playfield1.update();
       this.playfield2.update();
 

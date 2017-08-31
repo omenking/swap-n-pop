@@ -24,8 +24,9 @@ module.exports = function(game){
       return this.playfield.create_after();
     }
     update() {
+      game.controls.update()
       this.playfield.update();
-      return this.playfield.render();
+      this.playfield.render();
     }
     stage_music(state){}
   }

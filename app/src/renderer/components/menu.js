@@ -30,7 +30,7 @@ module.exports = function(game){
       ]);
     }
     update() {
-      return this.cursor.update();
+      this.cursor.update()
     }
     mode_1p_vs_2p_local() {
       ipc.send('play-vs');
