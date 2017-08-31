@@ -1,6 +1,6 @@
-const {app, BrowserWindow, ipcMain: ipc} = require('electron')
+const {app, Menu, BrowserWindow, ipcMain: ipc} = require('electron')
 const Replay = require('./src/main/replay')(__dirname)
-
+const Store = require('electron-store')
 
 
 const path = require('path')
@@ -9,33 +9,100 @@ const url  = require('url')
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
 
-let win
+let win, win_edit_input
+
+const store = new Store()
+if (!store.has('inputs')){
+  store.set('inputs',[
+  38, //p0_up
+  40, //p0_down
+  37, //p0_left
+  39, //p0_right
+  90, //p0_a
+  88, //p0_b
+  83, //p0_l
+  65, //p0_r
+  13, //p0_start
+  null, //p0_up
+  null, //p0_down
+  null, //p0_left
+  null, //p0_right
+  null, //p0_a
+  null, //p0_b
+  null, //p0_l
+  null, //p0_r
+  null  //p0_start
+  ])
+}
+
+const template = [
+  {
+    label: 'Controls',
+    submenu: [
+      {click: click_edit_input, label: "Input"}
+    ]
+  }
+]
+
+if (process.platform === 'darwin') {
+  template.unshift({
+    label: "Swap N Pop",
+    submenu: [
+      {role: 'about', label: "About"},
+      {role: 'quit' , label: "Quit"}
+    ]
+  })
+}
+
+
+const menu  = Menu.buildFromTemplate(template)
+
+
+function click_edit_input(item, win, ev) {
+  win_edit_input = new BrowserWindow({
+    title     : "Input",
+    width     : 300,
+    height    : 334,
+    parent    : win
+  })
+  win_edit_input.loadURL(url.format({
+    pathname: path.join(__dirname, 'src', 'edit_input.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+  win_edit_input.webContents.openDevTools()
+}
+
 
 function create_window () {
   win = new BrowserWindow({
+    title     : "Swap N Pop",
     width     : WIN_WIDTH*2,
     height    : WIN_HEIGHT*2,
     minWidth  : WIN_WIDTH*2,
     minHeight : WIN_HEIGHT*2
   })
+  win.setTitle("Swap N Pop")
   win.setAspectRatio(8/7,0)
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, 'src', 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
-  //win.webContents.openDevTools()
+  win.webContents.openDevTools()
   win.on('closed', function () {
     win = null
   })
 }
 
-function test(){
-  console.log('Testing to see if this calls main')
-}
-
 function ready(){
+  Menu.setApplicationMenu(menu)
   create_window()
+
+
+  ipc.on('controls-update', (event) => {
+    win.webContents.send('controls-rebind')
+  });
 
   ipc.on('replay-save', (event, {seed,inputs}) => {
     Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
@@ -50,10 +117,7 @@ function ready(){
   ipc.on('play-vs', (event) => {
     win.webContents.send('play-vs',{seed: Replay.random_seed()})
   })
-
 }
-
-
 
 
 function window_all_closed(){

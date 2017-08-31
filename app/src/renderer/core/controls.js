@@ -1,37 +1,74 @@
 module.exports = function(game){
+  const Store = require('electron-store')
+  const store = new Store()
+  const {ipcRenderer: ipc} = require('electron')
+
   class controller {
     constructor() {
-      this.map      = this.map.bind(this)
-      this.map_key  = this.map_key.bind(this)
-      this.seralize = this.seralize.bind(this)
-      this.execute  = this.execute.bind(this)
+      this.map         = this.map.bind(this)
+      this.map_key     = this.map_key.bind(this)
+      this.seralize    = this.seralize.bind(this)
+      this.execute     = this.execute.bind(this)
       this.execute_key = this.execute_key.bind(this)
-      this.is_down  = this.is_down.bind(this)
+      this.is_down     = this.is_down.bind(this)
+      this.rebind      = this.rebind.bind(this)
     }
     create() {
       this.callbacks = {}
       this.simulated_down = {}
-      this.keys = game.input.keyboard.createCursorKeys();
+      this.keys = []
+      this.rebind()
+
+      ipc.on('controls-rebind', (event) => {
+        this.rebind()
+        this.map(0,{
+          up:    this.callbacks.pl0_up,
+          down:  this.callbacks.pl0_down,
+          left:  this.callbacks.pl0_left,
+          right: this.callbacks.pl0_right,
+          a:     this.callbacks.pl0_a,
+          b:     this.callbacks.pl0_b,
+          l:     this.callbacks.pl0_l,
+          r:     this.callbacks.pl0_r,
+          start: this.callbacks.pl0_start
+        })
+        this.map(1,{
+          up:    this.callbacks.pl1_up,
+          down:  this.callbacks.pl1_down,
+          left:  this.callbacks.pl1_left,
+          right: this.callbacks.pl1_right,
+          a:     this.callbacks.pl1_a,
+          b:     this.callbacks.pl1_b,
+          l:     this.callbacks.pl1_l,
+          r:     this.callbacks.pl1_r,
+          start: this.callbacks.pl1_start
+        })
+      })
+    }
+    rebind(){
+      let inputs = store.get('inputs')
+      game.input.keyboard.reset();
+      this.keys = []
       //player 1
-      this.keys.pl0_up    = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-      this.keys.pl0_down  = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-      this.keys.pl0_left  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-      this.keys.pl0_right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-      this.keys.pl0_a     = game.input.keyboard.addKey(Phaser.Keyboard.X);
-      this.keys.pl0_b     = game.input.keyboard.addKey(Phaser.Keyboard.Z);
-      this.keys.pl0_l     = game.input.keyboard.addKey(Phaser.Keyboard.C);
-      this.keys.pl0_r     = game.input.keyboard.addKey(Phaser.Keyboard.C);
-      this.keys.pl0_start = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+      this.keys.pl0_up    = game.input.keyboard.addKey(inputs[0]);
+      this.keys.pl0_down  = game.input.keyboard.addKey(inputs[1]);
+      this.keys.pl0_left  = game.input.keyboard.addKey(inputs[2]);
+      this.keys.pl0_right = game.input.keyboard.addKey(inputs[3]);
+      this.keys.pl0_a     = game.input.keyboard.addKey(inputs[4]);
+      this.keys.pl0_b     = game.input.keyboard.addKey(inputs[5]);
+      this.keys.pl0_l     = game.input.keyboard.addKey(inputs[6]);
+      this.keys.pl0_r     = game.input.keyboard.addKey(inputs[7]);
+      this.keys.pl0_start = game.input.keyboard.addKey(inputs[8]);
       //player 2
-      this.keys.pl1_up    = game.input.keyboard.addKey(Phaser.Keyboard.W);
-      this.keys.pl1_down  = game.input.keyboard.addKey(Phaser.Keyboard.S);
-      this.keys.pl1_left  = game.input.keyboard.addKey(Phaser.Keyboard.A);
-      this.keys.pl1_right = game.input.keyboard.addKey(Phaser.Keyboard.D);
-      this.keys.pl1_a     = game.input.keyboard.addKey(Phaser.Keyboard.K);
-      this.keys.pl1_b     = game.input.keyboard.addKey(Phaser.Keyboard.L);
-      this.keys.pl1_l     = game.input.keyboard.addKey(Phaser.Keyboard.J);
-      this.keys.pl1_r     = game.input.keyboard.addKey(Phaser.Keyboard.J);
-      this.keys.pl1_start = game.input.keyboard.addKey(Phaser.Keyboard.P);
+      this.keys.pl1_up    = game.input.keyboard.addKey(inputs[9]);
+      this.keys.pl1_down  = game.input.keyboard.addKey(inputs[10]);
+      this.keys.pl1_left  = game.input.keyboard.addKey(inputs[11]);
+      this.keys.pl1_right = game.input.keyboard.addKey(inputs[12]);
+      this.keys.pl1_a     = game.input.keyboard.addKey(inputs[13]);
+      this.keys.pl1_b     = game.input.keyboard.addKey(inputs[14]);
+      this.keys.pl1_l     = game.input.keyboard.addKey(inputs[15]);
+      this.keys.pl1_r     = game.input.keyboard.addKey(inputs[16]);
+      this.keys.pl1_start = game.input.keyboard.addKey(inputs[17]);
     }
     is_down(pi,key){
       const name = `pl${pi}_${key}`

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+      * {box-sizing: border-box; }
+      html,body{ margin:0;padding:0;font-family: arial;}
+      .clear { display: block; clear: both; }
+      .fields { padding: 16px; }
+      .title {
+        color: rgb(100,100,100);
+        font-size: 13px;
+        padding-bottom: 8px;
+      }
+      .p0 table { margin-right: 16px; }
+      .text_field        { margin-bottom: 16px; }
+      .text_field .lbl   { font-size: 12px;}
+      .text_field .input {
+        padding: 4px;
+        width: 70px;
+        height: 24px;
+        font-size: 12px;
+        border: solid 1px rgb(200,200,200);
+        border-bottom: solid 1px rgb(140,140,140);
+      }
+      .text_field .input.setting {
+        background: rgb(230,230,230);
+        border: solid 1px rgb(140,140,140);
+        border-bottom: solid 1px rgb(100,100,100);
+      }
+      .p0, .p1 { float: left; }
+    </style>
+  </head>
+  <body>
+  <script>
+    require('./edit_input.js')
+  </script>
+  </body>
+</html>
