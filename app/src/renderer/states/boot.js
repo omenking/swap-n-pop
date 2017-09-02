@@ -27,19 +27,17 @@ module.exports = function(game){
       game.load.onLoadStart.add(this.load_start   , this);
       game.load.onFileComplete.add(this.file_complete, this);
       game.load.onLoadComplete.add(this.load_complete, this);
-      game.controls.create()
-
-      return this.load();
+      return this.load()
     }
     load_start() {
-      return console.log('start loading');
     }
     file_complete(progress,key,success,cur,total){
       this.files.setText(`Files ${cur} / ${total}`);
       return this.file.setText(key);
     }
     load_complete() {
-      console.log('done loading');
+      game.controls.create()
+      game.sounds.create()
       return game.state.start('menu');
     }
     update() {

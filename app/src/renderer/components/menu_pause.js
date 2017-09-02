@@ -1,5 +1,6 @@
 module.exports = function(game){
-  const ComponentMenuPauseCursor = require('./menu_pause_cursor')(game)
+  const APP = require('swap-n-pop_app')
+  const ComponentMenuPauseCursor = require(APP.path.components('menu_pause_cursor'))(game)
   class controller {
     constructor() {
       this.create = this.create.bind(this);

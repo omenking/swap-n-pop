@@ -4,7 +4,7 @@
   "description": "An open-source built for competitive online tetris attack.",
   "main": "main.js",
   "scripts": {
-    "test": "mocha --recursive",
+    "test": "mocha spec/src/**/* --recursive",
     "start": "electron ."
   },
   "repository": "https://github.com/omenking/push2pop",
@@ -18,7 +18,8 @@
     "chai": "^4.1.1",
     "electron": "~1.6.2",
     "mithril": "^1.1.3",
-    "mocha": "^3.5.0"
+    "mocha": "^3.5.0",
+    "sinon": "^3.2.1"
   },
   "dependencies": {
     "electron-store": "^1.2.0",

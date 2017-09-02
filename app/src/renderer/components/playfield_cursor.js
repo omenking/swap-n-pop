@@ -1,10 +1,11 @@
 module.exports = function(game){
+  const APP = require('swap-n-pop_app')
   const {
     COLS,
     ROWS,
     UNIT,
     STARTPOS_PANELCURSOR_SPEED
-  } = require('./../core/data')
+  } = require(APP.path.core('data'))
   class controller {
     constructor() {
       this.create = this.create.bind(this);

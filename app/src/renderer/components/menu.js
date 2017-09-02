@@ -1,7 +1,9 @@
 module.exports = function(game){
-  const {PUZZLE} = require('./../core/data')
-  const ComponentMenuCursor = require('./menu_cursor')(game)
+  const APP = require('swap-n-pop_app')
+  const {PUZZLE} = require(APP.path.core('data'))
+  const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')
+
   class controller {
     constructor() {
       this.create = this.create.bind(this);

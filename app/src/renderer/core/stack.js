@@ -1,8 +1,9 @@
 module.exports = function(game){
+  const APP = require('swap-n-pop_app')
   const {
     COLS
-  } = require('./../core/data')
-  const _f = require('./../core/filters')
+  } = require(APP.path.core('data'))
+  const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   class controller {
     constructor(rng) {

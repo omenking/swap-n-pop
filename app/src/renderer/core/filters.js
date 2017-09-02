@@ -1,4 +1,5 @@
-const {ROWS, COLS} = require('./data')
+const APP = require('swap-n-pop_app')
+const {ROWS, COLS} = require(APP.path.core('data'))
 module.exports = {
   i_2_xy: function(i,rows,cols){
     if (!rows) { rows = ROWS; }

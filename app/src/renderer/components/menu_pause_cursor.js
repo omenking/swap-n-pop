@@ -1,5 +1,6 @@
 module.exports = function(game){
-  const {UNIT} = require('./../core/data')
+  const APP = require('swap-n-pop_app')
+  const {UNIT} = require(APP.path.core('data'))
   class controller {
     constructor() {
       this.create = this.create.bind(this);

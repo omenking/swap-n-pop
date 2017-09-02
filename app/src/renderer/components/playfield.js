@@ -1,11 +1,12 @@
 module.exports = function(game){
-  const _f = require('./../core/filters')
-  const ComponentMenuPause          = require('./menu_pause')(game)
-  const ComponentPlayfieldCountdown = require('./playfield_countdown')(game)
-  const ComponentPlayfieldCursor    = require('./playfield_cursor')(game)
-  const ComponentScore              = require('./score')(game)
-  const ComponentPanel              = require('./panel')(game)
-  const ComponentAi                 = require('./ai')(game)
+  const APP = require('swap-n-pop_app')
+  const _f = require(APP.path.core('filters'))
+  const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
+  const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
+  const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
+  const ComponentScore              = require(APP.path.components('score'))(game)
+  const ComponentPanel              = require(APP.path.components('panel'))(game)
+  const ComponentAi                 = require(APP.path.components('ai'))(game)
   const {
     ROWS,
     COLS,
@@ -13,39 +14,44 @@ module.exports = function(game){
     UNIT,
     TIME_PUSH,
     SCAN_BTLR
-  } = require('./../core/data')
+  } = require(APP.path.core('data'))
 
   class controller {
     static initClass() {
       this.prototype.history = {};
-      this.prototype.pi          = null; // player number, used to detect input
-      this.prototype.unit        = null;
-      this.prototype.rows        = null;
-      this.prototype.cols        = null;
-      this.prototype.combo       = null;
-      this.prototype.chain       = null;
-      this.prototype.cursor      = null;
-      this.prototype.blank       = null;
-      this.prototype.score       = 0;
-      this.prototype.scoreText   = null;
-      this.prototype.pushTime    = 0;
-      this.prototype.pushCounter = 0;
-      this.prototype.has_ai = false;
-      this.prototype.running = false;
-      this.prototype.land = false;
+      this.prototype.pi          = null  // player number, used to detect input
+      this.prototype.unit        = null
+      this.prototype.rows        = null
+      this.prototype.cols        = null
+      this.prototype.combo       = null
+      this.prototype.chain       = null
+      this.prototype.cursor      = null
+      this.prototype.blank       = null
+      this.prototype.score       = 0
+      this.prototype.scoreText   = null
+      this.prototype.pushTime    = 0
+      this.prototype.pushCounter = 0
+      this.prototype.has_ai      = false
+      this.prototype.running     = false
+      this.prototype.land        = false
+      this.prototype.stack       = null
        // when any panel has landed in the stac
     }
     constructor(pi){
+      if (pi !== 0 && pi !== 1){ 
+        throw new Error("player_number present and must be 0 or 1")
+      }
+
       this.get_data = this.get_data.bind(this);
       this.create = this.create.bind(this);
       this.create_after = this.create_after.bind(this);
       this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
-      this.create_newline = this.create_newline.bind(this);
       this.pause = this.pause.bind(this);
       this.resume = this.resume.bind(this);
       this.game_over = this.game_over.bind(this);
-      this.new_panels = this.new_panels.bind(this);
+      this.create_newline = this.create_newline.bind(this);
+      this.create_panels = this.create_panels.bind(this);
       this.fill_panels = this.fill_panels.bind(this);
       this.update_panels = this.update_panels.bind(this);
       this.update_chain_and_combo = this.update_chain_and_combo.bind(this);
@@ -57,8 +63,7 @@ module.exports = function(game){
       this.track_tick = this.track_tick.bind(this);
       this.print_tick = this.print_tick.bind(this);
       this.score_current = this.score_current.bind(this);
-      this.update_stack = this.update_stack.bind(this);
-      this.update_newline = this.update_newline.bind(this);
+      this.render_stack = this.render_stack.bind(this);
       this.panel_i = this.panel_i.bind(this);
       this.update = this.update.bind(this);
       this.shutdown = this.shutdown.bind(this);
@@ -76,29 +81,30 @@ module.exports = function(game){
       ];
     }
     create(stage,opts){
-      this.stage = stage;
-      if (opts == null) { opts = {}; }
-      this.sfx_swap  = game.add.audio('sfx_swap');
-      this.sfx_land = [];
-      this.sfx_land[0]  = game.add.audio('sfx_drop0');
-      this.sfx_land[1]  = game.add.audio('sfx_drop1');
-      this.sfx_land[2]  = game.add.audio('sfx_drop2');
-      this.sfx_land[3]  = game.add.audio('sfx_drop3');
+      if (stage === null) {
+        throw new Error("must pass stage")
+      }
+      if (opts       === null ||
+          opts.x     === null | 
+          opts.y     === null ||
+          opts.panel === null){
+        throw new Error("must pass at least x,y and panels")
+      }
 
-      this.should_push = opts.push || false;
+      this.stage       = stage
+      this.should_push = opts.push || false
 
-      this.height = (ROWS+1) * UNIT;
-      this.width  = COLS     * UNIT;
+      this.height = (ROWS+1) * UNIT
+      this.width  = COLS     * UNIT
 
       this.x = opts.x;
       this.y = opts.y;
 
-      this.layer_block  = game.add.group();
-      this.layer_block.x  = this.x;
-      this.layer_block.y  = this.y;
+      this.layer_block  = game.add.group()
+      this.layer_block.x  = this.x
+      this.layer_block.y  = this.y
 
-      this.create_stack(opts.panels);
-      this.create_newline('unique');
+      this.create_stack(opts.panels)
 
       this.score       = 0;
       this.chain       = 0;
@@ -106,63 +112,60 @@ module.exports = function(game){
       this.pushCounter = this.pushTime;
 
       this.score_lbl.create();
-      return this.blank.create(this, null, null, true);
+      this.blank.create(this, null, null, true)
     }
     create_after() {
-      this.layer_cursor = game.add.group();
-      this.layer_cursor.x = this.x;
-      this.layer_cursor.y = this.y;
+      this.layer_cursor = game.add.group()
+      this.layer_cursor.x = this.x
+      this.layer_cursor.y = this.y
 
       this.countdown.create(this);
       this.cursor.create(this, {ai: this.has_ai});
-      if (this.has_ai) { this.ai.create(this, this.cursor); }
-
-      this.menu_pause.create(this);
-
-      return this.render();
+      if (this.has_ai) { this.ai.create(this, this.cursor) }
+      this.menu_pause.create(this)
+      this.render() // might not be necessary since it gets call at end of frame
     }
     create_stack(data){
-      this.stack = this.new_panels(ROWS);
-      if (data) {
-        this.fill_panels(false, this.stack, data);
-      } else {
-        this.fill_panels(false, this.stack, 5, 'unique');
+      this.stack = []
+      this.create_panels(ROWS)
+      this.fill_panels(data)
+
+      // seems like this shouldn't be needed here
+      for (let i = 0; i < this.stack.length; i++){
+        this.stack[i].update_neighbours(i)
       }
-      return Array.from(this.stack).map((panel, i) =>
-        panel.update_neighbours(i));
     }
 
     push() {
       let i;
-      let asc, end;
       if (this.is_danger(0)) {
         this.stage.game_over();
         return 0;
       }
 
+      // move all panels up the stack
       const stack = new Array(PANELS);
-      for (i = COLS, end = PANELS, asc = COLS <= end; asc ? i < end : i > end; asc ? i++ : i--) {
+      for (i = COLS; i < PANELS; i++) {
         stack[i-COLS] = this.stack[i];
       }
 
-      for (i = 0; i < this.newline.length; i++) {
-        const panel = this.newline[i];
-        const ii = (PANELS-COLS)+i;
-        stack[ii] = panel;
-        stack[ii].newline = false;
-        stack[ii].play_live();
-      }
-
-      this.stack = stack;
-      this.create_newline('unique');
+      this.stack = stack
+      this.create_newline()
 
       if (this.cursor.y > 1) { this.cursor.y--; }
       return 1;
     }
     create_newline(mode){
       if (!this.should_push) { return; }
-      this.newline = this.new_panels(1, mode);
-      return this.fill_panels(true, this.newline, 1, mode);
+
+      for (let i = PANELS; i < PANELS+COLS; i++){
+        const [x,y] = Array.from(_f.i_2_xy(i))
+        this.stack[i] = new ComponentPanel()
+        this.stack[i].create(this, x, y)
+      }
+      for (let i = PANELS; i < PANELS+COLS; i++){
+        stack[i].set('unique')
+      }
     }
     pause(pi){
       this.menu_pause.pause(pi);
@@ -178,67 +181,28 @@ module.exports = function(game){
       for (i = 0; i < this.stack.length; i++) { panel = this.stack[i]; panel.check_dead(i, is_dead); }
       for (i = 0; i < this.newline.length; i++) { panel = this.newline[i]; panel.check_dead(i, is_dead); }
       this.running = false;
-      //console.log('gameover',
-        //this.stack[0].i,
-        //this.stack[1].i,
-        //this.stack[2].i,
-        //this.stack[3].i,
-        //this.stack[4].i,
-        //this.stack[5].i);
       this.pushCounter = 0;
     }
-    //grid of blocks
-    new_panels(rows){
-      const size   = COLS * rows;
-      const panels = new Array(size);
-      for (let i = 0, end = size, asc = 0 <= end; asc ? i < end : i > end; asc ? i++ : i--) {
-        const [x,y] = Array.from(_f.i_2_xy(i));
-        panels[i] = new ComponentPanel();
-        panels[i].create(this, x, y);
+    create_panels(rows){
+      const size = COLS * (rows + (this.should_push ? 1 : 0 ));
+
+      for (let i = 0; i < size; i++){
+        const [x,y] = Array.from(_f.i_2_xy(i))
+        this.stack[i] = new ComponentPanel()
+        this.stack[i].create(this, x, y)
       }
-      return panels;
     }
-    fill_panels(newline, stack, rows, mode=null){
-      let i, offset;
-      if (Array.isArray(rows)) {
-        const data    = rows;
-        offset  = (ROWS - (data.length / COLS)) * COLS;
+    fill_panels(data){
+      const offset = (ROWS - (data.length / COLS)) * COLS
 
-        return (() => {
-          const result = [];
-          for (i = 0; i < data.length; i++) {
-            const color = data[i];
-            result.push(stack[offset+i].set(color));
-          }
-          return result;
-        })();
-      } else {
-        offset = ((stack.length / COLS) - rows) * COLS;
-
-        const size = rows * COLS;
-        return (() => {
-          let asc, end;
-          const result1 = [];
-          for (i = offset, end = offset+size, asc = offset <= end; asc ? i < end : i > end; asc ? i++ : i--) {
-            switch (mode) {
-              case 'unique': stack[i].set('unique'); break;
-              default:
-                stack[i].set(mode[i]);
-            }
-            if (newline) {
-              stack[i].newline = true;
-              result1.push(stack[i].play_newline());
-            } else {
-              result1.push(undefined);
-            }
-          }
-          return result1;
-        })();
+      for (let i = 0; i < data.length; i++) {
+        this.stack[offset+i].set(data[i])
       }
     }
     update_panels() {
-      return Array.from(SCAN_BTLR).map((i) =>
-        this.stack[i].update(i, this.is_danger(1)));
+      for (let i in SCAN_BTLR){
+        this.stack[i].update(i, this.is_danger(1))
+      }
     }
     // Update the combos and chain for the entire grid.
     // Returns [combo, chain] where
@@ -283,9 +247,12 @@ module.exports = function(game){
     }
     is_danger(within){
       const offset = COLS*within;
-      const cols  = [];
-      for (let i = 0, end = COLS, asc = 0 <= end; asc ? i < end : i > end; asc ? i++ : i--) {
-        if (this.stack[offset+i] && (this.stack[offset+i].i >= 0) && (this.stack[offset+i].i !== null)) {
+      const cols   = [];
+
+      for (let i = 0; i < COLS; i++){
+        if (this.stack[offset+i]         &&
+           (this.stack[offset+i].i >= 0) &&
+           (this.stack[offset+i].i !== null)) {
           cols.push(i);
         }
       }
@@ -310,7 +277,7 @@ module.exports = function(game){
       }
     }
     track_panel(panel,name,v){
-      if ((this.tick >= 0) && (panel.newline !== true)) {
+      if ((this.tick >= 0) && (panel.newline() !== true)) {
         const i = _f.xy_2_i(panel.x, panel.y);
         if (!this.history) { this.history = {}; }
         if (!this.history[`${this.tick}`]) { this.history[`${this.tick}`] = []; }
@@ -382,13 +349,10 @@ module.exports = function(game){
         //console.log('Score: ', this.score);
       }
     }
-    update_stack() {
-      return Array.from(this.stack).map((panel) =>
-        panel.render());
-    }
-    update_newline() {
-      return Array.from(this.newline).map((panel) =>
-        panel.render(true));
+    render_stack() {
+      for (let panel of this.stack){
+        panel.render()
+      }
     }
     panel_i(i){
       if (this.stack[i] && (this.stack[i].i !== null)) {
@@ -398,8 +362,7 @@ module.exports = function(game){
       }
     }
     render() {
-      this.update_stack();
-      if (this.should_push) { this.update_newline(); }
+      this.render_stack();
       if (this.land === true) {
         const i = game.rnd.integerInRange(0,3);
         this.sfx_land[i].play();

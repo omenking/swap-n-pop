@@ -1,7 +1,7 @@
 module.exports = function(game){
-  const {VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH} = require('./../core/data')
-  const ComponentMenu = require('./../components/menu')(game)
-
+  const APP = require('swap-n-pop_app')
+  const {VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH} = require(APP.path.core('data'))
+  const ComponentMenu = require(APP.path.components('menu'))(game)
   class controller {
     constructor() {
       console.log('compiled states menu')

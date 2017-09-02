@@ -1,5 +1,6 @@
 module.exports = function(game){
-  const {UNIT, MENUCURSORBLINK} = require('./../core/data')
+  const APP = require('swap-n-pop_app')
+  const {UNIT, MENUCURSORBLINK} = require(APP.path.core('data'))
   class controller {
     constructor() {
       this.create = this.create.bind(this);
@@ -16,8 +17,6 @@ module.exports = function(game){
       this.x = x;
       this.y = y;
       this.menu_items = menu_items;
-      this.sfx_confirm = game.add.audio('sfx_confirm');
-      this.sfx_select  = game.add.audio('sfx_select');
 
       this.counter = 0;
       this.index  = 0;
@@ -39,7 +38,7 @@ module.exports = function(game){
     up(tick) {
       if (tick > 0) { return }
       if (this.index !== 0) {
-        this.sfx_select.play();
+        game.sounds.select()
         this.counter = 0;
         this.sprite.visible = true;
         return this.index--;
@@ -48,7 +47,7 @@ module.exports = function(game){
     down(tick) {
       if (tick > 0) { return }
       if (this.index !== (this.menu_items.length-1)) {
-        this.sfx_select.play();
+        game.sounds.select()
         this.counter = 0;
         this.sprite.visible = true;
         return this.index++;
@@ -56,7 +55,7 @@ module.exports = function(game){
     }
     confirm(tick) {
       if (tick > 0) { return }
-      this.sfx_confirm.play();
+      game.sounds.confirm()
       return this.menu_items[this.index]();
     }
     cancel(tick) {

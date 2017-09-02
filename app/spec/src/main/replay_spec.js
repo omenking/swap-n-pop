@@ -1,10 +1,11 @@
+const APP = require('swap-n-pop_app')
 const fs   = require('fs')
 const chai = require('chai')
 chai.should()
 
 const path      = require('path')
-const root_path = path.join(__dirname,'..','..')
-const Replay    = require(path.join(root_path,'src','main','replay'))(root_path)
+const root_path = APP.path.root()
+const Replay    = require(APP.path.main('replay'))(root_path)
 
 describe('replay.save(name,inputs)' ,function(){
   var filename = null;

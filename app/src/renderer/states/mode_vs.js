@@ -1,8 +1,10 @@
 module.exports = function(game){
-  const Stack = require('./../core/stack')(game)
-  const ComponentPlayfield = require('./../components/playfield')(game)
+  const APP = require('swap-n-pop_app')
+  const Stack = require(APP.path.core('stack'))(game)
+  const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
+
   class controller {
     constructor() {
       this.init   = this.init.bind(this);
@@ -21,6 +23,10 @@ module.exports = function(game){
       this.shutdown = this.shutdown.bind(this);
       this.playfield1 = new ComponentPlayfield(0);
       this.playfield2 = new ComponentPlayfield(1);
+    }
+
+    static initClass() {
+      this.prototype.rng = null
     }
     init(data){
       this.tick = -1
@@ -198,6 +204,7 @@ module.exports = function(game){
       this.playfield1.shutdown();
     }
   }
+  controller.initClass();
 
   return controller
 }

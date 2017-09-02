@@ -1,4 +1,5 @@
 module.exports = function(game){
+  const APP = require('swap-n-pop_app')
   const {
     UNIT,
     SWAP,
@@ -21,14 +22,14 @@ module.exports = function(game){
     TIME_CLEAR,
     TIME_POP,
     TIME_FALL
-  } = require('./../core/data')
-  const _f = require('./../core/filters')
+  } = require(APP.path.core('data'))
+  const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
 
   class controller {
     constructor() {
-      this.get_data = this.get_data.bind(this);
-      this.load_data = this.load_data.bind(this);
+      this.serialize = this.serialize.bind(this);
+      this.deserialize = this.deserialize.bind(this);
       this.create = this.create.bind(this);
       this.set_blank = this.set_blank.bind(this);
       this.is_swappable = this.is_swappable.bind(this);
@@ -53,6 +54,7 @@ module.exports = function(game){
       this.set = this.set.bind(this);
       this.update_state = this.update_state.bind(this);
       this.render = this.render.bind(this);
+      this.render_visible = this.render_visible.bind(this);
       this.fall = this.fall.bind(this);
       this.swap = this.swap.bind(this);
       this.erase = this.erase.bind(this);
@@ -82,32 +84,35 @@ module.exports = function(game){
       this.prototype.sprite             = null;
       this.prototype.i                  = null;
     }
-    get_data() {
+    serialize() {
       return [
-        this.x,this.y,this.i,this.state,
-        this.sprite.frame,this.sprite.visible,
-        this.chain,this.counter,this.counter_popping,
-        this.clearing,this.danger,this.newline,
-        this.animation_state,this.animation_counter
+        this.x,
+        this.y,
+        this.i,
+        this.state,
+        this.chain,
+        this.counter,
+        this.counter_popping,
+        this.animation_state,
+        this.animation_counter
       ];
     }
-    load_data(tick){
-      const i = _f.xy_2_i;
-      const data = this.playfield.stage.replay[this.playfield][this.pi-1][tick].stack[i];
-      this.x                 = data[0];
-      this.y                 = data[1];
-      this.i                 = data[2];
-      this.state             = data[3];
-      this.sprite.frame      = data[4];
-      this.sprite.visible    = data[5];
-      this.chain             = data[6];
-      this.counter           = data[7];
-      this.counter_popping   = data[8];
-      this.clearing          = data[9];
-      this.danger            = data[10];
-      this.newline           = data[11];
-      this.animation_state   = data[12];
-      return this.animation_counter = data[13];
+    deserialize(data){
+      this.x                 = data[0]
+      this.y                 = data[1]
+      this.i                 = data[2]
+      this.state             = data[3]
+      this.chain             = data[4]
+      this.counter           = data[5]
+      // maybe we can infer these 3 if we reorganize our code
+      this.counter_popping   = data[6]
+      this.animation_state   = data[7]
+      this.animation_counter = data[8]
+
+      //we need to infer these
+      //this.sprite.frame      = data[4]
+      //this.sprite.visible    = data[5]
+      //this.danger            = data[10]
     }
     create(playfield, x, y, blank){
       this.playfield = playfield;
@@ -120,8 +125,7 @@ module.exports = function(game){
       if (blank) { this.set_blank(); }
 
       this.sprite = game.make.sprite(0, 0, 'panels', this.frame(0));
-      this.sprite.visible  = false;
-      return this.playfield.layer_block.add(this.sprite);
+      this.playfield.layer_block.add(this.sprite);
     }
 
     // A blank block will see itself as its neighbors.
@@ -129,16 +133,17 @@ module.exports = function(game){
     // of STATIC.
     // The blank is used on the outer edges of the grid.
     set_blank() {
-      this.x                 = null;
-      this.y                 = null;
-      this.under             = this;
-      this.above             = this;
-      this.left              = this;
-      this.right             = this;
-      this.set_state(STATIC);
-      this.set_counter(0);
-      this.animation_state   = null;
-      return this.animation_counter = 0;
+      this.blank             = true
+      this.x                 = null
+      this.y                 = null
+      this.under             = this
+      this.above             = this
+      this.left              = this
+      this.right             = this
+      this.set_state(STATIC)
+      this.set_counter(0)
+      this.animation_state   = null
+      this.animation_counter = 0
     }
     is_swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
     is_support() {   return (this.state !== FALL) && ((this.i !== null) || (this.playfield.blank === this)); }
@@ -146,19 +151,19 @@ module.exports = function(game){
     is_comboable() {  return this.is_clearable() || ((this.state === CLEAR) && this.clearing); }
     is_empty() {      return (this.counter === 0) && (this.i === null) && (this !== this.playfield.blank); }
     set_state(v){
-      this.playfield.track_panel(this, 'state', v);
+      //this.playfield.track_panel(this, 'state', v);
       return this.state = v;
     }
     set_i(v){
-      this.playfield.track_panel(this, 'i', v);
+      //this.playfield.track_panel(this, 'i', v);
       return this.i = v;
     }
     set_counter(v){
-      this.playfield.track_panel(this, 'counter', v);
+      //this.playfield.track_panel(this, 'counter', v);
       return this.counter = v;
     }
     set_chain(v){
-      this.playfield.track_panel(this, 'chain', v);
+      //this.playfield.track_panel(this, 'chain', v);
       return this.chain = v;
     }
     matched(i){
@@ -196,7 +201,7 @@ module.exports = function(game){
     play_dead() {    return this.sprite.animations.play('dead'); }
     play_danger() {  return this.sprite.animations.play('danger', game.time.desiredFps/3, true); }
     play_newline() { return this.sprite.animations.play('newline'); }
-    
+
     set_animation() {
       this.sprite.frame = this.frame(0);
       this.sprite.animations.add('land'   , this.frames(FRAME_LAND));
@@ -204,7 +209,7 @@ module.exports = function(game){
       this.sprite.animations.add('live'   , this.frames(FRAME_LIVE));
       this.sprite.animations.add('danger' , this.frames(FRAME_DANGER));
       this.sprite.animations.add('dead'   , this.frames(FRAME_DEAD));
-      return this.sprite.animations.add('newline', this.frames(FRAME_NEWLINE));
+      this.sprite.animations.add('newline', this.frames(FRAME_NEWLINE));
     }
     set(i){
       switch (i) {
@@ -214,24 +219,16 @@ module.exports = function(game){
         default:
           this.set_i(i);
       }
-
-      if (this.i !== null) {
-        this.sprite.visible = true;
-      }
       return this.set_animation();
     }
-    // Update the current state of this block based on its own state, and the
-    // states of its neighbors.
-    // Will keep its current state it its counter is still running.
-    // Block behaviour should be described in the wiki
     update_state(i){
+      if (this.blank)      { return; } //blank sprite
       if (this.i === null) { return; }
-      if (this.newline) { return; }
+      if (this.newline())    { return; }
       if (this.counter_popping > 0) {
         this.counter_popping--;
       } else if (this.counter_popping === 0) {
         this.counter_popping = null;
-        this.sprite.visible = false;
       }
 
       if (this.counter > 0) {
@@ -243,11 +240,7 @@ module.exports = function(game){
       /* Run through the state switch to determine behaviour */
       switch (this.state) {
         case STATIC: case SWAP:
-          if (!this.sprite) {
-            this.set_state(STATIC);
-            this.set_chain(false);
-            return;
-          } else if (this.under === this.playfield.blank) {
+          if (this.under === this.playfield.blank) {
             this.set_state(STATIC);
             this.set_chain(false);
           } else if (this.under.state === HANG) {
@@ -255,7 +248,6 @@ module.exports = function(game){
             this.set_counter(this.under.counter);
             this.set_chain(this.under.chain);
           } else if (this.under.is_empty()) {
-            //console.log('undercheck', this.x, this.y, this.chain);
             this.set_state(HANG);
           } else {
             this.set_chain(false);
@@ -287,16 +279,10 @@ module.exports = function(game){
       }
     }
 
-
-
-    // Set the block sprite to the correct rendering location,
-    // keeping animations and offsets in mind.
-    // optional nextLine boolean determines if the block should be in the grid
-    // or in the bottom line still being added.
-    render(newline){
+    render(){
       if (!this.sprite) { return; }
       this.sprite.x = this.x * UNIT;
-      if (newline) {
+      if (this.newline()) {
         return this.sprite.y = ROWS * UNIT;
       } else {
         const y = this.playfield.should_push ? this.y : this.y+1;
@@ -311,23 +297,28 @@ module.exports = function(game){
             return this.sprite.x -= step * this.animation_counter;
         }
       }
-    }
-    // This block will give its state and sprite to the block under it and then
-    // reset to an empty block.
-    fall() {
-      this.under.set_state(this.state);
-      this.under.set_counter(this.counter);
-      this.under.set_chain(this.chain);
-      this.under.set_i(this.i);
-      this.under.set_animation();
-      this.under.sprite.frame   = this.sprite.frame;
-      this.under.sprite.visible = true;
 
-      this.set_state(STATIC);
-      this.set_counter(0);
-      this.set_chain(false);
-      this.set_i(null);
-      return this.sprite.visible = false;
+      this.render_visible()
+    }
+    render_visible(){
+      if (this.i === null || this.counter_popping === 0){
+        this.sprite.visible = false
+      } else {
+        this.sprite.visible = true
+      }
+    }
+    fall() {
+      this.under.set_state(this.state)
+      this.under.set_counter(this.counter)
+      this.under.set_chain(this.chain)
+      this.under.set_i(this.i)
+      this.under.set_animation()
+      this.under.sprite.frame   = this.sprite.frame
+
+      this.set_state(STATIC)
+      this.set_counter(0)
+      this.set_chain(false)
+      this.set_i(null)
     }
     // Swap this block with its right neighbour.
     swap() {
@@ -342,9 +333,6 @@ module.exports = function(game){
       const d2 = this.right.danger;
       this.danger       = d2;
       this.right.danger = d1;
-
-      this.sprite.visible       = this.i       !== null;
-      this.right.sprite.visible = this.right.i !== null;
 
       this.set_animation();
       this.right.set_animation();
@@ -382,7 +370,6 @@ module.exports = function(game){
     erase() {
       this.playfield.track_tick();
       this.set_i(null);
-      this.sprite.visible = false;
       this.set_state(STATIC);
       this.set_counter(0);
       this.set_chain(false);
@@ -409,8 +396,11 @@ module.exports = function(game){
     nocombo() {
       let values = ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng());
       return this.i = values.find((i)=> {
-        return this.matched(i) === false;
+        return this.matched(i) === false
       })
+    }
+    newline(){
+      return this.should_push && this.x === 0
     }
     chain_and_combo() {
       let combo = 0;
@@ -442,10 +432,10 @@ module.exports = function(game){
       }
     }
     update_neighbours(i){
-      this.left  = ((i+1) % COLS) === 1   ? this.playfield.blank : this.playfield.stack[i-1];
-      this.right = ((i+1) % COLS) === 0   ? this.playfield.blank : this.playfield.stack[i+1];
-      this.under = (i+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[i+COLS];
-      return this.above = (i+1) <= COLS   ? this.playfield.blank : this.playfield.stack[i-COLS];
+      this.left  = ((i+1) % COLS) === 1   ? this.playfield.blank : this.playfield.stack[i-1]
+      this.right = ((i+1) % COLS) === 0   ? this.playfield.blank : this.playfield.stack[i+1]
+      this.under = (i+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[i+COLS]
+      this.above = (i+1) <= COLS          ? this.playfield.blank : this.playfield.stack[i-COLS]
     }
     update(i,is_danger){
       if (!this.playfield.running) { return; }
@@ -462,11 +452,11 @@ module.exports = function(game){
         this.danger = false;
       }
 
-      this.update_neighbours(i);
-
-      this.update_state(i);
-      this.x = x;
-      return this.y = y;
+      console.log("BLANK",this.playfield.blank)
+      this.update_neighbours(i)
+      this.update_state(i)
+      this.x = x
+      this.y = y
     }
   }
   controller.initClass();
