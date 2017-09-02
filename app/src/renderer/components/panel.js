@@ -27,6 +27,7 @@ module.exports = function(game){
   const ss = require('shuffle-seed')
 
   class controller {
+    get [Symbol.toStringTag](){ return 'Panel' }
     constructor() {
       this.serialize = this.serialize.bind(this);
       this.deserialize = this.deserialize.bind(this);
@@ -224,7 +225,7 @@ module.exports = function(game){
     update_state(i){
       if (this.blank)      { return; } //blank sprite
       if (this.i === null) { return; }
-      if (this.newline())    { return; }
+      if (this.newline())  { return; }
       if (this.counter_popping > 0) {
         this.counter_popping--;
       } else if (this.counter_popping === 0) {
@@ -283,10 +284,10 @@ module.exports = function(game){
       if (!this.sprite) { return; }
       this.sprite.x = this.x * UNIT;
       if (this.newline()) {
-        return this.sprite.y = ROWS * UNIT;
+        this.sprite.y = this.y * UNIT
       } else {
-        const y = this.playfield.should_push ? this.y : this.y+1;
-        this.sprite.y = y * UNIT;
+        //const y = this.playfield.should_push ? this.y : this.y+1;
+        this.sprite.y = this.y * UNIT
         if (this.animation_counter <= 0) { this.animation_state = null; }
         if (this.animation_counter > 0) { this.animation_counter--; }
         switch (this.animation_state) {
@@ -400,7 +401,7 @@ module.exports = function(game){
       })
     }
     newline(){
-      return this.should_push && this.x === 0
+      return this.playfield.should_push && this.x === 0
     }
     chain_and_combo() {
       let combo = 0;
@@ -452,7 +453,6 @@ module.exports = function(game){
         this.danger = false;
       }
 
-      console.log("BLANK",this.playfield.blank)
       this.update_neighbours(i)
       this.update_state(i)
       this.x = x

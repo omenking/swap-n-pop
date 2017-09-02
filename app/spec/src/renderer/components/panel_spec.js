@@ -10,6 +10,13 @@ const Panel               = require(APP.path.components('panel'))(game)
 
 
 describe('Panel', function() {
+  describe('#class_name' ,function(){
+    it('should be type of Panel', function(){
+      const panel = new Panel()
+      panel.should.be.a('Panel')
+    })
+  })
+
   describe('#deserialize()' ,function(){
     it('should be able to deserialize', function(){
       const data = [10,0,1,STATIC,     // x,y,kind,state
@@ -32,5 +39,8 @@ describe('Panel', function() {
       panel.update_state(index)
       panel.state.should.eql(FALL)
     })
+  })
+
+  describe('#chain_and_combo()' ,function(){
   })
 }) //klass

@@ -17,6 +17,7 @@ module.exports = function(game){
   } = require(APP.path.core('data'))
 
   class controller {
+    get [Symbol.toStringTag](){ return 'Playfield' }
     static initClass() {
       this.prototype.history = {};
       this.prototype.pi          = null  // player number, used to detect input
@@ -42,6 +43,7 @@ module.exports = function(game){
         throw new Error("player_number present and must be 0 or 1")
       }
 
+      this.stack_size = this.stack_size.bind(this);
       this.get_data = this.get_data.bind(this);
       this.create = this.create.bind(this);
       this.create_after = this.create_after.bind(this);
@@ -54,6 +56,7 @@ module.exports = function(game){
       this.create_panels = this.create_panels.bind(this);
       this.fill_panels = this.fill_panels.bind(this);
       this.update_panels = this.update_panels.bind(this);
+      this.update_neighbours = this.update_neighbours.bind(this);
       this.update_chain_and_combo = this.update_chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.chain_over = this.chain_over.bind(this);
@@ -129,13 +132,17 @@ module.exports = function(game){
       this.stack = []
       this.create_panels(ROWS)
       this.fill_panels(data)
+      this.update_neighbours()
+    }
 
-      // seems like this shouldn't be needed here
+    update_neighbours(){
       for (let i = 0; i < this.stack.length; i++){
         this.stack[i].update_neighbours(i)
       }
     }
-
+    stack_size(){
+      return this.should_push ? this.stack.length-COLS : this.stack.length
+    }
     push() {
       let i;
       if (this.is_danger(0)) {
@@ -214,7 +221,7 @@ module.exports = function(game){
       let combo = 0;
       let chain = false;
       this.panels_clearing = [];
-      for (i = 0; i < this.stack.length; i++) {
+      for (i = 0; i < this.stack_size; i++) {
         panel = this.stack[i];
         const cnc    = panel.chain_and_combo();
         combo += cnc[0];
