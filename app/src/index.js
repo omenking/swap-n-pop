@@ -4,6 +4,7 @@ function attach_state(klass){
     init:     state.init,
     create:   state.create,
     update:   state.update,
+    render:   state.render,
     shutdown: state.shutdown
   }
 }

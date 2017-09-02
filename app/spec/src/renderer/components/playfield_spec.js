@@ -77,12 +77,37 @@ describe('Playfield', function() {
     beforeEach(function(){
       stage = new Stage()
       stage.init({seed: 'test'})
-      stack = new Stack(stage.rng)
       playfield = new Playfield(0)
     })
-    it('should create stack of 72 with push', function(){
-      playfield.create(stage,{push: true, x: 0, y: 0, panels: stack.panels})
-      playfield.stack.length.should.eql(72)
+    it('should fill panels', function(){
+      playfield.create(stage,{push: true, x: 0, y: 0, panels: [1,2,3,4,null,1]})
+
+      //for(let panel of playfield.stack){
+        //let i = playfield.stack.indexOf(panel)
+        //console.log(i,panel.serialize())
+      //}
+
+      playfield.stack[60].kind.should.eql(1)
+      playfield.stack[61].kind.should.eql(2)
+      playfield.stack[62].kind.should.eql(3)
+      playfield.stack[63].kind.should.eql(4)
+      playfield.stack[65].kind.should.eql(1)
     })
+  })
+
+  describe('#update_stack()' ,function(){
+    let stage     = null
+    let stack     = null
+    let playfield = null
+    beforeEach(function(){
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: true, x: 0, y: 0, panels: [1,2,3,4,null,1]})
+    })
+    it('should work', function(){
+      playfield.update_stack()
+    })
+
   })
 }) //klass

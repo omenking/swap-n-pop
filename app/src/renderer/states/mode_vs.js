@@ -7,10 +7,14 @@ module.exports = function(game){
 
   class controller {
     constructor() {
-      this.init   = this.init.bind(this);
+      this.init     = this.init.bind(this)
+      this.create   = this.create.bind(this)
+      this.update   = this.update.bind(this)
+      this.render   = this.render.bind(this)
+      this.shutdown = this.shutdown.bind(this)
+
       this.create_bg = this.create_bg.bind(this);
       this.create_frame = this.create_frame.bind(this);
-      this.create = this.create.bind(this);
       this.stage_music = this.stage_music.bind(this);
       this.pause = this.pause.bind(this);
       this.resume = this.resume.bind(this);
@@ -19,8 +23,6 @@ module.exports = function(game){
       this.update_input = this.update_input.bind(this);
       this.replay_input = this.replay_input.bind(this);
       this.update_replay = this.update_replay.bind(this);
-      this.update = this.update.bind(this);
-      this.shutdown = this.shutdown.bind(this);
       this.playfield1 = new ComponentPlayfield(0);
       this.playfield2 = new ComponentPlayfield(1);
     }
@@ -190,21 +192,21 @@ module.exports = function(game){
     update() {
       this.tick++;
       game.controls.update()
-      this.playfield1.update();
-      this.playfield2.update();
-
-      this.danger_check();
-
-      this.playfield1.render();
-      this.playfield2.render();
-      this.update_replay();
+      this.playfield1.update()
+      this.playfield2.update()
+      this.danger_check()
+      this.update_replay()
+    }
+    render(){
+      if (this.playfield1) { this.playfield1.render() }
+      if (this.playfield2) { this.playfield2.render() }
     }
     shutdown() {
-      this.stage_music('none');
-      this.playfield1.shutdown();
+      this.stage_music('none')
+      this.playfield1.shutdown()
     }
   }
-  controller.initClass();
+  controller.initClass()
 
   return controller
 }

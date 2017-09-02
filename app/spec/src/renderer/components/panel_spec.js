@@ -41,6 +41,12 @@ describe('Panel', function() {
     })
   })
 
+  describe('#update_neighbours()' ,function(){
+    it('should work', function(){
+      const panel = new Panel()
+    }
+  })
+
   describe('#chain_and_combo()' ,function(){
   })
 }) //klass

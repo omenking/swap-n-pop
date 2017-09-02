@@ -59,6 +59,8 @@ module.exports = function(game){
         }
       }
     }
+    render(){
+    }
   }
 
   return controller

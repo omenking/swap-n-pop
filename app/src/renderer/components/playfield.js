@@ -42,10 +42,13 @@ module.exports = function(game){
       if (pi !== 0 && pi !== 1){ 
         throw new Error("player_number present and must be 0 or 1")
       }
+      this.create   = this.create.bind(this)
+      this.update   = this.update.bind(this)
+      this.render   = this.render.bind(this)
+      this.shutdown = this.shutdown.bind(this)
 
       this.stack_size = this.stack_size.bind(this);
       this.get_data = this.get_data.bind(this);
-      this.create = this.create.bind(this);
       this.create_after = this.create_after.bind(this);
       this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
@@ -55,7 +58,7 @@ module.exports = function(game){
       this.create_newline = this.create_newline.bind(this);
       this.create_panels = this.create_panels.bind(this);
       this.fill_panels = this.fill_panels.bind(this);
-      this.update_panels = this.update_panels.bind(this);
+      this.update_stack = this.update_stack.bind(this);
       this.update_neighbours = this.update_neighbours.bind(this);
       this.update_chain_and_combo = this.update_chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
@@ -68,8 +71,6 @@ module.exports = function(game){
       this.score_current = this.score_current.bind(this);
       this.render_stack = this.render_stack.bind(this);
       this.panel_i = this.panel_i.bind(this);
-      this.update = this.update.bind(this);
-      this.shutdown = this.shutdown.bind(this);
       this.pi = pi;
       this.menu_pause = new ComponentMenuPause();
       this.countdown  = new ComponentPlayfieldCountdown();
@@ -126,11 +127,10 @@ module.exports = function(game){
       this.cursor.create(this, {ai: this.has_ai});
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.menu_pause.create(this)
-      this.render() // might not be necessary since it gets call at end of frame
     }
     create_stack(data){
       this.stack = []
-      this.create_panels(ROWS)
+      this.create_panels()
       this.fill_panels(data)
       this.update_neighbours()
     }
@@ -149,10 +149,11 @@ module.exports = function(game){
         this.stage.game_over();
         return 0;
       }
+      console.log('pushing')
 
       // move all panels up the stack
-      const stack = new Array(PANELS);
-      for (i = COLS; i < PANELS; i++) {
+      const stack = new Array(this.stack.length);
+      for (i = COLS; i < this.stack.length; i++) {
         stack[i-COLS] = this.stack[i];
       }
 
@@ -164,14 +165,15 @@ module.exports = function(game){
     }
     create_newline(mode){
       if (!this.should_push) { return; }
+      const rows = (ROWS + (this.should_push ? 1 : 0 ))
 
       for (let i = PANELS; i < PANELS+COLS; i++){
-        const [x,y] = Array.from(_f.i_2_xy(i))
+        const [x,y] = Array.from(_f.i2xy(i))
         this.stack[i] = new ComponentPanel()
         this.stack[i].create(this, x, y)
       }
       for (let i = PANELS; i < PANELS+COLS; i++){
-        stack[i].set('unique')
+        this.stack[i].set('unique')
       }
     }
     pause(pi){
@@ -185,16 +187,16 @@ module.exports = function(game){
     game_over() {
       let i, panel;
       const is_dead = this.is_danger(0);
-      for (i = 0; i < this.stack.length; i++) { panel = this.stack[i]; panel.check_dead(i, is_dead); }
-      for (i = 0; i < this.newline.length; i++) { panel = this.newline[i]; panel.check_dead(i, is_dead); }
+      for (i = 0; i < this.stack.length; i++) { this.stack[i].check_dead(i, is_dead); }
       this.running = false;
       this.pushCounter = 0;
     }
-    create_panels(rows){
-      const size = COLS * (rows + (this.should_push ? 1 : 0 ));
+    create_panels(){
+      const rows = (ROWS + (this.should_push === true ? 1 : 0 ))
+      const size = COLS * rows
 
       for (let i = 0; i < size; i++){
-        const [x,y] = Array.from(_f.i_2_xy(i))
+        const [x,y] = Array.from(_f.i2xy(i))
         this.stack[i] = new ComponentPanel()
         this.stack[i].create(this, x, y)
       }
@@ -205,9 +207,15 @@ module.exports = function(game){
       for (let i = 0; i < data.length; i++) {
         this.stack[offset+i].set(data[i])
       }
+
+      if (this.should_push){
+        for (let i = PANELS; i < PANELS+COLS; i++){
+          this.stack[i].set('unique')
+        }
+      }
     }
-    update_panels() {
-      for (let i in SCAN_BTLR){
+    update_stack() {
+      for (let i of SCAN_BTLR){
         this.stack[i].update(i, this.is_danger(1))
       }
     }
@@ -235,11 +243,10 @@ module.exports = function(game){
       if (this.chain && this.chain_over()) { this.chain = 0; }
       return [combo, chain];
     }
-    // Swaps two blocks at location (x,y) and (x+1,y) if swapping is possible
     swap(x, y){
-      const i = _f.xy_2_i(x, y);
+      const i = _f.xy2i(x,y)
       if (this.stack[i].is_swappable() && this.stack[i+1].is_swappable()) {
-        return this.stack[i].swap();
+        this.stack[i].swap()
       }
     }
     // Checks if the current chain is over.
@@ -285,7 +292,7 @@ module.exports = function(game){
     }
     track_panel(panel,name,v){
       if ((this.tick >= 0) && (panel.newline() !== true)) {
-        const i = _f.xy_2_i(panel.x, panel.y);
+        const i = _f.xy2i(panel.x, panel.y);
         if (!this.history) { this.history = {}; }
         if (!this.history[`${this.tick}`]) { this.history[`${this.tick}`] = []; }
         if (!this.history[`${this.tick}`][i]) { this.history[`${this.tick}`][i] = []; }
@@ -369,41 +376,40 @@ module.exports = function(game){
       }
     }
     render() {
-      this.render_stack();
-      if (this.land === true) {
-        const i = game.rnd.integerInRange(0,3);
-        this.sfx_land[i].play();
-        this.land = false;
-      }
-
-      this.cursor.update();
-      this.countdown.update();
-      this.menu_pause.update();
-
-      this.score_lbl.update(this.chain, this.score);
+      this.render_stack()
 
       if (this.should_push) {
         const lift = this.y + ((this.pushCounter / this.pushTime) * UNIT);
         this.layer_block.y  = lift;
-        return this.layer_cursor.y = lift;
+        this.layer_cursor.y = lift;
       }
     }
     update() {
+      this.countdown.update()
+      this.cursor.update()
+      this.menu_pause.update()
+      this.score_lbl.update(this.chain, this.score)
+
       if (!this.running) { return; }
-      //this.print_tick();
       if (this.should_push) { this.tick_push(); }
-      this.update_panels();
+      this.update_stack()
       if (this.has_ai) { this.ai.update(); }
       // combo n chain
       const cnc = this.update_chain_and_combo();
       this.score_current(cnc);
-      this.render();
+
+      if (this.land === true) {
+        game.sounds.land()
+        this.land = false
+      }
+
+
     }
     shutdown() {
-      return this.cursor.shutdown();
+      return this.cursor.shutdown()
     }
   }
-  controller.initClass();
+  controller.initClass()
 
   return controller
 }

@@ -28,21 +28,35 @@ module.exports = function(game){
 
   class controller {
     get [Symbol.toStringTag](){ return 'Panel' }
+    get kind(){ return this.i }
+    get counter()  {return this.attr_counter }
+    set counter(val) {
+      //this.playfield.track_panel(this, 'counter', v);
+      this.attr_counter = val
+    }
+
     constructor() {
+      this.create   = this.create.bind(this)
+      this.update   = this.update.bind(this)
+      this.render   = this.render.bind(this)
+      this.shutdown = this.shutdown.bind(this)
+
       this.serialize = this.serialize.bind(this);
       this.deserialize = this.deserialize.bind(this);
-      this.create = this.create.bind(this);
       this.set_blank = this.set_blank.bind(this);
+
       this.is_swappable = this.is_swappable.bind(this);
       this.is_support = this.is_support.bind(this);
       this.is_clearable = this.is_clearable.bind(this);
       this.is_comboable = this.is_comboable.bind(this);
       this.is_empty = this.is_empty.bind(this);
+
       this.set_state = this.set_state.bind(this);
       this.set_i = this.set_i.bind(this);
-      this.set_counter = this.set_counter.bind(this);
       this.set_chain = this.set_chain.bind(this);
+
       this.matched = this.matched.bind(this);
+
       this.frames = this.frames.bind(this);
       this.frame = this.frame.bind(this);
       this.play_land = this.play_land.bind(this);
@@ -52,9 +66,9 @@ module.exports = function(game){
       this.play_danger = this.play_danger.bind(this);
       this.play_newline = this.play_newline.bind(this);
       this.set_animation = this.set_animation.bind(this);
+
       this.set = this.set.bind(this);
       this.update_state = this.update_state.bind(this);
-      this.render = this.render.bind(this);
       this.render_visible = this.render_visible.bind(this);
       this.fall = this.fall.bind(this);
       this.swap = this.swap.bind(this);
@@ -66,7 +80,6 @@ module.exports = function(game){
       this.check_neighbours = this.check_neighbours.bind(this);
       this.check_dead = this.check_dead.bind(this);
       this.update_neighbours = this.update_neighbours.bind(this);
-      this.update = this.update.bind(this);
     }
 
     static initClass() {
@@ -78,7 +91,6 @@ module.exports = function(game){
       this.prototype.under              = null;
       this.prototype.left               = null;
       this.prototype.right              = null;
-      this.prototype.counter            = 0; //counter ie exclusivly used to count down time until clear.
       this.prototype.animation_state    = null;
       this.prototype.animation_counter  = 0;
       this.prototype.chain              = null;
@@ -117,15 +129,17 @@ module.exports = function(game){
     }
     create(playfield, x, y, blank){
       this.playfield = playfield;
+      this.counter = 0
+      this.i = null
       this.x = x;
       this.y = y;
       if (blank == null) { blank = false; }
-      this.danger = false;
       this.set_state(STATIC);
       this.set_chain(false);
       if (blank) { this.set_blank(); }
 
       this.sprite = game.make.sprite(0, 0, 'panels', this.frame(0));
+      this.sprite.visible = false
       this.playfield.layer_block.add(this.sprite);
     }
 
@@ -135,6 +149,7 @@ module.exports = function(game){
     // The blank is used on the outer edges of the grid.
     set_blank() {
       this.blank             = true
+      this.i = null
       this.x                 = null
       this.y                 = null
       this.under             = this
@@ -142,7 +157,7 @@ module.exports = function(game){
       this.left              = this
       this.right             = this
       this.set_state(STATIC)
-      this.set_counter(0)
+      this.counter =  0
       this.animation_state   = null
       this.animation_counter = 0
     }
@@ -159,16 +174,12 @@ module.exports = function(game){
       //this.playfield.track_panel(this, 'i', v);
       return this.i = v;
     }
-    set_counter(v){
-      //this.playfield.track_panel(this, 'counter', v);
-      return this.counter = v;
-    }
     set_chain(v){
       //this.playfield.track_panel(this, 'chain', v);
       return this.chain = v;
     }
     matched(i){
-      const pos = _f.xy_2_i(this.x, this.y);
+      const pos = _f.xy2i(this.x, this.y);
 
       const left  = this.playfield.panel_i(pos-1);
       const right = this.playfield.panel_i(pos+1);
@@ -225,7 +236,7 @@ module.exports = function(game){
     update_state(i){
       if (this.blank)      { return; } //blank sprite
       if (this.i === null) { return; }
-      if (this.newline())  { return; }
+      if (this.newline)    { return; }
       if (this.counter_popping > 0) {
         this.counter_popping--;
       } else if (this.counter_popping === 0) {
@@ -233,10 +244,8 @@ module.exports = function(game){
       }
 
       if (this.counter > 0) {
-        //if @x is 2 && @y is 9
-          //console.log "counter--", i
-        this.counter--;
-        if (this.counter > 0) { return; }
+        this.counter--
+        if (this.counter > 0) { return }
       }
       /* Run through the state switch to determine behaviour */
       switch (this.state) {
@@ -246,7 +255,7 @@ module.exports = function(game){
             this.set_chain(false);
           } else if (this.under.state === HANG) {
             this.set_state(HANG);
-            this.set_counter(this.under.counter);
+            this.counter =  this.under.counter
             this.set_chain(this.under.chain);
           } else if (this.under.is_empty()) {
             this.set_state(HANG);
@@ -264,7 +273,7 @@ module.exports = function(game){
             this.state = STATIC;
           } else {
             this.set_state(this.under.state);
-            this.set_counter(this.under.counter);
+            this.counter =  this.under.counter
             this.set_chain(this.under.chain);
           }
           if (((this.state === STATIC) || (this.state === SWAP)) && this.sprite) {
@@ -280,29 +289,8 @@ module.exports = function(game){
       }
     }
 
-    render(){
-      if (!this.sprite) { return; }
-      this.sprite.x = this.x * UNIT;
-      if (this.newline()) {
-        this.sprite.y = this.y * UNIT
-      } else {
-        //const y = this.playfield.should_push ? this.y : this.y+1;
-        this.sprite.y = this.y * UNIT
-        if (this.animation_counter <= 0) { this.animation_state = null; }
-        if (this.animation_counter > 0) { this.animation_counter--; }
-        switch (this.animation_state) {
-          case ANIM_SWAP_LEFT:
-            var step = UNIT / TIME_SWAP;
-            return this.sprite.x += step * this.animation_counter;
-          case ANIM_SWAP_RIGHT:
-            return this.sprite.x -= step * this.animation_counter;
-        }
-      }
-
-      this.render_visible()
-    }
     render_visible(){
-      if (this.i === null || this.counter_popping === 0){
+      if (this.kind === null || this.counter_popping === 0){
         this.sprite.visible = false
       } else {
         this.sprite.visible = true
@@ -310,30 +298,25 @@ module.exports = function(game){
     }
     fall() {
       this.under.set_state(this.state)
-      this.under.set_counter(this.counter)
+      this.under.counter =  this.counter
       this.under.set_chain(this.chain)
       this.under.set_i(this.i)
       this.under.set_animation()
       this.under.sprite.frame   = this.sprite.frame
 
       this.set_state(STATIC)
-      this.set_counter(0)
+      this.counter = 0
       this.set_chain(false)
       this.set_i(null)
     }
     // Swap this block with its right neighbour.
     swap() {
       //swap i
-      const i1 = this.i;
-      const i2 = this.right.i;
+      const i1 = this.i
+      const i2 = this.right.i
+
       this.set_i(i2);
       this.right.set_i(i1);
-
-      //swap danger
-      const d1 = this.danger;
-      const d2 = this.right.danger;
-      this.danger       = d2;
-      this.right.danger = d1;
 
       this.set_animation();
       this.right.set_animation();
@@ -342,15 +325,15 @@ module.exports = function(game){
       this.set_chain(false);
 
       if ((this.i !== null) || (this.right.i !== null)) {
-        this.playfield.sfx_swap.play();
+        game.sounds.swap()
       }
 
       if (this.i === null) {
         this.set_state(SWAP);
-        this.set_counter(0);
+        this.counter = 0
       } else {
         this.set_state(SWAP);
-        this.set_counter(TIME_SWAP);
+        this.counter = TIME_SWAP
         this.animation_state   = ANIM_SWAP_LEFT;
         this.animation_counter = TIME_SWAP;
       }
@@ -358,10 +341,10 @@ module.exports = function(game){
       if (this.right.i === null) {
         this.right.set_state(SWAP);
         //@right.counter = 0
-        return this.right.set_counter(0);
+        return this.right.counter = 0
       } else {
         this.right.set_state(SWAP);
-        this.right.set_counter(TIME_SWAP);
+        this.right.counter =  TIME_SWAP
         this.right.animation_state   = ANIM_SWAP_RIGHT;
         return this.right.animation_counter = TIME_SWAP;
       }
@@ -372,7 +355,7 @@ module.exports = function(game){
       this.playfield.track_tick();
       this.set_i(null);
       this.set_state(STATIC);
-      this.set_counter(0);
+      this.counter = 0
       this.set_chain(false);
       if (this.above && (this.above.i !== null)) {
         this.above.set_chain(true);
@@ -381,7 +364,7 @@ module.exports = function(game){
     }
     popping(i){
       const time = TIME_CLEAR + (TIME_POP*this.playfield.panels_clearing.length) + TIME_FALL;
-      this.set_counter(time);
+      this.counter = time
       this.clearing = false;
       return this.counter_popping = TIME_CLEAR + (TIME_POP*(i+1));
     }
@@ -400,8 +383,16 @@ module.exports = function(game){
         return this.matched(i) === false
       })
     }
-    newline(){
-      return this.playfield.should_push && this.x === 0
+    get danger(){
+      const i = _f.xy2i(this.x,1)
+      return this.playfield.stack[i]            &&
+             this.playfield.stack[i]            &&
+             this.playfield.stack[i].kind >= 0  &&
+             this.playfield.stack[i].kind !== null
+
+    }
+    get newline(){
+      return this.playfield.should_push && this.y === (ROWS)
     }
     chain_and_combo() {
       let combo = 0;
@@ -425,7 +416,7 @@ module.exports = function(game){
       return [combo,chain];
     }
     check_dead(i,is_dead){
-      const [x,y] = Array.from(_f.i_2_xy(i));
+      const [x,y] = Array.from(_f.i2xy(i));
       if (is_dead && (is_dead.indexOf(x) !== -1)) {
         return this.play_dead();
       } else {
@@ -438,28 +429,38 @@ module.exports = function(game){
       this.under = (i+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[i+COLS]
       this.above = (i+1) <= COLS          ? this.playfield.blank : this.playfield.stack[i-COLS]
     }
-    update(i,is_danger){
+    update(i){
       if (!this.playfield.running) { return; }
-      const [x,y] = Array.from(_f.i_2_xy(i));
-      if (is_danger && (is_danger.indexOf(x) !== -1)) {
-        if (this.danger === false) {
-          this.play_danger();
-        }
-        this.danger = true;
-      } else {
-        if (this.danger === true) {
-          this.play_live();
-        }
-        this.danger = false;
-      }
-
+      const [x,y] = Array.from(_f.i2xy(i));
       this.update_neighbours(i)
       this.update_state(i)
       this.x = x
       this.y = y
     }
-  }
-  controller.initClass();
 
+    render(){
+      if (!this.sprite) { return; }
+      this.render_visible()
+      this.sprite.x = this.x * UNIT
+      this.sprite.y = this.y * UNIT
+
+      if      (this.newline) { this.play_newline() }
+      else if (this.danger)  { this.play_danger()  }
+      else {                   this.play_live()
+
+        if (this.animation_counter <= 0) { this.animation_state = null; }
+        if (this.animation_counter > 0) { this.animation_counter--; }
+        switch (this.animation_state) {
+          case ANIM_SWAP_LEFT:
+            var step = UNIT / TIME_SWAP;
+            return this.sprite.x += step * this.animation_counter;
+          case ANIM_SWAP_RIGHT:
+            return this.sprite.x -= step * this.animation_counter;
+        }
+      }
+    }
+    shutdown(){}
+  } // klass
+  controller.initClass();
   return controller
 }

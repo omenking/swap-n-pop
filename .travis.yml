@@ -4,6 +4,7 @@ node_js:
 before_script:
   - cd app
   - npm install
+  - npm link swap-n-pop_app
 script: npm test
 os:
   - osx
