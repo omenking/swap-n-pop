@@ -74,7 +74,6 @@ module.exports = function(game){
       this.countdown  = new ComponentPlayfieldCountdown();
       this.cursor     = new ComponentPlayfieldCursor();
       this.score_lbl  = new ComponentScore();
-      this.blank      = new ComponentPanel();
       this.ai         = new ComponentAi();
     }
     get_data() {
@@ -114,7 +113,6 @@ module.exports = function(game){
       this.pushCounter = this.pushTime;
 
       this.score_lbl.create();
-      this.blank.create(this, null, null, true)
     }
     create_after() {
       this.layer_cursor = game.add.group()

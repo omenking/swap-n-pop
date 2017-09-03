@@ -1,5 +1,6 @@
 module.exports = function(game){
   const APP = require('swap-n-pop_app')
+  const blank = require(APP.path.components('panel_blank'))(game)
   const {
     UNIT,
     SWAP,
@@ -44,15 +45,15 @@ module.exports = function(game){
       return _f.xy2i(this.x,this.y)
     }
 
-    get  left(){ return ((this.pos+1) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-1] }
-    get right(){ return ((this.pos+1) % COLS) === 0    ? this.playfield.blank : this.playfield.stack[this.pos+1] }
-    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+(COLS*1)] }
-    get above(){ return  (this.pos+1) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-(COLS*1)] }
+    get  left(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack[this.pos-1] }
+    get right(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack[this.pos+1] }
+    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack[this.pos+(COLS*1)] }
+    get above(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack[this.pos-(COLS*1)] }
 
-    get  left2(){ return ((this.pos+2) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-2] }
-    get right2(){ return ((this.pos+2) % COLS) === 0    ? this.playfield.blank : this.playfield.stack[this.pos+2] }
-    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+(COLS*2)] }
-    get above2(){ return  (this.pos+2) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-(COLS*2)] }
+    get  left2(){ return ((this.pos+2) % COLS) === 1    ? blank : this.playfield.stack[this.pos-2] }
+    get right2(){ return ((this.pos+2) % COLS) === 0    ? blank : this.playfield.stack[this.pos+2] }
+    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? blank : this.playfield.stack[this.pos+(COLS*2)] }
+    get above2(){ return  (this.pos+2) <= COLS          ? blank : this.playfield.stack[this.pos-(COLS*2)] }
 
     constructor() {
       this.create   = this.create.bind(this)
@@ -62,7 +63,6 @@ module.exports = function(game){
 
       this.serialize = this.serialize.bind(this);
       this.deserialize = this.deserialize.bind(this);
-      this.set_blank = this.set_blank.bind(this);
 
       this.is_swappable = this.is_swappable.bind(this);
       this.is_support = this.is_support.bind(this);
@@ -136,41 +136,23 @@ module.exports = function(game){
       //this.sprite.visible    = data[5]
       //this.danger            = data[10]
     }
-    create(playfield, x, y, blank){
+    create(playfield, x, y){
       this.playfield = playfield;
       this.counter = 0
       this.i = null
       this.x = x;
       this.y = y;
-      if (blank == null) { blank = false; }
       this.state = STATIC
       this.chain = false
 
       this.sprite = game.make.sprite(0, 0, 'panels', this.frame(0));
       this.playfield.layer_block.add(this.sprite);
-      if (blank) { this.set_blank(); }
-    }
-
-    // A blank block will see itself as its neighbors.
-    // It is never supposed to have a sprite and should always have a state
-    // of STATIC.
-    // The blank is used on the outer edges of the grid.
-    set_blank() {
-      this.sprite.visible = false
-      this.blank  = true
-      this.i = null
-      this.x = null
-      this.y = null
-      this.state = STATIC
-      this.counter =  0
-      this.animation_state   = null
-      this.animation_counter = 0
     }
     is_swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
-    is_support() {   return (this.state !== FALL) && ((this.i !== null) || (this.playfield.blank === this)); }
+    is_support()   {  return (this.state !== FALL) && ((this.i !== null)); }
     is_clearable() {  return this.is_swappable() && this.under.is_support() && (this.i !== null); }
     is_comboable() {  return this.is_clearable() || ((this.state === CLEAR) && this.clearing); }
-    is_empty() {      return (this.counter === 0) && (this.i === null) && (this !== this.playfield.blank); }
+    is_empty() {      return (this.counter === 0) && (this.i === null) }
     matched(i){
       return ((this.left.kind  === i) && (this.right.kind  === i)) ||
              ((this.above.kind === i) && (this.under.kind  === i)) ||
@@ -227,7 +209,6 @@ module.exports = function(game){
     }
     update(i){
       if (!this.playfield.running) { return; }
-      if (this.blank)      { return; } //blank sprite
       if (this.i === null) { return; }
       if (this.newline)    { return; }
       if (this.counter_popping > 0) {
@@ -243,7 +224,7 @@ module.exports = function(game){
 
       switch (this.state) {
         case STATIC: case SWAP:
-          if (this.under === this.playfield.blank) {
+          if (this.under === blank) {
             this.state = STATIC
             this.chain = false
           } else if (this.under.state === HANG) {

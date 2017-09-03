@@ -10,6 +10,8 @@ const {
 
 chai.should()
 
+// sRJouZq3sh0yHl2w <-- This seed need to get to ensure its random
+
 describe('Stack', function() {
   const rng = seedrandom('S3cH3oWwXssauryt')
   describe('S3cH3oWwXssauryt seed' ,function(){
