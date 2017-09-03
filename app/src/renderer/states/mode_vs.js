@@ -65,6 +65,7 @@ module.exports = function(game){
       this.create_bg();
 
       const stack = new Stack(this.rng)
+      stack.create()
 
       this.playfield1.create(this, {push: true, x: offset+8  , y: 24, panels: stack.panels});
       this.playfield2.create(this, {push: true, x: offset+152, y: 24, panels: stack.panels});

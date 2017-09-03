@@ -1,32 +1,37 @@
 module.exports = function(game){
   const APP = require('swap-n-pop_app')
   const {
-    COLS
+    COLS, ROWS, PANELS
   } = require(APP.path.core('data'))
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   class controller {
     constructor(rng) {
       this.rng     = rng
-      this.create  = this.create.bind(this);
-      this.layout  = this.layout.bind(this);
-      this.at      = this.at.bind(this);
-      this.matched = this.matched.bind(this);
-      this.create()
+      this.steps   = this.steps.bind(this)
+      this.step    = this.step.bind(this)
+      this.create  = this.create.bind(this)
+      this.layout  = this.layout.bind(this)
+      this.at      = this.at.bind(this)
+      this.matched = this.matched.bind(this)
     }
     create() {
-      this.panels = []
-      const layout = this.layout()
+      this.panels = new Array(PANELS).fill(null)
+      this.steps(this.layout())
+    }
+    steps(layout){
       for (let i = 0; i < layout.length; i++) {
-        if (layout[i] == 1) {
-          let values = ss.shuffle([0, 1, 2, 3, 4],this.rng());
-          this.panels.push(values.find((ii)=> {
-            return this.matched(i,ii) === false;
-          }))
-        }
-        else {
-          this.panels.push(null)
-        }
+        this.step(layout,i)
+      }
+    }
+    step(layout,i){
+      const offset = (ROWS - (layout.length / COLS)) * COLS
+      if (layout[i] === 1) {
+        let kinds = ss.shuffle([0, 1, 2, 3, 4],this.rng())
+        let kind  = kinds.find((k)=> {
+          return this.matched(offset+i,k) === false
+        })
+        this.panels[offset+i] = kind
       }
     }
     layout(){
@@ -43,8 +48,8 @@ module.exports = function(game){
         ], this.rng())[0]
     }
     at(i){
-      if (this.panels[i] && (this.panels[i].i !== null)) {
-        return this.panels[i].i;
+      if (this.panels[i] && (this.panels[i].kind !== null)) {
+        return this.panels[i]
       } else {
         return null;
       }
@@ -59,13 +64,12 @@ module.exports = function(game){
       const right2 = this.at(pos+2);
       const under2 = this.at(pos+(2*COLS));
       const above2 = this.at(pos-(2*COLS));
-
       return ((left  === i) && (right  === i)) ||
-      ((above === i) && (under  === i)) ||
-      ((above === i) && (above2 === i)) ||
-      ((under === i) && (under2 === i)) ||
-      ((left  === i) && (left2  === i)) ||
-      ((right === i) && (right2 === i));
+             ((above === i) && (under  === i)) ||
+             ((above === i) && (above2 === i)) ||
+             ((under === i) && (under2 === i)) ||
+             ((left  === i) && (left2  === i)) ||
+             ((right === i) && (right2 === i))
     }
 
 

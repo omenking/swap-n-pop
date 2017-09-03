@@ -199,10 +199,8 @@ module.exports = function(game){
       }
     }
     fill_panels(data){
-      const offset = (ROWS - (data.length / COLS)) * COLS
-
       for (let i = 0; i < data.length; i++) {
-        this.stack[offset+i].set(data[i])
+        this.stack[i].set(data[i])
       }
 
       if (this.should_push){
