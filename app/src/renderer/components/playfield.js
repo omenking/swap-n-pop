@@ -146,7 +146,10 @@ module.exports = function(game){
       // move all panels up the stack
       const stack = new Array(this.stack.length)
       for (i = COLS; i < this.stack.length; i++) {
+        let [x,y] = Array.from(_f.i2xy(i-COLS))
         stack[i-COLS] = this.stack[i]
+        stack[i-COLS].x = x
+        stack[i-COLS].y = y
       }
       this.stack = stack
 

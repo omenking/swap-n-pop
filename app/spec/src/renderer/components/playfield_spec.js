@@ -149,9 +149,16 @@ describe('Playfield', function() {
 
       playfield.stack[i1].kind.should.eql(1)
       playfield.stack[i2].kind.should.eql(2)
+
+      playfield.stack[i1].y.should.eql(8)
+      playfield.stack[i2].y.should.eql(9)
+
       playfield.push()
       playfield.stack[i1].kind.should.eql(2)
       playfield.stack[i2].kind.should.eql(3)
+
+      playfield.stack[i1].y.should.eql(8)
+      playfield.stack[i2].y.should.eql(9)
     })
   })
 }) //klass
