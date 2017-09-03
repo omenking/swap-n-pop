@@ -63,7 +63,7 @@ module.exports = function(game){
       this.swap = this.swap.bind(this);
       this.chain_over = this.chain_over.bind(this);
       this.is_danger = this.is_danger.bind(this);
-      this.tick_push = this.tick_push.bind(this);
+      this.update_push = this.update_push.bind(this);
       this.track_panel = this.track_panel.bind(this);
       this.track_tick = this.track_tick.bind(this);
       this.print_tick = this.print_tick.bind(this);
@@ -144,26 +144,28 @@ module.exports = function(game){
       console.log('pushing')
 
       // move all panels up the stack
-      const stack = new Array(this.stack.length);
+      const stack = new Array(this.stack.length)
       for (i = COLS; i < this.stack.length; i++) {
-        stack[i-COLS] = this.stack[i];
+        stack[i-COLS] = this.stack[i]
       }
-
       this.stack = stack
+
       this.create_newline()
 
       if (this.cursor.y > 1) { this.cursor.y--; }
-      return 1;
+      return 1
     }
     create_newline(mode){
       if (!this.should_push) { return; }
       const rows = (ROWS + (this.should_push ? 1 : 0 ))
 
+      // create panels
       for (let i = PANELS; i < PANELS+COLS; i++){
         const [x,y] = Array.from(_f.i2xy(i))
         this.stack[i] = new ComponentPanel()
         this.stack[i].create(this, x, y)
       }
+      // fill panels
       for (let i = PANELS; i < PANELS+COLS; i++){
         this.stack[i].set('unique')
       }
@@ -263,7 +265,7 @@ module.exports = function(game){
      * spawn possible garbage,
      * updates the sprites to the correct locations in the canvas.
      */
-    tick_push() {
+    update_push() {
       if (this.cursor.can_push()) {
         this.pushCounter -= 100;
       } else {
@@ -368,7 +370,7 @@ module.exports = function(game){
       this.score_lbl.update(this.chain, this.score)
 
       if (!this.running) { return; }
-      if (this.should_push) { this.tick_push(); }
+      if (this.should_push) { this.update_push(); }
       this.update_stack()
       if (this.has_ai) { this.ai.update(); }
       // combo n chain

@@ -7,6 +7,7 @@ chai.should()
 const game = require(APP.path.spec('helpers','game_spec'))
 
 const seedrandom = require('seedrandom')
+const _f         = require(APP.path.core('filters'))
 const Stage      = require(APP.path.states('mode_vs'))(game)
 const Playfield  = require(APP.path.components('playfield'))(game)
 const Stack      = require(APP.path.core('stack'))(game)
@@ -127,6 +128,30 @@ describe('Playfield', function() {
     })
     it('should find one chain_and_combo', function(){
       playfield.chain_and_combo().should.eql([3,false])
+    })
+  })
+
+  describe('#push()' ,function(){
+    it('should shift panels up in stack', function(){
+      let panels   = [
+          1 , null, null, null, null, null,
+          2 , null, null, null, null, null,
+          3 , null, null, null, null, null
+        ]
+      let stage = new Stage()
+      stage.init({seed: 'test'})
+
+      let i1 = _f.xy2i(0,8)
+      let i2 = _f.xy2i(0,9)
+
+      let playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+
+      playfield.stack[i1].kind.should.eql(1)
+      playfield.stack[i2].kind.should.eql(2)
+      playfield.push()
+      playfield.stack[i1].kind.should.eql(2)
+      playfield.stack[i2].kind.should.eql(3)
     })
   })
 }) //klass
