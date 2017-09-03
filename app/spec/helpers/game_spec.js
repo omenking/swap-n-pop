@@ -31,5 +31,8 @@ module.exports = {
   },
   make: {
     sprite: stub_sprite
+  },
+  time: {
+    desiredFps: 60
   }
 }

@@ -36,6 +36,7 @@ module.exports = function(game){
       this.prototype.running     = false
       this.prototype.land        = false
       this.prototype.stack       = null
+      this.prototype.panels_clearing = []
        // when any panel has landed in the stac
     }
     constructor(pi){
@@ -47,7 +48,6 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.stack_size = this.stack_size.bind(this);
       this.get_data = this.get_data.bind(this);
       this.create_after = this.create_after.bind(this);
       this.create_stack = this.create_stack.bind(this);
@@ -59,8 +59,7 @@ module.exports = function(game){
       this.create_panels = this.create_panels.bind(this);
       this.fill_panels = this.fill_panels.bind(this);
       this.update_stack = this.update_stack.bind(this);
-      this.update_neighbours = this.update_neighbours.bind(this);
-      this.update_chain_and_combo = this.update_chain_and_combo.bind(this);
+      this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.chain_over = this.chain_over.bind(this);
       this.is_danger = this.is_danger.bind(this);
@@ -132,15 +131,9 @@ module.exports = function(game){
       this.stack = []
       this.create_panels()
       this.fill_panels(data)
-      this.update_neighbours()
     }
 
-    update_neighbours(){
-      for (let i = 0; i < this.stack.length; i++){
-        this.stack[i].update_neighbours(i)
-      }
-    }
-    stack_size(){
+    get stack_size(){
       return this.should_push ? this.stack.length-COLS : this.stack.length
     }
     push() {
@@ -216,32 +209,24 @@ module.exports = function(game){
     }
     update_stack() {
       for (let i of SCAN_BTLR){
-        this.stack[i].update(i, this.is_danger(1))
+        this.stack[i].update(i)
       }
     }
-    // Update the combos and chain for the entire grid.
-    // Returns [combo, chain] where
-    // combo is the amount of blocks participating in the combo
-    // chain is whether a chain is currently happening.
-    update_chain_and_combo() {
-      //@track_tick()
-      let i, panel;
-      let combo = 0;
-      let chain = false;
+    chain_and_combo() {
+      let i, panel
+      let combo = 0
+      let chain = false
       this.panels_clearing = [];
       for (i = 0; i < this.stack_size; i++) {
-        panel = this.stack[i];
-        const cnc    = panel.chain_and_combo();
-        combo += cnc[0];
+        const cnc  = this.stack[i].chain_and_combo()
+        combo += cnc[0]
         if (cnc[1]) { chain  = true; }
       }
       for (i = 0; i < this.panels_clearing.length; i++) {
-        panel = this.panels_clearing[i];
-        panel.popping(i);
+        this.panels_clearing[i].popping(i)
       }
-      //console.log 'chain_over_check', chain, @chain, @chain_over()
       if (this.chain && this.chain_over()) { this.chain = 0; }
-      return [combo, chain];
+      return [combo, chain]
     }
     swap(x, y){
       const i = _f.xy2i(x,y)
@@ -395,7 +380,7 @@ module.exports = function(game){
       this.update_stack()
       if (this.has_ai) { this.ai.update(); }
       // combo n chain
-      const cnc = this.update_chain_and_combo();
+      const cnc = this.chain_and_combo()
       this.score_current(cnc);
 
       if (this.land === true) {

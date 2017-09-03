@@ -34,6 +34,13 @@ module.exports = function(game){
       //this.playfield.track_panel(this, 'counter', v);
       this.attr_counter = val
     }
+    get pos(){
+      return _f.xy2i(this.x,this.y)
+    }
+    get left() { return ((this.pos+1) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-1] }
+    get right(){ return ((this.pos+1) % COLS) === 0    ? this.playfield.blank : this.playfield.stack[this.pos+1] }
+    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+COLS] }
+    get above(){ return  (this.pos+1) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-COLS] }
 
     constructor() {
       this.create   = this.create.bind(this)
@@ -68,7 +75,6 @@ module.exports = function(game){
       this.set_animation = this.set_animation.bind(this);
 
       this.set = this.set.bind(this);
-      this.update_state = this.update_state.bind(this);
       this.render_visible = this.render_visible.bind(this);
       this.fall = this.fall.bind(this);
       this.swap = this.swap.bind(this);
@@ -79,7 +85,6 @@ module.exports = function(game){
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.check_neighbours = this.check_neighbours.bind(this);
       this.check_dead = this.check_dead.bind(this);
-      this.update_neighbours = this.update_neighbours.bind(this);
     }
 
     static initClass() {
@@ -87,10 +92,6 @@ module.exports = function(game){
       this.prototype.x                  = null;
       this.prototype.y                  = null;
       this.prototype.state              = null;
-      this.prototype.above              = null;
-      this.prototype.under              = null;
-      this.prototype.left               = null;
-      this.prototype.right              = null;
       this.prototype.animation_state    = null;
       this.prototype.animation_counter  = 0;
       this.prototype.chain              = null;
@@ -148,14 +149,10 @@ module.exports = function(game){
     // of STATIC.
     // The blank is used on the outer edges of the grid.
     set_blank() {
-      this.blank             = true
+      this.blank  = true
       this.i = null
-      this.x                 = null
-      this.y                 = null
-      this.under             = this
-      this.above             = this
-      this.left              = this
-      this.right             = this
+      this.x = null
+      this.y = null
       this.set_state(STATIC)
       this.counter =  0
       this.animation_state   = null
@@ -233,7 +230,8 @@ module.exports = function(game){
       }
       return this.set_animation();
     }
-    update_state(i){
+    update(i){
+      if (!this.playfield.running) { return; }
       if (this.blank)      { return; } //blank sprite
       if (this.i === null) { return; }
       if (this.newline)    { return; }
@@ -368,15 +366,7 @@ module.exports = function(game){
       this.clearing = false;
       return this.counter_popping = TIME_CLEAR + (TIME_POP*(i+1));
     }
-      //@playfield.track_tick()
-    clear() {
-      if (this.state === CLEAR) { return [0, this.chain]; }
-      this.clearing = true;
-      this.set_state(CLEAR);
-      this.playfield.panels_clearing.push(this);
-      this.play_clear();
-      return [1, this.chain];
-    }
+
     nocombo() {
       let values = ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng());
       return this.i = values.find((i)=> {
@@ -394,26 +384,34 @@ module.exports = function(game){
     get newline(){
       return this.playfield.should_push && this.y === (ROWS)
     }
+    clear() {
+      if (this.state === CLEAR) { return [0, this.chain]; }
+      this.clearing = true
+      this.set_state(CLEAR)
+      this.playfield.panels_clearing.push(this)
+      this.play_clear()
+      return [1, this.chain]
+    }
     chain_and_combo() {
-      let combo = 0;
-      let chain = false;
-      if (!this.is_comboable()) { return [combo,chain]; }
+      let combo = 0
+      let chain = false
+      if (!this.is_comboable()) { return [combo,chain] }
       [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
-      return [combo,chain];
+      return [combo,chain]
     }
     check_neighbours(p1,p2,combo,chain){
       if (!p1.is_comboable() || (p1.i !== this.i)  ||
-                                  !p2.is_comboable() || (p2.i !== this.i)) { return [combo,chain]; }
-      const panel1  = p1.clear();
-      const middle  = this.clear();
-      const panel2  = p2.clear();
+          !p2.is_comboable() || (p2.i !== this.i)) { return [combo,chain]; }
+      const panel1  = p1.clear()
+      const middle  = this.clear()
+      const panel2  = p2.clear()
 
-      combo  += panel1[0];
-      combo  += middle[0];
-      combo  += panel2[0];
-      if (middle[1] || panel1[1] || panel2[1]) { chain   = true; }
-      return [combo,chain];
+      combo  += panel1[0]
+      combo  += middle[0]
+      combo  += panel2[0]
+      if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
+      return [combo,chain]
     }
     check_dead(i,is_dead){
       const [x,y] = Array.from(_f.i2xy(i));
@@ -423,21 +421,6 @@ module.exports = function(game){
         return this.play_live();
       }
     }
-    update_neighbours(i){
-      this.left  = ((i+1) % COLS) === 1   ? this.playfield.blank : this.playfield.stack[i-1]
-      this.right = ((i+1) % COLS) === 0   ? this.playfield.blank : this.playfield.stack[i+1]
-      this.under = (i+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[i+COLS]
-      this.above = (i+1) <= COLS          ? this.playfield.blank : this.playfield.stack[i-COLS]
-    }
-    update(i){
-      if (!this.playfield.running) { return; }
-      const [x,y] = Array.from(_f.i2xy(i));
-      this.update_neighbours(i)
-      this.update_state(i)
-      this.x = x
-      this.y = y
-    }
-
     render(){
       if (!this.sprite) { return; }
       this.render_visible()

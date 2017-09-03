@@ -108,6 +108,25 @@ describe('Playfield', function() {
     it('should work', function(){
       playfield.update_stack()
     })
+  })
 
+  describe('#chain_and_combo()' ,function(){
+    let stage     = null
+    let stack     = null
+    let playfield = null
+    let panels   = [
+        1   , null, null, null, null, null,
+        1   , null, null, null, null, null,
+        1   , null, null, null, null, null
+      ]
+    beforeEach(function(){
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+    })
+    it('should find one chain_and_combo', function(){
+      playfield.chain_and_combo().should.eql([3,false])
+    })
   })
 }) //klass

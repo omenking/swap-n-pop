@@ -6,8 +6,9 @@ chai.should()
 const game = require(APP.path.spec('helpers','game_spec'))
 const {STATIC,HANG,FALL}  = require(APP.path.core('data'))
 const _f                  = require(APP.path.core('filters'))
+const Stage               = require(APP.path.states('mode_vs'))(game)
+const Playfield           = require(APP.path.components('playfield'))(game)
 const Panel               = require(APP.path.components('panel'))(game)
-
 
 describe('Panel', function() {
   describe('#class_name' ,function(){
@@ -30,23 +31,60 @@ describe('Panel', function() {
     })
   })
 
-  describe('#update_state()' ,function(){
-    it('when HANG should change to FALL', function(){
-      const index = _f.xy_2_i(0,4)
-      const data = [0,4,1,HANG,null,0,0,null,0]
-      const panel = new Panel()
-      panel.deserialize(data)
-      panel.update_state(index)
-      panel.state.should.eql(FALL)
+  describe('#update()' ,function(){
+    //it('when HANG should change to FALL', function(){
+      //const index = _f.xy2i(0,4)
+      //const data = [0,4,1,HANG,null,0,0,null,0]
+      //const panel = new Panel()
+      //panel.playfield = {
+        //should_push: true
+      //}
+      //panel.deserialize(data)
+      //panel.update(index)
+      //panel.state.should.eql(FALL)
+    //})
+  })
+
+  describe('#clear()' ,function(){
+    it('should work', function(){
     })
   })
 
-  describe('#update_neighbours()' ,function(){
-    it('should work', function(){
-      const panel = new Panel()
-    }
+  describe('#check_neighbours()' ,function(){
+    it('should detect veritcal match', function(){
+      let stage     = null
+      let stack     = null
+      let playfield = null
+      let panels   = [
+        1   , null, null, null, null, null,
+        1   , null, null, null, null, null,
+        1   , null, null, null, null, null
+      ]
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      let i = _f.xy2i(0,9)
+      playfield.stack[i].check_neighbours(playfield.stack[i].above, playfield.stack[i].under, 0, false).should.eql([3,false])
+    })
   })
 
   describe('#chain_and_combo()' ,function(){
+    it('should detect vertical and horizontal match', function(){
+      let stage     = null
+      let stack     = null
+      let playfield = null
+      let panels   = [
+        null, 1, null, null, null, null,
+        1   , 1, 1   , null, null, null,
+        null, 1, null, null, null, null
+      ]
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      let i = _f.xy2i(1,9)
+      playfield.stack[i].chain_and_combo().should.eql([5,false])
+    })
   })
 }) //klass
