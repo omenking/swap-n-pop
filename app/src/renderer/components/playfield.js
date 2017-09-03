@@ -69,7 +69,6 @@ module.exports = function(game){
       this.print_tick = this.print_tick.bind(this);
       this.score_current = this.score_current.bind(this);
       this.render_stack = this.render_stack.bind(this);
-      this.panel_i = this.panel_i.bind(this);
       this.pi = pi;
       this.menu_pause = new ComponentMenuPause();
       this.countdown  = new ComponentPlayfieldCountdown();
@@ -351,13 +350,6 @@ module.exports = function(game){
     render_stack() {
       for (let panel of this.stack){
         panel.render()
-      }
-    }
-    panel_i(i){
-      if (this.stack[i] && (this.stack[i].i !== null)) {
-        return this.stack[i].i;
-      } else {
-        return null;
       }
     }
     render() {

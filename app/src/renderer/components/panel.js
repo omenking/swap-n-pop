@@ -37,10 +37,15 @@ module.exports = function(game){
     get pos(){
       return _f.xy2i(this.x,this.y)
     }
-    get left() { return ((this.pos+1) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-1] }
+    get  left(){ return ((this.pos+1) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-1] }
     get right(){ return ((this.pos+1) % COLS) === 0    ? this.playfield.blank : this.playfield.stack[this.pos+1] }
-    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+COLS] }
-    get above(){ return  (this.pos+1) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-COLS] }
+    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+(COLS*1)] }
+    get above(){ return  (this.pos+1) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-(COLS*1)] }
+
+    get  left2(){ return ((this.pos+2) % COLS) === 1    ? this.playfield.blank : this.playfield.stack[this.pos-2] }
+    get right2(){ return ((this.pos+2) % COLS) === 0    ? this.playfield.blank : this.playfield.stack[this.pos+2] }
+    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? this.playfield.blank : this.playfield.stack[this.pos+(COLS*2)] }
+    get above2(){ return  (this.pos+2) <= COLS          ? this.playfield.blank : this.playfield.stack[this.pos-(COLS*2)] }
 
     constructor() {
       this.create   = this.create.bind(this)
@@ -176,24 +181,12 @@ module.exports = function(game){
       return this.chain = v;
     }
     matched(i){
-      const pos = _f.xy2i(this.x, this.y);
-
-      const left  = this.playfield.panel_i(pos-1);
-      const right = this.playfield.panel_i(pos+1);
-      const under = this.playfield.panel_i(pos+(1*COLS));
-      const above = this.playfield.panel_i(pos-(1*COLS));
-
-      const left2  = this.playfield.panel_i(pos-2);
-      const right2 = this.playfield.panel_i(pos+2);
-      const under2 = this.playfield.panel_i(pos+(2*COLS));
-      const above2 = this.playfield.panel_i(pos-(2*COLS));
-
-      return ((left  === i) && (right  === i)) ||
-      ((above === i) && (under  === i)) ||
-      ((above === i) && (above2 === i)) ||
-      ((under === i) && (under2 === i)) ||
-      ((left  === i) && (left2  === i)) ||
-      ((right === i) && (right2 === i));
+      return ((this.left.kind  === i) && (this.right.kind  === i)) ||
+             ((this.above.kind === i) && (this.under.kind  === i)) ||
+             ((this.above.kind === i) && (this.above2.kind === i)) ||
+             ((this.under.kind === i) && (this.under2.kind === i)) ||
+             ((this.left.kind  === i) && (this.left2.kind  === i)) ||
+             ((this.right.kind === i) && (this.right2.kind === i))
     }
 
     frames(arr){
