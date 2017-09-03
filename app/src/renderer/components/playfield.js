@@ -230,7 +230,7 @@ module.exports = function(game){
     }
     swap(x, y){
       const i = _f.xy2i(x,y)
-      if (this.stack[i].is_swappable() && this.stack[i+1].is_swappable()) {
+      if (this.stack[i].swappable && this.stack[i+1].swappable) {
         this.stack[i].swap()
       }
     }

@@ -64,11 +64,6 @@ module.exports = function(game){
       this.serialize = this.serialize.bind(this);
       this.deserialize = this.deserialize.bind(this);
 
-      this.is_swappable = this.is_swappable.bind(this);
-      this.is_support = this.is_support.bind(this);
-      this.is_clearable = this.is_clearable.bind(this);
-      this.is_comboable = this.is_comboable.bind(this);
-      this.is_empty = this.is_empty.bind(this);
 
       this.matched = this.matched.bind(this);
 
@@ -148,11 +143,11 @@ module.exports = function(game){
       this.sprite = game.make.sprite(0, 0, 'panels', this.frame(0));
       this.playfield.layer_block.add(this.sprite);
     }
-    is_swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
-    is_support()   {  return (this.state !== FALL) && ((this.i !== null)); }
-    is_clearable() {  return this.is_swappable() && this.under.is_support() && (this.i !== null); }
-    is_comboable() {  return this.is_clearable() || ((this.state === CLEAR) && this.clearing); }
-    is_empty() {      return (this.counter === 0) && (this.i === null) }
+    get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
+    get support()   {  return (this.state !== FALL) && ((this.i !== null)); }
+    get clearable() {  return this.swappable && this.under.support && (this.i !== null); }
+    get comboable() {  return this.clearable || ((this.state === CLEAR) && this.clearing); }
+    get empty() {      return (this.counter === 0) && (this.i === null) }
     matched(i){
       return ((this.left.kind  === i) && (this.right.kind  === i)) ||
              ((this.above.kind === i) && (this.under.kind  === i)) ||
@@ -231,7 +226,7 @@ module.exports = function(game){
             this.state = HANG
             this.counter =  this.under.counter
             this.chain = this.under.chain
-          } else if (this.under.is_empty()) {
+          } else if (this.under.empty) {
             this.state = HANG
           } else {
             this.chain = false
@@ -241,7 +236,7 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
-          if (this.under.is_empty()) {
+          if (this.under.empty) {
             this.fall();
           } else if (this.under.state === CLEAR) {
             this.state = STATIC
@@ -370,14 +365,14 @@ module.exports = function(game){
     chain_and_combo() {
       let combo = 0
       let chain = false
-      if (!this.is_comboable()) { return [combo,chain] }
+      if (!this.comboable) { return [combo,chain] }
       [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
       return [combo,chain]
     }
     check_neighbours(p1,p2,combo,chain){
-      if (!p1.is_comboable() || (p1.i !== this.i)  ||
-          !p2.is_comboable() || (p2.i !== this.i)) { return [combo,chain]; }
+      if (!p1.comboable || (p1.i !== this.i)  ||
+          !p2.comboable || (p2.i !== this.i)) { return [combo,chain]; }
       const panel1  = p1.clear()
       const middle  = this.clear()
       const panel2  = p2.clear()

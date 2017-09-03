@@ -10,8 +10,8 @@ module.exports = function(game){
     counter             : 0,
     animation_state     : null,
     animation_counter   : 0,
-    is_comboable: function(){ return false },
-    is_support  : function(){ return true  },
-    is_empty    : function(){ return false }
+    is_comboable        : false,
+    is_support          : true,
+    is_empty            : false
   }
 }
