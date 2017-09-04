@@ -34,5 +34,8 @@ module.exports = {
   },
   time: {
     desiredFps: 60
+  },
+  sounds: {
+    swap: sinon.stub()
   }
 }

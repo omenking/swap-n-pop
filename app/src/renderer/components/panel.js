@@ -3,10 +3,14 @@ module.exports = function(game){
   const blank = require(APP.path.components('panel_blank'))(game)
   const {
     UNIT,
-    SWAP,
+    SWAP_L,
+    SWAP_R,
+    SWAPPING_L,
+    SWAPPING_R,
     STATIC,
     HANG,
     FALL,
+    LAND,
     CLEAR,
     PANELS,
     COLS,
@@ -45,15 +49,15 @@ module.exports = function(game){
       return _f.xy2i(this.x,this.y)
     }
 
-    get  left(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack[this.pos-1] }
-    get right(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack[this.pos+1] }
-    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack[this.pos+(COLS*1)] }
-    get above(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack[this.pos-(COLS*1)] }
+    get  left(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack(this.x-1,this.y)   }
+    get right(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack(this.x+1,this.y)   }
+    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+1) }
+    get above(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-1) }
 
-    get  left2(){ return ((this.pos+2) % COLS) === 1    ? blank : this.playfield.stack[this.pos-2] }
-    get right2(){ return ((this.pos+2) % COLS) === 0    ? blank : this.playfield.stack[this.pos+2] }
-    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? blank : this.playfield.stack[this.pos+(COLS*2)] }
-    get above2(){ return  (this.pos+2) <= COLS          ? blank : this.playfield.stack[this.pos-(COLS*2)] }
+    get  left2(){ return ((this.pos+2) % COLS) === 1    ? blank : this.playfield.stack(this.x-2,this.y)  }
+    get right2(){ return ((this.pos+2) % COLS) === 0    ? blank : this.playfield.stack(this.x+2,this.y)  }
+    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+2)}
+    get above2(){ return  (this.pos+2) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-2)}
 
     constructor() {
       this.create   = this.create.bind(this)
@@ -61,28 +65,13 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.serialize = this.serialize.bind(this);
       this.deserialize = this.deserialize.bind(this);
-
 
       this.matched = this.matched.bind(this);
 
-      this.frames = this.frames.bind(this);
-      this.frame = this.frame.bind(this);
-      this.play_swap = this.play_swap.bind(this);
-      this.play_land = this.play_land.bind(this);
-      this.play_clear = this.play_clear.bind(this);
-      this.play_live = this.play_live.bind(this);
-      this.play_dead = this.play_dead.bind(this);
-      this.play_danger = this.play_danger.bind(this);
-      this.play_newline = this.play_newline.bind(this);
-      this.set_animation = this.set_animation.bind(this);
-
       this.set = this.set.bind(this);
       this.render_visible = this.render_visible.bind(this);
-      this.fall = this.fall.bind(this);
       this.swap = this.swap.bind(this);
-      this.erase = this.erase.bind(this);
       this.popping = this.popping.bind(this);
       this.clear = this.clear.bind(this);
       this.nocombo = this.nocombo.bind(this);
@@ -101,53 +90,46 @@ module.exports = function(game){
       this.prototype.sprite             = null;
       this.prototype.i                  = null;
     }
-    serialize() {
+    get serialize() {
       return [
         this.x,
         this.y,
-        this.i,
+        this.kind,
         this.state,
-        this.chain,
         this.counter,
-        this.counter_popping,
-        this.animation_state,
-        this.animation_counter
+        this.chain,
       ];
     }
     deserialize(data){
-      this.x                 = data[0]
-      this.y                 = data[1]
-      this.i                 = data[2]
-      this.state             = data[3]
-      this.chain             = data[4]
-      this.counter           = data[5]
+      this.x       = data[0]
+      this.y       = data[1]
+      this.kind    = data[2]
+      this.state   = data[3]
+      this.chain   = data[4]
+      this.counter = data[5]
       // maybe we can infer these 3 if we reorganize our code
       this.counter_popping   = data[6]
       this.animation_state   = data[7]
       this.animation_counter = data[8]
-
-      //we need to infer these
-      //this.sprite.frame      = data[4]
-      //this.sprite.visible    = data[5]
-      //this.danger            = data[10]
     }
     create(playfield, x, y){
-      this.playfield = playfield;
-      this.counter = 0
+      this.playfield = playfield
+      this.counter   = 0
       this.i = null
       this.x = x;
       this.y = y;
       this.state = STATIC
       this.chain = false
 
-      this.sprite = game.make.sprite(0, 0, 'panels', this.frame(0));
+      this.sprite = game.make.sprite(0, 0, 'panels',0);
       this.playfield.layer_block.add(this.sprite);
     }
     get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
-    get support()   {  return (this.state !== FALL) && ((this.i !== null)); }
-    get clearable() {  return this.swappable && this.under.support && (this.i !== null); }
+    get support()   {  return this.state !== FALL && !this.hidden }
+    get clearable() {  return this.swappable && this.under.support && !this.hidden }
     get comboable() {  return this.clearable || ((this.state === CLEAR) && this.clearing); }
-    get empty() {      return (this.counter === 0) && (this.i === null) }
+    get empty() {      return (this.counter === 0) && this.hidden }
+    get hidden(){      return (this.kind === null) }
     matched(i){
       return ((this.left.kind  === i) && (this.right.kind  === i)) ||
              ((this.above.kind === i) && (this.under.kind  === i)) ||
@@ -156,21 +138,7 @@ module.exports = function(game){
              ((this.left.kind  === i) && (this.left2.kind  === i)) ||
              ((this.right.kind === i) && (this.right2.kind === i))
     }
-
-    frames(arr){
-      const frames = [];
-      for (let f of Array.from(arr)) { frames.push(this.frame(f)); }
-      return frames;
-    }
-    frame(i){
-      return (this.i * 8) + i;
-    }
-    play_land() {    return this.sprite.animations.play('land' , game.time.desiredFps, false); }
-    play_clear() {   return this.sprite.animations.play('clear', game.time.desiredFps, false); }
-    play_live() {    return this.sprite.animations.play('live'); }
-    play_dead() {    return this.sprite.animations.play('dead'); }
-    play_danger() {  return this.sprite.animations.play('danger', game.time.desiredFps/3, true); }
-    play_newline() { return this.sprite.animations.play('newline'); }
+    set frame(i){ this.sprite.frame = (this.kind * 8) + i}
     play_swap(){
       if (this.animation_counter <= 0) { this.animation_state = null; }
       if (this.animation_counter > 0 ) { this.animation_counter--;    }
@@ -183,15 +151,6 @@ module.exports = function(game){
       }
     }
 
-    set_animation() {
-      this.sprite.frame = this.frame(0);
-      this.sprite.animations.add('land'   , this.frames(FRAME_LAND));
-      this.sprite.animations.add('clear'  , this.frames(FRAME_CLEAR));
-      this.sprite.animations.add('live'   , this.frames(FRAME_LIVE));
-      this.sprite.animations.add('danger' , this.frames(FRAME_DANGER));
-      this.sprite.animations.add('dead'   , this.frames(FRAME_DEAD));
-      this.sprite.animations.add('newline', this.frames(FRAME_NEWLINE));
-    }
     set(i){
       switch (i) {
         case 'unique':
@@ -200,12 +159,10 @@ module.exports = function(game){
         default:
           this.kind = i
       }
-      return this.set_animation();
     }
     update(i){
       if (!this.playfield.running) { return; }
-      if (this.i === null) { return; }
-      if (this.newline)    { return; }
+      if (this.newline){ return; }
       if (this.counter_popping > 0) {
         this.counter_popping--;
       }
@@ -216,119 +173,104 @@ module.exports = function(game){
       }
       if (this.counter_popping === 0) { this.counter_popping = null; }
 
-
       switch (this.state) {
-        case STATIC: case SWAP:
-          if (this.under === blank) {
-            this.state = STATIC
-            this.chain = false
-          } else if (this.under.state === HANG) {
+        case SWAP_L:
+          this.state   = SWAPPING_L
+          this.counter = TIME_SWAP
+          break
+        case SWAP_R:
+          this.state   = SWAPPING_R
+          this.counter = TIME_SWAP
+          break
+        case SWAPPING_L:
+          const i1 = this.kind
+          const i2 = this.right.kind
+          this.kind       = i2
+          this.right.kind = i1
+          this.state = STATIC
+          break
+        case SWAPPING_R:
+          this.state = STATIC
+          break
+        case STATIC:
+          if (this.under.empty && !this.empty) {
             this.state = HANG
-            this.counter =  this.under.counter
-            this.chain = this.under.chain
-          } else if (this.under.empty) {
-            this.state = HANG
-          } else {
-            this.chain = false
           }
+          //if (this.under === blank) {
+            //this.chain = false
+          //} else if (this.under.state === HANG) {
+            //this.state = HANG
+            //this.counter =  this.under.counter
+            //this.chain   = this.under.chain
+          //} else if (this.under.empty && !this.empty) {
+            //this.state = HANG
+          //} else {
+            //this.chain = false
+          //}
           break;
         case HANG:
           this.state = FALL
           break;
         case FALL:
           if (this.under.empty) {
-            this.fall();
-          } else if (this.under.state === CLEAR) {
-            this.state = STATIC
+            this.under.kind    = this.kind
+            this.under.state   = this.state
+            this.under.counter = this.counter
+            this.under.chain   = this.chain
+
+            this.kind    = null
+            this.state   = STATIC
+            this.counter = 0
+            this.chain   = false
           } else {
-            this.state   = this.under.state
-            this.counter = this.under.counter
-            this.chain   = this.under.chain
+            this.state   = LAND
+            this.counter = FRAME_LAND.length
           }
-          if (((this.state === STATIC) || (this.state === SWAP)) && this.sprite) {
-            this.play_land();
-            this.playfield.land = true;
-          }
+          //} else if (this.under.state === CLEAR) {
+            //this.state = STATIC
+          //} else {
+            //this.state   = this.under.state
+            //this.counter = this.under.counter
+            //this.chain   = this.under.chain
+          //}
+            //this.state   = LAND
+            //this.counter = FRAME_LAND.length
           break;
         case CLEAR:
-          this.erase();
+          this.state   = STATIC
+          this.kind    = null
+          this.counter = 0
+          this.chain   = false
+          if (this.above && (!this.above.hidden)) {
+            this.above.chain = true
+          }
+          break;
+        case LAND:
+          console.log('land done')
+          this.state = STATIC
           break;
         default:
-          console.log("Unknown block state");
+          throw(new Error('unknown panel state'))
       }
     }
 
     render_visible(){
-      if (this.kind === null || this.counter_popping === 0 ){
+      if (this.hidden || this.counter_popping === 0 ){
         this.sprite.visible = false
       } else {
         this.sprite.visible = true
       }
     }
-    fall() {
-      this.under.state   = this.state
-      this.under.counter = this.counter
-      this.under.chain   = this.chain
-      this.under.kind    = this.kind
-      this.under.set_animation()
-      this.under.sprite.frame = this.sprite.frame
-
-      this.state   = STATIC
-      this.counter = 0
-      this.chain   = false
-      this.kind    = null
-    }
-    // Swap this block with its right neighbour.
     swap() {
-      //swap i
-      const i1 = this.kind
-      const i2 = this.right.kind
+      if (this.hidden && this.right.hidden) { return }
 
-      this.kind = i2
-      this.right.kind = i1
-
-      this.set_animation();
-      this.right.set_animation();
-
-      this.right.chain = false
       this.chain       = false
+      this.right.chain = false
 
-      if ((this.kind !== null) || (this.right.kind !== null)) {
-        game.sounds.swap()
-      }
+      this.state       = SWAP_L
+      this.right.state = SWAP_R
 
-      if (this.kind === null) {
-        this.state   = SWAP
-        this.counter = 0
-      } else {
-        this.state   = SWAP
-        this.counter = TIME_SWAP
-        this.animation_state   = ANIM_SWAP_LEFT;
-        this.animation_counter = TIME_SWAP;
-      }
-
-      if (this.right.kind === null) {
-        this.right.state   = SWAP
-        this.right.counter = 0
-      } else {
-        this.right.state             = SWAP
-        this.right.counter           = TIME_SWAP
-        this.right.animation_state   = ANIM_SWAP_RIGHT
-        this.right.animation_counter = TIME_SWAP
-      }
-    }
-    // Erase the contents of this block and start a chain in
-    // its upper neighbour.
-    erase() {
-      this.playfield.track_tick();
-      this.kind    = null
-      this.state   = STATIC
-      this.counter = 0
-      this.chain   = false
-      if (this.above && (this.above.i !== null)) {
-        this.above.chain = true
-        //return console.log('above', this.above.x, this.above.y, this.above.chain);
-      }
+      game.sounds.swap()
     }
     popping(i){
       const time = TIME_CLEAR + (TIME_POP*this.playfield.panels_clearing.length) + TIME_FALL;
@@ -344,12 +286,7 @@ module.exports = function(game){
       })
     }
     get danger(){
-      const i = _f.xy2i(this.x,1)
-      return this.playfield.stack[i]            &&
-             this.playfield.stack[i]            &&
-             this.playfield.stack[i].kind >= 0  &&
-             this.playfield.stack[i].kind !== null
-
+      return !this.playfield.stack(this.x,1).hidden
     }
     get newline(){
       return this.playfield.should_push && this.y === (ROWS)
@@ -359,7 +296,6 @@ module.exports = function(game){
       this.clearing = true
       this.state    = CLEAR
       this.playfield.panels_clearing.push(this)
-      this.play_clear()
       return [1, this.chain]
     }
     chain_and_combo() {
@@ -371,8 +307,8 @@ module.exports = function(game){
       return [combo,chain]
     }
     check_neighbours(p1,p2,combo,chain){
-      if (!p1.comboable || (p1.i !== this.i)  ||
-          !p2.comboable || (p2.i !== this.i)) { return [combo,chain]; }
+      if (!p1.comboable || (p1.kind !== this.kind)  ||
+          !p2.comboable || (p2.kind !== this.kind)) { return [combo,chain]; }
       const panel1  = p1.clear()
       const middle  = this.clear()
       const panel2  = p2.clear()
@@ -391,15 +327,31 @@ module.exports = function(game){
         return this.play_live();
       }
     }
+
+    //swap
+    //land
+    //clear
+    //live
+    //dead
+    //danger
+    //newline
+    animate(){
+      if (this.newline) {
+        this.frame = FRAME_NEWLINE
+      } else if (this.state === LAND){
+        this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
+      } else if (this.danger){
+        //this.play_danger()
+      } else {
+        this.frame = FRAME_LIVE
+      }
+      //this.play_swap()
+    }
     render(){
       if (!this.sprite) { return; }
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
-
-      if      (this.newline) { this.play_newline() }
-      else if (this.danger)  { this.play_danger()  }
-      else                   { this.play_live()    }
-      this.play_swap()
+      this.animate()
       this.render_visible()
     }
     shutdown(){}

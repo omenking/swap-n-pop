@@ -25,7 +25,7 @@ module.exports = function(game){
       this.sfx_swap.play()
     }
     confirm(){
-      this.sfx_confirm.play()
+      //this.sfx_confirm.play()
     }
     select(){
       this.sfx_select.play()

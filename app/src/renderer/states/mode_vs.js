@@ -74,6 +74,7 @@ module.exports = function(game){
       this.playfield2.create_after();
     }
     stage_music(state){
+      return
       switch (state) {
         case 'pause':
           switch (this.state_music) {

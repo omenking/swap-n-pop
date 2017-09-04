@@ -33,11 +33,15 @@ module.exports = {
   //number of starting blocks
   NRBLOCK : 17,
   // States
-  STATIC : 0,
-  HANG   : 1,
-  FALL   : 2,
-  SWAP   : 3,
-  CLEAR  : 4,
+  STATIC     : 0,
+  HANG       : 1,
+  FALL       : 2,
+  LAND       : 3,
+  SWAP_L     : 4,
+  SWAP_R     : 5,
+  SWAPPING_L : 6,
+  SWAPPING_R : 7,
+  CLEAR      : 8,
   // Animation Frame
   FRAME_LAND    : [4,4,4,2,2,2,3,3,3,0],
   FRAME_CLEAR   : [6,0,6,0,6,0,6,0,6,0,6,0,
@@ -46,16 +50,10 @@ module.exports = {
                    6,0,6,0,6,0,6,0,5,5,5,5,
                    5,5,5,5,5,5,5,5,5,5,5,5],
 
-  FRAME_LIVE    : [0],
+  FRAME_LIVE    :  0,
   FRAME_DANGER  : [0,4,0,3,2,3],
   FRAME_DEAD    : [5],
-  FRAME_NEWLINE : [1],
-
-  // Animation states
-  ANIM_SWAP_LEFT  : 0,
-  ANIM_SWAP_RIGHT : 1,
-  ANIM_LAND       : 2,
-  ANIM_CLEAR      : 3,
+  FRAME_NEWLINE :  1,
 
   // Timing
   TIME_CLEAR : 60, //the time it takes before the first panel is ready to start popping
