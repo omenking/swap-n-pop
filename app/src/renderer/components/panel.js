@@ -28,6 +28,7 @@ module.exports = function(game){
     TIME_POP,
     TIME_FALL
   } = require(APP.path.core('data'))
+
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
 
@@ -105,12 +106,8 @@ module.exports = function(game){
       this.y       = data[1]
       this.kind    = data[2]
       this.state   = data[3]
-      this.chain   = data[4]
-      this.counter = data[5]
-      // maybe we can infer these 3 if we reorganize our code
-      this.counter_popping   = data[6]
-      this.animation_state   = data[7]
-      this.animation_counter = data[8]
+      this.counter = data[4]
+      this.chain   = data[5]
     }
     create(playfield, x, y){
       this.playfield = playfield
@@ -246,7 +243,6 @@ module.exports = function(game){
           }
           break;
         case LAND:
-          console.log('land done')
           this.state = STATIC
           break;
         default:
