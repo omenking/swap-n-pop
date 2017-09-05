@@ -177,7 +177,7 @@ module.exports = function(game){
       // create panels
       for (let i = PANELS; i < PANELS+COLS; i++){
         const [x,y] = Array.from(_f.i2xy(i))
-        this.stack(i) = new ComponentPanel()
+        this._stack[i] = new ComponentPanel()
         this.stack(i).create(this, x, y)
       }
       // fill panels
