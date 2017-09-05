@@ -130,18 +130,6 @@ module.exports = function(game){
              ((this.right.kind === i) && (this.right2.kind === i))
     }
     set frame(i){ this.sprite.frame = (this.kind * 8) + i}
-    play_swap(){
-      if (this.animation_counter <= 0) { this.animation_state = null; }
-      if (this.animation_counter > 0 ) { this.animation_counter--;    }
-      switch (this.animation_state) {
-        case ANIM_SWAP_LEFT:
-          var step = UNIT / TIME_SWAP;
-          this.sprite.x += step * this.animation_counter;
-        case ANIM_SWAP_RIGHT:
-          this.sprite.x -= step * this.animation_counter;
-      }
-    }
-
     set(i){
       switch (i) {
         case 'unique':
@@ -166,6 +154,11 @@ module.exports = function(game){
 
       switch (this.state) {
         case SWAP_L:
+          const i1 = this.kind
+          const i2 = this.right.kind
+          this.kind       = i2
+          this.right.kind = i1
+
           this.state   = SWAPPING_L
           this.counter = TIME_SWAP
           break
@@ -174,17 +167,13 @@ module.exports = function(game){
           this.counter = TIME_SWAP
           break
         case SWAPPING_L:
-          const i1 = this.kind
-          const i2 = this.right.kind
-          this.kind       = i2
-          this.right.kind = i1
           this.state = STATIC
           break
         case SWAPPING_R:
           this.state = STATIC
           break
         case STATIC:
-          if (this.under.empty && !this.empty) {
+          if ((this.under.empty && !this.empty) || this.under.state === HANG) {
             this.state = HANG
           }
           //if (this.under === blank) {
@@ -245,7 +234,7 @@ module.exports = function(game){
     }
 
     render_visible(){
-      if (this.hidden || this.counter_popping === 0 ){
+      if (this.hidden){
         this.sprite.visible = false
       } else {
         this.sprite.visible = true
@@ -328,12 +317,22 @@ module.exports = function(game){
         this.frame = FRAME_NEWLINE
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
+      } if (this.state === SWAPPING_L || this.state === SWAPPING_R){
+        let v = (UNIT / TIME_SWAP) * this.counter
+        switch (this.state) {
+          case SWAPPING_L:
+            this.sprite.x += v
+            break
+          case SWAPPING_R:
+            this.sprite.x -= v
+            break
+        }
+        this.frame = FRAME_LIVE
       } else if (this.danger){
         //this.play_danger()
       } else {
         this.frame = FRAME_LIVE
       }
-      //this.play_swap()
     }
     render(){
       if (!this.sprite) { return; }

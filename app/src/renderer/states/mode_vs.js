@@ -29,6 +29,7 @@ module.exports = function(game){
 
     static initClass() {
       this.prototype.rng = null
+      this.prototype.debug = false
     }
     init(data){
       this.tick = -1
@@ -200,6 +201,9 @@ module.exports = function(game){
       this.update_replay()
     }
     render(){
+      if(this.debug) { 
+        debugger
+      }
       if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
     }

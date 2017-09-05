@@ -69,69 +69,63 @@ describe('panel_actions', function() {
   })
 
   it('#swapping', function(){
-    // 1 0 N
-    // 1 4 N
-    // 2 3 N
-    load([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAP_L,0,F], [2,8 ,N,SWAP_R,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
+    // 0 N
+    load([0,10 ,0,SWAP_L,0,F], [1,10 ,N,SWAP_R,0,F])
     //################################################################
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAPPING_L,4,F], [2,8 ,N,SWAPPING_R,4,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F]    , [2,9 ,N,STATIC    ,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F]    , [2,10,N,STATIC    ,0,F])
+    chec([0,10 ,N,SWAPPING_L,4,F], [1,10 ,0,SWAPPING_R,4,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAPPING_L,3,F], [2,8 ,N,SWAPPING_R,3,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F]    , [2,9 ,N,STATIC    ,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F]    , [2,10,N,STATIC    ,0,F])
+    chec([0,10 ,N,SWAPPING_L,3,F], [1,10 ,0,SWAPPING_R,3,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAPPING_L,2,F], [2,8 ,N,SWAPPING_R,2,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F]    , [2,9 ,N,STATIC    ,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F]    , [2,10,N,STATIC    ,0,F])
+    chec([0,10 ,N,SWAPPING_L,2,F], [1,10 ,0,SWAPPING_R,2,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAPPING_L,1,F], [2,8 ,N,SWAPPING_R,1,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F]    , [2,9 ,N,STATIC    ,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F]    , [2,10,N,STATIC    ,0,F])
+    chec([0,10 ,N,SWAPPING_L,1,F], [1,10 ,0,SWAPPING_R,1,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,N ,STATIC,0,F], [2,8 ,0,STATIC,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4 ,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3 ,STATIC,0,F], [2,10,N,STATIC,0,F])
+    chec([0,10 ,N,STATIC,0,F], [1,10 ,0,STATIC,0,F])
   })
 
   it('#hang', function(){
-    // 1 N 0
-    // 1 4 N
-    // 2 3 N
-    load([0,8 ,1,STATIC,0,F], [1,8 ,N ,STATIC,0,F], [2,8 ,0,STATIC,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4 ,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3 ,STATIC,0,F], [2,10,N,STATIC,0,F])
+    // 1
+    // 0
+    // N
+    // N
+    load([0,7 ,1,STATIC,0,F],
+         [0,8 ,0,STATIC,0,F],
+         [0,9 ,N,STATIC,0,F],
+         [0,10,N,STATIC,0,F])
     //################################################################
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,0,HANG  ,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
+    chec([0,7 ,1,HANG  ,0,F],
+         [0,8 ,0,HANG  ,0,F],
+         [0,9 ,N,STATIC,0,F],
+         [0,10,N,STATIC,0,F])
   })
 
   it('#fall', function(){
-    // 1 N 0
-    // 1 4 N
-    // 2 3 N
-    load([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,0,HANG  ,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
+    // 1
+    // 0
+    // N
+    // N
+    load([0,7 ,1,HANG  ,0,F],
+         [0,8 ,0,HANG  ,0,F],
+         [0,9 ,N,STATIC,0,F],
+         [0,10,N,STATIC,0,F])
     //################################################################
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,0 ,FALL  ,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
+    chec([0,7 ,1 ,FALL ,0,F],
+         [0,8 ,0 ,FALL ,0,F],
+         [0,9 ,N,STATIC,0,F],
+         [0,10,N,STATIC,0,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,false], [2,8 ,N,STATIC,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,false], [2,9 ,0,FALL  ,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,false], [2,10,N,STATIC,0,F])
+    chec([0,7 ,N,STATIC,0,F],
+         [0,8 ,1,FALL  ,0,F],
+         [0,9 ,0,FALL  ,0,F],
+         [0,10,N,STATIC,0,F])
     playfield.update()
-    chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,N,STATIC,0,F],
-         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,0,FALL  ,0,F])
+    chec([0,7 ,N,STATIC,0,F],
+         [0,8 ,N,STATIC,0,F],
+         [0,9 ,1,FALL  ,0,F],
+         [0,10,0,FALL  ,0,F])
   })
 
   it('#land', function(){
