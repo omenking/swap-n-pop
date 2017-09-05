@@ -1,14 +1,25 @@
 const APP = require('swap-n-pop_app')
 const fs   = require('fs')
 const chai = require('chai')
+const sinon = require('sinon')
 chai.should()
 
 const game = require(APP.path.spec('helpers','game_spec'))
-const {STATIC,HANG,FALL}  = require(APP.path.core('data'))
+const {STATIC,HANG,FALL,CLEAR,PANELS}  = require(APP.path.core('data'))
 const _f                  = require(APP.path.core('filters'))
 const Stage               = require(APP.path.states('mode_vs'))(game)
 const Playfield           = require(APP.path.components('playfield'))(game)
 const Panel               = require(APP.path.components('panel'))(game)
+
+//shorthands
+const T = true
+const F = false
+const N = null
+
+var _playfield = null
+function load(...arr){
+  for (i of arr){ _playfield.stack(i[0], i[1]).deserialize(i) }
+}
 
 describe('Panel', function() {
   describe('#class_name' ,function(){
@@ -47,6 +58,26 @@ describe('Panel', function() {
 
   describe('#clear()' ,function(){
     it('should work', function(){
+    })
+  })
+
+  describe.only('#clear_index' ,function(){
+    it('should work', function(){
+      let stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
+      playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
+      playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
+      playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
+      playfield.running    = true
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
+      _playfield = playfield
+
+      load([0, 8 ,0,CLEAR,60,F],
+           [0, 9 ,1,CLEAR,60,F],
+           [0,10 ,1,CLEAR,60,F])
+      playfield.stack(0,10).clear_index.should.eql([2,3])
     })
   })
 

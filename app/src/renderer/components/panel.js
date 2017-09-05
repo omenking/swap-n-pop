@@ -79,8 +79,6 @@ module.exports = function(game){
       this.prototype.playfield          = null;
       this.prototype.x                  = null;
       this.prototype.y                  = null;
-      this.prototype.animation_state    = null;
-      this.prototype.animation_counter  = 0;
       this.prototype.chain              = null;
       this.prototype.sprite             = null;
       this.prototype.i                  = null;
@@ -236,6 +234,8 @@ module.exports = function(game){
     render_visible(){
       if (this.hidden){
         this.sprite.visible = false
+      } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
+        this.sprite.visible = false
       } else {
         this.sprite.visible = true
       }
@@ -304,7 +304,19 @@ module.exports = function(game){
         return this.play_live();
       }
     }
-
+    get clear_index(){
+      if (this.state !== CLEAR) {
+        throw(new Error('clear_index called on non CLEAR panel'))
+      }
+      let panels = []
+      for (let p of this.playfield.stack()){
+        if (p.counter === this.counter &&
+            p.state   === CLEAR) {
+          panels.push(p)
+        }
+      }
+      return [panels.indexOf(this),panels.length]
+    }
     //swap
     //land
     //clear
@@ -315,9 +327,18 @@ module.exports = function(game){
     animate(){
       if (this.newline) {
         this.frame = FRAME_NEWLINE
+      } else if (this.state === CLEAR){
+        let [i,len] = this.clear_index
+        let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
+        this.time_pop = TIME_CLEAR + (TIME_POP*i)
+        this.time_cur = time_max - this.counter
+        if (FRAME_CLEAR.length > this.time_cur){
+          //if(i === 0){ console.log(time_cur,FRAME_CLEAR[time_cur])}
+          this.frame = FRAME_CLEAR[this.time_cur]
+        }
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
-      } if (this.state === SWAPPING_L || this.state === SWAPPING_R){
+      } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
         let v = (UNIT / TIME_SWAP) * this.counter
         switch (this.state) {
           case SWAPPING_L:
