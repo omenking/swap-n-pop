@@ -124,7 +124,7 @@ module.exports = function(game){
     get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
     get support()   {  return this.state !== FALL && !this.hidden }
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
-    get comboable() {  return this.clearable || ((this.state === CLEAR) && this.clearing); }
+    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
     get empty() {      return (this.counter === 0) && this.hidden }
     get hidden(){      return (this.kind === null) }
     matched(i){
@@ -269,10 +269,7 @@ module.exports = function(game){
       game.sounds.swap()
     }
     popping(i){
-      const time = TIME_CLEAR + (TIME_POP*this.playfield.panels_clearing.length) + TIME_FALL;
-      this.counter = time
-      this.clearing = false;
-      return this.counter_popping = TIME_CLEAR + (TIME_POP*(i+1));
+      this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
     }
 
     nocombo() {
@@ -289,9 +286,8 @@ module.exports = function(game){
     }
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }
-      this.clearing = true
-      this.state    = CLEAR
-      this.playfield.panels_clearing.push(this)
+      this.state = CLEAR
+      this.playfield.clearing.push(this)
       return [1, this.chain]
     }
     chain_and_combo() {
@@ -303,8 +299,10 @@ module.exports = function(game){
       return [combo,chain]
     }
     check_neighbours(p1,p2,combo,chain){
-      if (!p1.comboable || (p1.kind !== this.kind)  ||
-          !p2.comboable || (p2.kind !== this.kind)) { return [combo,chain]; }
+      if (
+        !p1.comboable          || !p2.comboable ||
+         p1.kind !== this.kind || p2.kind !== this.kind
+      ) { return [combo,chain]; }
       const panel1  = p1.clear()
       const middle  = this.clear()
       const panel2  = p2.clear()

@@ -28,6 +28,7 @@ module.exports = function(game){
       this.prototype.chain       = null
       this.prototype.cursor      = null
       this.prototype.blank       = null
+      this.prototype.clearing    = null
       this.prototype.score       = 0
       this.prototype.scoreText   = null
       this.prototype.pushTime    = 0
@@ -35,7 +36,6 @@ module.exports = function(game){
       this.prototype.has_ai      = false
       this.prototype.running     = false
       this.prototype.land        = false
-      this.prototype.panels_clearing = []
        // when any panel has landed in the stac
     }
     constructor(pi){
@@ -231,15 +231,18 @@ module.exports = function(game){
       let i, panel
       let combo = 0
       let chain = false
-      this.panels_clearing = [];
-      for (i = 0; i < this._stack_size; i++) {
-        const cnc  = this._stack[i].chain_and_combo()
+
+      this.clearing = []
+      for (i = 0; i < this.stack_size; i++) {
+        const cnc  = this.stack(i).chain_and_combo()
         combo += cnc[0]
         if (cnc[1]) { chain  = true; }
       }
-      for (i = 0; i < this.panels_clearing.length; i++) {
-        this.panels_clearing[i].popping(i)
+
+      for (let panel of this.clearing){
+        panel.popping(this.clearing.length)
       }
+
       if (this.chain && this.chain_over()) { this.chain = 0; }
       return [combo, chain]
     }
@@ -253,8 +256,7 @@ module.exports = function(game){
     // returns a boolean
     chain_over() {
       let chain = true;
-      for (let panel of Array.from(this.stack())) {
-        //if (panel.chain) { console.log('chained!'); }
+      for (let panel of this.stack()) {
         if (panel.chain) { chain = false; }
       }
       return chain;

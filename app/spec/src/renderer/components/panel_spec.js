@@ -56,6 +56,14 @@ describe('Panel', function() {
       let stack     = null
       let playfield = null
       let panels   = [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
         1   , null, null, null, null, null,
         1   , null, null, null, null, null,
         1   , null, null, null, null, null
@@ -64,8 +72,9 @@ describe('Panel', function() {
       stage.init({seed: 'test'})
       playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-      let i = _f.xy2i(0,9)
-      playfield.stack[i].check_neighbours(playfield.stack[i].above, playfield.stack[i].under, 0, false).should.eql([3,false])
+      playfield.stack(0,9).check_neighbours(
+        playfield.stack(0,9).above,
+        playfield.stack(0,9).under, 0, false).should.eql([3,false])
     })
   })
 
@@ -75,6 +84,14 @@ describe('Panel', function() {
       let stack     = null
       let playfield = null
       let panels   = [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
         null, 1, null, null, null, null,
         1   , 1, 1   , null, null, null,
         null, 1, null, null, null, null
@@ -83,8 +100,7 @@ describe('Panel', function() {
       stage.init({seed: 'test'})
       playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-      let i = _f.xy2i(1,9)
-      playfield.stack[i].chain_and_combo().should.eql([5,false])
+      playfield.stack(1,9).chain_and_combo().should.eql([3,false])
     })
   })
 }) //klass

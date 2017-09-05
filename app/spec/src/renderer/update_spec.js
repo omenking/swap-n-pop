@@ -20,7 +20,8 @@ const {
   STATIC,
   HANG,
   FALL,
-  LAND
+  LAND,
+  CLEAR
 } = require(APP.path.core('data'))
 
 //shorthands
@@ -37,7 +38,7 @@ function chec(...arr){
   for (i of arr){ _playfield.stack(i[0], i[1]).serialize.should.eql(i)}
 }
 
-describe('Panel Update', function() {
+describe('panel_actions', function() {
   var playfield
   beforeEach(function(){
     let stage = new Stage()
@@ -52,7 +53,11 @@ describe('Panel Update', function() {
     _playfield = playfield
   })
 
-  it('swap', function(){
+  //todo - swapping should allow for a panel 
+  it('#swap', function(){
+    // 1 0 N
+    // 1 4 N
+    // 2 3 N
     load([0,8 ,1,STATIC,0,F], [1,8 ,0,STATIC,0,F], [2,8 ,N,STATIC,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
@@ -63,7 +68,10 @@ describe('Panel Update', function() {
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
   })
 
-  it('swapping', function(){
+  it('#swapping', function(){
+    // 1 0 N
+    // 1 4 N
+    // 2 3 N
     load([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAP_L,0,F], [2,8 ,N,SWAP_R,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
@@ -90,7 +98,10 @@ describe('Panel Update', function() {
          [0,10,2,STATIC,0,F], [1,10,3 ,STATIC,0,F], [2,10,N,STATIC,0,F])
   })
 
-  it('hang', function(){
+  it('#hang', function(){
+    // 1 N 0
+    // 1 4 N
+    // 2 3 N
     load([0,8 ,1,STATIC,0,F], [1,8 ,N ,STATIC,0,F], [2,8 ,0,STATIC,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4 ,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3 ,STATIC,0,F], [2,10,N,STATIC,0,F])
@@ -101,15 +112,18 @@ describe('Panel Update', function() {
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
   })
 
-  it('fall', function(){
+  it('#fall', function(){
+    // 1 N 0
+    // 1 4 N
+    // 2 3 N
     load([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,0,HANG  ,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
     //################################################################
     playfield.update()
     chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,0 ,FALL  ,0,F],
-      [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
-      [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
+         [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
     playfield.update()
     chec([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,false], [2,8 ,N,STATIC,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,false], [2,9 ,0,FALL  ,0,F],
@@ -120,7 +134,10 @@ describe('Panel Update', function() {
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,0,FALL  ,0,F])
   })
 
-  it('land', function(){
+  it('#land', function(){
+    // 1 N N
+    // 1 4 N
+    // 2 3 0
     load([0,8 ,1,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,N,STATIC,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,0,FALL  ,0,F])
@@ -143,4 +160,50 @@ describe('Panel Update', function() {
          [0,9 ,1,STATIC,0,false], [1,9 ,4,STATIC,0,false], [2,9 ,N,STATIC,0,false],
          [0,10,2,STATIC,0,false], [1,10,3,STATIC,0,false], [2,10,0,STATIC,0,false])
   })
+
+  it('#clear', function(){
+    // N 2 N
+    // 2 1 2
+    // 3 1 3
+    // 2 1 2
+    load([0,7 ,N,STATIC,0,F], [1,7 ,2,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,1,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,1,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,1,STATIC,0,F], [2,10,2,STATIC,0,F])
+    //################################################################
+    playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,2,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,1,CLEAR,90,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,1,CLEAR,90,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,1,CLEAR,90,F], [2,10,2,STATIC,0,F])
+    for(i = 0; i < 90; i++){ playfield.update() }
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,2,HANG  ,0,T], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
+  })
+  it('#chain', function(){
+    // N 2 N
+    // 2 N 2
+    // 3 N 3
+    // 2 N 2
+    load([0,7 ,N,STATIC,0,F], [1,7 ,2,HANG  ,0,T], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
+    //################################################################
+    playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,2,FALL  ,0,T], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
+    playfield.update()
+    playfield.update()
+    playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,CLEAR,90,F], [1,10,2,CLEAR ,90,T],[2,10,2,CLEAR,90,F])
+  })
+
 }) //klass
