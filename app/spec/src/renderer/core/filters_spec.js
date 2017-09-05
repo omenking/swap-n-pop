@@ -84,4 +84,22 @@ describe('_f', function() {
     it('4,10 should be 64', function(){ _f.xy2i(4,10).should.eql(64) })
     it('5,10 should be 65', function(){ _f.xy2i(5,10).should.eql(65) })
   })
+
+  describe('#out_of_bounds(x,y)' ,function(){
+    it('-x out of bounds',function(){
+      _f.out_of_bounds(-1,0).should.be.true
+    })
+    it('+x out of bounds',function(){
+      _f.out_of_bounds(6,0).should.be.true
+    })
+    it('-y out of bounds',function(){
+      _f.out_of_bounds(0,-1).should.be.true
+    })
+    it('+y out of bounds',function(){
+      _f.out_of_bounds(0,11).should.be.true
+    })
+    it('should be in bounds',function(){
+      _f.out_of_bounds(0,0).should.be.false
+    })
+  })
 })

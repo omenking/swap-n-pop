@@ -46,19 +46,15 @@ module.exports = function(game){
     get chain()    {return this.attr_chain }
     set chain(val) {       this.attr_chain = val }
 
-    get pos(){
-      return _f.xy2i(this.x,this.y)
-    }
+    get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack(this.x-1,this.y)   }
+    get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack(this.x+1,this.y)   }
+    get under(){ return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack(this.x  ,this.y+1) }
+    get above(){ return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack(this.x  ,this.y-1) }
 
-    get  left(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack(this.x-1,this.y)   }
-    get right(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack(this.x+1,this.y)   }
-    get under(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+1) }
-    get above(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-1) }
-
-    get  left2(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack(this.x-2,this.y)  }
-    get right2(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack(this.x+2,this.y)  }
-    get under2(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+2)}
-    get above2(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-2)}
+    get  left2(){ return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack(this.x-2,this.y)  }
+    get right2(){ return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack(this.x+2,this.y)  }
+    get under2(){ return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack(this.x  ,this.y+2)}
+    get above2(){ return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack(this.x  ,this.y-2)}
 
     constructor() {
       this.create   = this.create.bind(this)
@@ -66,19 +62,18 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.deserialize = this.deserialize.bind(this);
-
-      this.matched = this.matched.bind(this);
-
-      this.set = this.set.bind(this);
-      this.render_visible = this.render_visible.bind(this);
-      this.swap = this.swap.bind(this);
-      this.popping = this.popping.bind(this);
-      this.clear = this.clear.bind(this);
-      this.nocombo = this.nocombo.bind(this);
-      this.chain_and_combo = this.chain_and_combo.bind(this);
-      this.check_neighbours = this.check_neighbours.bind(this);
-      this.check_dead = this.check_dead.bind(this);
+      this.deserialize      = this.deserialize.bind(this);
+      this.matched          = this.matched.bind(this);
+      this.set              = this.set.bind(this)
+      this.render_visible   = this.render_visible.bind(this)
+      this.swap             = this.swap.bind(this)
+      this.popping          = this.popping.bind(this)
+      this.clear            = this.clear.bind(this)
+      this.nocombo          = this.nocombo.bind(this)
+      this.chain_and_combo  = this.chain_and_combo.bind(this)
+      this.check_neighbours = this.check_neighbours.bind(this)
+      this.check_dead       = this.check_dead.bind(this)
+      this.out_of_bounds    = this.out_of_bounds.bind(this)
     }
 
     static initClass() {

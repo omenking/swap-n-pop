@@ -35,5 +35,9 @@ module.exports = {
     console.log('9 -',s[54],s[55],s[56],s[57],s[58],s[59])
     console.log('10 -',s[60],s[61],s[62],s[63],s[64],s[65])
 
+  },
+  out_of_bounds(x,y){
+    return x < 0 || x > (COLS-1) ||
+           y < 0 || y > (ROWS-1)
   }
 }
