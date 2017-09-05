@@ -246,10 +246,9 @@ module.exports = function(game){
       if (this.chain && this.chain_over()) { this.chain = 0; }
       return [combo, chain]
     }
-    swap(x, y){
-      const i = _f.xy2i(x,y)
-      if (this._stack[i].swappable && this._stack[i+1].swappable) {
-        this.stack(i).swap()
+    swap(x,y){
+      if (this.stack(x,y).swappable && this.stack(x+1,y).swappable) {
+        this.stack(x,y).swap()
       }
     }
     // Checks if the current chain is over.

@@ -220,4 +220,37 @@ describe('panel_actions', function() {
          [0,10,2,CLEAR,90,F], [1,10,2,CLEAR ,90,T],[2,10,2,CLEAR,90,F])
     playfield.chain.should.eql(1)
   })
+
+  it('#chain_swap', function(){
+    // swap in 2 as 4 is falling
+    // 3 2 3
+    // 1 4 1
+    // 0 4 0
+    // 3 4 2
+    // 1 2 3
+    load([0,6 ,3,STATIC,0,F], [1,6  ,2,STATIC,0,F], [2,6 ,3,STATIC,0,F],
+         [0,7 ,1,STATIC,0,F], [1,7  ,4,STATIC,0,F], [2,7 ,1,STATIC,0,F],
+         [0,8 ,0,STATIC,0,F], [1,8  ,4,STATIC,0,F], [2,8 ,0,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9  ,4,STATIC,0,F], [2,9 ,2,STATIC,0,F],
+         [0,10,1,STATIC,0,F], [1,10 ,2,STATIC,0,F], [2,10,3,STATIC,0,F])
+    //################################################################
+    playfield.update()
+    load([0,6 ,3,STATIC,0,F], [1,6  ,2,STATIC,0,F], [2,6 ,3,STATIC,0,F],
+         [0,7 ,1,STATIC,0,F], [1,7  ,4,CLEAR,90,F], [2,7 ,1,STATIC,0,F],
+         [0,8 ,0,STATIC,0,F], [1,8  ,4,CLEAR,90,F], [2,8 ,0,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9  ,4,CLEAR,90,F], [2,9 ,2,STATIC,0,F],
+         [0,10,1,STATIC,0,F], [1,10 ,2,STATIC,0,F], [2,10,3,STATIC,0,F])
+    for(i = 0; i < 90; i++){ playfield.update() }
+    load([0,6 ,3,STATIC,0,F], [1,6  ,2,HANG,0,T], [2,6 ,3,STATIC,0,F],
+         [0,7 ,1,STATIC,0,F], [1,7  ,N,STATIC,0,F], [2,7 ,1,STATIC,0,F],
+         [0,8 ,0,STATIC,0,F], [1,8  ,N,STATIC,0,F], [2,8 ,0,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9  ,N,STATIC,0,F], [2,9 ,2,STATIC,0,F],
+         [0,10,1,STATIC,0,F], [1,10 ,2,STATIC,0,F], [2,10,3,STATIC,0,F])
+    playfield.swap(1,10)
+    load([0,6 ,3,STATIC,0,F], [1,6  ,2,HANG,0,T], [2,6 ,3,STATIC,0,F],
+         [0,7 ,1,STATIC,0,F], [1,7  ,N,STATIC,0,F], [2,7 ,1,STATIC,0,F],
+         [0,8 ,0,STATIC,0,F], [1,8  ,N,STATIC,0,F], [2,8 ,0,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9  ,N,STATIC,0,F], [2,9 ,2,STATIC,0,F],
+         [0,10,1,STATIC,0,F], [1,10 ,2,SWAP_L,0,F], [2,10,3,SWAP_R,0,F])
+  })
 }) //klass
