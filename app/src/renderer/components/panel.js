@@ -55,10 +55,10 @@ module.exports = function(game){
     get under(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+1) }
     get above(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-1) }
 
-    get  left2(){ return ((this.pos+2) % COLS) === 1    ? blank : this.playfield.stack(this.x-2,this.y)  }
-    get right2(){ return ((this.pos+2) % COLS) === 0    ? blank : this.playfield.stack(this.x+2,this.y)  }
-    get under2(){ return  (this.pos+2) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+2)}
-    get above2(){ return  (this.pos+2) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-2)}
+    get  left2(){ return ((this.pos+1) % COLS) === 1    ? blank : this.playfield.stack(this.x-2,this.y)  }
+    get right2(){ return ((this.pos+1) % COLS) === 0    ? blank : this.playfield.stack(this.x+2,this.y)  }
+    get under2(){ return  (this.pos+1) >= (PANELS-COLS) ? blank : this.playfield.stack(this.x  ,this.y+2)}
+    get above2(){ return  (this.pos+1) <= COLS          ? blank : this.playfield.stack(this.x  ,this.y-2)}
 
     constructor() {
       this.create   = this.create.bind(this)
