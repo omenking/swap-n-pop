@@ -73,7 +73,6 @@ module.exports = function(game){
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.check_neighbours = this.check_neighbours.bind(this)
       this.check_dead       = this.check_dead.bind(this)
-      this.out_of_bounds    = this.out_of_bounds.bind(this)
     }
 
     static initClass() {
