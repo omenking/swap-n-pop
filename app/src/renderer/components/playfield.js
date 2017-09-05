@@ -282,13 +282,13 @@ module.exports = function(game){
      */
     update_push() {
       if (this.cursor.can_push()) {
-        this.pushCounter -= 100;
+        this.pushCounter -= 100
       } else {
-        this.pushCounter--;
+        this.pushCounter--
       }
       if (this.pushCounter <= 0) {
-        this.pushCounter = this.pushTime;
-        return this.score      += this.push();
+        this.pushCounter   = this.pushTime
+        this.score        += this.push()
       }
     }
     track_panel(panel,name,v){
@@ -351,17 +351,17 @@ module.exports = function(game){
     }
     score_current(cnc){
       if (cnc[0] > 0) {
-        //console.log('combo is ', cnc);
+        console.log('combo is ', cnc);
         this.score += cnc[0] * 10;
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
-          //console.log('chain is ', this.chain + 1);
+          console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
           this.score += this.score_chain(this.chain + 1);
         }
-        //console.log('Score: ', this.score);
+        console.log('Score: ', this.score);
       }
     }
     render_stack() {

@@ -20,7 +20,7 @@ module.exports = function(game){
 
     update(chain,score){
       let text  = `${score}`;
-      if (chain) { text += `\nchain: ${chain}${1}`; }
+      if (chain) { text += `\nchain: ${chain+1}`; }
       return this.lbl.setText(text);
     }
   }
