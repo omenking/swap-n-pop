@@ -7,11 +7,6 @@ const Server = require(APP.path.main('server'))
 
 describe('Server' ,function(){
   describe('#create()' ,function(){
-    it('default to port 41234 host 127.0.0.1',function(){
-      const server = new Server()
-      server.create()
-      server.close()
-    })
     it('should be able to change port and host',function(){
       const server = new Server()
       server.create(41235,'127.0.0.2')
@@ -20,10 +15,19 @@ describe('Server' ,function(){
   })
 
   describe('#send(msg)' ,function(){
-    it('should send message',function(){
+    it('should send message',function(done){
       const server = new Server()
-      server.create()
-      server.send('hello!')
+      const client = new Server()
+      server.create(40099,'127.0.0.1',function(){
+        client.create(40001,'127.0.0.1',function(){
+          client.connect(40099,'127.0.0.1',function(err,data){
+            data.port.should.eql(40099)
+            done(err)
+          })
+        })
+      })
+
+
     })
   })
 })
