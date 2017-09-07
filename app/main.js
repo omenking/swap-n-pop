@@ -37,9 +37,10 @@ if (!store.has('inputs')){
 
 const template = [
   {
-    label: 'Controls',
+    label: 'Settings',
     submenu: [
-      {click: click_edit_input, label: "Input"}
+      {click: click_settings_input  , label: "Input"},
+      {click: click_settings_network, label: "Network"}
     ]
   }
 ]
@@ -48,19 +49,37 @@ if (process.platform === 'darwin') {
   template.unshift({
     label: "Swap N Pop",
     submenu: [
-      {role: 'about', label: "About"},
+      {role: 'about', label: "About Swap N Pop"},
+      {type: 'separator' },
+      {click: click_settings_input, label: "Preferences"},
+      {type: 'separator' },
       {role: 'quit' , label: "Quit"}
     ]
   })
 }
 
-
 const menu  = Menu.buildFromTemplate(template)
 
 
-function click_edit_input(item, win, ev) {
+function click_settings_input(item, win, ev) {
   win_edit_input = new BrowserWindow({
     title     : "Input",
+    width     : 400,
+    height    : 400,
+    parent    : win,
+    resizable: false
+  })
+  win_edit_input.loadURL(url.format({
+    pathname: path.join(__dirname, 'src', 'edit_input.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+  win_edit_input.webContents.openDevTools()
+}
+
+function click_settings_network(item, win, ev) {
+  win_edit_input = new BrowserWindow({
+    title     : "Network",
     width     : 300,
     height    : 334,
     parent    : win

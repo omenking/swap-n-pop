@@ -3,31 +3,47 @@
   <head>
     <meta charset="UTF-8">
     <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
     <style>
       * {box-sizing: border-box; }
-      html,body{ margin:0;padding:0;font-family: arial;}
+      html,body{ 
+        background: rgb(33,33,33); 
+        margin:0;
+        padding:0;
+        font-family: 'Open Sans', arial, sans-serif;
+        font-weight: 300;
+        color: rgb(246,246,246);
+        font-size: 11px;
+      }
       .clear { display: block; clear: both; }
-      .fields { padding: 16px; }
+      .fields { 
+        padding: 24px 40px;
+        border-right: solid 1px rgb(48,48,48)
+      }
       .title {
-        color: rgb(100,100,100);
-        font-size: 13px;
+        color: rgb(246,246,246);
+        font-weight: 600;
+        letter-spacing: 0.1em;
         padding-bottom: 8px;
+        text-shadow: 1px 1px #000000;
       }
       .p0 table { margin-right: 16px; }
       .text_field        { margin-bottom: 16px; }
-      .text_field .lbl   { font-size: 12px;}
+      .text_field .lbl   { font-size: 11px;}
       .text_field .input {
-        padding: 4px;
+        padding: 6px 8px;
         width: 70px;
-        height: 24px;
-        font-size: 12px;
-        border: solid 1px rgb(200,200,200);
-        border-bottom: solid 1px rgb(140,140,140);
+        height: 29px;
+        font-size: 11px;
+        border-radius: 3px;
+        border: solid 1px rgb(0,0,0);
+        background: rgb(42,42,42);
+        box-shadow: inset 0px 0px 3px #111;
       }
       .text_field .input.setting {
-        background: rgb(230,230,230);
-        border: solid 1px rgb(140,140,140);
-        border-bottom: solid 1px rgb(100,100,100);
+        border: solid 1px rgb(0,0,0);
+        background: rgb(62,62,62);
+        box-shadow: inset 0px 0px 3px #111;
       }
       .p0, .p1 { float: left; }
     </style>

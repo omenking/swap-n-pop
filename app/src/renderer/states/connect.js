@@ -9,7 +9,7 @@ module.exports = function(game){
       this.update = this.update.bind(this)
 
       this.listening = this.listening.bind(this)
-      this.start      = this.start.bind(this)
+      this.start     = this.start.bind(this)
     }
     create(){
       this.server = new Server()
@@ -24,6 +24,8 @@ module.exports = function(game){
     }
     start(){
       ipc.send('play-vs',{online: this.server, cpu: false})
+    }
+    update(){
     }
   }
 

@@ -13,8 +13,6 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.start = this.start.bind(this)
-
       this.create_bg = this.create_bg.bind(this);
       this.create_frame = this.create_frame.bind(this);
       this.stage_music = this.stage_music.bind(this);
