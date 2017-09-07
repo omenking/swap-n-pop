@@ -1,6 +1,6 @@
 module.exports = function(game){
   const APP = require('swap-n-pop_app')
-  const Stack = require(APP.path.core('stack'))(game)
+  const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
@@ -12,6 +12,8 @@ module.exports = function(game){
       this.update   = this.update.bind(this)
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
+
+      this.start = this.start.bind(this)
 
       this.create_bg = this.create_bg.bind(this);
       this.create_frame = this.create_frame.bind(this);
@@ -32,15 +34,17 @@ module.exports = function(game){
       this.prototype.debug = false
     }
     init(data){
-      this.tick = -1
-      this.seed = data.seed
-      this.rng  = seedrandom(this.seed)
+      this.tick   = -1
+      this.seed   = data.seed
+      this.online = data.online
+      this.rng    = seedrandom(this.seed)
+
       if (data.inputs) {
-        this.replay = true
+        this.replay    = true
         this.replaying = [null,null]
-        this.inputs = data.inputs
+        this.inputs    = data.inputs
       } else {
-        this.replay    = false
+        this.replay = false
         this.inputs = [
           [[-1,0,'000000']],
           [[-1,0,'000000']]
@@ -54,8 +58,8 @@ module.exports = function(game){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
     }
     create() {
-      game.stage.backgroundColor = 0x000000;
-      this.state_music = 'none';
+      game.stage.backgroundColor = 0x000000
+      this.state_music = 'none'
 
       this.danger = false;
       this.msx_stage_results  = game.add.audio('msx_stage_results');
@@ -173,12 +177,17 @@ module.exports = function(game){
       if (this.replaying[pi] === null) {
         this.replaying[pi] = this.inputs[pi].shift()
       }
-      if ((this.replaying[pi][0]+this.replaying[pi][1]) < this.tick){
-        while((this.replaying[pi][0]+this.replaying[pi][1]) < this.tick){
+
+      const tick   = this.replaying[pi][0]
+      const times  = this.replaying[pi][1]
+      const inputs = this.replaying[pi][2]
+
+      if ((tick+times) < this.tick){
+        while((tick+times) < this.tick){
           this.replaying[pi] = this.inputs[pi].shift()
         }
-        console.log('+',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
-        game.controls.execute(pi,this.replaying[pi][2])
+        console.log('+',this.tick,tick,times,inputs)
+        game.controls.execute(pi,inputs)
       } else {
         //console.log('~',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
       }
@@ -201,7 +210,7 @@ module.exports = function(game){
       this.update_replay()
     }
     render(){
-      if(this.debug) { 
+      if(this.debug){
         debugger
       }
       if (this.playfield1) { this.playfield1.render() }

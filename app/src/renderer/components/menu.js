@@ -6,24 +6,20 @@ module.exports = function(game){
 
   class controller {
     constructor() {
-      this.create = this.create.bind(this);
-      this.update = this.update.bind(this);
-      this.mode_1p_vs_2p_local = this.mode_1p_vs_2p_local.bind(this);
-      this.mode_1p_vs_2p_online = this.mode_1p_vs_2p_online.bind(this);
-      this.mode_1p_vs_cpu = this.mode_1p_vs_cpu.bind(this);
-      this.mode_improve = this.mode_improve.bind(this);
-      this.mode_option = this.mode_option.bind(this);
-      this.cursor = new ComponentMenuCursor();
-      ipc.on('play-vs', (event, {seed}) => {
-        return game.state.start('mode_vs',true,false, {seed: seed})
-      })
-      ipc.on('replay-load', (event, {seed,inputs}) => {
-        return game.state.start('mode_vs',true,false, {seed: seed, inputs: inputs})
-      })
+      this.create = this.create.bind(this)
+      this.update = this.update.bind(this)
+
+      this.mode_1p_vs_2p_local  = this.mode_1p_vs_2p_local.bind(this)
+      this.mode_1p_vs_2p_online = this.mode_1p_vs_2p_online.bind(this)
+      this.mode_1p_vs_cpu       = this.mode_1p_vs_cpu.bind(this)
+      this.mode_improve         = this.mode_improve.bind(this)
+      this.mode_option          = this.mode_option.bind(this)
+
+      this.cursor = new ComponentMenuCursor()
     }
     create() {
       this.sprite = game.add.sprite(40, 40, 'menu');
-      return this.cursor.create(this, 26, 39, [
+      this.cursor.create(this, 26, 39, [
         this.mode_1p_vs_2p_local,
         this.mode_1p_vs_2p_online,
         this.mode_1p_vs_cpu,
@@ -35,18 +31,18 @@ module.exports = function(game){
       this.cursor.update()
     }
     mode_1p_vs_2p_local() {
-      ipc.send('play-vs');
+      ipc.send('play-vs',{online: false, cpu: false})
     }
     mode_1p_vs_2p_online() {
-      ipc.send('play-vs');
+      game.state.start('connect',true,false,'join')
     }
     mode_1p_vs_cpu() {
-      ipc.send('play-vs');
+      ipc.send('play-vs',{online: false, cpu: true})
     }
     mode_improve() {
-      return game.state.start('mode_puzzle',true,false,
+      game.state.start('mode_puzzle',true,false,
         PUZZLE.skill_chain_demo_2.demo_4
-      );
+      )
     }
     mode_option() {
       ipc.send('replay-load')

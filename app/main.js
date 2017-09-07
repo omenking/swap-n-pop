@@ -99,14 +99,12 @@ function ready(){
   Menu.setApplicationMenu(menu)
   create_window()
 
-
   ipc.on('controls-update', (event) => {
     win.webContents.send('controls-rebind')
-  });
-
+  })
   ipc.on('replay-save', (event, {seed,inputs}) => {
     Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
-  });
+  })
   ipc.on('replay-load', (event) => {
     Replay.last(function(err,name){
       Replay.load(name,function(err,data){
@@ -114,8 +112,12 @@ function ready(){
       })
     })
   })
-  ipc.on('play-vs', (event) => {
-    win.webContents.send('play-vs',{seed: Replay.random_seed()})
+  ipc.on('play-vs', (event,{online,cpu}) => {
+    win.webContents.send('play-vs',{
+      seed:   Replay.random_seed(),
+      online: online,
+      cpu:    cpu
+    })
   })
 }
 

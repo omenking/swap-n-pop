@@ -9,7 +9,8 @@ class controller {
     this.send      = this.send.bind(this)
     this.sent      = this.sent.bind(this)
     this.close     = this.close.bind(this)
-    this.connect     = this.connect.bind(this)
+    this.connect   = this.connect.bind(this)
+    this.connected = this.connected.bind(this)
   }
   get state(){ return this._state }
 
@@ -37,6 +38,10 @@ class controller {
     this.server.on('listening', this.listening(callback))
     this.server.bind(this.port,this.host)
   }
+  connected(callback){
+    this._state     = 'awaiting'
+    this._connected = callback
+  }
   connect(port,host,callback){
     if(port === null) { throw(new Error('port can not be null')) }
     if(host === null) { throw(new Error('host can not be null')) }
@@ -53,7 +58,9 @@ class controller {
   }
   message(msg,req){
     console.log(`${this.address} >| ${req.address}:${req.port} :::${msg}`)
-    if (`${msg}` === 'CON' && this.state === 'listening'){
+    if (`${msg}` === 'CON' && this.state === 'awaiting'){
+      this._state = 'connected'
+      this._connected(null,true)
       this.send_port = req.port
       this.send_host = req.address
       this.send('XCON')
