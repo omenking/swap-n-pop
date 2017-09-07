@@ -1,14 +1,15 @@
 [![Build Status](https://travis-ci.org/omenking/swap-n-pop.svg?branch=master)](https://travis-ci.org/omenking/swap-n-pop) ![Test](https://ci.appveyor.com/api/projects/status/github/omenking/swap-n-pop?branch=master&svg=true)
 
 
-## Goal 
+## Goal
 
 An online competitve TA/PdP/PPL clone.
 
 ## Project Tenets
 
-There were/are multiple TA/PdP/PPL clones in development but they did not
-fulfil
+There's multiple TA/PdP/PPL clones in development but they did not
+adhere to the teants below.
+
 
 ### 1. Open-Source
 
