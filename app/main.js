@@ -9,7 +9,8 @@ const url  = require('url')
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
 
-let win, win_edit_input
+let win,
+    win_settings
 
 const store = new Store()
 if (!store.has('inputs')){
@@ -39,8 +40,9 @@ const template = [
   {
     label: 'Settings',
     submenu: [
-      {click: click_settings_input  , label: "Input"},
-      {click: click_settings_network, label: "Network"}
+      {click: click_settings('input')  , label: "Input"},
+      {click: click_settings('network'), label: "Network"},
+      {click: click_settings('audio')  , label: "Audio"}
     ]
   }
 ]
@@ -51,7 +53,7 @@ if (process.platform === 'darwin') {
     submenu: [
       {role: 'about', label: "About Swap N Pop"},
       {type: 'separator' },
-      {click: click_settings_input, label: "Preferences"},
+      {click: click_settings, label: "Preferences"},
       {type: 'separator' },
       {role: 'quit' , label: "Quit"}
     ]
@@ -60,36 +62,22 @@ if (process.platform === 'darwin') {
 
 const menu  = Menu.buildFromTemplate(template)
 
-
-function click_settings_input(item, win, ev) {
-  win_edit_input = new BrowserWindow({
-    title     : "Input",
-    width     : 400,
-    height    : 400,
-    parent    : win,
-    resizable: false
-  })
-  win_edit_input.loadURL(url.format({
-    pathname: path.join(__dirname, 'src', 'edit_input.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-  win_edit_input.webContents.openDevTools()
-}
-
-function click_settings_network(item, win, ev) {
-  win_edit_input = new BrowserWindow({
-    title     : "Network",
-    width     : 300,
-    height    : 334,
-    parent    : win
-  })
-  win_edit_input.loadURL(url.format({
-    pathname: path.join(__dirname, 'src', 'edit_input.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-  win_edit_input.webContents.openDevTools()
+function click_settings(item, win, ev) {
+  return function(){
+    win_settings = new BrowserWindow({
+      title     : "Settings",
+      width     : 500,
+      height    : 500,
+      parent    : win,
+      resizable: false
+    })
+    win_settings.loadURL(url.format({
+      pathname: path.join(__dirname, 'src', 'settings.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
+    win_settings.webContents.openDevTools()
+  }
 }
 
 

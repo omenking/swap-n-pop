@@ -15,6 +15,29 @@
         color: rgb(246,246,246);
         font-size: 11px;
       }
+      nav {
+        position: relative;
+        border-bottom: solid 1px rgb(0,0,0);
+      }
+      nav:after {
+        width: 100%;
+        content: '';
+        width: 100%;
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        border-bottom: solid 1px rgb(48,48,48);
+      }
+      nav .tab {
+        cursor: pointer;
+        float: left;
+        font-size: 13px;
+        display: inline-block;
+        padding: 8px 16px;
+      }
+      nav .tab.active {
+        background: rgb(40,40,40);
+      }
       .clear { display: block; clear: both; }
       .fields { 
         padding: 24px 40px;
@@ -50,7 +73,7 @@
   </head>
   <body>
   <script>
-    require('./edit_input.js')
+    require('./settings.js')
   </script>
   </body>
 </html>
