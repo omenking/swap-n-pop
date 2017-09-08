@@ -57,6 +57,10 @@ module.exports = function(game){
       this.create_frame(offset);
       this.playfield1.create_after();
       this.playfield2.create_after();
+
+      this.online.on('recieve'function(data){
+        this.inputs.reconcile(data)
+      })
     }
 
     pause(pi){
@@ -98,6 +102,9 @@ module.exports = function(game){
       this.playfield2.update()
       this.danger_check()
       this.inputs.update(this.tick)
+      if (this.online){
+        this.online.send(this.inputs.send)
+      }
     }
     render(){
       if(this.debug){

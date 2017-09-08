@@ -14,6 +14,47 @@ describe('Server' ,function(){
     })
   })
 
+  describe('#signal(k)' ,function(){
+    it('should match',function(){
+      const server = new Server()
+      console.log(Buffer.from([0x00]))
+      server.create(40101,'127.0.0.1')
+      server.signal('connecting').should.eql(Buffer.from([0x00]))
+      server.signal('connected').should.eql(Buffer.from([0x01]))
+      server.close()
+    }) // it
+
+    it('should error', function(){
+      (function(){
+        const server = new Server()
+        server.create(40101,'127.0.0.1')
+        server.close()
+        server.signal('test')
+      }).should.throw("no idea what you want to send")
+    })
+  }) // describe
+
+  describe('#msg(bug)' ,function(){
+    it('should match',function(){
+      const server = new Server()
+      server.create(40101,'127.0.0.1')
+      server.msg(Buffer.from([0x00])).should.eql(['connecting',null])
+      server.msg(Buffer.from([0x01])).should.eql(['connected',null])
+      server.close()
+    }) // it
+
+    it('should error', function(){
+      (function(){
+        const server = new Server()
+        server.create(40101,'127.0.0.1')
+        server.close()
+        server.msg('test')
+      }).should.throw("no idea what you go")
+    })
+
+
+  }) // describe
+
   describe('#connect()' ,function(){
     it('should connect',function(done){
       const server = new Server()

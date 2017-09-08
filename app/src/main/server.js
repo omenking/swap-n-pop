@@ -5,12 +5,16 @@ class controller {
     this.create    = this.create.bind(this)
     this.error     = this.error.bind(this)
     this.message   = this.message.bind(this)
+    this.signal    = this.signal.bind(this)
+    this.msg       = this.msg.bind(this)
+
     this.listening = this.listening.bind(this)
     this.send      = this.send.bind(this)
     this.sent      = this.sent.bind(this)
     this.close     = this.close.bind(this)
     this.connect   = this.connect.bind(this)
     this.connected = this.connected.bind(this)
+    this.on        = this.on.bind(this)
   }
   get state(){ return this._state }
 
@@ -29,6 +33,7 @@ class controller {
   create(port,host,callback){
     if(port === null) { throw(new Error('port can not be null')) }
     if(host === null) { throw(new Error('host can not be null')) }
+    this.states  = {}
     this._state  = 'inactive'
     this.port    = port
     this.host    = host
@@ -37,6 +42,9 @@ class controller {
     this.server.on('message'  , this.message)
     this.server.on('listening', this.listening(callback))
     this.server.bind(this.port,this.host)
+  }
+  on(key,callback){
+    this.states[key] = callback
   }
   connected(callback){
     this._state     = 'awaiting'
@@ -49,22 +57,42 @@ class controller {
     this._state    = 'connecting'
     this.send_port = port
     this.send_host = host
-    const msg = new Buffer('CON')
-    this.server.send(msg, 0, msg.length, this.send_port, this.send_host, this.sent)
+    this.send(this.signal('connecting'))
   }
   error(err){
     console.log(`server error:\n${err.stack}`)
     this.server.close()
   }
-  message(msg,req){
-    console.log(`${this.address} >| ${req.address}:${req.port} :::${msg}`)
-    if (`${msg}` === 'CON' && this.state === 'awaiting'){
+  signal(k){
+    if (k === 'connecting') {
+     return Buffer.from([0x00])
+    } else if (k === 'connected') {
+     return Buffer.from([0x01])
+    } else {
+      throw(new Error("no idea what you want to send"))
+    }
+  }
+  msg(buf){
+    if (buf.length === 1 && buf[0] === 0x00) {
+      return ['connecting',null]
+    } else if (buf.length === 1 && buf[0] === 0x01) {
+      return ['connected',null]
+    } else {
+      throw(new Error("no idea what you go"))
+    }
+  }
+  message(buf,req){
+    console.log(`${this.address} >| ${req.address}:${req.port} :::${buf}`)
+
+    const [sig,data] = this.msg(buf)
+
+    if (sig === 'connecting' && this.state === 'awaiting'){
       this._state = 'connected'
       this._connected(null,true)
       this.send_port = req.port
       this.send_host = req.address
-      this.send('XCON')
-    } else if (`${msg}` === 'XCON' && this.state === 'connecting'){
+      this.send(this.signal('connected'))
+    } else if (sig === 'connected' && this.state === 'connecting'){
       this._state = 'connected'
       if (this.send_port === req.port && this.send_host === req.address){
         this._connected(null,{port: req.port, host: req.address})
@@ -72,8 +100,11 @@ class controller {
         this._connected("port and host don't match",{port: req.port, host: req.address})
       }
     } else {
-      console.log(`${msg}`,this.state)
-      throw(new Error('no where to go'))
+      if (this.states[sig]) {
+        this.states[sig](data)
+      } else {
+        throw(new Error('no where to go'))
+      }
     }
   }
   listening(callback){
@@ -84,11 +115,10 @@ class controller {
       if (callback){callback()}
     }.bind(this)
   }
-  send(val){
+  send(buf){
     if(this.send_port === null) { throw(new Error('port can not be null')) }
     if(this.send_host === null) { throw(new Error('host can not be null')) }
-    const msg = new Buffer(val)
-    this.server.send(msg, 0, msg.length, this.send_port, this.send_host, this.sent)
+    this.server.send(buf, 0, buf.length, this.send_port, this.send_host, this.sent)
   }
   sent(err, bytes){
     if (err){throw err}
