@@ -34,7 +34,7 @@ module.exports = function(game){
       ipc.send('play-vs',{online: false, cpu: false})
     }
     mode_1p_vs_2p_online() {
-      game.state.start('connect',true,false,'join')
+      game.state.start('connect',true,false,{mode: 'quick'})
     }
     mode_1p_vs_cpu() {
       ipc.send('play-vs',{online: false, cpu: true})

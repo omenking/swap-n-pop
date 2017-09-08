@@ -37,3 +37,7 @@ ipc.on('play-vs', (event, {seed,online,cpu}) => {
 ipc.on('replay-load', (event, {seed,inputs}) => {
   game.state.start('mode_vs',true,false, {seed: seed, inputs: inputs})
 })
+
+ipc.on('network-connect', (event, data) => {
+  game.state.start('connect',true,false,data)
+})

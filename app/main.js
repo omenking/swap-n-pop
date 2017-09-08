@@ -53,7 +53,7 @@ if (process.platform === 'darwin') {
     submenu: [
       {role: 'about', label: "About Swap N Pop"},
       {type: 'separator' },
-      {click: click_settings, label: "Preferences"},
+      {click: click_settings('input'), label: "Preferences"},
       {type: 'separator' },
       {role: 'quit' , label: "Quit"}
     ]
@@ -76,6 +76,7 @@ function click_settings(item, win, ev) {
       protocol: 'file:',
       slashes: true
     }))
+    win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
     win_settings.webContents.openDevTools()
   }
 }
@@ -96,6 +97,7 @@ function create_window () {
     protocol: 'file:',
     slashes: true
   }))
+  win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.webContents.openDevTools()
   win.on('closed', function () {
     win = null
@@ -125,6 +127,12 @@ function ready(){
       online: online,
       cpu:    cpu
     })
+  })
+
+  ipc.on('network-connect', (event,{mode,port,host}) => {
+    win.webContents.send('network-connect',{mode: mode, port: port, host: host})
+    win_settings.close()
+    win.focus()
   })
 }
 

@@ -15,11 +15,11 @@
         color: rgb(246,246,246);
         font-size: 11px;
       }
-      nav {
+      .divider {
         position: relative;
         border-bottom: solid 1px rgb(0,0,0);
       }
-      nav:after {
+      .divider:after {
         width: 100%;
         content: '';
         width: 100%;
@@ -39,7 +39,7 @@
         background: rgb(40,40,40);
       }
       .clear { display: block; clear: both; }
-      .fields { 
+      form {
         padding: 24px 40px;
         border-right: solid 1px rgb(48,48,48)
       }
@@ -52,10 +52,14 @@
       }
       .p0 table { margin-right: 16px; }
       .text_field        { margin-bottom: 16px; }
-      .text_field .lbl   { font-size: 11px;}
-      .text_field .input {
+      .text_field .lbl,
+      .text_field label { font-size: 11px;}
+      .text_field .input,
+      .text_field input {
         padding: 6px 8px;
         width: 70px;
+        color: rgb(255,255,255);
+        outline: none;
         height: 29px;
         font-size: 11px;
         border-radius: 3px;
@@ -67,6 +71,20 @@
         border: solid 1px rgb(0,0,0);
         background: rgb(62,62,62);
         box-shadow: inset 0px 0px 3px #111;
+      }
+      .text_field.host input{
+        min-width: 120px;
+      }
+      input[type='submit'] {
+        outline: none;
+        min-width: 80px;
+        text-align: center;
+        font-size: 12px;
+        border-radius: 3px;
+        color: rgb(255,255,255);
+        background: linear-gradient(rgb(47,47,47), rgb(32,32,32));
+        border: solid 1px rgb(0,0,0);
+        padding: 8px 12px;
       }
       .p0, .p1 { float: left; }
     </style>

@@ -7,8 +7,41 @@ const keycode = require('keycode')
 var mode    = 'input'
 
 //settings_network #####################
+var host_port = {value: 40001      , setValue: function(v) {host_port.value = v}}
+var join_host = {value: '127.0.0.1', setValue: function(v) {join_host.value = v}}
+var join_port = {value: 40001      , setValue: function(v) {join_port.value = v}}
+
+function submit_host(){
+  ipc.send('network-connect',{
+    mode: 'host',
+    host_port: host_port.value,
+    join_host: join_host.value,
+    join_port: join_port.value
+  })
+  return false
+}
+
+function submit_join(){
+  ipc.send('network-connect',{
+    mode: 'join',
+    host_port: host_port.value,
+    join_host: join_host.value,
+    join_port: join_port.value
+  })
+  return false
+}
 function settings_network(){
-  return 'settings network'
+  return([
+    m('form.host.divider',{onsubmit: submit_host}, [
+      m('.text_field.port',[m('label','port'),m("input[type='text']",{oninput: m.withAttr('value',host_port.setValue), value: host_port.value })]),
+      m("input[type='submit']",{value: 'Host'})
+    ]),
+    m('form.join',{onsubmit: submit_join}, [
+      m('.text_field.host',[m('label','host'),m("input[type='text']",{oninput: m.withAttr('value',join_host.setValue), value: join_host.value })]),
+      m('.text_field.port',[m('label','port'),m("input[type='text']",{oninput: m.withAttr('value',join_port.setValue), value: join_port.value })]),
+      m("input[type='submit']",{value: 'Join'})
+    ])
+  ])
 }
 //settings_input #######################
 var setting = null
@@ -38,7 +71,7 @@ function textfield(key,label){
 
 
 function settings_input(){
- return m('.fields',[
+ return m('form',[
     m('.p0',
     m('.title','Player 1'),
     m('table',[
@@ -104,7 +137,7 @@ function click_tab(new_mode){
 }
 
 function nav(){
-  return m('nav',[
+  return m('nav.divider',[
     m('.tab',{className: class_tab('input')  , onclick: click_tab('input')}  ,'Inputs'),
     m('.tab',{className: class_tab('network'), onclick: click_tab('network')},'Network'),
     m('.tab',{className: class_tab('audio')  , onclick: click_tab('audio')}  ,'Audio'),
