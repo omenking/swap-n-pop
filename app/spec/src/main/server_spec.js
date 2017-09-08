@@ -14,13 +14,14 @@ describe('Server' ,function(){
     })
   })
 
-  describe('#signal(k)' ,function(){
+  describe('#signal(k,data)' ,function(){
     it('should match',function(){
       const server = new Server()
       console.log(Buffer.from([0x00]))
       server.create(40101,'127.0.0.1')
       server.signal('connecting').should.eql(Buffer.from([0x00]))
       server.signal('connected').should.eql(Buffer.from([0x01]))
+      server.signal('framedata').should.eql(Buffer.from([0x02]))
       server.close()
     }) // it
 
@@ -34,7 +35,7 @@ describe('Server' ,function(){
     })
   }) // describe
 
-  describe('#msg(bug)' ,function(){
+  describe('#msg(buf)' ,function(){
     it('should match',function(){
       const server = new Server()
       server.create(40101,'127.0.0.1')
@@ -51,8 +52,6 @@ describe('Server' ,function(){
         server.msg('test')
       }).should.throw("no idea what you go")
     })
-
-
   }) // describe
 
   describe('#connect()' ,function(){

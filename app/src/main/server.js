@@ -57,26 +57,33 @@ class controller {
     this._state    = 'connecting'
     this.send_port = port
     this.send_host = host
-    this.send(this.signal('connecting'))
+    this.send('connecting')
   }
   error(err){
     console.log(`server error:\n${err.stack}`)
     this.server.close()
   }
-  signal(k){
+  signal(k,data){
     if (k === 'connecting') {
      return Buffer.from([0x00])
     } else if (k === 'connected') {
      return Buffer.from([0x01])
+    } else if (k === 'framedata') {
+     return Buffer.from([0x02])
     } else {
       throw(new Error("no idea what you want to send"))
     }
   }
+  // 0x00 - connecting
+  // 0x01 - connected
+  // 0x02 - framedata
   msg(buf){
     if (buf.length === 1 && buf[0] === 0x00) {
       return ['connecting',null]
     } else if (buf.length === 1 && buf[0] === 0x01) {
       return ['connected',null]
+    } else if (buf[0] === 0x02) {
+      return ['framedata',buf]
     } else {
       throw(new Error("no idea what you go"))
     }
@@ -91,7 +98,7 @@ class controller {
       this._connected(null,true)
       this.send_port = req.port
       this.send_host = req.address
-      this.send(this.signal('connected'))
+      this.send('connected')
     } else if (sig === 'connected' && this.state === 'connecting'){
       this._state = 'connected'
       if (this.send_port === req.port && this.send_host === req.address){
@@ -115,7 +122,8 @@ class controller {
       if (callback){callback()}
     }.bind(this)
   }
-  send(buf){
+  send(name,data){
+    const buf = this.signal(name,data)
     if(this.send_port === null) { throw(new Error('port can not be null')) }
     if(this.send_host === null) { throw(new Error('host can not be null')) }
     this.server.send(buf, 0, buf.length, this.send_port, this.send_host, this.sent)
