@@ -15,7 +15,6 @@ module.exports = function(game){
 
       this.create_bg = this.create_bg.bind(this);
       this.create_frame = this.create_frame.bind(this);
-      this.stage_music = this.stage_music.bind(this);
       this.pause = this.pause.bind(this);
       this.resume = this.resume.bind(this);
       this.game_over = this.game_over.bind(this);
@@ -57,15 +56,11 @@ module.exports = function(game){
     }
     create() {
       game.stage.backgroundColor = 0x000000
-      this.state_music = 'none'
 
-      this.danger = false;
-      this.msx_stage_results  = game.add.audio('msx_stage_results');
-      this.msx_stage          = game.add.audio('msx_stage');
-      this.msx_stage_critical = game.add.audio('msx_stage_critical');
+      this.danger = false
 
       const offset = 0;
-      this.create_bg();
+      this.create_bg()
 
       const stack = new Stack(this.rng)
       stack.create()
@@ -76,74 +71,20 @@ module.exports = function(game){
       this.playfield1.create_after();
       this.playfield2.create_after();
     }
-    stage_music(state){
-      return
-      switch (state) {
-        case 'pause':
-          switch (this.state_music) {
-            case 'active':
-              this.msx_stage.pause();
-              break;
-            case 'danger': 
-              this.msx_stage_critical.pause();
-              break;
-          }
-          break;
-        case 'resume':
-          switch (this.state_music) {
-            case 'active':
-              this.msx_stage.resume();
-              break;
-            case 'danger':
-              this.msx_stage_critical.resume();
-              break;
-          }
-          break;
-        case 'none':
-          this.state_music = state;
-          this.msx_stage.stop();
-          this.msx_stage_critical.stop();
-          this.msx_stage_results.stop();
-          break;
-        case 'active':
-          if (this.state_music != 'active') {
-            this.state_music = state;
-            this.msx_stage.play();
-            this.msx_stage_critical.stop();
-            this.msx_stage_results.stop();
-          }
-          break;
-        case 'danger':
-          if (this.state_music != 'danger') {
-            this.state_music = state;
-            this.msx_stage.stop();
-            this.msx_stage_critical.play();
-            this.msx_stage_results.stop();
-          }
-          break;
-        case 'results':
-          if (this.state_music != 'results') {
-            this.state_music = state;
-            this.msx_stage.stop();
-            this.msx_stage_critical.stop();
-            this.msx_stage_results.play();
-          }
-          break;
-      }
-    }
+
     pause(pi){
-      this.stage_music('pause')
+      game.sounds.stage_music('pause')
       this.playfield1.pause(pi)
       this.playfield2.pause(pi)
     }
     resume() {
-      this.stage_music('resume')
+      game.sounds.stage_music('resume')
       this.playfield1.resume()
       this.playfield2.resume()
     }
     game_over() {
       ipc.send('replay-save', {seed: this.seed, inputs: this.inputs});
-      this.stage_music('results')
+      game.sounds.stage_music('results')
       this.playfield1.game_over()
       this.playfield2.game_over()
     }
@@ -153,12 +94,12 @@ module.exports = function(game){
 
       if (d1 || d2) {
         if (this.danger === false) {
-          this.stage_music('danger');
+          game.sounds.stage_music('danger');
         }
         return this.danger = true;
       } else {
         if (this.danger === true) {
-          this.stage_music('active');
+          game.sounds.stage_music('active');
         }
         return this.danger = false
       }
@@ -215,7 +156,7 @@ module.exports = function(game){
       if (this.playfield2) { this.playfield2.render() }
     }
     shutdown() {
-      this.stage_music('none')
+      game.sounds.stage_music('none')
       this.playfield1.shutdown()
     }
   }

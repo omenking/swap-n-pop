@@ -54,7 +54,7 @@ module.exports = function(game){
           this.playfield.cursor.state = 'active';
           this.playfield.cursor.sprite.visible = true;
           this.playfield.running = true;
-          this.playfield.stage.stage_music('active');
+          game.sounds.stage_music('active')
           return this.state = null;
         }
       }
