@@ -61,10 +61,19 @@ function inputclass(key){
   }
 }
 
+function inputvalue(key){
+  const v = inputs[key]
+  if (typeof(v) === 'string' && v.charAt(0) === 'G'){
+    return v
+  } else {
+    return keycode(v)
+  }
+}
+
 function textfield(key,label){
   return m('tr.text_field',[
     m('td.lbl',label),
-    m('td.val',m(".input",{ className: inputclass(key), onclick: setkey(key) }, keycode(inputs[key])))
+    m('td.val',m(".input",{ className: inputclass(key), onclick: setkey(key) }, inputvalue(key) ))
   ])
 }
 
@@ -102,6 +111,16 @@ function settings_input(){
  ])
 }
 
+function storekey(v){
+  let i = inputs.indexOf(v)
+  if (i != -1) { inputs[i] = null}
+  inputs[setting] = v
+  store.set('inputs', inputs)
+  ipc.send('controls-update')
+  setting = null
+  m.redraw()
+}
+
 document.onclick = function (e) {
   if (setting != null && e.target.className != 'input setting') {
     setting = null
@@ -110,17 +129,33 @@ document.onclick = function (e) {
 
 document.onkeydown = function (e) {
   if (setting != null) {
-    let i = inputs.indexOf(e.keyCode)
-    if (i != -1) {
-      inputs[i] = null
-    }
-    inputs[setting] = e.keyCode
-    store.set('inputs', inputs)
-    ipc.send('controls-update')
-    setting = null
-    m.redraw()
+    storekey(e.keyCode)
   }
 }
+
+function poll_gamepad(){
+  if (setting === null){ return }
+  const gg = navigator.getGamepads()
+  if (gg[0] === null &&
+      gg[1] === null &&
+      gg[2] === null &&
+      gg[3] === null){ return }
+  for(let i = 0; i < gg.length; i++){
+    let gamepad = gg[i]
+    if (gamepad !== null) {
+      for (let ii = 0;  ii < gamepad.buttons.length; ii++) {
+        if (gamepad.buttons[ii].value === 1){
+          storekey(`GPAD${i}${ii}`)
+        } // if
+      } // for
+    } // if
+  } // for
+}
+
+setInterval(function(){
+  poll_gamepad()
+},100)
+
 //######################################
 function class_tab(new_mode){
   if (mode === new_mode){

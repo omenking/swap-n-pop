@@ -76,8 +76,8 @@ function click_settings(item, win, ev) {
       protocol: 'file:',
       slashes: true
     }))
-    //win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
-    //win_settings.webContents.openDevTools()
+    win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
+    win_settings.webContents.openDevTools()
   }
 }
 
