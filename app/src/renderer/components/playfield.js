@@ -385,9 +385,10 @@ module.exports = function(game){
       this.score_lbl.update(this.chain, this.score)
 
       if (!this.running) { return; }
-      if (this.should_push) { this.update_push(); }
+
+      if (this.should_push) { this.update_push() }
       this.update_stack()
-      if (this.has_ai) { this.ai.update(); }
+      if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
       this.score_current(cnc);

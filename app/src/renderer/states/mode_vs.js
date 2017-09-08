@@ -2,6 +2,7 @@ module.exports = function(game){
   const APP = require('swap-n-pop_app')
   const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
+  const CoreInputs         = require(APP.path.core('inputs'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
 
@@ -19,9 +20,6 @@ module.exports = function(game){
       this.resume = this.resume.bind(this);
       this.game_over = this.game_over.bind(this);
       this.danger_check = this.danger_check.bind(this);
-      this.update_input = this.update_input.bind(this);
-      this.replay_input = this.replay_input.bind(this);
-      this.update_replay = this.update_replay.bind(this);
       this.playfield1 = new ComponentPlayfield(0);
       this.playfield2 = new ComponentPlayfield(1);
     }
@@ -35,18 +33,7 @@ module.exports = function(game){
       this.seed   = data.seed
       this.online = data.online
       this.rng    = seedrandom(this.seed)
-
-      if (data.inputs) {
-        this.replay    = true
-        this.replaying = [null,null]
-        this.inputs    = data.inputs
-      } else {
-        this.replay = false
-        this.inputs = [
-          [[-1,0,'000000']],
-          [[-1,0,'000000']]
-        ]
-      }
+      this.inputs = new CoreInputs(data.inputs)
     }
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
@@ -83,7 +70,7 @@ module.exports = function(game){
       this.playfield2.resume()
     }
     game_over() {
-      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs});
+      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
       game.sounds.stage_music('results')
       this.playfield1.game_over()
       this.playfield2.game_over()
@@ -104,49 +91,13 @@ module.exports = function(game){
         return this.danger = false
       }
     }
-    update_input(pi){
-      const bitset = game.controls.seralize(pi)
-      if (bitset === this.inputs[pi][this.inputs[pi].length-1][2]) {
-        this.inputs[pi][this.inputs[pi].length-1][1]++
-      } else {
-        this.inputs[pi].push([this.tick,0,bitset])
-      }
-    }
-    replay_input(pi){
-      if (this.replaying[pi] === null) {
-        this.replaying[pi] = this.inputs[pi].shift()
-      }
-
-      const tick   = this.replaying[pi][0]
-      const times  = this.replaying[pi][1]
-      const inputs = this.replaying[pi][2]
-
-      if ((tick+times) < this.tick){
-        while((tick+times) < this.tick){
-          this.replaying[pi] = this.inputs[pi].shift()
-        }
-        console.log('+',this.tick,tick,times,inputs)
-        game.controls.execute(pi,inputs)
-      } else {
-        //console.log('~',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
-      }
-    }
-    update_replay() {
-      if (this.replay){
-        this.replay_input(0)
-        this.replay_input(1)
-      } else {
-        this.update_input(0)
-        this.update_input(1)
-      }
-    }
     update() {
-      this.tick++;
+      this.tick++
       game.controls.update()
       this.playfield1.update()
       this.playfield2.update()
       this.danger_check()
-      this.update_replay()
+      this.inputs.update(this.tick)
     }
     render(){
       if(this.debug){
