@@ -76,8 +76,8 @@ function click_settings(item, win, ev) {
       protocol: 'file:',
       slashes: true
     }))
-    win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
-    win_settings.webContents.openDevTools()
+    //win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
+    //win_settings.webContents.openDevTools()
   }
 }
 
@@ -129,8 +129,8 @@ function ready(){
     })
   })
 
-  ipc.on('network-connect', (event,{mode,port,host}) => {
-    win.webContents.send('network-connect',{mode: mode, port: port, host: host})
+  ipc.on('network-connect', (event,data) => {
+    win.webContents.send('network-connect',data)
     win_settings.close()
     win.focus()
   })
