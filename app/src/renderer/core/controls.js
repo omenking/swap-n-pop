@@ -117,26 +117,31 @@ module.exports = function(game){
       this.simulated_down[name] = 0
     }
     seralize(pi){
-      var bitset = ''
-      bitset += this.keys[`pl${pi}_up`].isDown    ? '1' : '0'
-      bitset += this.keys[`pl${pi}_down`].isDown  ? '1' : '0'
-      bitset += this.keys[`pl${pi}_left`].isDown  ? '1' : '0'
-      bitset += this.keys[`pl${pi}_right`].isDown ? '1' : '0'
-      bitset += this.keys[`pl${pi}_b`].isDown || this.keys[`pl${pi}_a`].isDown ? '1' : '0'
-      bitset += this.keys[`pl${pi}_r`].isDown || this.keys[`pl${pi}_l`].isDown ? '1' : '0'
-      return bitset
+      var byte = 0x00
+      if(this.keys[`pl${pi}_up`].isDown   ){byte = byte | 0x01} //0000 0001
+      if(this.keys[`pl${pi}_down`].isDown ){byte = byte | 0x02} //0000 0010
+      if(this.keys[`pl${pi}_left`].isDown ){byte = byte | 0x04} //0000 0100
+      if(this.keys[`pl${pi}_right`].isDown){byte = byte | 0x08} //0000 1000
+      if(this.keys[`pl${pi}_a`].isDown    ){byte = byte | 0x10} //0001 0000
+      if(this.keys[`pl${pi}_b`].isDown    ){byte = byte | 0x20} //0010 0000
+      if(this.keys[`pl${pi}_r`].isDown ||
+        this.keys[`pl${pi}_l`].isDown     ){byte = byte | 0x40} //0100 0000
+      if(this.keys[`pl${pi}_start`].isDown){byte = byte | 0x80} //1000 0000
+      return byte
     }
-    execute(pi,bitset){
-      this.execute_key(bitset,pi,0,'up')
-      this.execute_key(bitset,pi,1,'down')
-      this.execute_key(bitset,pi,2,'left')
-      this.execute_key(bitset,pi,3,'right')
-      this.execute_key(bitset,pi,4,'a')
-      this.execute_key(bitset,pi,5,'r')
+    execute(pi,byte){
+      this.execute_key(byte,pi,0x01,'up')
+      this.execute_key(byte,pi,0x02,'down')
+      this.execute_key(byte,pi,0x04,'left')
+      this.execute_key(byte,pi,0x08,'right')
+      this.execute_key(byte,pi,0x10,'a')
+      this.execute_key(byte,pi,0x20,'b')
+      this.execute_key(byte,pi,0x40,'r')
+      this.execute_key(byte,pi,0x80,'start')
     }
-    execute_key(bitset,pi,at,key){
+    execute_key(byte,pi,at,key){
       const name = `pl${pi}_${key}`
-      if (bitset.charAt(at) === '1') {
+      if (byte & at === at) {
         this.trigger(name)
       } else {
         this.simulated_down[name] = 0
