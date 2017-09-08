@@ -58,9 +58,9 @@ module.exports = function(game){
       this.playfield1.create_after();
       this.playfield2.create_after();
 
-      this.online.on('recieve'function(data){
-        this.inputs.reconcile(data)
-      })
+      //this.online.on('recieve',function(data){
+        //this.inputs.reconcile(data)
+      //})
     }
 
     pause(pi){
