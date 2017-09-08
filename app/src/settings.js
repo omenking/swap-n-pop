@@ -63,7 +63,7 @@ function inputclass(key){
 
 function inputvalue(key){
   const v = inputs[key]
-  if (typeof(v) === 'string' && v.charAt(0) === 'G'){
+  if (typeof(v) === 'string' && (v.charAt(1) === 'A' || v.charAt(1) === 'P')){
     return v
   } else {
     return keycode(v)
@@ -76,8 +76,6 @@ function textfield(key,label){
     m('td.val',m(".input",{ className: inputclass(key), onclick: setkey(key) }, inputvalue(key) ))
   ])
 }
-
-
 
 function settings_input(){
  return m('form',[
@@ -145,9 +143,25 @@ function poll_gamepad(){
     if (gamepad !== null) {
       for (let ii = 0;  ii < gamepad.buttons.length; ii++) {
         if (gamepad.buttons[ii].value === 1){
-          storekey(`GPAD${i}${ii}`)
+          storekey(`${i}PAD${ii}`)
         } // if
       } // for
+
+      for (let ii = 0;  ii < gamepad.axes.length; ii++) {
+        let axis = null
+        if      (ii % 2 === 0) {
+          if     (gamepad.axes[ii]  ===  -1){ axis = 'L' }
+          else if(gamepad.axes[ii]  ===   1){ axis = 'R' }
+        }
+        else if (ii % 2 === 1) {
+          if     (gamepad.axes[ii]  ===  -1){ axis = 'U' }
+          else if(gamepad.axes[ii]  ===   1){ axis = 'D' }
+        }
+        if (axis !== null){
+          storekey(`${i}AXS${ii}${axis}`)
+        }
+      } // for
+
     } // if
   } // for
 }
