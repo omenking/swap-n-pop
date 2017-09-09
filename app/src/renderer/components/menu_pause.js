@@ -32,10 +32,10 @@ module.exports = function(game){
     pause(pi){
       this.paused         = true;
       if (this.playfield.pi === pi) {
-        this.sprite.visible = true;
-        return this.cursor.map_controls();
+        this.sprite.visible = true
+        this.cursor.map_controls()
       } else {
-        return game.controls.map(this.playfield.pi, {}); //disable controls
+        game.controls.map(this.playfield.pi, {}); //disable controls
       }
     }
     update() {

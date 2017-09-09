@@ -12,7 +12,7 @@ module.exports = function(game){
       if(data){
         this.replay    = true
         this.replaying = [null,null]
-        this.inputs = data
+        this.inputs    = data
       } else {
         this.replay = false
         this.inputs = [

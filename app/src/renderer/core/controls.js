@@ -130,9 +130,7 @@ module.exports = function(game){
     }
     map_key(pi,key,opts){
       const fun = opts[key] ? opts[key] : function() {};
-      var name = `pl${pi}_${key}`
-      this.callbacks[name] = fun
-      this._down[name]     = 0
+      this.callbacks[`pl${pi}_${key}`] = fun
     }
     seralize(pi){
       var byte = 0x00
