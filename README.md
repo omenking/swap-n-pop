@@ -7,21 +7,24 @@ An online competitve TA/PdP/PPL clone.
 
 ## Development
 
-There are two `package.json files`
-`ROOT/package.json`     - responsbible for packaging the app for dist
-'ROOT/app/package.json` - the app itself
+There are two `package.json` files
+
+* `/package.json`     - responsbible for packaging the app for distribution
+* `/app/package.json` - the app itself, run test suite, development
 
 To run the app locally in development:
-`cd app`
-`npm install`
-`npm test`  - runs specs
-`npm start` - starts electron app
+
+1.  `cd app`
+1. `npm install`
+1. `npm test` (optional)
+1. `npm start`
 
 ## Building
 
 To build a binary for the filesystem you are on:
-`npm install`
-`npm dist`
+
+1. `npm install`
+1. `npm dist`
 
 ## Project Tenets
 
@@ -65,3 +68,4 @@ my preference to optimized my preferred workflow. But I decided its more
 important to forgo personal preferences and use what comes with whats
 supported with Chrome as long as doesn't put undue burden on
 development.
+
