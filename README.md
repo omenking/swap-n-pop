@@ -9,7 +9,7 @@ An online competitve TA/PdP/PPL clone.
 
 There are two `package.json` files
 
-* `/package.json`     - responsbible for packaging the app for distribution
+* `/package.json`     - responsible for packaging the app for distribution
 * `/app/package.json` - the app itself, run test suite, development
 
 To run the app locally in development:
