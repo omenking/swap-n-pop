@@ -32,9 +32,17 @@ module.exports = function(game){
       this.tick   = -1
       this.seed   = data.seed
       this.online = data.online
+      this.cpu    = data.cpu
       this.rng    = seedrandom(this.seed)
       this.inputs = new CoreInputs(data.inputs)
     }
+
+    get online(){ return this._online }
+    get cpu(){    return this._cpu }
+
+    set online(v){ this._online = v}
+    set cpu(v){    this._cpu = v }
+
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
     }
@@ -103,9 +111,9 @@ module.exports = function(game){
       this.playfield2.update()
       this.danger_check()
       this.inputs.update(this.tick)
-      if (this.online){
-        this.online.send(this.inputs.send)
-      }
+      //if (this.online){
+        //this.online.send(this.inputs.send)
+      //}
     }
     render(){
       if(this.debug){

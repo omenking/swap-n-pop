@@ -22,9 +22,8 @@ module.exports = function(game){
       this.shutdown = this.shutdown.bind(this);
     }
 
-    create(playfield,opts){
+    create(playfield){
       this.playfield = playfield;
-      if (opts == null) { opts = {}; }
       this.state      = 'hidden';
       this.sfx_select = game.add.audio('sfx_select');
 
@@ -32,9 +31,6 @@ module.exports = function(game){
       this.counter         = 0;
       this.x = 2;
       this.y = 6;
-
-      // center the cursor
-      this.ai = opts.ai || false;
 
       const diff = (UNIT / 16) * 3;
       this.sprite = game.make.sprite(((COLS-2)*UNIT)-diff, 0-diff, 'playfield_cursor', 0);
@@ -46,7 +42,7 @@ module.exports = function(game){
     }
     entrance() {
       this.sprite.visible = true;
-      return this.state          = 'entering';
+      return this.state   = 'entering';
     }
     map_controls() {
       game.controls.map(this.playfield.pi, {
@@ -115,7 +111,11 @@ module.exports = function(game){
             return this.sprite.x -= STARTPOS_PANELCURSOR_SPEED;
           } else {
             this.state = 'preactive';
-            if (this.ai === false) { return this.map_controls(); }
+            if (this.playfield.stage.cpu[0]  === false ||
+                (this.playfield.stage.online !== false && this.playfield.pi == 0)
+            ) {
+              return this.map_controls()
+            }
           }
           break;
         case 'preactive': case 'active':

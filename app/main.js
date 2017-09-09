@@ -9,8 +9,7 @@ const url  = require('url')
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
 
-let win,
-    win_settings
+let win, win_settings = null
 
 const store = new Store()
 if (!store.has('inputs')){
@@ -42,7 +41,8 @@ const template = [
     submenu: [
       {click: click_settings('input')  , label: "Input"},
       {click: click_settings('network'), label: "Network"},
-      {click: click_settings('audio')  , label: "Audio"}
+      {click: click_settings('audio')  , label: "Audio"},
+      {click: click_settings('replay') , label: "Replay"}
     ]
   }
 ]
@@ -62,8 +62,14 @@ if (process.platform === 'darwin') {
 
 const menu  = Menu.buildFromTemplate(template)
 
-function click_settings(item, win, ev) {
-  return function(){
+function click_settings(mode) {
+  return function(item, win, ev){
+    if (win_settings !== null){
+      win_settings.custom = {mode: mode}
+      win_settings.webContents.send('reload',{mode: mode})
+      win_settings.show()
+      return
+    }
     win_settings = new BrowserWindow({
       title     : "Settings",
       width     : 500,
@@ -71,6 +77,7 @@ function click_settings(item, win, ev) {
       parent    : win,
       resizable: false
     })
+    win_settings.custom = {mode: mode}
     win_settings.loadURL(url.format({
       pathname: path.join(__dirname, 'src', 'settings.html'),
       protocol: 'file:',
@@ -78,6 +85,9 @@ function click_settings(item, win, ev) {
     }))
     win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
     win_settings.webContents.openDevTools()
+    win_settings.on('closed', function () {
+      win_settings = null
+    })
   }
 }
 
@@ -97,8 +107,8 @@ function create_window () {
     protocol: 'file:',
     slashes: true
   }))
-  win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
-  win.webContents.openDevTools()
+  //win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
+  //win.webContents.openDevTools()
   win.on('closed', function () {
     win = null
   })

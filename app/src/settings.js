@@ -1,15 +1,20 @@
 const m = require('../node_modules/mithril/mithril.min.js')
-const {ipcRenderer: ipc} = require('electron')
+const {remote,ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 const keycode = require('keycode')
 
-var mode    = 'input'
+var mode = remote.getCurrentWindow().custom.mode
 
 //settings_network #####################
 var host_port = {value: 40001      , setValue: function(v) {host_port.value = v}}
 var join_host = {value: '127.0.0.1', setValue: function(v) {join_host.value = v}}
 var join_port = {value: 40001      , setValue: function(v) {join_port.value = v}}
+
+ipc.on('reload',function(event,data){
+  mode = data.mode
+  m.redraw()
+})
 
 function submit_host(){
   ipc.send('network-connect',{
@@ -170,6 +175,14 @@ setInterval(function(){
   poll_gamepad()
 },100)
 
+//settings_replay ######################
+function settings_replay(){
+  return 'replay'
+}
+//settings_audio #######################
+function settings_audio(){
+  return 'audio'
+}
 //######################################
 function class_tab(new_mode){
   if (mode === new_mode){
@@ -190,12 +203,15 @@ function nav(){
     m('.tab',{className: class_tab('input')  , onclick: click_tab('input')}  ,'Inputs'),
     m('.tab',{className: class_tab('network'), onclick: click_tab('network')},'Network'),
     m('.tab',{className: class_tab('audio')  , onclick: click_tab('audio')}  ,'Audio'),
+    m('.tab',{className: class_tab('replay') , onclick: click_tab('replay')}  ,'Replays'),
     m('.clear')
   ])
 }
 function content(){
   if      (mode === 'input'){   return settings_input()}
   else if (mode === 'network'){ return settings_network()}
+  else if (mode === 'audio'){   return settings_audio()}
+  else if (mode === 'replay'){  return settings_replay()}
 }
 
 const app = {view: function(){

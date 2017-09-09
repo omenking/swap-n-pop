@@ -38,7 +38,8 @@ ipc.on('replay-load', (event, {seed,inputs}) => {
   game.state.start('mode_vs',true,false, {
     seed:   seed,
     online: false,
-    inputs: inputs
+    inputs: inputs,
+    cpu: [false,false]
   })
 })
 

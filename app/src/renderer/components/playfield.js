@@ -128,7 +128,7 @@ module.exports = function(game){
       this.layer_cursor.y = this.y
 
       this.countdown.create(this)
-      this.cursor.create(this, {ai: this.has_ai})
+      this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.menu_pause.create(this)
     }
