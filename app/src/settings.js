@@ -176,8 +176,33 @@ setInterval(function(){
 },100)
 
 //settings_replay ######################
+var replay_dir = store.get('replay_dir')
+ipc.on('replay-dir',function(event,dir){
+  console.log('replay-dir')
+  replay_dir = dir
+  m.redraw()
+})
+
+function click_change_replay_dir(){
+  ipc.send('replay-dir-change')
+}
+
+function click_reset_replay_dir(){
+  ipc.send('replay-dir-reset')
+}
+
 function settings_replay(){
-  return 'replay'
+  return m('form',[
+    m('.text_field.replay_dir',[
+      m('label','Replay Folder Location:'),
+      m('.input',replay_dir),
+      m('.buttons',[
+        m('.button.change',{onclick: click_change_replay_dir},'Change'),
+        m('.button.reset' ,{onclick: click_reset_replay_dir },'Reset'),
+      ]),
+      m('.clear')
+    ])
+  ])
 }
 //settings_audio #######################
 function settings_audio(){
@@ -208,10 +233,10 @@ function nav(){
   ])
 }
 function content(){
-  if      (mode === 'input'){   return settings_input()}
-  else if (mode === 'network'){ return settings_network()}
-  else if (mode === 'audio'){   return settings_audio()}
-  else if (mode === 'replay'){  return settings_replay()}
+  if      (mode === 'input')  { return m('.content.settings_input'  ,settings_input()   )}
+  else if (mode === 'network'){ return m('.content.settings_network',settings_network() )}
+  else if (mode === 'audio')  { return m('.content.settings_audio'  ,settings_audio()   )}
+  else if (mode === 'replay') { return m('.content.settings_replay' ,settings_replay()  )}
 }
 
 const app = {view: function(){

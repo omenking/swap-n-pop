@@ -53,7 +53,10 @@
       .p0 table { margin-right: 16px; }
       .text_field        { margin-bottom: 16px; }
       .text_field .lbl,
-      .text_field label { font-size: 11px;}
+      .text_field label { 
+        font-weight: 600;
+        font-size: 11px;
+      }
       .text_field .input,
       .text_field input {
         padding: 6px 8px;
@@ -75,18 +78,36 @@
       .text_field.host input{
         min-width: 120px;
       }
+      .text_field.replay_dir label {
+        display: block;
+        padding-bottom: 8px;
+      }
+      .text_field.replay_dir .input {
+        width: 100%;
+      }
+      .button,
       input[type='submit'] {
+        cursor: pointer;
+        display: inline-block;
         outline: none;
         min-width: 80px;
         text-align: center;
-        font-size: 12px;
+        font-size: 11px;
         border-radius: 3px;
         color: rgb(255,255,255);
         background: linear-gradient(rgb(47,47,47), rgb(32,32,32));
         border: solid 1px rgb(0,0,0);
-        padding: 8px 12px;
+        padding: 6px 10px;
+        padding-bottom: 7px;
       }
       .p0, .p1 { float: left; }
+      .settings_replay .buttons {
+        padding-top: 16px;
+        text-align: right;
+      }
+      .settings_replay .buttons .change{
+        margin-right: 8px;
+      }
     </style>
   </head>
   <body>

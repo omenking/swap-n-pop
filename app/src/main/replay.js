@@ -1,19 +1,40 @@
-module.exports = function(root_path){
+module.exports = function(app,store){
   const path   = require('path')
   const fs     = require('fs')
   const glob   = require('glob')
   const crypto = require('crypto')
+
+  function dir(state,dir){
+    if(state === 'change' && (dir === null || dir !== undefined)){
+      throw(new Error('must pass a directory'))
+    }
+    if (state === 'reset'){
+      dir = path.join(app.getPath('appData'),'swapnpop','replays')
+      store.set('replay_dir',dir)
+    } else if (state === 'change'){
+      store.set('replay_dir',dir)
+    } else {
+      if (store.has('replay_dir')){
+        dir = store.get('replay_dir')
+      } else {
+        dir = path.join(app.getPath('appData'),'swapnpop','replays')
+        store.set('replay_dir',dir)
+      }
+    }
+    if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
+    return dir
+  }
 
   function save(name,seed,org_inputs,callback) {
     //need to clone because we are shifting and want to keep
     //the data passed in, entact.
     var inputs = JSON.parse(JSON.stringify(org_inputs))
 
-    const dir      = path.join(root_path,'replays')
+    const dir      = store.get('replay_dir')
     const filename = path.join(dir,`${name}.replay`)
 
     if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
-    fs.unlink(filename,function(){})
+    fs.unlink(filename,function(){}) //delets file if happens to already exist
 
     const file = fs.createWriteStream(filename, {flags: 'a'})
     const len = inputs[0].length + inputs[1].length
@@ -40,7 +61,7 @@ module.exports = function(root_path){
   }
 
   function load(name,callback){
-    const dir      = path.join(root_path,'replays')
+    const dir      = store.get('replay_dir')
     const filename = path.join(dir,`${name}.replay`)
     var   inputs   = [[],[]]
     var   seed     = null
@@ -63,8 +84,9 @@ module.exports = function(root_path){
   }
 
   function last(callback){
-    var name = null
-    glob(path.join(root_path,'replays','*.replay'),{},function(err,files){
+    let name = null
+    let dir = path.join(store.get('replay_dir'),'*.replay')
+    glob(dir,{},function(err,files){
       name = path.basename(files[files.length-1],'.replay')
       callback(err,name)
     })
@@ -85,6 +107,7 @@ module.exports = function(root_path){
 
 
   return {
+    dir : dir,
     save: save,
     load: load,
     last: last,

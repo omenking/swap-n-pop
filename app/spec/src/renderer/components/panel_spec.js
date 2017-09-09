@@ -61,7 +61,7 @@ describe('Panel', function() {
     })
   })
 
-  describe.only('#clear_index' ,function(){
+  describe('#clear_index' ,function(){
     it('should work', function(){
       let stage = new Stage()
       stage.init({seed: 'test'})
@@ -103,6 +103,7 @@ describe('Panel', function() {
       stage.init({seed: 'test'})
       playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      playfield.clearing = []
       playfield.stack(0,9).check_neighbours(
         playfield.stack(0,9).above,
         playfield.stack(0,9).under, 0, false).should.eql([3,false])
@@ -131,6 +132,7 @@ describe('Panel', function() {
       stage.init({seed: 'test'})
       playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      playfield.clearing = []
       playfield.stack(1,9).chain_and_combo().should.eql([3,false])
     })
   })

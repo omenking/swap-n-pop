@@ -1,7 +1,8 @@
-const {app, Menu, BrowserWindow, ipcMain: ipc} = require('electron')
-const Replay = require('./src/main/replay')(__dirname)
+const {app, Menu, BrowserWindow, ipcMain: ipc, dialog} = require('electron')
 const Store = require('electron-store')
+const store = new Store()
 
+const Replay = require('./src/main/replay')(app,store)
 
 const path = require('path')
 const url  = require('url')
@@ -9,9 +10,12 @@ const url  = require('url')
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
 
+
 let win, win_settings = null
 
-const store = new Store()
+Replay.dir()
+
+// maybe move to inputs
 if (!store.has('inputs')){
   store.set('inputs',[
   38, //p0_up
@@ -117,33 +121,6 @@ function create_window () {
 function ready(){
   Menu.setApplicationMenu(menu)
   create_window()
-
-  ipc.on('controls-update', (event) => {
-    win.webContents.send('controls-rebind')
-  })
-  ipc.on('replay-save', (event, {seed,inputs}) => {
-    Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
-  })
-  ipc.on('replay-load', (event) => {
-    Replay.last(function(err,name){
-      Replay.load(name,function(err,data){
-        win.webContents.send('replay-load',data)
-      })
-    })
-  })
-  ipc.on('play-vs', (event,{online,cpu}) => {
-    win.webContents.send('play-vs',{
-      seed:   Replay.random_seed(),
-      online: online,
-      cpu:    cpu
-    })
-  })
-
-  ipc.on('network-connect', (event,data) => {
-    win.webContents.send('network-connect',data)
-    win_settings.close()
-    win.focus()
-  })
 }
 
 
@@ -162,3 +139,44 @@ function activate(){
 app.on('ready'            , ready)
 app.on('window-all-closed', window_all_closed)
 app.on('activate'         , activate)
+
+ipc.on('controls-update', (event) => {
+  win.webContents.send('controls-rebind')
+})
+ipc.on('replay-dir-change', (event) => {
+  dialog.showOpenDialog(win_settings, {
+    properties: ['openDirectory']
+  },function(data){
+    if (data.length > 0){
+      let dir = Replay.dir('change',data[0])
+      win_settings.webContents.send('replay-dir',dir)
+    }
+  })
+})
+ipc.on('replay-dir-reset', (event) => {
+  let dir = Replay.dir('reset')
+  win_settings.webContents.send('replay-dir',dir)
+})
+ipc.on('replay-save', (event, {seed,inputs}) => {
+  Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
+})
+ipc.on('replay-load', (event) => {
+  Replay.last(function(err,name){
+    Replay.load(name,function(err,data){
+      win.webContents.send('replay-load',data)
+    })
+  })
+})
+ipc.on('play-vs', (event,{online,cpu}) => {
+  win.webContents.send('play-vs',{
+    seed:   Replay.random_seed(),
+    online: online,
+    cpu:    cpu
+  })
+})
+
+ipc.on('network-connect', (event,data) => {
+  win.webContents.send('network-connect',data)
+  win_settings.close()
+  win.focus()
+})
