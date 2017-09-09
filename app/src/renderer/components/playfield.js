@@ -94,7 +94,7 @@ module.exports = function(game){
         throw new Error("must pass stage")
       }
       if (opts       === null ||
-          opts.x     === null | 
+          opts.x     === null ||
           opts.y     === null ||
           opts.panel === null){
         throw new Error("must pass at least x,y and panels")
