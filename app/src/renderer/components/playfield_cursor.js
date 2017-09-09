@@ -126,7 +126,6 @@ module.exports = function(game){
       }
     }
     shutdown() {
-      return console.log('shutdown cursor');
     }
   }
   return controller

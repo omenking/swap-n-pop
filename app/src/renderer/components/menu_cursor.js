@@ -56,7 +56,7 @@ module.exports = function(game){
     confirm(tick) {
       if (tick > 0) { return }
       game.sounds.confirm()
-      return this.menu_items[this.index]();
+      return this.menu_items[this.index]()
     }
     cancel(tick) {
       if (tick > 0) { return }

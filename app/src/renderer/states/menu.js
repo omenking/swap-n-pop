@@ -39,6 +39,9 @@ module.exports = function(game){
       this.bg.tilePosition.y += 0.5
       this.bg.tilePosition.x -= 0.5
     }
+    shutdown(){
+      game.controls.disable()
+    }
   }
   return controller
 }

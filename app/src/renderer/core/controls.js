@@ -7,7 +7,7 @@ module.exports = function(game){
     constructor() {
       this.map         = this.map.bind(this)
       this.map_key     = this.map_key.bind(this)
-      this.seralize    = this.seralize.bind(this)
+      this.serialize    = this.serialize.bind(this)
       this.execute     = this.execute.bind(this)
       this.execute_key = this.execute_key.bind(this)
       this.is_down     = this.is_down.bind(this)
@@ -15,6 +15,7 @@ module.exports = function(game){
       this.rebind      = this.rebind.bind(this)
       this.trigger     = this.trigger.bind(this)
       this.add_input   = this.add_input.bind(this)
+      this.disable     = this.disable.bind(this)
     }
     create() {
       this.callbacks = {
@@ -40,12 +41,28 @@ module.exports = function(game){
 
       game.input.gamepad.start()
       this.pad = game.input.gamepad.pad1
-      //this.pad = [
-        //game.input.gamepad.pad1,
-        //game.input.gamepad.pad2
-      //]
 
-      this._down = {} //simulated down
+      this._simdown = {
+        pl0_up    : false,
+        pl0_down  : false,
+        pl0_left  : false,
+        pl0_right : false,
+        pl0_a     : false,
+        pl0_b     : false,
+        pl0_l     : false,
+        pl0_r     : false,
+        pl0_start : false,
+        pl1_up    : false,
+        pl1_down  : false,
+        pl1_left  : false,
+        pl1_right : false,
+        pl1_a     : false,
+        pl1_b     : false,
+        pl1_l     : false,
+        pl1_r     : false,
+        pl1_start : false
+      } //simulated down
+      this._down    = {}
       this.keys = []
       this.rebind()
 
@@ -122,6 +139,10 @@ module.exports = function(game){
       const name = `pl${pi}_${key}`
       return this._down[name] > 0
     }
+    disable(){
+      this.map(0,{})
+      this.map(1,{})
+    }
     map(pi,opts){
       const keys = "up down left right a b l r start".split(' ');
       for (let key of keys) {
@@ -132,7 +153,7 @@ module.exports = function(game){
       const fun = opts[key] ? opts[key] : function() {};
       this.callbacks[`pl${pi}_${key}`] = fun
     }
-    seralize(pi){
+    serialize(pi){
       var byte = 0x00
       if(this.check_down(`pl${pi}_up`   )){byte = byte | 0x01} //0000 0001
       if(this.check_down(`pl${pi}_down` )){byte = byte | 0x02} //0000 0010
@@ -157,10 +178,10 @@ module.exports = function(game){
     }
     execute_key(byte,pi,at,key){
       const name = `pl${pi}_${key}`
-      if (byte & at === at) {
-        this.trigger(name)
+      if ((byte & at) === at) {
+        this._simdown[name] = true
       } else {
-        this._down[name] = 0
+        this._simdown[name] = false
       }
     }
     trigger(name){
@@ -168,7 +189,9 @@ module.exports = function(game){
     }
     check_down(key){
       const input = this.keys[key]
-      if (Array.isArray(input)) {
+      if (this._simdown[key]){
+        return true
+      } else if (Array.isArray(input)) {
         if (game.input.gamepad.supported && game.input.gamepad.active && this.pad.connected){
           if      (input.length === 2){
             return this.pad.isDown(input[1])

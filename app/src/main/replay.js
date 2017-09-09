@@ -51,7 +51,11 @@ module.exports = function(root_path){
           seed = lines[i]
         } else {
           let arr = lines[i].split(',')
-          inputs[parseInt(arr[0])].push([parseInt(arr[1]),parseInt(arr[2]),arr[3]])
+          inputs[parseInt(arr[0])].push(
+            [parseInt(arr[1]),
+             parseInt(arr[2]),
+             parseInt(arr[3])]
+          )
         }
       }
       callback(err,{seed: seed, inputs: inputs})

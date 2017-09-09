@@ -21,13 +21,14 @@ module.exports = function(game){
       ]);
     }
     cancel() {
-      this.paused = false;
-      return game.state.start('menu');
+      this.paused = false
+      console.log('cancel')
+      game.state.start('menu')
     }
     contiune() {
-      this.paused         = false;
-      this.sprite.visible = false;
-      return this.playfield.stage.resume(this.playfield.pi);
+      this.paused         = false
+      this.sprite.visible = false
+      this.playfield.stage.resume(this.playfield.pi)
     }
     pause(pi){
       this.paused         = true;
@@ -40,7 +41,7 @@ module.exports = function(game){
     }
     update() {
       if (!this.paused) { return; }
-      return this.cursor.update();
+      this.cursor.update();
     }
   }
 

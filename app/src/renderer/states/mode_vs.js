@@ -74,6 +74,7 @@ module.exports = function(game){
       this.playfield2.resume()
     }
     game_over() {
+      console.log('gameover')
       ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
       game.sounds.stage_music('results')
       this.playfield1.game_over()
@@ -108,12 +109,14 @@ module.exports = function(game){
     }
     render(){
       if(this.debug){
+        console.log('debugger triggered')
         debugger
       }
       if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
     }
     shutdown() {
+      console.log('shutdown mode_vs')
       game.sounds.stage_music('none')
       this.playfield1.shutdown()
       this.playfield2.shutdown()

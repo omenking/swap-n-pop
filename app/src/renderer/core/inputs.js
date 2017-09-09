@@ -40,7 +40,7 @@ module.exports = function(game){
     }
 
     update_input(pi,tick){
-      const bitset = game.controls.seralize(pi)
+      const bitset = game.controls.serialize(pi)
       if (bitset === this.inputs[pi][this.inputs[pi].length-1][2]) { // inputs did not change
         this.inputs[pi][this.inputs[pi].length-1][1]++
       } else { // inputs changed
@@ -52,18 +52,12 @@ module.exports = function(game){
         this.replaying[pi] = this.inputs[pi].shift()
       }
 
-      const tick_old = this.replaying[pi][0]
-      const times    = this.replaying[pi][1]
-      const inputs   = this.replaying[pi][2]
-
-      if ((tick_old+times) < tick){
-        while((tick_old+times) < tick){
+      if (this.replaying[pi][0]+this.replaying[pi][1] < tick){
+        while(this.replaying[pi][0]+this.replaying[pi][1] < tick){
           this.replaying[pi] = this.inputs[pi].shift()
         }
-        console.log('+',tick,tick_old,times,inputs)
-        game.controls.execute(pi,inputs)
-      } else {
-        //console.log('~',this.tick,this.replaying[pi][0],this.replaying[pi][1],this.replaying[pi][2])
+        game.controls.execute(pi,this.replaying[pi][2])
+        //console.log(tick,this.replaying[pi][0]+this.replaying[pi][1],this.replaying[pi][2])
       }
     }
 
