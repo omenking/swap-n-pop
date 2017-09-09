@@ -111,8 +111,8 @@ function create_window () {
     protocol: 'file:',
     slashes: true
   }))
-  //win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
-  //win.webContents.openDevTools()
+  win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
+  win.webContents.openDevTools()
   win.on('closed', function () {
     win = null
   })
@@ -147,10 +147,15 @@ ipc.on('replay-dir-change', (event) => {
   dialog.showOpenDialog(win_settings, {
     properties: ['openDirectory']
   },function(data){
-    if (data.length > 0){
+    if (data !== undefined && data !== null && data.length > 0){
       let dir = Replay.dir('change',data[0])
       win_settings.webContents.send('replay-dir',dir)
     }
+  })
+})
+ipc.on('replay-list', (event) => {
+  Replay.list(function(err,files){
+    win_settings.webContents.send('replay-list',files)
   })
 })
 ipc.on('replay-dir-reset', (event) => {

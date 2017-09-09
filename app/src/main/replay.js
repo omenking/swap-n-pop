@@ -1,11 +1,26 @@
 module.exports = function(app,store){
   const path   = require('path')
   const fs     = require('fs')
+  const fx     = require('mkdir-recursive')
   const glob   = require('glob')
   const crypto = require('crypto')
 
+  function list(callback){
+    let dir = path.join(store.get('replay_dir'),'*.replay')
+    glob(dir,{},function(err,files){
+      let filenames = []
+      for (let file of files){
+        filenames.push(
+          path.basename(file,'.replay')
+        )
+      }
+      callback(err,filenames)
+    })
+  }
+
   function dir(state,dir){
-    if(state === 'change' && (dir === null || dir !== undefined)){
+    if(state === 'change' && (dir === null || dir === undefined)){
+      console.log(state,dir)
       throw(new Error('must pass a directory'))
     }
     if (state === 'reset'){
@@ -21,7 +36,7 @@ module.exports = function(app,store){
         store.set('replay_dir',dir)
       }
     }
-    if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
+    if (!fs.existsSync(dir)){ fx.mkdirSync(dir); } // create dir if it don't exist.
     return dir
   }
 
@@ -107,6 +122,7 @@ module.exports = function(app,store){
 
 
   return {
+    list: list,
     dir : dir,
     save: save,
     load: load,

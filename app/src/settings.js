@@ -176,10 +176,15 @@ setInterval(function(){
 },100)
 
 //settings_replay ######################
-var replay_dir = store.get('replay_dir')
+let replay_files = []
+let replay_dir   = store.get('replay_dir')
+ipc.send('replay-list')
 ipc.on('replay-dir',function(event,dir){
-  console.log('replay-dir')
   replay_dir = dir
+  m.redraw()
+})
+ipc.on('replay-list',function(event,files){
+  replay_files = files
   m.redraw()
 })
 
@@ -191,6 +196,13 @@ function click_reset_replay_dir(){
   ipc.send('replay-dir-reset')
 }
 
+function settings_replay_items(){
+  let items = []
+  for (let file of replay_files){
+    items.push(m('.item',file))
+  }
+  return items
+}
 function settings_replay(){
   return m('form',[
     m('.text_field.replay_dir',[
@@ -201,7 +213,8 @@ function settings_replay(){
         m('.button.reset' ,{onclick: click_reset_replay_dir },'Reset'),
       ]),
       m('.clear')
-    ])
+    ]),
+    m('.data-table', settings_replay_items())
   ])
 }
 //settings_audio #######################
