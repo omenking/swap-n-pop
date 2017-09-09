@@ -5,6 +5,24 @@
 
 An online competitve TA/PdP/PPL clone.
 
+## Development
+
+There are two `package.json files`
+`ROOT/package.json`     - responsbible for packaging the app for dist
+'ROOT/app/package.json` - the app itself
+
+To run the app locally in development:
+`cd app`
+`npm install`
+`npm test`  - runs specs
+`npm start` - starts electron app
+
+## Building
+
+To build a binary for the filesystem you are on:
+`npm install`
+`npm dist`
+
 ## Project Tenets
 
 There's multiple TA/PdP/PPL clones in development but they did not
