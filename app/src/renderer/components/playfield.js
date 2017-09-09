@@ -63,9 +63,6 @@ module.exports = function(game){
       this.chain_over    = this.chain_over.bind(this);
       this.is_danger     = this.is_danger.bind(this);
       this.update_push   = this.update_push.bind(this);
-      this.track_panel   = this.track_panel.bind(this);
-      this.track_tick    = this.track_tick.bind(this);
-      this.print_tick    = this.print_tick.bind(this);
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
@@ -291,31 +288,6 @@ module.exports = function(game){
         this.score        += this.push()
       }
     }
-    track_panel(panel,name,v){
-      if ((this.tick >= 0) && (panel.newline() !== true)) {
-        const i = _f.xy2i(panel.x, panel.y);
-        if (!this.history) { this.history = {}; }
-        if (!this.history[`${this.tick}`]) { this.history[`${this.tick}`] = []; }
-        if (!this.history[`${this.tick}`][i]) { this.history[`${this.tick}`][i] = []; }
-        return this.history[`${this.tick}`][i].push(`${name}: ${v}`);
-      }
-    }
-
-    track_tick() {
-      if (!(this.tick >= 0)) { return this.tick = 0; }
-    }
-    print_tick(with_time){
-      if (with_time == null) { with_time = false; }
-      if (this.tick >= 0) {
-        if (with_time) {
-          console.log(`~ ${this.tick} ${Date.now()}`);
-        } else {
-          console.log(`~ ${this.tick}`);
-        }
-        return this.tick++;
-      }
-    }
-
     score_combo(combo){
       switch (combo) {
         case 4: return 20;
