@@ -116,6 +116,7 @@ module.exports = function(game){
     shutdown() {
       game.sounds.stage_music('none')
       this.playfield1.shutdown()
+      this.playfield2.shutdown()
     }
   }
   controller.initClass()
