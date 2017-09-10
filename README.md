@@ -16,6 +16,10 @@ To run the app locally in development:
 
 1.  `cd app`
 1. `npm install`
+1. `cd swap-n-pop_app`
+1. `npm link`
+1. `cd ..`
+1. `npm link swap-n-pop_app`
 1. `npm test` (optional)
 1. `npm start`
 
