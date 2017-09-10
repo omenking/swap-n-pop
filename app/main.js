@@ -109,7 +109,8 @@ function create_window () {
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'src', 'index.html'),
     protocol: 'file:',
-    slashes: true
+    slashes: true,
+    icon: path.join(__dirname, 'src', 'assets', 'icons', 'png', '64x64.png')
   }))
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.webContents.openDevTools()
