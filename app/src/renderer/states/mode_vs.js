@@ -89,8 +89,8 @@ module.exports = function(game){
       this.playfield2.game_over()
     }
     danger_check() {
-      const d1 = this.playfield1.is_danger(1);
-      const d2 = this.playfield2.is_danger(2);
+      const d1 = this.playfield1.danger(1)
+      const d2 = this.playfield2.danger(2)
 
       if (d1 || d2) {
         if (this.danger === false) {

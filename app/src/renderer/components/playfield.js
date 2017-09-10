@@ -60,8 +60,8 @@ module.exports = function(game){
       this.update_stack = this.update_stack.bind(this);
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
+      this.danger = this.danger.bind(this);
       this.chain_over    = this.chain_over.bind(this);
-      this.is_danger     = this.is_danger.bind(this);
       this.update_push   = this.update_push.bind(this);
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
@@ -146,9 +146,9 @@ module.exports = function(game){
     }
     push() {
       let i;
-      if (this.is_danger(0)) {
-        this.stage.game_over();
-        return 0;
+      if (this.danger(0)) {
+        this.stage.game_over()
+        return 0
       }
       console.log('pushing')
 
@@ -191,11 +191,8 @@ module.exports = function(game){
       return this.cursor.map_controls();
     }
     game_over() {
-      let i, panel;
-      const is_dead = this.is_danger(0);
-      for (i = 0; i < this.stack_len; i++) { this.stack[i].check_dead(i, is_dead); }
-      this.running = false;
-      this.pushCounter = 0;
+      this.running = false
+      this.pushCounter = 0
     }
     create_panels(){
       const rows = (ROWS + (this.should_push === true ? 1 : 0 ))
@@ -257,7 +254,7 @@ module.exports = function(game){
       }
       return chain;
     }
-    is_danger(within){
+    danger(within){
       const offset = COLS*within;
       const cols   = [];
 

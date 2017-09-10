@@ -53,8 +53,8 @@ module.exports = {
 
   FRAME_LIVE    :  0,
   FRAME_DANGER  : [0,4,0,3,2,3],
-  FRAME_DEAD    : [5],
-  FRAME_NEWLINE :  1,
+  FRAME_DEAD    : 5,
+  FRAME_NEWLINE : 1,
 
   // Timing
   TIME_CLEAR : 60, //the time it takes before the first panel is ready to start popping

@@ -72,7 +72,6 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.check_neighbours = this.check_neighbours.bind(this)
-      this.check_dead       = this.check_dead.bind(this)
     }
 
     static initClass() {
@@ -264,6 +263,9 @@ module.exports = function(game){
     get danger(){
       return !this.playfield.stack(this.x,1).hidden
     }
+    get dead(){
+      return !this.playfield.stack(this.x,0).hidden
+    }
     get newline(){
       return this.playfield.should_push && this.y === (ROWS)
     }
@@ -296,14 +298,6 @@ module.exports = function(game){
       if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
       return [combo,chain]
     }
-    check_dead(i,is_dead){
-      const [x,y] = Array.from(_f.i2xy(i));
-      if (is_dead && (is_dead.indexOf(x) !== -1)) {
-        return this.play_dead();
-      } else {
-        return this.play_live();
-      }
-    }
     get clear_index(){
       if (this.state !== CLEAR) {
         throw(new Error('clear_index called on non CLEAR panel'))
@@ -327,6 +321,8 @@ module.exports = function(game){
     animate(){
       if (this.newline) {
         this.frame = FRAME_NEWLINE
+      } else if (this.dead){
+        this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
         let [i,len] = this.clear_index
         let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
