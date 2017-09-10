@@ -165,11 +165,14 @@ ipc.on('replay-dir-reset', (event) => {
 ipc.on('replay-save', (event, {seed,inputs}) => {
   Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
 })
-ipc.on('replay-load', (event) => {
-  Replay.last(function(err,name){
-    Replay.load(name,function(err,data){
-      win.webContents.send('replay-load',data)
-    })
+ipc.on('replay-delete', (event,name) => {
+  Replay.del(name)
+})
+ipc.on('replay-load', (event,name) => {
+  Replay.load(name,function(err,data){
+    win_settings.close()
+    win.focus()
+    win.webContents.send('replay-load',data)
   })
 })
 ipc.on('play-vs', (event,{online,cpu}) => {

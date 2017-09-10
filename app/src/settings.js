@@ -196,10 +196,36 @@ function click_reset_replay_dir(){
   ipc.send('replay-dir-reset')
 }
 
+function click_replay_play(file){
+  return function(){
+    ipc.send('replay-load',file)
+  }
+}
+
+function click_replay_remove(file){
+  return function(){
+    i = replay_files.indexOf(file)
+    replay_files.splice(i, 1)
+    ipc.send('replay-delete',file)
+  }
+}
+
 function settings_replay_items(){
   let items = []
   for (let file of replay_files){
-    items.push(m('.item',file))
+    items.push(m('tr.item',[
+      m('td.name', file),
+      m('td.date', ''),
+      m('td.actions',[
+        m('.button.small.replay.icon',{onclick: click_replay_play(file)}, [
+          m('span.fa.fa-play'),
+          m('span','Replay')
+        ]),
+        m('.button.small.delete',{onclick: click_replay_remove(file)}, [
+          m('span.fa.fa-trash-o')
+        ])
+      ])
+    ]))
   }
   return items
 }
@@ -214,7 +240,7 @@ function settings_replay(){
       ]),
       m('.clear')
     ]),
-    m('.data-table', settings_replay_items())
+    m('.data-table', m('table',settings_replay_items()))
   ])
 }
 //settings_audio #######################

@@ -18,6 +18,12 @@ module.exports = function(app,store){
     })
   }
 
+  function del(name){
+    const dir      = store.get('replay_dir')
+    const filename = path.join(dir,`${name}.replay`)
+    fs.unlink(filename,function(){}) //delets file if happens to already exist
+  }
+
   function dir(state,dir){
     if(state === 'change' && (dir === null || dir === undefined)){
       console.log(state,dir)
@@ -124,6 +130,7 @@ module.exports = function(app,store){
   return {
     list: list,
     dir : dir,
+    del: del,
     save: save,
     load: load,
     last: last,
