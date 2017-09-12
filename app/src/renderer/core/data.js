@@ -1,7 +1,4 @@
 module.exports = {
-  VERSION_MAJOR: 0,
-  VERSION_MINOR: 1,
-  VERSION_PATCH :0,
   PUZZLE: {
     test: [
       null, null, 2, null, null, null,
