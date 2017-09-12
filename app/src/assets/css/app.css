@@ -1,6 +1,6 @@
 * {box-sizing: border-box; }
 html,body{ 
-  background: rgb(33,33,33); 
+  background: rgb(33,33,33);
   margin:0;
   padding:0;
   font-family: 'Open Sans', arial, sans-serif;
@@ -13,6 +13,22 @@ body{overflow: hidden}
   position: relative;
   border-bottom: solid 1px rgb(0,0,0);
 }
+
+div::-webkit-scrollbar,
+div::-webkit-scrollbar-track,
+div::-webkit-scrollbar-track-piece {
+  background: rgb(33,33,33);
+}
+
+div::-webkit-scrollbar {
+  width: 8px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background: rgb(20,20,20);
+  border-radius: 999px;
+}
+
 .divider:after {
   width: 100%;
   content: '';
