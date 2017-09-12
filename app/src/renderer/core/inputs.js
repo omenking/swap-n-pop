@@ -48,15 +48,20 @@ module.exports = function(game){
       }
     }
     replay_input(pi,tick){
+      if (this.replaying[pi] === 'done') { return }
       if (this.replaying[pi] === null) {
         this.replaying[pi] = this.inputs[pi].shift()
       }
 
       if (this.replaying[pi][0]+this.replaying[pi][1] < tick){
-        while(this.replaying[pi][0]+this.replaying[pi][1] < tick){
-          this.replaying[pi] = this.inputs[pi].shift()
+        if(this.inputs[pi].length === 0){
+          this.replaying[pi] = 'done'
+        } else {
+          while(this.replaying[pi][0]+this.replaying[pi][1] < tick){
+            this.replaying[pi] = this.inputs[pi].shift()
+          }
+          game.controls.execute(pi,this.replaying[pi][2])
         }
-        game.controls.execute(pi,this.replaying[pi][2])
         //console.log(tick,this.replaying[pi][0]+this.replaying[pi][1],this.replaying[pi][2])
       }
     }

@@ -348,7 +348,7 @@ module.exports = function(game){
       } else if (this.danger){
         // create a new state DANGER and using counter we can maybe
         // make this deterministic.
-        console.log(this.danger)
+        //console.log(this.danger)
         //this.play_danger()
       } else {
         this.frame = FRAME_LIVE
