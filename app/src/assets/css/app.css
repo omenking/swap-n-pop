@@ -8,6 +8,7 @@ html,body{
   color: rgb(246,246,246);
   font-size: 11px;
 }
+body{overflow: hidden}
 .divider {
   position: relative;
   border-bottom: solid 1px rgb(0,0,0);
