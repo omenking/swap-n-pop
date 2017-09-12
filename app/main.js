@@ -48,6 +48,13 @@ const template = [
       {click: click_settings('audio')  , label: "Audio"},
       {click: click_settings('replay') , label: "Replay"}
     ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {click: click_debug('main')      , label: "Inspector Main"},
+      {click: click_debug('settings')  , label: "Inspector Settings"}
+    ]
   }
 ]
 
@@ -65,6 +72,23 @@ if (process.platform === 'darwin') {
 }
 
 const menu  = Menu.buildFromTemplate(template)
+
+function click_debug(kind){
+  return function(){
+    switch (kind) {
+      case 'main':
+        if (win !== null) {
+          win.webContents.openDevTools()
+        }
+        break
+      case 'settings':
+        if (win_settings !== null) {
+          win_settings.webContents.openDevTools()
+        }
+        break
+    }
+  }
+}
 
 function click_settings(mode) {
   return function(item, win, ev){
@@ -88,7 +112,6 @@ function click_settings(mode) {
       slashes: true
     }))
     win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
-    win_settings.webContents.openDevTools()
     win_settings.on('closed', function () {
       win_settings = null
     })
@@ -113,7 +136,6 @@ function create_window () {
     icon: path.join(__dirname, 'src', 'assets', 'icons', 'png', '64x64.png')
   }))
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
-  win.webContents.openDevTools()
   win.on('closed', function () {
     win = null
   })
