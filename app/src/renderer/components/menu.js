@@ -40,9 +40,10 @@ module.exports = function(game){
       ipc.send('play-vs',{online: false, cpu: [false,true]})
     }
     mode_improve() {
-      game.state.start('mode_puzzle',true,false,
-        PUZZLE.skill_chain_demo_2.demo_4
-      )
+      game.state.start('mode_puzzle',true,false,{
+        panels: PUZZLE.skill_chain_demo_2.demo_4,
+        cpu: [false,null]
+      })
     }
     mode_option() {
       ipc.send('settings','replay')

@@ -1,25 +1,32 @@
+const N = null
 module.exports = {
   PUZZLE: {
     test: [
-      null, null, 2, null, null, null,
-      null, null, 2, null, null, null,
-      null, null, 3, null, null, null,
-      null, null, 3, null, null, null,
-      null, null, 1, null, null, null,
-      null, null, 1, null, null, null,
-      null, null, 1, null, null, null,
-      null, null, 3, null, null, null,
-      null, null, 2, null, null, null
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, 2, N, N, N,
+      N, N, 2, N, N, N,
+      N, N, 3, N, N, N,
+      N, N, 3, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 3, N, N, N,
+      N, N, 2, N, N, N
     ],
     skill_chain_demo_2: {
       demo_4: [
-        null, null, 5, 2, 2, null,
-        null, null, 2, 5, 0, null,
-        null, null, 4, 2, 4, null,
-        null, 3   , 5, 2, 3, null,
-        null, 3   , 0, 4, 0, null,
-        null, 5   , 5, 3, 4, null,
-        2   , 3   , 2, 5, 3, 4
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, 5, 2, 2, N,
+        N, N, 2, 5, 0, N,
+        N, N, 4, 2, 4, N,
+        N, 3, 5, 2, 3, N,
+        N, 3, 0, 4, 0, N,
+        N, 5, 5, 3, 4, N,
+        2, 3, 2, 5, 3, 4
       ]
     }
   },

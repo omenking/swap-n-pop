@@ -91,10 +91,9 @@ module.exports = function(game){
               (this.state === 'active')
     }
     update() {
-      let diff = (UNIT / 16) * 3;
-      let y    = this.playfield.should_push ? this.y : this.y+1;
-      const x    = (this.x * UNIT) - diff;
-      y    = (y * UNIT)  - diff;
+      let diff = (UNIT / 16) * 3
+      let x  = (this.x * UNIT) - diff
+      let y  = (this.y * UNIT) - diff
 
       if ((this.state === 'entering') || (this.state === 'preactive')) {
         this.counter_flicker++;
@@ -106,23 +105,23 @@ module.exports = function(game){
       switch (this.state) {
         case 'entering':
           if (this.sprite.y < y) {
-            return this.sprite.y += STARTPOS_PANELCURSOR_SPEED;
+            this.sprite.y += STARTPOS_PANELCURSOR_SPEED
           } else if (this.sprite.x > x) {
-            return this.sprite.x -= STARTPOS_PANELCURSOR_SPEED;
+            this.sprite.x -= STARTPOS_PANELCURSOR_SPEED
           } else {
             this.state = 'preactive';
             if (this.playfield.stage.cpu[0]  === false ||
                 (this.playfield.stage.online !== false && this.playfield.pi == 0)
             ) {
-              return this.map_controls()
+              this.map_controls()
             }
           }
-          break;
+          break
         case 'preactive': case 'active':
-          diff = (UNIT / 16) * 3;
-          y = this.playfield.should_push ? this.y : this.y+1;
-          this.sprite.x = (this.x * UNIT) - diff;
-          return this.sprite.y = (y * UNIT)  - diff;
+          diff = (UNIT / 16) * 3
+          this.sprite.x = (this.x * UNIT) - diff
+          this.sprite.y = (this.y * UNIT) - diff
+          break
       }
     }
     shutdown() {

@@ -150,7 +150,6 @@ module.exports = function(game){
         this.stage.game_over()
         return 0
       }
-      console.log('pushing')
 
       // move all panels up the stack
       const stack = new Array(this.stack_len)

@@ -298,9 +298,11 @@ module.exports = function(game){
       if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
       return [combo,chain]
     }
+    // clear index is to determine what frame of clear frame we
+    // are on.
     get clear_index(){
       if (this.state !== CLEAR) {
-        throw(new Error('clear_index called on non CLEAR panel'))
+        throw(new Error('clear_index called on none CLEAR panel'))
       }
       let panels = []
       for (let p of this.playfield.stack()){
