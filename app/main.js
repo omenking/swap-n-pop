@@ -212,3 +212,7 @@ ipc.on('network-connect', (event,data) => {
   win_settings.close()
   win.focus()
 })
+
+ipc.on('settings', (event,name) => {
+  click_settings(name)()
+})

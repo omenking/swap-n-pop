@@ -1,7 +1,6 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const ComponentMenu = require(APP.path.components('menu'))(game)
-  const {ipcRenderer: ipc} = require('electron')
 
   class controller {
     constructor() {

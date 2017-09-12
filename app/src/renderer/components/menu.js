@@ -34,10 +34,7 @@ module.exports = function(game){
       ipc.send('play-vs',{online: false, cpu: [false,false]})
     }
     mode_1p_vs_2p_online() {
-      game.state.start('connect',true,false,{
-        mode: 'quick',
-        cpu: [false,false]
-      })
+      ipc.send('settings','network')
     }
     mode_1p_vs_cpu() {
       ipc.send('play-vs',{online: false, cpu: [false,true]})
@@ -48,7 +45,7 @@ module.exports = function(game){
       )
     }
     mode_option() {
-      ipc.send('replay-load')
+      ipc.send('settings','replay')
     }
   };
 
