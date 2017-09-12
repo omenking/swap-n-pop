@@ -1,4 +1,4 @@
-const m = require('../node_modules/mithril/mithril.min.js')
+const m = require('./lib/mithril')
 const {remote,ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
