@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const {UNIT, MENUCURSORBLINK} = require(APP.path.core('data'))
   class controller {
     constructor() {

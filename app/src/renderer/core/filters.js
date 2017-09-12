@@ -1,4 +1,4 @@
-const APP         = require('swap-n-pop_app')
+const APP         = require('../../../app')('../../../')
 const {COLS,ROWS} = require(APP.path.core('data'))
 module.exports = {
   i2xy: function(i){

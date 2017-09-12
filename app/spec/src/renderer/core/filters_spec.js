@@ -1,4 +1,4 @@
-const APP        = require('swap-n-pop_app')
+const APP = require('../../../../app')('../../../../')
 const chai       = require('chai')
 const _f         = require(APP.path.core('filters'))
 

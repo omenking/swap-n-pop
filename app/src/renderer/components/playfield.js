@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const _f = require(APP.path.core('filters'))
   const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)

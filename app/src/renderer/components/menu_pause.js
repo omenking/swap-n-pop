@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const ComponentMenuPauseCursor = require(APP.path.components('menu_pause_cursor'))(game)
   class controller {
     constructor() {

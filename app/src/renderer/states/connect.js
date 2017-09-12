@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const Server = require(APP.path.main('server'))
   const {ipcRenderer: ipc} = require('electron')
 

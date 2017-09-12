@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)

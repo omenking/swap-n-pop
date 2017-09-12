@@ -17,7 +17,8 @@
 		"appId": "com.swap-n-pop.app",
 		"mac": {
 			"category": "public.app-category.games",
-      "publish": ["github"]
+      "publish": ["github"],
+      "icon": "./app/src/assets/icons/mac/icon.icns"
 		},
     "win": {
       "target": "nsis",

@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const blank = require(APP.path.components('panel_blank'))(game)
   const {
     UNIT,

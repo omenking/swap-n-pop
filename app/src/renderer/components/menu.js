@@ -1,5 +1,5 @@
 module.exports = function(game){
-  const APP = require('swap-n-pop_app')
+  const APP = require('../../../app')('../../../')
   const {PUZZLE} = require(APP.path.core('data'))
   const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')

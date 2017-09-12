@@ -1,4 +1,4 @@
-const APP        = require('swap-n-pop_app')
+const APP = require('../../../../app')('../../../../')
 const chai       = require('chai')
 const sinon      = require('sinon')
 const CoreInputs = require(APP.path.core('inputs'))

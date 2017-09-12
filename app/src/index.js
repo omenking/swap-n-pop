@@ -1,4 +1,4 @@
-const APP = require('swap-n-pop_app')
+const APP = require('../app')('../')
 const {ipcRenderer: ipc} = require('electron')
 
 function attach_state(klass){
