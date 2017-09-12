@@ -137,7 +137,8 @@ function create_window () {
   }))
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
-    win = null
+    app.quit()
+    //win = null
   })
 }
 
