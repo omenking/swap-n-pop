@@ -1,6 +1,5 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
-  const Server = require(APP.path.main('server'))
   const {ipcRenderer: ipc} = require('electron')
 
   class controller {
@@ -31,20 +30,17 @@ module.exports = function(game){
 
     create(){
       this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
-
-      this.server = new Server()
-      this.server.create(this.host_port,'127.0.0.1',this.listening)
+      game.server.create(this.host_port,'127.0.0.1',this.listening)
     }
     listening(){
       if (this.mode === 'host') {
-        this.server.connected(this.start)
+        game.server.connected(this.start)
       } else if(this.mode === 'join') {
-        this.server.connect(this.join_port,this.join_host,this.start)
+        game.server.connect(this.join_port,this.join_host,this.start)
       }
     }
     start(){
-      console.log('connect start')
-      ipc.send('play-vs',{online: this.server, cpu: false})
+      ipc.send('play-vs',{online: true, cpu: false})
     }
     update(){
       this.bg.tilePosition.y += 0.5

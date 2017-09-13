@@ -1,6 +1,6 @@
 {
   "name": "swap-n-pop",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An open-source built for competitive online tetris attack.",
   "main": "main.js",
   "scripts": {

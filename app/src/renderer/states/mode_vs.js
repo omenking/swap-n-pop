@@ -2,6 +2,7 @@ module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
+  const ComponentPing      = require(APP.path.components('ping'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
@@ -22,6 +23,7 @@ module.exports = function(game){
       this.danger_check = this.danger_check.bind(this)
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
+      this.ping         = new ComponentPing()
     }
 
     static initClass() {
@@ -31,17 +33,17 @@ module.exports = function(game){
     init(data){
       this.tick   = -1
       this.seed   = data.seed
-      this.online = data.online
       this.cpu    = data.cpu
+      this.online = data.online
       this.rng    = seedrandom(this.seed)
-      this.inputs = new CoreInputs(data.inputs)
+      this.inputs = new CoreInputs(data.inputs,data.online)
     }
 
-    get online(){ return this._online }
-    get cpu(){    return this._cpu }
+    get online(){  return this._online }
+    set online(v){ this._online = v }
 
-    set online(v){ this._online = v}
-    set cpu(v){    this._cpu = v }
+    get cpu(){  return this._cpu }
+    set cpu(v){ this._cpu = v }
 
     create_bg() {
       this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
@@ -66,9 +68,9 @@ module.exports = function(game){
       this.playfield1.create_after()
       this.playfield2.create_after()
 
-      //this.online.on('recieve',function(data){
-        //this.inputs.reconcile(data)
-      //})
+      if (this.online){
+        this.ping.create()
+      }
     }
 
     pause(pi){
@@ -111,9 +113,7 @@ module.exports = function(game){
       this.playfield2.update()
       this.danger_check()
       this.inputs.update(this.tick)
-      //if (this.online){
-        //this.online.send(this.inputs.send)
-      //}
+
     }
     render(){
       if(this.debug){
@@ -122,6 +122,9 @@ module.exports = function(game){
       }
       if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
+      if (this.online){
+        this.ping.render()
+      }
     }
     shutdown() {
       console.log('shutdown mode_vs')

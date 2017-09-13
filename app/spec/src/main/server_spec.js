@@ -21,7 +21,9 @@ describe('Server' ,function(){
       server.create(40101,'127.0.0.1')
       server.signal('connecting').should.eql(Buffer.from([0x00]))
       server.signal('connected').should.eql(Buffer.from([0x01]))
-      server.signal('framedata').should.eql(Buffer.from([0x02]))
+      server.signal('ping').should.eql(Buffer.from([0x02]))
+      server.signal('pong').should.eql(Buffer.from([0x03]))
+      server.signal('framedata',null).should.eql(Buffer.from([0x04,0x00]))
       server.close()
     }) // it
 
@@ -90,4 +92,44 @@ describe('Server' ,function(){
       }) //server.create
     }) // it
   }) // describe
+
+
+  describe('#ping()' ,function(){
+    it('should ping and pong',function(done){
+      const server = new Server()
+      const client = new Server()
+      server.create(40099,'127.0.0.1',function(){
+        client.create(40001,'127.0.0.1',function(){
+          server.connected(function(err,data){
+            client.on('pong',function(){
+              console.log('pp',client.ping_time)
+              done()
+              server.close()
+              client.close()
+            })
+            client.ping()
+          })
+          client.connect(40099,'127.0.0.1',function(){
+          })
+
+        })
+      })
+    }) // it
+  }) // describe
+
+  describe.only('#test()' ,function(){
+    it('should',function(){
+      const num  = 10102
+      const size = Math.ceil(num.toString(2).length / 8)
+      const arr  = new Array(size+1).fill(null)
+      arr[0] = 0x02
+      console.log('arr',arr)
+      const buf  = Buffer.from(arr)
+      buf.writeUIntBE(num,1,size)
+      console.log('b',buf)
+      console.log('b2',buf.readUIntBE(1,size))
+      //console.log('buf',buf)
+    }) // it
+  }) // describe
+
 })
