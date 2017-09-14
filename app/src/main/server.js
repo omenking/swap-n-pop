@@ -88,7 +88,9 @@ class controller {
     return buf
   }
   buf_str(v,data){
-    const buf = Buffer.from([v]).concat(Buffer.from(data, 'ascii'))
+    const buf1 = Buffer.from([v])
+    const buf2 = Buffer.from(data, 'ascii')
+    const buf = Buffer.concat([buf1,buf2],buf1.length+buf2.length)
     return buf
   }
   buf_framedata(v,data){
