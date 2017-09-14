@@ -148,7 +148,7 @@ class controller {
   // 0x03 - pong
   // 0x04 - framedata
   msg(buf){
-         if (buf[0] === 0x00 && buf.length === 1) {return ['connecting',this.msg_str(buf)]}
+         if (buf[0] === 0x00                    ) {return ['connecting',this.msg_str(buf)]}
     else if (buf[0] === 0x01 && buf.length === 1) {return ['connected' ,null]}
     else if (buf[0] === 0x02                    ) {return ['ping'      ,this.msg_int(buf)]}
     else if (buf[0] === 0x03                    ) {return ['pong'      ,this.msg_int(buf)]}
