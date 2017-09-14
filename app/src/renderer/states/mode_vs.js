@@ -85,7 +85,9 @@ module.exports = function(game){
     }
     game_over() {
       console.log('gameover')
-      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
+      if(!this.inputs.replay){
+        ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
+      }
       game.sounds.stage_music('results')
       this.playfield1.game_over()
       this.playfield2.game_over()

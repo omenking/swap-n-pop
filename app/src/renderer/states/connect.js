@@ -40,7 +40,7 @@ module.exports = function(game){
       }
     }
     start(){
-      ipc.send('play-vs',{online: true, cpu: false})
+      ipc.send('play-vs',{seed: 'puzzle', online: true, cpu: false})
     }
     update(){
       this.bg.tilePosition.y += 0.5
