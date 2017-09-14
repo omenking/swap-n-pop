@@ -30,7 +30,7 @@ module.exports = function(game){
 
     create(){
       this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
-      game.server.create(this.host_port,'127.0.0.1',this.listening)
+      game.server.create(this.host_port,'0.0.0.0',this.listening)
     }
     listening(){
       if (this.mode === 'host') {
