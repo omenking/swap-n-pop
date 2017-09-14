@@ -204,11 +204,13 @@ ipc.on('replay-load', (event,name) => {
   })
 })
 ipc.on('play-vs', (event,{seed,online,cpu}) => {
+  console.log('seed_____:0',seed)
   if (online){
     seed = seed
   } else {
     seed = Replay.random_seed()
   }
+  console.log('seed_____:1',seed)
   win.webContents.send('play-vs',{
     seed:   seed,
     online: online,

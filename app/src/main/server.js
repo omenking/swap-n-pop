@@ -76,7 +76,7 @@ class controller {
     this.send('connecting',seed)
   }
   error(err){
-    console.log(`server error:\n${err.stack}`)
+    //console.log(`server error:\n${err.stack}`)
     this.server.close()
   }
   buf_int(v,data){
@@ -156,7 +156,7 @@ class controller {
     else {throw(new Error("no idea what you go"))}
   }
   message(buf,req){
-    console.log(`${this.address} >| ${req.address}:${req.port} :::${buf}`)
+    //console.log(`${this.address} >| ${req.address}:${req.port} :::${buf}`)
 
     const [sig,data] = this.msg(buf)
 
@@ -175,7 +175,7 @@ class controller {
         this._connected("port and host don't match",{port: req.port, host: req.address})
       }
     } else {
-      console.log('sig',sig)
+      //console.log('sig',sig)
       if (this.states[sig]) {
         this.states[sig](data)
       } else {
@@ -187,7 +187,7 @@ class controller {
     return function(){
       this._state  = 'listening'
       const address = this.server.address()
-      console.log(`${address.address}:${address.port} :::listening`)
+      //console.log(`${address.address}:${address.port} :::listening`)
       if (callback){callback()}
     }.bind(this)
   }
@@ -199,7 +199,7 @@ class controller {
   }
   sent(err, bytes){
     if (err){throw err}
-    console.log(`${this.address} -> ${this.send_address} :::${bytes}`)
+    //console.log(`${this.address} -> ${this.send_address} :::${bytes}`)
   }
   ping(){
     this.send('ping',new Date().getTime())
