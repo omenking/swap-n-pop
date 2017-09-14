@@ -118,19 +118,19 @@ module.exports = function(game){
     get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
     get empty() {      return (this.counter === 0) && this.hidden }
     get hidden(){      return (this.kind === null) }
-    matched(i){
-      return ((this.left.kind  === i) && (this.right.kind  === i)) ||
-             ((this.above.kind === i) && (this.under.kind  === i)) ||
-             ((this.above.kind === i) && (this.above2.kind === i)) ||
-             ((this.under.kind === i) && (this.under2.kind === i)) ||
-             ((this.left.kind  === i) && (this.left2.kind  === i)) ||
-             ((this.right.kind === i) && (this.right2.kind === i))
+    matched(kind){
+      return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||
+             ((this.above.kind === kind) && (this.under.kind  === kind)) ||
+             ((this.above.kind === kind) && (this.above2.kind === kind)) ||
+             ((this.under.kind === kind) && (this.under2.kind === kind)) ||
+             ((this.left.kind  === kind) && (this.left2.kind  === kind)) ||
+             ((this.right.kind === kind) && (this.right2.kind === kind))
     }
     set frame(i){ this.sprite.frame = (this.kind * 8) + i}
     set(i){
       switch (i) {
         case 'unique':
-          this.nocombo();
+          this.nocombo()
           break;
         default:
           this.kind = i
@@ -254,8 +254,11 @@ module.exports = function(game){
       this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
     }
 
+    //should never generate 2 panels on top of each other
     nocombo() {
-      let values = ss.shuffle([0, 1, 2, 3, 4],this.playfield.stage.rng());
+      const arr = [0, 1, 2, 3, 4]
+      if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
+      let values = ss.shuffle(arr,this.playfield.stage.rng())
       return this.i = values.find((i)=> {
         return this.matched(i) === false
       })

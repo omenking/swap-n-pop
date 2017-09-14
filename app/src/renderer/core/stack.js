@@ -26,10 +26,15 @@ module.exports = function(game){
     }
     step(layout,i){
       const offset = (ROWS - (layout.length / COLS)) * COLS
-      if (layout[i] === 1) {
-        let kinds = ss.shuffle([0, 1, 2, 3, 4],this.rng())
+      const pos = offset+i
+      if (layout[i] === 1) { //if there is a panel
+
+        const above = this.at(pos-(1*COLS))
+        const arr = [0, 1, 2, 3, 4]
+        if (above){ arr.splice(arr.indexOf(above), 1)}
+        let kinds = ss.shuffle(arr,this.rng())
         let kind  = kinds.find((k)=> {
-          return this.matched(offset+i,k) === false
+          return this.matched(pos,k) === false
         })
         this.panels[offset+i] = kind
       }
@@ -54,22 +59,22 @@ module.exports = function(game){
         return null;
       }
     }
-    matched(pos,i){
-      const left  = this.at(pos-1);
-      const right = this.at(pos+1);
-      const under = this.at(pos+(1*COLS));
-      const above = this.at(pos-(1*COLS));
+    matched(pos,kind){
+      const left  = this.at(pos-1)
+      const right = this.at(pos+1)
+      const under = this.at(pos+(1*COLS))
+      const above = this.at(pos-(1*COLS))
 
-      const left2  = this.at(pos-2);
-      const right2 = this.at(pos+2);
-      const under2 = this.at(pos+(2*COLS));
-      const above2 = this.at(pos-(2*COLS));
-      return ((left  === i) && (right  === i)) ||
-             ((above === i) && (under  === i)) ||
-             ((above === i) && (above2 === i)) ||
-             ((under === i) && (under2 === i)) ||
-             ((left  === i) && (left2  === i)) ||
-             ((right === i) && (right2 === i))
+      const left2  = this.at(pos-2)
+      const right2 = this.at(pos+2)
+      const under2 = this.at(pos+(2*COLS))
+      const above2 = this.at(pos-(2*COLS))
+      return ((left  === kind) && (right  === kind)) ||
+             ((above === kind) && (under  === kind)) ||
+             ((above === kind) && (above2 === kind)) ||
+             ((under === kind) && (under2 === kind)) ||
+             ((left  === kind) && (left2  === kind)) ||
+             ((right === kind) && (right2 === kind))
     }
 
 
