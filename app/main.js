@@ -1,4 +1,4 @@
-const {app, Menu, BrowserWindow, ipcMain: ipc, dialog} = require('electron')
+const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 
@@ -181,6 +181,10 @@ ipc.on('replay-list', (event) => {
   Replay.list(function(err,files){
     win_settings.webContents.send('replay-list',files)
   })
+})
+ipc.on('replay-dir-reveal', (event) => {
+  let dir = Replay.dir()
+  shell.openItem(dir)
 })
 ipc.on('replay-dir-reset', (event) => {
   let dir = Replay.dir('reset')

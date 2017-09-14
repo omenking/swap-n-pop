@@ -188,20 +188,23 @@ ipc.on('replay-list',function(event,files){
   m.redraw()
 })
 
+function click_reveal_replay_dir(){
+  ipc.send('replay-dir-reveal')
+}
 function click_change_replay_dir(){
   ipc.send('replay-dir-change')
 }
-
+function click_change_replay_dir(){
+  ipc.send('replay-dir-change')
+}
 function click_reset_replay_dir(){
   ipc.send('replay-dir-reset')
 }
-
 function click_replay_play(file){
   return function(){
     ipc.send('replay-load',file)
   }
 }
-
 function click_replay_remove(file){
   return function(){
     i = replay_files.indexOf(file)
@@ -235,6 +238,7 @@ function settings_replay(){
       m('label','Replay Folder Location:'),
       m('.input',replay_dir),
       m('.buttons',[
+        m('.button.reveal',{onclick: click_reveal_replay_dir},'Reveal'),
         m('.button.change',{onclick: click_change_replay_dir},'Change'),
         m('.button.reset' ,{onclick: click_reset_replay_dir },'Reset'),
       ]),

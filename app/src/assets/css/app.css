@@ -147,6 +147,7 @@ input[type='submit'] {
   padding-top: 16px;
   text-align: right;
 }
+.settings_replay .buttons .reveal,
 .settings_replay .buttons .change{
   margin-right: 8px;
 }
