@@ -62,7 +62,9 @@ module.exports = function(game){
     unpack(data){
       console.log('upack',data.ack0,data.ack1,data.frames)
       let len = null
-      for (let d of data.frames) {
+      let d   = null
+      for (let i = this.ack[0]-data.ack0; data.frame_count > i;i++) {
+        d = data.frames[i]
         len = this.inputs[1].length-1
         if (this.inputs[1][len][2] === d){//is same
           this.inputs[1][len][1]++

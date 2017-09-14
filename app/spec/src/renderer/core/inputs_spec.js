@@ -72,6 +72,7 @@ describe('Inputs', function() {
   describe('#unpack()', function(){
     it('should get', function(){
       const inputs = new CoreInputs(null,true)
+      inputs.ack = [5,0]
       inputs.unpack({
         ack0: 5,
         ack1: 0,
