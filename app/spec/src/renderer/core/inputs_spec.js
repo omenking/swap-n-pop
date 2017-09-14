@@ -2,7 +2,8 @@ const APP = require('../../../../app')('../../../../')
 const chai  = require('chai')
 const sinon = require('sinon')
 
-const game = require(APP.path.spec('helpers','game_spec'))
+const Game = require(APP.path.spec('helpers','game_spec'))
+const game = new Game()
 const CoreInputs = require(APP.path.core('inputs'))(game)
 
 chai.should()
@@ -97,4 +98,6 @@ describe('Inputs', function() {
 
     }) // it
   }) // describe
+
+
 })
