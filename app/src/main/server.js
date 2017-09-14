@@ -71,6 +71,7 @@ class controller {
     if(host === null) { throw(new Error('host can not be null')) }
     this._connected = callback
     this._state    = 'connecting'
+    this.seed      = seed
     this.send_port = port
     this.send_host = host
     this.send('connecting',seed)

@@ -19,7 +19,7 @@ describe('Server' ,function(){
       const server = new Server()
       console.log(Buffer.from([0x00]))
       server.create(40101,'127.0.0.1')
-      server.signal('connecting').should.eql(Buffer.from([0x00]))
+      server.signal('connecting','h').should.eql(Buffer.from([0x00,0x68]))
       server.signal('connected').should.eql(Buffer.from([0x01]))
       server.signal('ping',1).should.eql(Buffer.from([0x02,0x01]))
       server.signal('pong',1).should.eql(Buffer.from([0x03,0x01]))
@@ -41,7 +41,7 @@ describe('Server' ,function(){
     it('should match',function(){
       const server = new Server()
       server.create(40101,'127.0.0.1')
-      server.msg(Buffer.from([0x00])).should.eql(['connecting',null])
+      server.msg(Buffer.from([0x00,0x68])).should.eql(['connecting','h'])
       server.msg(Buffer.from([0x01])).should.eql(['connected',null])
       server.close()
     }) // it
@@ -63,7 +63,7 @@ describe('Server' ,function(){
       server.create(40099,'127.0.0.1',function(){
         client.create(40001,'127.0.0.1',function(){
           server.connected(function(err,data){})
-          client.connect(40099,'127.0.0.1',function(err,data){
+          client.connect(40099,'127.0.0.1','hello123',function(err,data){
             data.port.should.eql(40099)
             done(err)
             server.close()
@@ -86,7 +86,7 @@ describe('Server' ,function(){
             server.close()
             client.close()
           })
-          client.connect(40099,'127.0.0.1',function(){
+          client.connect(40099,'127.0.0.1','hello123',function(){
           })
         })
       }) //server.create
@@ -109,7 +109,7 @@ describe('Server' ,function(){
             })
             client.ping()
           })
-          client.connect(40099,'127.0.0.1',function(){
+          client.connect(40099,'127.0.0.1','hello123',function(){
           })
 
         })
@@ -187,4 +187,24 @@ describe('Server' ,function(){
       })
     }) // it
   }) // describe
+
+  describe('#buf_str(v,data)' ,function(){
+    it('should',function(){
+      const server = new Server()
+      const buf = Buffer.from([
+        0x00, //signal
+        0x68,
+        0x65,
+        0x6c,
+        0x6c,
+        0x6f,
+        0x31,
+        0x32,
+        0x33
+      ])
+      server.buf_str(0x00,'hello123').should.eql(buf)
+    }) // it
+  }) // describe
+
+
 })
