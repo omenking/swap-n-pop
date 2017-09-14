@@ -203,11 +203,9 @@ ipc.on('replay-load', (event,name) => {
     win.webContents.send('replay-load',data)
   })
 })
-ipc.on('play-vs', (event,{online,cpu}) => {
-  let seed = null
+ipc.on('play-vs', (event,{seed,online,cpu}) => {
   if (online){
-    seed = game.server.seed
-    console.log('seed',seed)
+    seed = seed
   } else {
     seed = Replay.random_seed()
   }
