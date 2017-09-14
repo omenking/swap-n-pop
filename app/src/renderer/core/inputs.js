@@ -60,7 +60,7 @@ module.exports = function(game){
     }
 
     unpack(data){
-      console.log('upack',data.ack0,data.ack1,data.frames)
+      //console.log('upack',data.ack0,data.ack1,data.frames)
       let len = null
       let d   = null
       for (let i = this.ack[0]-data.ack0; data.frame_count > i;i++) {

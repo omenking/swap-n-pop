@@ -18,10 +18,12 @@ class controller {
     this.ping      = this.ping.bind(this)
     this.pong      = this.pong.bind(this)
 
-    this.buf_ping      = this.buf_ping.bind(this)
+    this.buf_str      = this.buf_str.bind(this)
+    this.buf_int      = this.buf_int.bind(this)
     this.buf_framedata = this.buf_framedata.bind(this)
 
-    this.msg_ping      = this.msg_ping.bind(this)
+    this.msg_str      = this.msg_str.bind(this)
+    this.msg_int      = this.msg_int.bind(this)
     this.msg_framedata = this.msg_framedata.bind(this)
   }
   get state(){ return this._state }
@@ -37,6 +39,9 @@ class controller {
   set port(v){ this._port = v }
   set send_host(v){ this._send_host = v }
   set send_port(v){ this._send_port = v }
+
+  get seed(){ return this._seed }
+  set seed(v){ this._seed = v }
 
   create(port,host,callback){
     if(port === null) { throw(new Error('port can not be null')) }
@@ -61,25 +66,29 @@ class controller {
     this._state     = 'awaiting'
     this._connected = callback
   }
-  connect(port,host,callback){
+  connect(port,host,seed,callback){
     if(port === null) { throw(new Error('port can not be null')) }
     if(host === null) { throw(new Error('host can not be null')) }
     this._connected = callback
     this._state    = 'connecting'
     this.send_port = port
     this.send_host = host
-    this.send('connecting')
+    this.send('connecting',seed)
   }
   error(err){
     console.log(`server error:\n${err.stack}`)
     this.server.close()
   }
-  buf_ping(v,data){
+  buf_int(v,data){
     const size = Math.ceil(data.toString(2).length / 8)
     const arr  = new Array(size+1).fill(null)
     arr[0] = v
     const buf  = Buffer.from(arr)
     buf.writeUIntBE(data,1,size)
+    return buf
+  }
+  buf_str(v,data){
+    const buf = Buffer.from([v]).concat(Buffer.from(data, 'ascii'))
     return buf
   }
   buf_framedata(v,data){
@@ -99,8 +108,11 @@ class controller {
                     size1)
     return buf
   }
-  msg_ping(buf){
+  msg_int(buf){
     return buf.readUIntBE(1,buf.length-1)
+  }
+  msg_str(buf){
+    return buf.toString('ascii', 1)
   }
   msg_framedata(buf){
     const frame_count = buf.readUInt8(1)
@@ -121,10 +133,10 @@ class controller {
     }
   }
   signal(k,data){
-         if (k === 'connecting') {return Buffer.from([0x00])}
+         if (k === 'connecting') {return this.buf_str(0x00,data)}
     else if (k === 'connected')  {return Buffer.from([0x01])}
-    else if (k === 'ping')       {return this.buf_ping(0x02,data)}
-    else if (k === 'pong')       {return this.buf_ping(0x03,data)}
+    else if (k === 'ping')       {return this.buf_int(0x02,data)}
+    else if (k === 'pong')       {return this.buf_int(0x03,data)}
     else if (k === 'framedata')  {return this.buf_framedata(0x04,data)}
     else {throw(new Error("no idea what you want to send"))}
   }
@@ -134,10 +146,10 @@ class controller {
   // 0x03 - pong
   // 0x04 - framedata
   msg(buf){
-         if (buf[0] === 0x00 && buf.length === 1) {return ['connecting',null]}
+         if (buf[0] === 0x00 && buf.length === 1) {return ['connecting',this.msg_str(buf)]}
     else if (buf[0] === 0x01 && buf.length === 1) {return ['connected' ,null]}
-    else if (buf[0] === 0x02                    ) {return ['ping'      ,this.msg_ping(buf)]}
-    else if (buf[0] === 0x03                    ) {return ['pong'      ,this.msg_ping(buf)]}
+    else if (buf[0] === 0x02                    ) {return ['ping'      ,this.msg_int(buf)]}
+    else if (buf[0] === 0x03                    ) {return ['pong'      ,this.msg_int(buf)]}
     else if (buf[0] === 0x04)                     {return ['framedata' ,this.msg_framedata(buf)] }
     else {throw(new Error("no idea what you go"))}
   }
@@ -147,6 +159,7 @@ class controller {
     const [sig,data] = this.msg(buf)
 
     if (sig === 'connecting' && this.state === 'awaiting'){
+      this.seed   = data
       this._state = 'connected'
       this._connected(null,true)
       this.send_port = req.port

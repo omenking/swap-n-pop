@@ -1,6 +1,7 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const {ipcRenderer: ipc} = require('electron')
+  const Replay = require('../../../src/main/replay')(null,null)
 
   class controller {
     constructor() {
@@ -36,11 +37,16 @@ module.exports = function(game){
       if (this.mode === 'host') {
         game.server.connected(this.start)
       } else if(this.mode === 'join') {
-        game.server.connect(this.join_port,this.join_host,this.start)
+        game.server.connect(
+          this.join_port,
+          this.join_host,
+          Replay.random_seed(), //hacky until we get a game setup screen
+          this.start
+        )
       }
     }
     start(){
-      ipc.send('play-vs',{seed: 'puzzle', online: true, cpu: false})
+      ipc.send('play-vs',{online: true, cpu: false})
     }
     update(){
       this.bg.tilePosition.y += 0.5
