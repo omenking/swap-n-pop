@@ -33,6 +33,9 @@ module.exports = function(game){
       }
     }
 
+    get last_pack(){ return this._last_pack }
+    set last_pack(v){ this._last_pack = v}
+
     get tick(){ return this._tick }
     set tick(v){ this._tick = v}
 
@@ -60,10 +63,10 @@ module.exports = function(game){
     }
 
     unpack(data){
-      //console.log('upack',data.ack0,data.ack1,data.frames)
-      let len = null
-      let d   = null
-      for (let i = this.ack[0]-data.ack0; data.frame_count > i;i++) {
+      let   len    = null
+      let   d      = null
+      const offset = this.ack[0]-data.ack0
+      for (let i = offset; data.frame_count > i;i++) {
         d = data.frames[i]
         len = this.inputs[1].length-1
         if (this.inputs[1][len][2] === d){//is same
@@ -75,7 +78,7 @@ module.exports = function(game){
         }
       }
       len = this.inputs[1].length-1
-      this.ack[0] = this.inputs[1][len][0]+this.inputs[1][len][1]
+      this.ack[0] = data.frame_count-offset
       this.ack[1] = data.ack1
     }
 
@@ -132,7 +135,8 @@ module.exports = function(game){
         this.update_input(1,tick)
       }
       if (this.online){
-        game.server.send('framedata',this.pack())
+        this.last_pack = this.pack()
+        game.server.send('framedata',this.last_pack)
       }
     }
 

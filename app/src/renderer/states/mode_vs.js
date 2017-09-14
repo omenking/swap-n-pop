@@ -35,7 +35,6 @@ module.exports = function(game){
       this.seed   = data.seed
       this.cpu    = data.cpu
       this.online = data.online
-      console.log('seed___________:',this.seed)
       this.rng    = seedrandom(this.seed)
       this.inputs = new CoreInputs(data.inputs,data.online)
     }

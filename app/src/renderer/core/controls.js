@@ -1,8 +1,7 @@
 module.exports = function(game){
+  const {ipcRenderer: ipc} = require('electron')
   const Store = require('electron-store')
   const store = new Store()
-  const {ipcRenderer: ipc} = require('electron')
-
   class controller {
     constructor() {
       this.map         = this.map.bind(this)

@@ -9,8 +9,7 @@ module.exports = function(game){
       this.lbl = game.add.text(0, 10, '0', {
         fontSize: '16px',
         fill: 0x000000
-      }
-      );
+      });
       this.lbl.y = 10;
       this.lbl.setTextBounds(50, 0, 46, 32);
       this.lbl.boundsAlignH = 'right';
