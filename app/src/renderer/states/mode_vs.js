@@ -31,7 +31,7 @@ module.exports = function(game){
       this.prototype.debug = false
     }
     init(data){
-      this.tick   = -1
+      this.tick   = 0
       this.seed   = data.seed
       this.cpu    = data.cpu
       this.online = data.online
