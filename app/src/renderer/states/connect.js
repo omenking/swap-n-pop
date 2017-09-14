@@ -49,7 +49,7 @@ module.exports = function(game){
       ipc.send('play-vs',{
         seed  : game.server.seed,
         online: true,
-        cpu   : false
+        cpu   : [false,false]
       })
     }
     update(){
