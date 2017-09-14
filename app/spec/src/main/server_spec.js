@@ -21,9 +21,9 @@ describe('Server' ,function(){
       server.create(40101,'127.0.0.1')
       server.signal('connecting').should.eql(Buffer.from([0x00]))
       server.signal('connected').should.eql(Buffer.from([0x01]))
-      server.signal('ping').should.eql(Buffer.from([0x02]))
-      server.signal('pong').should.eql(Buffer.from([0x03]))
-      server.signal('framedata',null).should.eql(Buffer.from([0x04,0x00]))
+      server.signal('ping',1).should.eql(Buffer.from([0x02,0x01]))
+      server.signal('pong',1).should.eql(Buffer.from([0x03,0x01]))
+      //server.signal('framedata',null).should.eql(Buffer.from([0x04,0x00]))
       server.close()
     }) // it
 
@@ -117,9 +117,9 @@ describe('Server' ,function(){
     }) // it
   }) // describe
 
-  describe.only('#test()' ,function(){
+  describe('#test()' ,function(){
     it('should',function(){
-      const num  = 10102
+      const num  = 768290
       const size = Math.ceil(num.toString(2).length / 8)
       const arr  = new Array(size+1).fill(null)
       arr[0] = 0x02
@@ -132,4 +132,59 @@ describe('Server' ,function(){
     }) // it
   }) // describe
 
+  describe('#buf_framedata(v,data)' ,function(){
+    it('should',function(){
+      const server = new Server()
+      const buf = Buffer.from([
+        0x04, //signal
+        0x03, //frame_count eg. 3
+        0x02, //ack0 size 2
+        0x03, //ack1 size 3
+        0x20, //f1
+        0x10, //f2
+        0x00, //f3
+
+        0x27, // uint eg. 10102
+        0x76,
+
+        0x0b,// unit eg. 768290
+        0xb9,
+        0x22
+      ])
+      server.buf_framedata(0x04,{
+        frame_count: 3,
+        frames: [0x20,0x10,0x00],
+        ack0: 10102,
+        ack1: 768290
+      }).should.eql(buf)
+    }) // it
+  }) // describe
+
+  describe('#msg_framedata(buf)' ,function(){
+    it('should',function(){
+      const server = new Server()
+      const buf = Buffer.from([
+        0x04, //signal
+        0x03, //frame_count eg. 3
+        0x02, //ack0 size 2
+        0x03, //ack1 size 3
+        0x20, //f1
+        0x10, //f2
+        0x00, //f3
+
+        0x27, // uint eg. 10102
+        0x76,
+
+        0x0b,// unit eg. 768290
+        0xb9,
+        0x22
+      ])
+      server.msg_framedata(buf).should.eql({
+        frame_count: 3,
+        frames: [0x20,0x10,0x00],
+        ack0: 10102,
+        ack1: 768290
+      })
+    }) // it
+  }) // describe
 })

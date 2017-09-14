@@ -23,11 +23,11 @@ module.exports = function(game){
         this.online = online
         this.replay = false
         this.inputs = [
-          [[-1,0,0x00]], // frame, times, inputs
-          [[-1,0,0x00]]
+          [[0,0,0x00]], // frame, times, inputs
+          [[0,0,0x00]]
         ]
         if (this.online){
-          this.acked = [-1,-1]
+          this.ack = [0,0]
           game.server.on('framedata',this.unpack)
         }
       }
@@ -48,15 +48,21 @@ module.exports = function(game){
 
     pack(){
       const data = []
-      for (let i = this.acked[1]; this.tick >= i; i++){
+      for (let i = this.ack[1]; this.tick >= i; i++){
         data.push(this.at(i))
       }
-      return data
+      return {
+        frame_count: data.length,
+        frames: data,
+        ack0: this.ack[1],//local
+        ack1: this.ack[0] //remote
+      }
     }
 
     unpack(data){
+      console.log('upack',data.ack0,data.ack1,data.frames)
       let len = null
-      for (let d of data) {
+      for (let d of data.frames) {
         len = this.inputs[1].length-1
         if (this.inputs[1][len][2] === d){//is same
           this.inputs[1][len][1]++
@@ -66,6 +72,9 @@ module.exports = function(game){
           ])
         }
       }
+      len = this.inputs[1].length-1
+      this.ack[0] = this.inputs[1][len][0]+this.inputs[1][len][1]
+      this.ack[1] = data.ack1
     }
 
     // needs to be optimized
@@ -121,7 +130,7 @@ module.exports = function(game){
         this.update_input(1,tick)
       }
       if (this.online){
-        //game.server.send('framedata',this.pack)
+        game.server.send('framedata',this.pack())
       }
     }
 

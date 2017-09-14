@@ -37,5 +37,8 @@ module.exports = {
   },
   sounds: {
     swap: sinon.stub()
+  },
+  server: {
+    on: sinon.stub()
   }
 }

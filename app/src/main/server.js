@@ -17,6 +17,12 @@ class controller {
     this.on        = this.on.bind(this)
     this.ping      = this.ping.bind(this)
     this.pong      = this.pong.bind(this)
+
+    this.buf_ping      = this.buf_ping.bind(this)
+    this.buf_framedata = this.buf_framedata.bind(this)
+
+    this.msg_ping      = this.msg_ping.bind(this)
+    this.msg_framedata = this.msg_framedata.bind(this)
   }
   get state(){ return this._state }
 
@@ -68,27 +74,58 @@ class controller {
     console.log(`server error:\n${err.stack}`)
     this.server.close()
   }
+  buf_ping(v,data){
+    const size = Math.ceil(data.toString(2).length / 8)
+    const arr  = new Array(size+1).fill(null)
+    arr[0] = v
+    const buf  = Buffer.from(arr)
+    buf.writeUIntBE(data,1,size)
+    return buf
+  }
+  buf_framedata(v,data){
+    const size0 = Math.ceil(data.ack0.toString(2).length / 8)
+    const size1 = Math.ceil(data.ack1.toString(2).length / 8)
+
+    const arr  = [v,null,null,null].concat(data.frames).concat(new Array(size0+size1))
+    const buf  = Buffer.from(arr)
+    buf.writeUInt8(data.frame_count,1)
+    buf.writeUInt8(size0,2)
+    buf.writeUInt8(size1,3)
+    buf.writeUIntBE(data.ack0,
+                    data.frame_count+4, //offset
+                    size0)
+    buf.writeUIntBE(data.ack1,
+                    data.frame_count+4+size0, //offset
+                    size1)
+    return buf
+  }
+  msg_ping(buf){
+    return buf.readUIntBE(1,buf.length-1)
+  }
+  msg_framedata(buf){
+    const frame_count = buf.readUInt8(1)
+    const offset      = 4+frame_count
+    const size0       = buf.readUInt8(2)
+    const size1       = buf.readUInt8(3)
+    const ack0        = buf.readUIntBE(offset,size0)
+    const ack1        = buf.readUIntBE(offset+size0,size1)
+    const frames      = []
+    for (let i = 4; i < frame_count+4 ; i++){
+      frames.push(buf[i])
+    }
+    return {
+      frame_count: frame_count,
+      frames: frames,
+      ack0: ack0,
+      ack1: ack1
+    }
+  }
   signal(k,data){
          if (k === 'connecting') {return Buffer.from([0x00])}
     else if (k === 'connected')  {return Buffer.from([0x01])}
-    else if (k === 'ping') {
-      //write integer to buffer
-      const size = Math.ceil(data.toString(2).length / 8)
-      const arr  = new Array(size+1).fill(null)
-      arr[0] = 0x02
-      const buf  = Buffer.from(arr)
-      buf.writeUIntBE(data,1,size)
-      return buf
-    }
-    else if (k === 'pong') {
-      const size = Math.ceil(data.toString(2).length / 8)
-      const arr  = new Array(size+1).fill(null)
-      arr[0] = 0x03
-      const buf  = Buffer.from(arr)
-      buf.writeUIntBE(data,1,size)
-      return buf
-    }
-    else if (k === 'framedata')  {return Buffer.from([0x04].concat(data))}
+    else if (k === 'ping')       {return this.buf_ping(0x02,data)}
+    else if (k === 'pong')       {return this.buf_ping(0x03,data)}
+    else if (k === 'framedata')  {return this.buf_framedata(0x04,data)}
     else {throw(new Error("no idea what you want to send"))}
   }
   // 0x00 - connecting
@@ -99,9 +136,9 @@ class controller {
   msg(buf){
          if (buf[0] === 0x00 && buf.length === 1) {return ['connecting',null]}
     else if (buf[0] === 0x01 && buf.length === 1) {return ['connected' ,null]}
-    else if (buf[0] === 0x02                    ) {return ['ping'      ,buf.readUIntBE(1,buf.length-1)]}
-    else if (buf[0] === 0x03                    ) {return ['pong'      ,buf.readUIntBE(1,buf.length-1)]}
-    else if (buf[0] === 0x04)                     {return ['framedata' ,buf] }
+    else if (buf[0] === 0x02                    ) {return ['ping'      ,this.msg_ping(buf)]}
+    else if (buf[0] === 0x03                    ) {return ['pong'      ,this.msg_ping(buf)]}
+    else if (buf[0] === 0x04)                     {return ['framedata' ,this.msg_framedata(buf)] }
     else {throw(new Error("no idea what you go"))}
   }
   message(buf,req){
@@ -123,6 +160,7 @@ class controller {
         this._connected("port and host don't match",{port: req.port, host: req.address})
       }
     } else {
+      console.log('sig',sig)
       if (this.states[sig]) {
         this.states[sig](data)
       } else {
@@ -154,9 +192,9 @@ class controller {
   pong(data){
     // fake delay between 20ms to 2s
     const s = Math.floor(Math.random() * (20 - 2 + 1)) + 2
-    //setTimeout(function(){
+    setTimeout(function(){
       this.send('pong',data)
-    //}.bind(this),s*10)
+    }.bind(this),s*10)
   }
   close(){
     this.server.close()
