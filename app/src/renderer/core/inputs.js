@@ -87,7 +87,7 @@ module.exports = function(game){
       game.controls.execute(pi,this.inputs[pi][tick])
     }
 
-    update(tick) {
+    update(tick,send) {
       this.tick = tick
       if (this.replay){
         this.replay_input(0,tick)
@@ -100,7 +100,7 @@ module.exports = function(game){
           this.update_input(1,tick)
         }
       }
-      if (this.online){
+      if (this.online && send){
         this.last_pack = this.pack()
         game.server.send('framedata',this.last_pack)
       }

@@ -16,6 +16,7 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
+      this.step         = this.step.bind(this)
       this.roll         = this.roll.bind(this)
       this.create_bg    = this.create_bg.bind(this)
       this.create_frame = this.create_frame.bind(this)
@@ -127,18 +128,21 @@ module.exports = function(game){
         }
       }
     }
-    update(tick) {
-      if (tick !== undefined) { this.tick++ }
+    update() {
+      this.step(false)
+    }
+    step(tick){
+      if (tick === false) { this.tick++ }
       game.controls.update()
       this.playfield1.update()
       this.playfield2.update()
       this.danger_check()
-      if (tick !== undefined) {
-        this.inputs.update(tick)
-        this.snapshots.snap(tick)
-      } else {
-        this.inputs.update(this.tick)
+      if (tick === false) {
+        this.inputs.update(this.tick,true)
         this.snapshots.snap(this.tick)
+      } else {
+        this.inputs.update(tick,false)
+        this.snapshots.snap(tick)
       }
     }
     render(){

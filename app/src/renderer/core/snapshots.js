@@ -20,13 +20,11 @@ module.exports = function(game){
     set playfield1(v){ this._playfield1 = v}
 
     load(tick){
-      console.log('snapshot load',tick)
       const offset = tick - this.index_tick
-      if (0 >= offset){
-        const index = this.index + offset
-      } else {
-        const index = 120 + offset
-      }
+      let index    = null
+      if (0 >= offset){index = this.index + offset}
+      else            {index = 120 + offset}
+      //console.log('snapshot load',tick,index,offset,this.index_tick)
       this.playfield0.load(this.snapshot[index][0])
       this.playfield1.load(this.snapshot[index][1])
     }

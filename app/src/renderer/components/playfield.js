@@ -100,7 +100,7 @@ module.exports = function(game){
     load(snapshot){
       this.running = snapshot[0]
       this.cursor.load(snapshot[1])
-      for (i = 0; i < this.stack_len; i++) {
+      for (let i = 0; i < this.stack_len; i++) {
         this.stack(i).load(snapshot[2][i])
       }
     }
