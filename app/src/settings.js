@@ -7,9 +7,10 @@ const keycode = require('keycode')
 var mode = remote.getCurrentWindow().custom.mode
 
 //settings_network #####################
-var host_port = {value: 40001      , setValue: function(v) {host_port.value = v}}
-var join_host = {value: '127.0.0.1', setValue: function(v) {join_host.value = v}}
-var join_port = {value: 40001      , setValue: function(v) {join_port.value = v}}
+var inputs  = store.get('network.host_port')
+var host_port = {value: store.get('network.host_port'), setValue: function(v) {host_port.value = v}}
+var join_host = {value: store.get('network.join_host'), setValue: function(v) {join_host.value = v}}
+var join_port = {value: store.get('network.join_port'), setValue: function(v) {join_port.value = v}}
 
 ipc.on('reload',function(event,data){
   mode = data.mode
@@ -17,6 +18,7 @@ ipc.on('reload',function(event,data){
 })
 
 function submit_host(){
+  store.set('network.host_port',host_port.value)
   ipc.send('network-connect',{
     mode: 'host',
     host_port: host_port.value,
@@ -27,6 +29,8 @@ function submit_host(){
 }
 
 function submit_join(){
+  store.set('network.join_host',join_host.value)
+  store.set('network.join_port',join_port.value)
   ipc.send('network-connect',{
     mode: 'join',
     host_port: host_port.value,
