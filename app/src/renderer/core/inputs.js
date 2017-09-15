@@ -63,8 +63,10 @@ module.exports = function(game){
         let tick = this.ack[0]+i
         let byte = data.frames[i+offset]
         if( tick >= this.inputs[1].length) {
+          console.log('+',byte)
           this.inputs[1].push(byte)
         } else {
+          console.log('=',byte)
           this.inputs[1][tick] = byte
         }
       }
@@ -88,7 +90,7 @@ module.exports = function(game){
         this.replay_input(1,tick)
       } else {
         this.update_input(0,tick)
-        if (this.online){
+        if (this.online && (typeof this.inputs[tick] !== 'undefined') ){
           this.replay_input(1,tick)
         } else {
           this.update_input(1,tick)
