@@ -8,41 +8,62 @@ module.exports = function(game){
   } = require(APP.path.core('data'))
   class controller {
     constructor() {
-      this.create = this.create.bind(this);
-      this.entrance = this.entrance.bind(this);
-      this.map_controls = this.map_controls.bind(this);
-      this.pause = this.pause.bind(this);
-      this.up = this.up.bind(this);
-      this.down = this.down.bind(this);
-      this.left = this.left.bind(this);
-      this.right = this.right.bind(this);
-      this.swap = this.swap.bind(this);
-      this.can_push = this.can_push.bind(this);
-      this.update = this.update.bind(this);
-      this.shutdown = this.shutdown.bind(this);
+      this.create = this.create.bind(this)
+      this.update = this.update.bind(this)
+      this.shutdown = this.shutdown.bind(this)
+
+      this.load = this.load.bind(this)
+      this.entrance = this.entrance.bind(this)
+      this.map_controls = this.map_controls.bind(this)
+      this.pause = this.pause.bind(this)
+      this.up = this.up.bind(this)
+      this.down = this.down.bind(this)
+      this.left = this.left.bind(this)
+      this.right = this.right.bind(this)
+      this.swap = this.swap.bind(this)
+      this.can_push = this.can_push.bind(this)
     }
 
     create(playfield){
-      this.playfield = playfield;
-      this.state      = 'hidden';
-      this.sfx_select = game.add.audio('sfx_select');
+      this.playfield = playfield
+      this.state      = 'hidden'
+      this.sfx_select = game.add.audio('sfx_select')
 
-      this.counter_flicker = 0;
-      this.counter         = 0;
-      this.x = 2;
-      this.y = 6;
+      this.counter_flicker = 0
+      this.counter         = 0
+      this.x = 2
+      this.y = 6
 
-      const diff = (UNIT / 16) * 3;
-      this.sprite = game.make.sprite(((COLS-2)*UNIT)-diff, 0-diff, 'playfield_cursor', 0);
-      this.sprite.animations.add('idle', [0,1]);
-      this.sprite.animations.play('idle', Math.round(game.time.desiredFps / 10), true);
-      this.sprite.visible = false;
+      const diff = (UNIT / 16) * 3
+      this.sprite = game.make.sprite(((COLS-2)*UNIT)-diff, 0-diff, 'playfield_cursor', 0)
+      this.sprite.animations.add('idle', [0,1])
+      this.sprite.animations.play('idle', Math.round(game.time.desiredFps / 10), true)
+      this.sprite.visible = false
 
-      return this.playfield.layer_cursor.add(this.sprite);
+      this.playfield.layer_cursor.add(this.sprite)
     }
+
+    get snap() {
+      return [
+        this.x,
+        this.y,
+        this.state,
+        this.counter_flicker,
+        this.counter
+      ]
+    }
+
+    load(data){
+      this.x               = data[0]
+      this.y               = data[1]
+      this.state           = data[2]
+      this.counter_flicker = data[3]
+      this.counter         = data[4]
+    }
+
     entrance() {
-      this.sprite.visible = true;
-      return this.state   = 'entering';
+      this.sprite.visible = true
+      return this.state   = 'entering'
     }
     map_controls() {
       game.controls.map(this.playfield.pi, {

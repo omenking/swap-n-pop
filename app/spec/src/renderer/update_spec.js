@@ -31,7 +31,7 @@ const N = null
 
 var _playfield = null
 function load(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).deserialize(i) }
+  for (i of arr){ _playfield.stack(i[0], i[1]).load(i) }
 }
 
 function chec(...arr){

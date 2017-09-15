@@ -47,7 +47,8 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.get_data = this.get_data.bind(this);
+      this.load = this.load.bind(this)
+
       this.create_after = this.create_after.bind(this);
       this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
@@ -84,10 +85,24 @@ module.exports = function(game){
         throw(new Error('invalid query to stack'))
       }
     }
-    get_data() {
+    get snap() {
+      const snap_cursor = this.cursor.snap
+      const snap_stack  = []
+      for (let panel of this.stack()){
+        snap_stack.push(panel.snap)
+      }
       return [
-        this.running,this.score
-      ];
+        this.running,
+        snap_cursor,
+        snap_stack
+      ]
+    }
+    load(snapshot){
+      this.running = snapshot[0]
+      this.cursor.load(snapshot[1])
+      for (i = 0; i < this.stack_len; i++) {
+        this.stack(i).load(snapshot[2][i])
+      }
     }
     create(stage,opts){
       if (stage === null) {

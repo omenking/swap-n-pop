@@ -18,7 +18,7 @@ const N = null
 
 var _playfield = null
 function load(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).deserialize(i) }
+  for (i of arr){ _playfield.stack(i[0], i[1]).load(i) }
 }
 
 describe('Panel', function() {
@@ -29,12 +29,12 @@ describe('Panel', function() {
     })
   })
 
-  describe('#deserialize()' ,function(){
-    it('should be able to deserialize', function(){
+  describe('#load()' ,function(){
+    it('should be able to load', function(){
       const data = [10,0,1,STATIC,     // x,y,kind,state
                     null,0,0,null,0] // chain,counter,counter_popping.animation_state,animation_counter
       const panel = new Panel()
-      panel.deserialize(data)
+      panel.load(data)
       panel.x.should.eql(10)
       panel.y.should.eql(0)
       panel.i.should.eql(1)
@@ -50,7 +50,7 @@ describe('Panel', function() {
       //panel.playfield = {
         //should_push: true
       //}
-      //panel.deserialize(data)
+      //panel.load(data)
       //panel.update(index)
       //panel.state.should.eql(FALL)
     //})

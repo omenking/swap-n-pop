@@ -4,6 +4,7 @@ module.exports = function(game){
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const ComponentPing      = require(APP.path.components('ping'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)
+  const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
 
@@ -15,6 +16,7 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
+      this.roll         = this.roll.bind(this)
       this.create_bg    = this.create_bg.bind(this)
       this.create_frame = this.create_frame.bind(this)
       this.pause        = this.pause.bind(this)
@@ -36,7 +38,8 @@ module.exports = function(game){
       this.cpu    = data.cpu
       this.online = data.online
       this.rng    = seedrandom(this.seed)
-      this.inputs = new CoreInputs(data.inputs,data.online)
+      this.inputs = new CoreInputs(data.inputs,data.online,this)
+      this.snapshots = new CoreSnapshots()
     }
 
     get online(){  return this._online }
@@ -67,6 +70,11 @@ module.exports = function(game){
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
+
+      this.snapshots.create(
+        this.playfield1,
+        this.playfield2
+      )
 
       if (this.online){
         this.ping.create()
@@ -108,14 +116,30 @@ module.exports = function(game){
         return this.danger = false
       }
     }
-    update() {
-      this.tick++
+    roll(from,to){
+      if (from > to) { // rollback
+        console.log('roll-backward',from,to)
+      } else { //rollforward
+        console.log('roll-forward',from,to)
+        this.snapshots.load(from)
+        for (let i = from; from > to; i++) {
+          this.update(i)
+        }
+      }
+    }
+    update(tick) {
+      if (tick !== undefined) { this.tick++ }
       game.controls.update()
       this.playfield1.update()
       this.playfield2.update()
       this.danger_check()
-      this.inputs.update(this.tick)
-
+      if (tick !== undefined) {
+        this.inputs.update(tick)
+        this.snapshots.snap(tick)
+      } else {
+        this.inputs.update(this.tick)
+        this.snapshots.snap(this.tick)
+      }
     }
     render(){
       if(this.debug){

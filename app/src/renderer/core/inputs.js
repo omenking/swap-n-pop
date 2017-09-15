@@ -1,6 +1,6 @@
 module.exports = function(game){
   class controller {
-    constructor(inputs,online) {
+    constructor(inputs,online,stage) {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
 
@@ -10,10 +10,11 @@ module.exports = function(game){
       this.update_input = this.update_input.bind(this)
       this.replay_input = this.replay_input.bind(this)
 
-      this.create(inputs,online)
+      this.create(inputs,online,stage)
     } //constructor
 
-    create(inputs,online){
+    create(inputs,online,stage){
+      this.stage = stage
       if(inputs){
         this.replay    = true
         this.inputs    = inputs
@@ -27,6 +28,8 @@ module.exports = function(game){
         }
       }
     }
+    get stage(){ return this._stage }
+    set stage(v){ this._stage = v}
 
     get last_pack(){ return this._last_pack }
     set last_pack(v){ this._last_pack = v}
@@ -63,13 +66,14 @@ module.exports = function(game){
         let tick = this.ack[0]+i
         let byte = data.frames[i+offset]
         if( tick >= this.inputs[1].length) {
-          console.log('+',byte)
+          if (byte !== 0x00) { console.log(this.tick,tick,'+',byte) }
           this.inputs[1].push(byte)
         } else {
-          console.log('=',byte)
+          if (byte !== 0x00) { console.log(this.tick,tick,'=',byte) }
           this.inputs[1][tick] = byte
         }
       }
+      this.stage.roll(this.ack[0],this.tick) //from and to
       this.ack[0] = this.ack[0]+(data.frame_count-offset)
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }

@@ -62,7 +62,8 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.deserialize      = this.deserialize.bind(this);
+      this.load = this.load.bind(this)
+
       this.matched          = this.matched.bind(this);
       this.set              = this.set.bind(this)
       this.render_visible   = this.render_visible.bind(this)
@@ -82,7 +83,7 @@ module.exports = function(game){
       this.prototype.sprite             = null;
       this.prototype.i                  = null;
     }
-    get serialize() {
+    get snap() {
       return [
         this.x,
         this.y,
@@ -92,7 +93,7 @@ module.exports = function(game){
         this.chain,
       ];
     }
-    deserialize(data){
+    load(data){
       this.x       = data[0]
       this.y       = data[1]
       this.kind    = data[2]
