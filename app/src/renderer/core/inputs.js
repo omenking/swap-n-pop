@@ -59,8 +59,14 @@ module.exports = function(game){
 
     unpack(data){
       const offset = this.ack[0]-data.ack0
-      for (let i = offset; data.frame_count > i; i++) {
-        this.inputs[1].push(data.frames[i])
+      for (let i = 0; data.frame_count-offset > i; i++) {
+        let tick = this.ack[0]+i
+        let byte = data.frames[i+offset]
+        if( tick >= this.inputs[1].length) {
+          this.inputs[1].push(byte)
+        } else {
+          this.inputs[1][tick] = byte
+        }
       }
       this.ack[0] = this.ack[0]+(data.frame_count-offset)
       this.ack[1] = data.ack1
