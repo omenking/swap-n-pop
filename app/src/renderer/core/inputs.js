@@ -69,7 +69,7 @@ module.exports = function(game){
         }
       }
       this.ack[0] = this.ack[0]+(data.frame_count-offset)
-      //this.ack[1] = data.ack1
+      this.ack[1] = Math.max(this.ack[1],data.ack1)
     }
 
     update_input(pi,tick){
