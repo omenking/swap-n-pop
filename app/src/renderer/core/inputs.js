@@ -69,13 +69,14 @@ module.exports = function(game){
         }
       }
       this.ack[0] = this.ack[0]+(data.frame_count-offset)
-      this.ack[1] = data.ack1
+      //this.ack[1] = data.ack1
     }
 
     update_input(pi,tick){
       const byte = game.controls.serialize(pi)
       this.inputs[pi].push(byte)
     }
+
     replay_input(pi,tick){
       game.controls.execute(pi,this.inputs[pi][tick])
     }

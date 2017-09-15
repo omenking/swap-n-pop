@@ -118,12 +118,12 @@ module.exports = function(game){
     }
     add_input(i){
       if(typeof(i) === 'string'){
-        if (i.charAt(1) === 'P') {
+        if (i.charAt(1) === 'P') { // check for button
           return [
             parseInt(i.charAt(0)),
             parseInt(i.substr(4,i.length-1))
           ]
-        } else if (i.charAt(1) === 'A') {
+        } else if (i.charAt(1) === 'A') { // check for axis
           return [
             parseInt(i.charAt(0)),
             parseInt(i.charAt(4)),
