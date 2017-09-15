@@ -46,10 +46,7 @@ module.exports = function(app,store){
     return dir
   }
 
-  function save(name,seed,org_inputs,callback) {
-    //need to clone because we are shifting and want to keep
-    //the data passed in, entact.
-    var inputs = JSON.parse(JSON.stringify(org_inputs))
+  function save(name,seed,inputs,callback) {
 
     const dir      = store.get('replay_dir')
     const filename = path.join(dir,`${name}.replay`)
@@ -57,28 +54,41 @@ module.exports = function(app,store){
     if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
     fs.unlink(filename,function(){}) //delets file if happens to already exist
 
-    const file = fs.createWriteStream(filename, {flags: 'a'})
-    const len = inputs[0].length + inputs[1].length
+    const int0     = inputs[0].length
+    const int1     = inputs[1].length
 
-    // We want to iterate through the inputs of player 1 and 2
-    // and insert them based on frame(tick) so the .replay file
-    // is garunteed to be sorted by frame data.
-    file.write(seed+"\n")
-    for (i = 0; i < len; i++) {
-      let pi;
-      if      (inputs[0].length === 0 && inputs[1].length > 0) { pi = 1 } //cond2
-      else if (inputs[1].length === 0 && inputs[0].length > 0) { pi = 0 } //cond1
-      else if (inputs[0][0][0] <  inputs[1][0][0])             { pi = 0 } //cond3
-      else                                                     { pi = 1 } //cond4
-      file.write(`${pi},`+inputs[pi].shift().join(',')+"\n")
-    }
-    file.end()
-    file.on('error', function(err) {
-      callback(err,filename);
-    });
-    file.on('finish', function() {
-      callback(null,filename);
-    });
+    const lens     = seed.length
+    const len0     = Math.ceil(int0.toString(2).length / 8)
+    const len1     = Math.ceil(int1.toString(2).length / 8)
+
+    const frames   = inputs[0].concat(inputs[1])
+
+    const buf_len    = Buffer.from([lens,len0,len1])
+    const buf_seed   = Buffer.from(seed, 'ascii')
+    const buf_int0   = Buffer.allocUnsafe(len0)
+    const buf_int1   = Buffer.allocUnsafe(len1)
+    const buf_frames = Buffer.from(frames)
+
+    buf_int0.writeUIntBE(int0,0,len0)
+    buf_int1.writeUIntBE(int1,0,len1)
+
+    const buf = Buffer.concat([
+      buf_len,
+      buf_seed,
+      buf_int0,
+      buf_int1,
+      buf_frames
+    ],
+        buf_len.length
+      + buf_seed.length
+      + buf_int0.length
+      + buf_int1.length
+      + buf_frames.length
+    )
+
+    fs.writeFile(filename,buf,'binary',function(err) {
+      callback(err,filename)
+    })
   }
 
   function load(name,callback){
@@ -86,42 +96,37 @@ module.exports = function(app,store){
     const filename = path.join(dir,`${name}.replay`)
     var   inputs   = [[],[]]
     var   seed     = null
-    fs.readFile(filename, 'utf8', function(err,data){
-      const lines = data.trim().split("\n")
-      for (i = 0; i < lines.length; i++) {
-        if (i === 0) {
-          seed = lines[i]
-        } else {
-          let arr = lines[i].split(',')
-          inputs[parseInt(arr[0])].push(
-            [parseInt(arr[1]),
-             parseInt(arr[2]),
-             parseInt(arr[3])]
-          )
-        }
-      }
-      callback(err,{seed: seed, inputs: inputs})
-    })
-  }
+    fs.readFile(filename, function(err,buf){
+      const lens = buf[0]
+      const len0 = buf[1]
+      const len1 = buf[2]
+      const bufs = Buffer.allocUnsafe(lens)
+      buf.copy(bufs,0,3,3+lens)
+      const seed = bufs.toString('ascii')
+      const int0 = buf.readUIntBE(3+lens,len0)
+      const int1 = buf.readUIntBE(3+lens+len0,len1)
 
-  function last(callback){
-    let name = null
-    let dir = path.join(store.get('replay_dir'),'*.replay')
-    glob(dir,{},function(err,files){
-      name = path.basename(files[files.length-1],'.replay')
-      callback(err,name)
+      let len = 3+lens+len0+len1
+      buf0 = Buffer.allocUnsafe(int0)
+      buf1 = Buffer.allocUnsafe(int1)
+      buf.copy(buf0,0,len,len+int0)
+      buf.copy(buf1,0,len+int0,len+int0+int1)
+      let a0 = Array.prototype.slice.call(buf0, 0)
+      let a1 = Array.prototype.slice.call(buf1, 0)
+
+      callback(err,{seed: seed, inputs: [a0,a1]})
     })
   }
 
   function random_seed (howMany=16, chars) {
-    chars = chars || "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    chars = chars || "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789"
     var rnd = crypto.randomBytes(howMany)
         , value = new Array(howMany)
-        , len = chars.length;
+        , len = chars.length
 
     for (var i = 0; i < howMany; i++) {
-        value[i] = chars[rnd[i] % len]
-    };
+      value[i] = chars[rnd[i] % len]
+    }
 
     return value.join('');
   }
@@ -133,7 +138,6 @@ module.exports = function(app,store){
     del: del,
     save: save,
     load: load,
-    last: last,
     random_seed: random_seed
   }
 }
