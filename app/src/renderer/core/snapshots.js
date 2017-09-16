@@ -21,7 +21,7 @@ module.exports = function(game){
     set playfield1(v){ this._playfield1 = v}
 
     load(tick){
-      let i = cindex(tick)
+      let i = this.cindex(tick)
       this.playfield0.load(this.snapshot[i][0])
       this.playfield1.load(this.snapshot[i][1])
     }
