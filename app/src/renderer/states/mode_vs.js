@@ -128,12 +128,12 @@ module.exports = function(game){
       if (from > to) { // rollback
         console.log('<-----')
       } else { //rollforward
-        console.log('----->')
+        console.log(`${from} ${to}----->`)
         //console.log('f~',from,to)
         this.snapshots.load(from)
         // since we loaded a snapshot, maybe we don't need to step
         // throuh the frame we loaded the snapshot on.
-        for (let i = from+1; i < to; i++) {
+        for (let i = from+1; i <= to; i++) {
           //console.log('fi',i)
           this.step(i)
         }
@@ -158,7 +158,6 @@ module.exports = function(game){
         this.inputs.update(this.tick,true)
         this.snapshots.snap(this.tick)
       } else {
-        console.log('rolling',tick)
         this.inputs.update(tick,false)
         this.snapshots.snap(tick)
       }

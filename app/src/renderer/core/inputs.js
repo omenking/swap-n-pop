@@ -63,6 +63,13 @@ module.exports = function(game){
     unpack(data){
       const offset     = this.ack[0]-data.ack0
       const len_frames = data.frame_count-offset //amount of frames to be imported
+      console.log('=============')
+      console.log('offset',offset)
+      console.log('tick'  ,this.tick)
+      console.log('frame_count'  ,data.frame_count)
+      console.log('frames'  ,data.frames)
+      console.log(len_frames)
+      console.log('-------------')
       for (let i = 0; len_frames >= i; i++) {
         let tick = this.ack[0]+i
         let byte = data.frames[i+offset]
