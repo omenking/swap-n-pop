@@ -31,8 +31,7 @@ module.exports = function(game){
       this.prototype.clearing    = null
       this.prototype.score       = 0
       this.prototype.scoreText   = null
-      this.prototype.pushTime    = 0
-      this.prototype.pushCounter = 0
+      this.prototype.push_counter = 0
       this.prototype.has_ai      = false
       this.prototype.running     = false
       this.prototype.land        = false
@@ -93,15 +92,17 @@ module.exports = function(game){
       }
       return [
         this.running,
+        this.push_counter,
         snap_cursor,
         snap_stack
       ]
     }
     load(snapshot){
-      this.running = snapshot[0]
-      this.cursor.load(snapshot[1])
+      this.running      = snapshot[0]
+      this.push_counter = snapshot[1]
+      this.cursor.load(   snapshot[2])
       for (let i = 0; i < this.stack_len; i++) {
-        this.stack(i).load(snapshot[2][i])
+        this.stack(i).load(snapshot[3][i])
       }
     }
     create(stage,opts){
@@ -130,10 +131,9 @@ module.exports = function(game){
 
       this.create_stack(opts.panels)
 
-      this.score       = 0;
-      this.chain       = 0;
-      this.pushTime    = TIME_PUSH;
-      this.pushCounter = this.pushTime;
+      this.score       = 0
+      this.chain       = 0
+      this.push_counter = TIME_PUSH
 
       this.score_lbl.create();
     }
@@ -206,7 +206,7 @@ module.exports = function(game){
     }
     game_over() {
       this.running = false
-      this.pushCounter = 0
+      this.push_counter = 0
     }
     create_panels(){
       const rows = (ROWS + (this.should_push === true ? 1 : 0 ))
@@ -290,12 +290,12 @@ module.exports = function(game){
      */
     update_push() {
       if (this.cursor.can_push()) {
-        this.pushCounter -= 100
+        this.push_counter -= 100
       } else {
-        this.pushCounter--
+        this.push_counter--
       }
-      if (this.pushCounter <= 0) {
-        this.pushCounter   = this.pushTime
+      if (this.push_counter <= 0) {
+        this.push_counter   = TIME_PUSH
         this.score        += this.push()
       }
     }
@@ -356,7 +356,7 @@ module.exports = function(game){
       this.render_stack()
 
       if (this.should_push) {
-        const lift = this.y + ((this.pushCounter / this.pushTime) * UNIT);
+        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT);
         this.layer_block.y  = lift;
         this.layer_cursor.y = lift;
       }
