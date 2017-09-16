@@ -121,8 +121,10 @@ module.exports = function(game){
       if (from > to) { // rollback
       } else { //rollforward
         this.snapshots.load(from)
+        console.log('f~',from,to)
         for (let i = from; from > to; i++) {
-          this.update(i)
+          console.log('fi',i)
+          this.step(i)
         }
       }
     }
