@@ -180,6 +180,7 @@ class controller {
       if (this.states[sig]) {
         this.states[sig](data)
       } else {
+        console.log('error',sig,data)
         throw(new Error('no idea where to go'))
       }
     }
