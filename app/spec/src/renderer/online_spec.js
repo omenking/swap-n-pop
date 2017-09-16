@@ -108,18 +108,30 @@ describe('Online Simulation', function() {
     chec_cursors(2,6, 2,6, 2,6, 2,6)
     game0.controls.execute(0,0x01) // player 1 move up
     game1.controls.execute(0,0x08) // player 1 move right
-    const p00 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]}
+    //console.log('s_______0>',stage0.snapshots.snapshot[0][0][2])
+    const p00 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]} //0. send 0-2 frames
     const p01 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
     update(p00,p01) //1
+    //console.log('s_______0>',stage0.snapshots.snapshot[0][0][2])
     chec_cursors(2,5, // player 1 moved up
                  2,6,
                  3,6, // player 2 moved right
                  2,6)
     stage0.inputs.unpack(p01)
-    stage1.inputs.unpack(p00)
+    stage1.inputs.unpack(p00) //1. we got 0-2
     ////2-3#######################################################
-    const p10 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]}
-    const p11 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
+    const p10 = {ack0: 0, ack1: 2, frame_count: 3, frames: [0x00,0x01,0x01]}
+    const p11 = {ack0: 0, ack1: 2, frame_count: 3, frames: [0x00,0x08,0x08]}
     update(p10,p11) //1
+    chec_cursors(2,4, // player 1 moved up
+                 2,6,
+                 4,6, // player 2 moved right
+                 2,6)
+    stage0.inputs.unpack(p10)
+    stage1.inputs.unpack(p11)
+    ////2-4#######################################################
+    const p20 = {ack0: 2, ack1: 3, frame_count: 2, frames: [0x01,0x01]}
+    const p21 = {ack0: 2, ack1: 3, frame_count: 2, frames: [0x08,0x08]}
+    update(p20,p21) //1
   }) //it
 }) //describe

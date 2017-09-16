@@ -82,6 +82,7 @@ module.exports = function(game){
         this.playfield1,
         this.playfield2
       )
+      this.snapshots.snap(0)
 
       if (this.online){
         this.ping.create()
@@ -126,9 +127,11 @@ module.exports = function(game){
     roll_to(from,to){
       if (from > to) { // rollback
       } else { //rollforward
-        this.snapshots.load(from)
         console.log('f~',from,to)
-        for (let i = from; i < to; i++) {
+        this.snapshots.load(from)
+        // since we loaded a snapshot, maybe we don't need to step
+        // throuh the frame we loaded the snapshot on.
+        for (let i = from+1; i < to; i++) {
           console.log('fi',i)
           this.step(i)
         }
