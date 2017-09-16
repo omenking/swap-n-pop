@@ -86,16 +86,19 @@ module.exports = function(game){
 
     update_input(pi,tick){
       const byte = game.controls.serialize(pi)
+      console.log('upp',byte)
       this.inputs[pi].push(byte)
     }
 
     replay_input(pi,tick){
-      game.controls.execute(pi,this.inputs[pi][tick])
+      const byte = this.inputs[pi][tick]
+      console.log('rep',byte)
+      game.controls.execute(pi,byte)
     }
 
     update(tick,send) {
       this.tick = tick
-      if (this.replay || this.send === false){
+      if (this.replay || send === false){
         this.replay_input(0,tick)
         this.replay_input(1,tick)
       } else {
