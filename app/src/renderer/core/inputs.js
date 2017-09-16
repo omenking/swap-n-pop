@@ -92,7 +92,7 @@ module.exports = function(game){
 
     replay_input(pi,tick){
       const byte = this.inputs[pi][tick]
-      console.log('rep',byte)
+      console.log('rep',pi,tick,byte)
       game.controls.execute(pi,byte)
     }
 
@@ -103,7 +103,7 @@ module.exports = function(game){
         this.replay_input(1,tick)
       } else {
         this.update_input(0,tick)
-        if (this.online && (typeof this.inputs[tick] !== 'undefined') ){
+        if (this.online && (typeof this.inputs[1][tick] !== 'undefined') ){
           this.replay_input(1,tick)
         } else {
           this.update_input(1,tick)
