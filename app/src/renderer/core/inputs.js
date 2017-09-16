@@ -61,23 +61,17 @@ module.exports = function(game){
     }
 
     unpack(data){
-      const offset     = this.ack[0]-data.ack0
-      const len_frames = data.frame_count-offset //amount of frames to be imported
-      console.log('=============')
-      console.log('offset',offset)
-      console.log('tick'  ,this.tick)
-      console.log('frame_count'  ,data.frame_count)
-      console.log('frames'  ,data.frames)
-      console.log(len_frames)
-      console.log('-------------')
-      for (let i = 0; len_frames >= i; i++) {
-        let tick = this.ack[0]+i
-        let byte = data.frames[i+offset]
-        if( tick >= this.inputs[1].length) {
-          if (byte !== 0x00) { console.log(this.tick,tick,'+',byte) }
+      const frame_start = this.ack[0]
+      const frame_end   = data.ack0+data.frame_count-1
+
+      for (let tick = frame_start; frame_end >= tick; tick++) {
+        let byte = data.frames[tick-data.ack0]
+
+        if( tick > this.tick) {
+          if (byte !== 0x00) { console.log(tick,'+',byte) }
           this.inputs[1].push(byte)
         } else {
-          if (byte !== 0x00) { console.log(this.tick,tick,'=',byte) }
+          if (byte !== 0x00) { console.log(tick,'=',byte) }
           this.inputs[1][tick] = byte
         }
       }
@@ -88,7 +82,7 @@ module.exports = function(game){
         from:  this.ack[0],
         to:    this.tick
       }
-      this.ack[0] = this.ack[0]+len_frames
+      this.ack[0] = frame_end
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }
 
