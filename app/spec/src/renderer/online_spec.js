@@ -38,10 +38,12 @@ describe('Online Simulation', function() {
     _stage1 = stage1
   })
 
-
-      //Buffer.from([0x04,0x01,0x00,0x00,[>*/0x01,/*<]0x00,0x00]),
-      //Buffer.from([0x04,0x01,0x00,0x00,[>*/0x00,/*<]0x00,0x00]),
   it('#data', function(){
+    console.log(
+      's0 p0 cursor',
+      stage0.playfield1.cursor.x,
+      stage0.playfield1.cursor.y
+    )
     game0.controls.execute(0,0x01) // up
     game1.controls.execute(0,0x08) // right
     update(
@@ -61,10 +63,10 @@ describe('Online Simulation', function() {
     stage0.inputs.inputs[0].should.eql([0x00,0x01,0x00])
     stage0.inputs.inputs[1].should.eql([0x00,0x08,0x08])
     stage1.inputs.inputs[0].should.eql([0x00,0x08,0x08])
-    stage1.inputs.inputs[1].should.eql([0x00])
+    stage1.inputs.inputs[1].should.eql([0x00,0x00])
 
     game1.controls.execute(0,0x00) // none
-    let pack0_3 = {ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x01,0x00,0x00]}
+    let pack0_3 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
     let pack1_3 = {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
     update(pack0_3,pack1_3)
     stage1.inputs.unpack(pack0_3)
