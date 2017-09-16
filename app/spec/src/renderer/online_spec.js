@@ -42,7 +42,8 @@ describe('Online Simulation', function() {
     console.log(
       's0 p0 cursor',
       stage0.playfield1.cursor.x,
-      stage0.playfield1.cursor.y
+      stage0.playfield1.cursor.y,
+      stage0.playfield1.cursor.state
     )
     game0.controls.execute(0,0x01) // up
     game1.controls.execute(0,0x08) // right
@@ -50,6 +51,11 @@ describe('Online Simulation', function() {
       {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]},
       {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
     ) //1
+    console.log(
+      's0 p0 cursor',
+      stage0.playfield1.cursor.x,
+      stage0.playfield1.cursor.y
+    )
     stage0.inputs.inputs[0].should.eql([0x00,0x01])
     stage0.inputs.inputs[1].should.eql([0x00])
     stage1.inputs.inputs[0].should.eql([0x00,0x08])
@@ -72,8 +78,8 @@ describe('Online Simulation', function() {
     stage1.inputs.unpack(pack0_3)
 
     update(
-      {ack0: 0, ack1: 3, frame_count: 5, frames: [0x00,0x01,0x00,0x00,0x00]},
-      {ack0: 3, ack1: 4, frame_count: 2, frames: [0x00,0x00]}
+      {ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x01,0x00,0x00]},
+      {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
     )
   }) //it
 }) //describe

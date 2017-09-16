@@ -28,7 +28,6 @@ module.exports = function(game){
     create(playfield){
       this.playfield = playfield
       this.state      = 'hidden'
-      this.sfx_select = game.add.audio('sfx_select')
 
       this.counter_flicker = 0
       this.counter         = 0
@@ -36,10 +35,22 @@ module.exports = function(game){
       this.y = 6
 
       const diff = (UNIT / 16) * 3
-      this.sprite = game.make.sprite(((COLS-2)*UNIT)-diff, 0-diff, 'playfield_cursor', 0)
+      let x,y, visible
+      if(this.playfield.should_countdown){
+        x = (this.x * UNIT) - diff
+        y = (this.y * UNIT) - diff
+        visible = true
+      } else {
+        x = ((COLS-2)*UNIT)-diff
+        y = 0-diff
+        visible = false
+        this.state = 'active'
+        this.map_controls()
+      }
+      this.sprite = game.make.sprite(x, y, 'playfield_cursor', 0)
       this.sprite.animations.add('idle', [0,1])
       this.sprite.animations.play('idle', Math.round(game.time.desiredFps / 10), true)
-      this.sprite.visible = false
+      this.sprite.visible = visible
 
       this.playfield.layer_cursor.add(this.sprite)
     }
@@ -83,22 +94,22 @@ module.exports = function(game){
     }
     up(tick) {
       if (tick > 0) { return }
-      this.sfx_select.play();
+      game.sounds.select()
       if (this.y > 0) { this.y--; }
     }
     down(tick) {
       if (tick > 0) { return }
-      this.sfx_select.play();
+      game.sounds.select()
       if (this.y < (ROWS - 1)) { this.y++; }
     }
     left(tick) {
       if (tick > 0) { return }
-      this.sfx_select.play();
+      game.sounds.select()
       if (this.x > 0) { this.x--; }
     }
     right(tick) {
       if (tick > 0) { return }
-      this.sfx_select.play();
+      game.sounds.select()
       if (this.x < (COLS - 2)) { this.x++; }
     }
     swap(tick) {

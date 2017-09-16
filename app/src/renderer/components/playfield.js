@@ -109,15 +109,17 @@ module.exports = function(game){
       if (stage === null) {
         throw new Error("must pass stage")
       }
-      if (opts       === null ||
-          opts.x     === null ||
-          opts.y     === null ||
-          opts.panel === null){
-        throw new Error("must pass at least x,y and panels")
+      if (opts           === null ||
+          opts.x         === null ||
+          opts.y         === null ||
+          opts.countdown === null ||
+          opts.panel     === null){
+        throw new Error("must pass at least x,y,countdown and panels")
       }
 
-      this.stage       = stage
-      this.should_push = opts.push || false
+      this.stage            = stage
+      this.should_push      = opts.push      || false
+      this.should_countdown = opts.countdown || false
 
       this.height = (ROWS+1) * UNIT
       this.width  = COLS     * UNIT
@@ -202,7 +204,7 @@ module.exports = function(game){
     }
     resume() {
       this.running = true;
-      return this.cursor.map_controls();
+      return this.cursor.map_controls()
     }
     game_over() {
       this.running = false

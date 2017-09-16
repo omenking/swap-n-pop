@@ -74,7 +74,13 @@ class game_controller {
       desiredFps: 60
     }
     this.sounds = {
-      swap: sinon.stub()
+      swap: sinon.stub(),
+      blip: sinon.stub(),
+      ding: sinon.stub(),
+      land: sinon.stub(),
+      confirm: sinon.stub(),
+      select: sinon.stub(),
+      stage_music: sinon.stub()
     }
     this.server = {
       on: sinon.stub()

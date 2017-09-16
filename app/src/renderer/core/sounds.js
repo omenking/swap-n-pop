@@ -3,6 +3,8 @@ module.exports = function(game){
     constructor() {
       this.create      = this.create.bind(this)
 
+      this.blip         = this.blip.bind(this)
+      this.ding         = this.ding.bind(this)
       this.land         = this.land.bind(this)
       this.swap         = this.swap.bind(this)
       this.confirm      = this.confirm.bind(this)
@@ -27,6 +29,9 @@ module.exports = function(game){
 
       this.sfx_confirm = game.add.audio('sfx_confirm')
       this.sfx_select  = game.add.audio('sfx_select')
+
+      this.sfx_blip  = game.add.audio('sfx_countdown_blip')
+      this.sfx_ding  = game.add.audio('sfx_countdown_ding')
     }
     land(){
       this.sfx_land[0].play()
@@ -39,6 +44,13 @@ module.exports = function(game){
     }
     select(){
       this.sfx_select.play()
+    }
+
+    blip(){
+      this.sfx_blip.play()
+    }
+    ding(){
+      this.sfx_ding.play()
     }
 
     stage_music(state){
