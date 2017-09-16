@@ -10,6 +10,7 @@ module.exports = function(game){
     constructor() {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
+      this.render = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
       this.load = this.load.bind(this)
@@ -63,7 +64,7 @@ module.exports = function(game){
 
     entrance() {
       this.sprite.visible = true
-      return this.state   = 'entering'
+      this.state = 'entering'
     }
     map_controls() {
       game.controls.map(this.playfield.pi, {
@@ -112,39 +113,59 @@ module.exports = function(game){
               (this.state === 'active')
     }
     update() {
+      // should check in a deterministic way for preactive
       let diff = (UNIT / 16) * 3
-      let x  = (this.x * UNIT) - diff
-      let y  = (this.y * UNIT) - diff
+      let x = (this.x * UNIT) - diff
+      let y = (this.y * UNIT) - diff
 
-      if ((this.state === 'entering') || (this.state === 'preactive')) {
+      if ((this.state === 'entering') ||
+          (this.state === 'preactive')) {
         this.counter_flicker++;
         if (this.counter_flicker > 1) {
           this.counter_flicker = 0;
+        }
+      }
+      switch (this.state) {
+        case 'entering':
+
+          if      (this.sprite.y < y){}
+          else if (this.sprite.x > x){}
+          else {
+            this.state = 'preactive'
+            if (this.playfield.stage.cpu[0] === false ||
+               (this.playfield.stage.online !== false &&
+                this.playfield.pi == 0
+               )){
+              this.map_controls()
+            }
+          }
+          break
+      }
+    }
+
+    render(){
+      let diff = (UNIT / 16) * 3
+      let x = (this.x * UNIT) - diff
+      let y = (this.y * UNIT) - diff
+
+      if ((this.state === 'entering') ||
+          (this.state === 'preactive')) {
+        if (this.counter_flicker > 1) {
           this.sprite.visible = !this.sprite.visible;
         }
       }
       switch (this.state) {
         case 'entering':
-          if (this.sprite.y < y) {
-            this.sprite.y += STARTPOS_PANELCURSOR_SPEED
-          } else if (this.sprite.x > x) {
-            this.sprite.x -= STARTPOS_PANELCURSOR_SPEED
-          } else {
-            this.state = 'preactive';
-            if (this.playfield.stage.cpu[0]  === false ||
-                (this.playfield.stage.online !== false && this.playfield.pi == 0)
-            ) {
-              this.map_controls()
-            }
-          }
+          if      (this.sprite.y < y) {this.sprite.y += STARTPOS_PANELCURSOR_SPEED}
+          else if (this.sprite.x > x) {this.sprite.x -= STARTPOS_PANELCURSOR_SPEED}
           break
         case 'preactive': case 'active':
-          diff = (UNIT / 16) * 3
-          this.sprite.x = (this.x * UNIT) - diff
-          this.sprite.y = (this.y * UNIT) - diff
+          this.sprite.x = x
+          this.sprite.y = y
           break
       }
     }
+
     shutdown() {
     }
   }
