@@ -129,12 +129,10 @@ module.exports = function(game){
         console.log('<-----')
       } else { //rollforward
         console.log(`${from} ${to}----->`)
-        //console.log('f~',from,to)
         this.snapshots.load(from)
         // since we loaded a snapshot, maybe we don't need to step
         // throuh the frame we loaded the snapshot on.
         for (let i = from+1; i <= to; i++) {
-          //console.log('fi',i)
           this.step(i)
         }
       }
@@ -149,8 +147,8 @@ module.exports = function(game){
     step(tick){
       if (tick === false) {
         this.tick++
-        game.controls.update()
       }
+      game.controls.update()
       this.playfield1.update()
       this.playfield2.update()
       this.danger_check()
