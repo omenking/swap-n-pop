@@ -138,9 +138,8 @@ module.exports = function(game){
     update() {
       if (this.roll.ready){
         this.roll_to(this.roll.from,this.roll.to)
-      } else {
-        this.step(false)
       }
+      this.step(false)
     }
     step(tick){
       if (tick === false) { this.tick++ }

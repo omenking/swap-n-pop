@@ -20,6 +20,22 @@ function update(p0,p1){
   _stage1.inputs.last_pack.should.eql(p1)
 }
 
+function chec_cursors(x00,y00,
+                      x01,y01,
+
+                      x10,y10,
+                      x11,y11){
+  _stage0.playfield1.cursor.x.should.eql(x00)
+  _stage0.playfield1.cursor.y.should.eql(y00)
+  _stage0.playfield2.cursor.x.should.eql(x01)
+  _stage0.playfield2.cursor.y.should.eql(y01)
+
+  _stage1.playfield1.cursor.x.should.eql(x10)
+  _stage1.playfield1.cursor.y.should.eql(y10)
+  _stage1.playfield2.cursor.x.should.eql(x11)
+  _stage1.playfield2.cursor.y.should.eql(y11)
+}
+
 describe('Online Simulation', function() {
   var stage0, stage1
   beforeEach(function(){
@@ -38,48 +54,72 @@ describe('Online Simulation', function() {
     _stage1 = stage1
   })
 
-  it('#data', function(){
-    console.log(
-      's0 p0 cursor',
-      stage0.playfield1.cursor.x,
-      stage0.playfield1.cursor.y,
-      stage0.playfield1.cursor.state
-    )
-    game0.controls.execute(0,0x01) // up
-    game1.controls.execute(0,0x08) // right
-    update(
-      {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]},
-      {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
-    ) //1
-    console.log(
-      's0 p0 cursor',
-      stage0.playfield1.cursor.x,
-      stage0.playfield1.cursor.y
-    )
-    stage0.inputs.inputs[0].should.eql([0x00,0x01])
-    stage0.inputs.inputs[1].should.eql([0x00])
-    stage1.inputs.inputs[0].should.eql([0x00,0x08])
-    stage1.inputs.inputs[1].should.eql([0x00])
+  //// commented out because I just wanted to run the spec below
+  //it('#data', function(){
+    ////0-1#######################################################
+    //chec_cursors(2,6, 2,6, 2,6, 2,6)
+    //game0.controls.execute(0,0x01) // player 1 move up
+    //game1.controls.execute(0,0x08) // player 1 move right
+    //update(
+      //{ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]},
+      //{ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
+    //) //1
+    //chec_cursors(2,5, // player 1 moved up
+                 //2,6,
+                 //3,6, // player 2 moved right
+                 //2,6)
+    //stage0.inputs.inputs[0].should.eql([0x00,0x01])
+    //stage0.inputs.inputs[1].should.eql([0x00])
+    //stage1.inputs.inputs[0].should.eql([0x00,0x08])
+    //stage1.inputs.inputs[1].should.eql([0x00])
+    ////1-2#######################################################
+    //game0.controls.execute(0,0x00) // none
+    //let pack0_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
+    //let pack1_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x08,0x08]}
+    //update(pack0_2,pack1_2) // 2
+    //stage0.inputs.unpack(pack1_2)
+    //chec_cursors(2,5,
+                 //2,6,
+                 //4,6, // player still moving right
+                 //2,6)
+    //stage0.inputs.inputs[0].should.eql([0x00,0x01,0x00])
+    //stage0.inputs.inputs[1].should.eql([0x00,0x08,0x08])
+    //stage1.inputs.inputs[0].should.eql([0x00,0x08,0x08])
+    //stage1.inputs.inputs[1].should.eql([0x00,0x00])
+    ////2-3#######################################################
+    //game1.controls.execute(0,0x00) // none
+    //let pack0_3 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
+    //let pack1_3 = {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
+    //update(pack0_3,pack1_3) // 3
+    //chec_cursors(2,5,
+                 //3,6, //unpacking should have set this to 3, not 4 because of timeing of unpacking
+                 //4,6,
+                 //2,6)
+    //stage1.inputs.unpack(pack0_3)
+    ////3-4#######################################################
+    //update(
+      //{ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x01,0x00,0x00]},
+      //{ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
+    //) // 4
+  //}) //it
 
-    game0.controls.execute(0,0x00) // none
-    let pack0_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
-    let pack1_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x08,0x08]}
-    update(pack0_2,pack1_2)
-    stage0.inputs.unpack(pack1_2)
-    stage0.inputs.inputs[0].should.eql([0x00,0x01,0x00])
-    stage0.inputs.inputs[1].should.eql([0x00,0x08,0x08])
-    stage1.inputs.inputs[0].should.eql([0x00,0x08,0x08])
-    stage1.inputs.inputs[1].should.eql([0x00,0x00])
-
-    game1.controls.execute(0,0x00) // none
-    let pack0_3 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
-    let pack1_3 = {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
-    update(pack0_3,pack1_3)
-    stage1.inputs.unpack(pack0_3)
-
-    update(
-      {ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x01,0x00,0x00]},
-      {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
-    )
+  it('#should move cursor', function(){
+    ////0-1#######################################################
+    chec_cursors(2,6, 2,6, 2,6, 2,6)
+    game0.controls.execute(0,0x01) // player 1 move up
+    game1.controls.execute(0,0x08) // player 1 move right
+    const p00 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]}
+    const p01 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
+    update(p00,p01) //1
+    chec_cursors(2,5, // player 1 moved up
+                 2,6,
+                 3,6, // player 2 moved right
+                 2,6)
+    stage0.inputs.unpack(p01)
+    stage1.inputs.unpack(p00)
+    ////2-3#######################################################
+    const p10 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]}
+    const p11 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
+    update(p10,p11) //1
   }) //it
 }) //describe
