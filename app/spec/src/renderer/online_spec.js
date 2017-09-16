@@ -15,6 +15,7 @@ var _stage0 = null
 var _stage1 = null
 function update(p0,p1){
   _stage0.update()
+  console.log('-------')
   _stage1.update()
   _stage0.inputs.last_pack.should.eql(p0)
   _stage1.inputs.last_pack.should.eql(p1)
@@ -111,27 +112,43 @@ describe('Online Simulation', function() {
     //console.log('s_______0>',stage0.snapshots.snapshot[0][0][2])
     const p00 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]} //0. send 0-2 frames
     const p01 = {ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
+    console.log('t______1')
     update(p00,p01) //1
     //console.log('s_______0>',stage0.snapshots.snapshot[0][0][2])
     chec_cursors(2,5, // player 1 moved up
                  2,6,
                  3,6, // player 2 moved right
                  2,6)
-    stage0.inputs.unpack(p01)
-    stage1.inputs.unpack(p00) //1. we got 0-2
+    //stage0.inputs.unpack(p01)
+    //stage1.inputs.unpack(p00) //1. we got 0-2
     ////2-3#######################################################
-    const p10 = {ack0: 0, ack1: 2, frame_count: 3, frames: [0x00,0x01,0x01]}
-    const p11 = {ack0: 0, ack1: 2, frame_count: 3, frames: [0x00,0x08,0x08]}
-    update(p10,p11) //1
+    const p10 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x01]}
+    const p11 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x08,0x08]}
+    console.log('t______2')
+    update(p10,p11) //2
     chec_cursors(2,4, // player 1 moved up
                  2,6,
                  4,6, // player 2 moved right
                  2,6)
-    stage0.inputs.unpack(p10)
-    stage1.inputs.unpack(p11)
-    ////2-4#######################################################
-    const p20 = {ack0: 2, ack1: 3, frame_count: 2, frames: [0x01,0x01]}
-    const p21 = {ack0: 2, ack1: 3, frame_count: 2, frames: [0x08,0x08]}
-    update(p20,p21) //1
+    console.log('unpacking______2_0')
+    stage0.inputs.unpack(p11)
+    console.log('unpacking______2_1')
+    stage1.inputs.unpack(p10)
+    ////3-4#######################################################
+    const p20 = {ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x01,0x01,0x01]}
+    const p21 = {ack0: 0, ack1: 3, frame_count: 4, frames: [0x00,0x08,0x08,0x08]}
+    console.log('t______3')
+    update(p20,p21) //3
+    stage0.inputs.unpack(p21)
+    stage1.inputs.unpack(p20)
+    ////4-5#######################################################
+    const p30 = {ack0: 3, ack1: 4, frame_count: 2, frames: [0x01,0x01]}
+    const p31 = {ack0: 3, ack1: 4, frame_count: 2, frames: [0x08,0x08]}
+    console.log('t______4')
+    update(p30,p31) //4
+    chec_cursors(2,2, // player 1 moved up
+                 2,4,
+                 7,6, // player 2 moved right
+                 2,6)
   }) //it
 }) //describe

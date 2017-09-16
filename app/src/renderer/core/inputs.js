@@ -61,8 +61,9 @@ module.exports = function(game){
     }
 
     unpack(data){
-      const offset = this.ack[0]-data.ack0
-      for (let i = 0; data.frame_count-offset > i; i++) {
+      const offset     = this.ack[0]-data.ack0
+      const len_frames = data.frame_count-offset //amount of frames to be imported
+      for (let i = 0; len_frames >= i; i++) {
         let tick = this.ack[0]+i
         let byte = data.frames[i+offset]
         if( tick >= this.inputs[1].length) {
@@ -80,19 +81,19 @@ module.exports = function(game){
         from:  this.ack[0],
         to:    this.tick
       }
-      this.ack[0] = this.ack[0]+(data.frame_count-offset)
+      this.ack[0] = this.ack[0]+len_frames
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }
 
     update_input(pi,tick){
       const byte = game.controls.serialize(pi)
-      console.log('upp',byte)
+      //console.log('upp',byte)
       this.inputs[pi].push(byte)
     }
 
     replay_input(pi,tick){
       const byte = this.inputs[pi][tick]
-      console.log('rep',pi,tick,byte)
+      //console.log('rep',pi,tick,byte)
       game.controls.execute(pi,byte)
     }
 
