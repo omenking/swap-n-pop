@@ -95,7 +95,7 @@ module.exports = function(game){
 
     update(tick,send) {
       this.tick = tick
-      if (this.replay){
+      if (this.replay || this.send === false){
         this.replay_input(0,tick)
         this.replay_input(1,tick)
       } else {
