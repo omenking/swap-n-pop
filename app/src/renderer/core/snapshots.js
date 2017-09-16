@@ -3,8 +3,9 @@ module.exports = function(game){
     constructor(){
       this.create  = this.create.bind(this)
 
-      this.load  = this.load.bind(this)
-      this.snap  = this.snap.bind(this)
+      this.cindex = this.cindex.bind(this)
+      this.load   = this.load.bind(this)
+      this.snap   = this.snap.bind(this)
     }
     create(p0,p1){
       this.playfield0 = p0
@@ -20,22 +21,24 @@ module.exports = function(game){
     set playfield1(v){ this._playfield1 = v}
 
     load(tick){
+      let i = cindex(tick)
+      this.playfield0.load(this.snapshot[i][0])
+      this.playfield1.load(this.snapshot[i][1])
+    }
+
+    cindex(tick){
       const offset = tick - this.index_tick
       let index    = null
-      if (0 >= offset){index = this.index + offset}
-      else            {index = 120 + offset}
-      //console.log('snapshot load',tick,index,offset,this.index_tick)
-      this.playfield0.load(this.snapshot[index][0])
-      this.playfield1.load(this.snapshot[index][1])
+      if (offset >= 0){return offset}
+      else            {return 120+offset}
     }
 
     snap(tick){
       if (this.index >= 119){
-        this.index      = 0
+        this.index      = -1
         this.index_tick = tick
-      } else {
-        this.index++
       }
+      this.index++
       this.snapshot[this.index][0] = this.playfield0.snap
       this.snapshot[this.index][1] = this.playfield1.snap
     }

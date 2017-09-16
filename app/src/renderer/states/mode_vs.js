@@ -119,9 +119,7 @@ module.exports = function(game){
     }
     roll(from,to){
       if (from > to) { // rollback
-        console.log('roll-backward',from,to)
       } else { //rollforward
-        console.log('roll-forward',from,to)
         this.snapshots.load(from)
         for (let i = from; from > to; i++) {
           this.update(i)

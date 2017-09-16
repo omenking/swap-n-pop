@@ -64,5 +64,4 @@ describe('Inputs', function() {
     }) // it
   }) // describe
 
-
 })
