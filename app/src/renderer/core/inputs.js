@@ -73,7 +73,11 @@ module.exports = function(game){
           this.inputs[1][tick] = byte
         }
       }
-      this.stage.roll(this.ack[0],this.tick) //from and to
+      this.stage.roll = {
+        ready: true,
+        from:  this.ack[0],
+        to:    this.tick
+      }
       this.ack[0] = this.ack[0]+(data.frame_count-offset)
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }

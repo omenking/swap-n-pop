@@ -17,7 +17,7 @@ module.exports = function(game){
       this.shutdown = this.shutdown.bind(this)
 
       this.step         = this.step.bind(this)
-      this.roll         = this.roll.bind(this)
+      this.roll_to      = this.roll_to.bind(this)
       this.create_bg    = this.create_bg.bind(this)
       this.create_frame = this.create_frame.bind(this)
       this.pause        = this.pause.bind(this)
@@ -32,6 +32,7 @@ module.exports = function(game){
     static initClass() {
       this.prototype.rng = null
       this.prototype.debug = false
+      this.prototype.roll = {}
     }
     init(data){
       this.tick   = 0
@@ -41,6 +42,11 @@ module.exports = function(game){
       this.rng    = seedrandom(this.seed)
       this.inputs = new CoreInputs(data.inputs,data.online,this)
       this.snapshots = new CoreSnapshots()
+      this.roll = {
+        ready: false,
+        from: null,
+        to: null
+      }
     }
 
     get online(){  return this._online }
@@ -117,7 +123,7 @@ module.exports = function(game){
         return this.danger = false
       }
     }
-    roll(from,to){
+    roll_to(from,to){
       if (from > to) { // rollback
       } else { //rollforward
         this.snapshots.load(from)
@@ -127,9 +133,14 @@ module.exports = function(game){
           this.step(i)
         }
       }
+      this.roll = {ready: false}
     }
     update() {
-      this.step(false)
+      if (this.roll.ready){
+        this.roll_to(this.roll.from,this.roll.to)
+      } else {
+        this.step(false)
+      }
     }
     step(tick){
       if (tick === false) { this.tick++ }
