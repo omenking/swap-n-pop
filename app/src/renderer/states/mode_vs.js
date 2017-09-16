@@ -122,7 +122,7 @@ module.exports = function(game){
       } else { //rollforward
         this.snapshots.load(from)
         console.log('f~',from,to)
-        for (let i = from; from < to; i++) {
+        for (let i = from; i < to; i++) {
           console.log('fi',i)
           this.step(i)
         }
