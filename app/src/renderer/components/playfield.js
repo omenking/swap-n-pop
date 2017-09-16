@@ -353,6 +353,7 @@ module.exports = function(game){
       }
     }
     render() {
+      this.cursor.render()
       this.render_stack()
 
       if (this.should_push) {

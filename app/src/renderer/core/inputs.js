@@ -73,6 +73,8 @@ module.exports = function(game){
           this.inputs[1][tick] = byte
         }
       }
+      // Tell the stage (mode_vs) that we want to roll from..to
+      // the next time update is called.
       this.stage.roll = {
         ready: true,
         from:  this.ack[0],
