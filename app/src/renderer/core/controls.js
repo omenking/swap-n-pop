@@ -186,12 +186,87 @@ module.exports = function(game){
     }
     trigger(name){
       this.callbacks[name](this._down[name]++)
+      console.log(name,this._down[name])
     }
-    load(data){
-      this._down =  data
+    load(snapshot){
+      this._down.pl0_up    = snapshot[0][0]
+      this._down.pl0_down  = snapshot[0][1]
+      this._down.pl0_left  = snapshot[0][2]
+      this._down.pl0_right = snapshot[0][3]
+      this._down.pl0_a     = snapshot[0][4]
+      this._down.pl0_b     = snapshot[0][5]
+      this._down.pl0_l     = snapshot[0][6]
+      this._down.pl0_r     = snapshot[0][7]
+      this._down.pl0_start = snapshot[0][8]
+      this._down.pl1_up    = snapshot[0][9]
+      this._down.pl1_down  = snapshot[0][10]
+      this._down.pl1_left  = snapshot[0][11]
+      this._down.pl1_right = snapshot[0][12]
+      this._down.pl1_a     = snapshot[0][13]
+      this._down.pl1_b     = snapshot[0][14]
+      this._down.pl1_l     = snapshot[0][15]
+      this._down.pl1_r     = snapshot[0][16]
+      this._down.pl1_start = snapshot[0][17]
+
+      this._simdown.pl0_up    = snapshot[1][0]
+      this._simdown.pl0_down  = snapshot[1][1]
+      this._simdown.pl0_left  = snapshot[1][2]
+      this._simdown.pl0_right = snapshot[1][3]
+      this._simdown.pl0_a     = snapshot[1][4]
+      this._simdown.pl0_b     = snapshot[1][5]
+      this._simdown.pl0_l     = snapshot[1][6]
+      this._simdown.pl0_r     = snapshot[1][7]
+      this._simdown.pl0_start = snapshot[1][8]
+      this._simdown.pl1_up    = snapshot[1][9]
+      this._simdown.pl1_down  = snapshot[1][10]
+      this._simdown.pl1_left  = snapshot[1][11]
+      this._simdown.pl1_right = snapshot[1][12]
+      this._simdown.pl1_a     = snapshot[1][13]
+      this._simdown.pl1_b     = snapshot[1][14]
+      this._simdown.pl1_l     = snapshot[1][15]
+      this._simdown.pl1_r     = snapshot[1][16]
+      this._simdown.pl1_start = snapshot[1][17]
     }
     get snap(){
-      return this._down
+      return [[
+         this._down.pl0_up
+        ,this._down.pl0_down
+        ,this._down.pl0_left
+        ,this._down.pl0_right
+        ,this._down.pl0_a
+        ,this._down.pl0_b
+        ,this._down.pl0_l
+        ,this._down.pl0_r
+        ,this._down.pl0_start
+        ,this._down.pl1_up
+        ,this._down.pl1_down
+        ,this._down.pl1_left
+        ,this._down.pl1_right
+        ,this._down.pl1_a
+        ,this._down.pl1_b
+        ,this._down.pl1_l
+        ,this._down.pl1_r
+        ,this._down.pl1_start
+      ],[
+         this._simdown.pl0_up
+        ,this._simdown.pl0_down
+        ,this._simdown.pl0_left
+        ,this._simdown.pl0_right
+        ,this._simdown.pl0_a
+        ,this._simdown.pl0_b
+        ,this._simdown.pl0_l
+        ,this._simdown.pl0_r
+        ,this._simdown.pl0_start
+        ,this._simdown.pl1_up
+        ,this._simdown.pl1_down
+        ,this._simdown.pl1_left
+        ,this._simdown.pl1_right
+        ,this._simdown.pl1_a
+        ,this._simdown.pl1_b
+        ,this._simdown.pl1_l
+        ,this._simdown.pl1_r
+        ,this._simdown.pl1_start
+      ]]
     }
     check_down(key){
       const input = this.keys[key]
