@@ -4,10 +4,14 @@ module.exports = function(game){
   const store = new Store()
   class controller {
     constructor() {
+      this.create = this.create.bind(this)
+      this.update = this.update.bind(this)
+
+      this.update_pl   = this.update_pl.bind(this)
       this.load        = this.load.bind(this)
       this.map         = this.map.bind(this)
       this.map_key     = this.map_key.bind(this)
-      this.serialize    = this.serialize.bind(this)
+      this.serialize   = this.serialize.bind(this)
       this.execute     = this.execute.bind(this)
       this.execute_key = this.execute_key.bind(this)
       this.is_down     = this.is_down.bind(this)
@@ -186,7 +190,7 @@ module.exports = function(game){
     }
     trigger(name){
       this.callbacks[name](this._down[name]++)
-      console.log(name,this._down[name])
+      //console.log(name,this._down[name])
     }
     load(snapshot){
       this._down.pl0_up    = snapshot[0][0]
@@ -268,13 +272,13 @@ module.exports = function(game){
         ,this._simdown.pl1_start
       ]]
     }
-    check_down(key){
+    check_down(sim,key){
       const input = this.keys[key]
-      if (this._simdown[key]){
+      if (sim && this._simdown[key]){
         return true
       } else if (Array.isArray(input)) {
         if (game.input.gamepad.supported && game.input.gamepad.active && this.pad.connected){
-          if      (input.length === 2){
+          if (input.length === 2){
             return this.pad.isDown(input[1])
           }
           else if (input.length === 3){
@@ -288,69 +292,37 @@ module.exports = function(game){
         }
       } else if (input !== undefined){
         return input.isDown
+      } else {
+        this._simdown[key] = false
       }
     }
-    update(){
-      // Player 1 #####
-      if      (this.check_down("pl0_left") ){ this.trigger("pl0_left") }
-      else if (this.check_down("pl0_right")){ this.trigger("pl0_right")}
-      else {
-        this._down["pl0_left"]  = 0
-        this._down["pl0_right"] = 0
-      }
-
-      if      (this.check_down("pl0_up")  ){ this.trigger("pl0_up")  }
-      else if (this.check_down("pl0_down")){ this.trigger("pl0_down")}
-      else {
-        this._down["pl0_up"]   = 0
-        this._down["pl0_down"] = 0
-      }
-
-      if (this.check_down("pl0_a")){ this.trigger("pl0_a") }
-      else { this._down["pl0_a"] = 0 }
-
-      if (this.check_down("pl0_b")){ this.trigger("pl0_b") }
-      else { this._down["pl0_b"] = 0 }
-
-      if (this.check_down("pl0_l")){ this.trigger("pl0_l") }
-      else { this._down["pl0_l"] = 0 }
-
-      if (this.check_down("pl0_r")){ this.trigger("pl0_r") }
-      else { this._down["pl0_r"] = 0 }
-
-      if (this.check_down("pl0_start")){ this.trigger("pl0_start") }
-      else { this._down["pl0_start"] = 0 }
-      // Player 2 #####
-      if      (this.check_down("pl1_left") ){ this.trigger("pl1_left") }
-      else if (this.check_down("pl1_right")){ this.trigger("pl1_right")}
-      else {
-        this._down["pl1_left"]  = 0
-        this._down["pl1_right"] = 0
-      }
-
-      if      (this.check_down("pl1_up")  ){ this.trigger("pl1_up")  }
-      else if (this.check_down("pl1_down")){ this.trigger("pl1_down")}
-      else {
-        this._down["pl1_up"]   = 0
-        this._down["pl1_down"] = 0
-      }
-
-      if (this.check_down("pl1_a")){ this.trigger("pl1_a") }
-      else { this._down["pl1_a"] = 0 }
-
-      if (this.check_down("pl1_b")){ this.trigger("pl1_b") }
-      else { this._down["pl1_b"] = 0 }
-
-      if (this.check_down("pl1_l")){ this.trigger("pl1_l") }
-      else { this._down["pl1_l"] = 0 }
-
-      if (this.check_down("pl1_r")){ this.trigger("pl1_r") }
-      else { this._down["pl1_r"] = 0 }
-
-      if (this.check_down("pl1_start")){ this.trigger("pl1_start") }
-      else { this._down["pl1_start"] = 0 }
+    update(sim){
+      this.update_pl(sim,0)
+      this.update_pl(sim,1)
     }
-  };
+    update_pl(sim,pi){
+      if      (this.check_down(sim,`pl${pi}_left`) ){ this.trigger(`pl${pi}_left`) }
+      else if (this.check_down(sim,`pl${pi}_right`)){ this.trigger(`pl${pi}_right`)}
+      else {
+        this._down[`pl${pi}_left`]  = 0
+        this._down[`pl${pi}_right`] = 0
+      }
+
+      if      (this.check_down(sim,`pl${pi}_up`)  ){ this.trigger(`pl${pi}_up`)  }
+      else if (this.check_down(sim,`pl${pi}_down`)){ this.trigger(`pl${pi}_down`)}
+      else {
+        this._down[`pl${pi}_up`]   = 0
+        this._down[`pl${pi}_down`] = 0
+      }
+
+      if (this.check_down(sim,`pl${pi}_a`))    { this.trigger(`pl${pi}_a`)     } else { this._down[`pl${pi}_a`]     = 0 }
+      if (this.check_down(sim,`pl${pi}_b`))    { this.trigger(`pl${pi}_b`)     } else { this._down[`pl${pi}_b`]     = 0 }
+      if (this.check_down(sim,`pl${pi}_l`))    { this.trigger(`pl${pi}_l`)     } else { this._down[`pl${pi}_l`]     = 0 }
+      if (this.check_down(sim,`pl${pi}_r`))    { this.trigger(`pl${pi}_r`)     } else { this._down[`pl${pi}_r`]     = 0 }
+      if (this.check_down(sim,`pl${pi}_start`)){ this.trigger(`pl${pi}_start`) } else { this._down[`pl${pi}_start`] = 0 }
+    }
+
+  }
 
   return controller
 }

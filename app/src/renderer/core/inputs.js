@@ -64,10 +64,10 @@ module.exports = function(game){
       const frame_start = this.ack[0]
       const frame_end   = data.ack0+data.frame_count-1
 
-      console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
+      //console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
       for (let tick = frame_start; frame_end >= tick; tick++) {
         let byte = data.frames[tick-data.ack0]
-        console.log(this.tick,tick,byte)
+        //console.log(this.tick,tick,byte)
 
         if( tick > this.tick) {
           this.inputs[1].push(byte)
