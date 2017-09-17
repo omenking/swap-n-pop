@@ -64,24 +64,26 @@ module.exports = function(game){
       const frame_start = this.ack[0]
       const frame_end   = data.ack0+data.frame_count-1
 
+      console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
       for (let tick = frame_start; frame_end >= tick; tick++) {
         let byte = data.frames[tick-data.ack0]
+        console.log(this.tick,tick,byte)
 
         if( tick > this.tick) {
-          if (byte !== 0x00) { console.log(tick,'+',byte) }
           this.inputs[1].push(byte)
         } else {
-          if (byte !== 0x00) { console.log(tick,'=',byte) }
           this.inputs[1][tick] = byte
         }
       }
       // Tell the stage (mode_vs) that we want to roll from..to
       // the next time update is called.
-      this.stage.roll = {
-        ready: true,
-        from:  this.ack[0],
-        to:    this.tick
+      this.stage.roll.ready = true
+      if (this.stage.roll.from === null){
+        this.stage.roll.from = this.ack[0]
+      } else {
+        this.stage.roll.from = Math.min(this.ack[0],this.stage.roll.from)
       }
+      this.stage.roll.to    = this.tick
       this.ack[0] = frame_end
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }

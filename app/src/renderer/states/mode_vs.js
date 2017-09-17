@@ -137,7 +137,7 @@ module.exports = function(game){
           this.step(i)
         }
       }
-      this.roll = {ready: false}
+      this.roll = {ready: false, from: null, to: null}
     }
     update() {
       if (this.roll.ready){
