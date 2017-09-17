@@ -125,10 +125,11 @@ function click_settings(mode) {
 function create_window () {
   win = new BrowserWindow({
     title     : "Swap N Pop",
-    width     : WIN_WIDTH*2,
-    height    : WIN_HEIGHT*2,
-    minWidth  : WIN_WIDTH*2,
-    minHeight : WIN_HEIGHT*2
+    width     : 2*WIN_WIDTH ,
+    height    : 2*WIN_HEIGHT,
+    minWidth  : 2*WIN_WIDTH ,
+    minHeight : 2*WIN_HEIGHT,
+    useContentSize: true
   })
   win.setTitle("Swap N Pop")
   win.setAspectRatio(8/7,0)
