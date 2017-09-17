@@ -32,7 +32,6 @@ module.exports = function(game){
       this.prototype.clearing    = null
       this.prototype.score       = 0
       this.prototype.scoreText   = null
-      this.prototype.push_counter = 0
       this.prototype.has_ai      = false
       this.prototype.running     = false
       this.prototype.land        = false
@@ -74,6 +73,10 @@ module.exports = function(game){
       this.score_lbl  = new ComponentScore();
       this.ai         = new ComponentAi();
     }
+
+    get push_counter(){ return this._push_counter }
+    set push_counter(v){ this._push_counter = v }
+
     stack(v1=null,v2=null){
       if (v1 >= 0 && v2 >= 0 && v1 !== null & v2 !== null) {
         return this._stack[_f.xy2i(v1,v2)]
