@@ -106,7 +106,8 @@ function click_settings(mode) {
       width     : 500,
       height    : 500,
       parent    : win,
-      resizable: false
+      resizable: false,
+      backgroundColor: '#212121'
     })
     win_settings.custom = {mode: mode}
     win_settings.loadURL(url.format({
@@ -129,7 +130,8 @@ function create_window () {
     height    : 2*WIN_HEIGHT,
     minWidth  : 2*WIN_WIDTH ,
     minHeight : 2*WIN_HEIGHT,
-    useContentSize: true
+    useContentSize: true,
+    backgroundColor: '#282828'
   })
   win.setTitle("Swap N Pop")
   win.setAspectRatio(8/7,0)

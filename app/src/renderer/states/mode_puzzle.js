@@ -35,7 +35,6 @@ module.exports = function(game){
     set cpu(v){    this._cpu = v }
 
     create() {
-      game.stage.backgroundColor = 0xFFFFFF;
       this.playfield.create(this, {
         push  : false,
         x     : 40,

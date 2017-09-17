@@ -64,8 +64,6 @@ module.exports = function(game){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
     }
     create() {
-      game.stage.backgroundColor = 0x000000
-
       this.danger = false
 
       const offset = 0;

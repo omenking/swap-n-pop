@@ -10,7 +10,6 @@ module.exports = function(game){
       this.menu   = new ComponentMenu()
     }
     create() {
-      game.stage.backgroundColor = '#ffffff'
       this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_blue')
       this.menu.create()
     }
