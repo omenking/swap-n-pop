@@ -144,6 +144,7 @@ module.exports = function(game){
         this.roll_to(this.roll.from,this.roll.to)
       }
       this.step(false)
+      console.log('<-',this.tick,'-------------------------------->')
     }
     step(tick){
       if (tick === false) {

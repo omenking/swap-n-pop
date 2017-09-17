@@ -4,6 +4,7 @@ module.exports = function(game){
   const store = new Store()
   class controller {
     constructor() {
+      this.load        = this.load.bind(this)
       this.map         = this.map.bind(this)
       this.map_key     = this.map_key.bind(this)
       this.serialize    = this.serialize.bind(this)
@@ -61,8 +62,8 @@ module.exports = function(game){
         pl1_r     : false,
         pl1_start : false
       } //simulated down
-      this._down    = {}
-      this.keys = []
+      this._down = {}
+      this.keys  = []
       this.rebind()
 
       ipc.on('controls-rebind', (event) => {
@@ -185,6 +186,12 @@ module.exports = function(game){
     }
     trigger(name){
       this.callbacks[name](this._down[name]++)
+    }
+    load(data){
+      this._down =  data
+    }
+    get snap(){
+      return this._down
     }
     check_down(key){
       const input = this.keys[key]
