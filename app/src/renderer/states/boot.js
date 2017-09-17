@@ -64,6 +64,9 @@ module.exports = function(game){
       game.load.image('bg_blue'  , './assets/bg_blue.png')
       game.load.image('bg_green' , './assets/bg_green.png')
       game.load.image('bg_purple', './assets/bg_purple.png')
+      // UI -----------
+      game.load.spritesheet('ints_small' , './assets/ints_small.png'  , 8, 8, 18)
+      game.load.spritesheet('ints_large' , './assets/ints_large.png'  , 8, 14,18)
       // Menus --------
       game.load.image('menu'             , './assets/menu.png')
       game.load.image('menu_cursor'      , './assets/menu_cursor.png')

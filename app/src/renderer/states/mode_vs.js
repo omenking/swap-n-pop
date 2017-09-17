@@ -3,6 +3,7 @@ module.exports = function(game){
   const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const ComponentPing      = require(APP.path.components('ping'))(game)
+  const ComponentTimer      = require(APP.path.components('timer'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)
   const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
   const {ipcRenderer: ipc} = require('electron')
@@ -27,6 +28,7 @@ module.exports = function(game){
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()
+      this.timer        = new ComponentTimer()
     }
 
     static initClass() {
@@ -77,6 +79,7 @@ module.exports = function(game){
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
+      this.timer.create()
 
       this.snapshots.create(
         this.playfield1,
@@ -148,7 +151,6 @@ module.exports = function(game){
       if (tick === false) {
         this.tick++
       }
-      game.controls.update()
       this.playfield1.update()
       this.playfield2.update()
       this.danger_check()
@@ -159,12 +161,14 @@ module.exports = function(game){
         this.inputs.update(tick,false)
         this.snapshots.snap(tick)
       }
+      game.controls.update()
     }
     render(){
       if(this.debug){
         console.log('debugger triggered')
         debugger
       }
+      this.timer.render(this.tick)
       if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
       if (this.online){
