@@ -211,11 +211,11 @@ describe('Playfield', function() {
     stage.init({seed: 'test'})
 
     let playfield = new Playfield(0)
-    playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+    playfield.create(stage,{countdown: true, push: false, x: 0, y: 0, panels: panels})
     playfield.create_after()
-    console.log('ps',playfield.snap)
     playfield.snap.should.eql([
       false,
+      1000,
       [ 2, 6, 'hidden', 0, 0 ],
       [
         [ 0, 0, null, 0, 0, false ],

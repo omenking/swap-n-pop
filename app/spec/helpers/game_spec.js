@@ -46,7 +46,14 @@ stub_sprite.returns({
     add: sinon.stub(),
     play: sinon.stub()
   },
-  addChild: sinon.stub()
+  addChild: sinon.stub(),
+  anchor: {
+    set: sinon.stub()
+  },
+  scale: {
+    x: null,
+    y: null
+  }
 })
 
 const stub_text = sinon.stub()
