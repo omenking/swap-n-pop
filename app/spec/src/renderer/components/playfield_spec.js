@@ -210,82 +210,19 @@ describe('Playfield', function() {
     let stage = new Stage()
     stage.init({seed: 'test'})
 
-    let playfield = new Playfield(0)
-    playfield.create(stage,{countdown: true, push: false, x: 0, y: 0, panels: panels})
+    const playfield = new Playfield(0)
+    const snapshot  = new Array(3)
+    playfield.create(stage,{countdown: false, push: true, x: 0, y: 0, panels: panels})
     playfield.create_after()
-    playfield.snap.should.eql([
-      false,
-      1000,
-      [ 2, 6, 'hidden', 0, 0 ],
-      [
-        [ 0, 0, null, 0, 0, false ],
-        [ 1, 0, null, 0, 0, false ],
-        [ 2, 0, null, 0, 0, false ],
-        [ 3, 0, null, 0, 0, false ],
-        [ 4, 0, null, 0, 0, false ],
-        [ 5, 0, null, 0, 0, false ],
-        [ 0, 1, null, 0, 0, false ],
-        [ 1, 1, null, 0, 0, false ],
-        [ 2, 1, null, 0, 0, false ],
-        [ 3, 1, null, 0, 0, false ],
-        [ 4, 1, null, 0, 0, false ],
-        [ 5, 1, null, 0, 0, false ],
-        [ 0, 2, null, 0, 0, false ],
-        [ 1, 2, null, 0, 0, false ],
-        [ 2, 2, null, 0, 0, false ],
-        [ 3, 2, null, 0, 0, false ],
-        [ 4, 2, null, 0, 0, false ],
-        [ 5, 2, null, 0, 0, false ],
-        [ 0, 3, null, 0, 0, false ],
-        [ 1, 3, null, 0, 0, false ],
-        [ 2, 3, null, 0, 0, false ],
-        [ 3, 3, null, 0, 0, false ],
-        [ 4, 3, null, 0, 0, false ],
-        [ 5, 3, null, 0, 0, false ],
-        [ 0, 4, null, 0, 0, false ],
-        [ 1, 4, null, 0, 0, false ],
-        [ 2, 4, null, 0, 0, false ],
-        [ 3, 4, null, 0, 0, false ],
-        [ 4, 4, null, 0, 0, false ],
-        [ 5, 4, null, 0, 0, false ],
-        [ 0, 5, null, 0, 0, false ],
-        [ 1, 5, null, 0, 0, false ],
-        [ 2, 5, null, 0, 0, false ],
-        [ 3, 5, null, 0, 0, false ],
-        [ 4, 5, null, 0, 0, false ],
-        [ 5, 5, null, 0, 0, false ],
-        [ 0, 6, null, 0, 0, false ],
-        [ 1, 6, null, 0, 0, false ],
-        [ 2, 6, null, 0, 0, false ],
-        [ 3, 6, null, 0, 0, false ],
-        [ 4, 6, null, 0, 0, false ],
-        [ 5, 6, null, 0, 0, false ],
-        [ 0, 7, null, 0, 0, false ],
-        [ 1, 7, null, 0, 0, false ],
-        [ 2, 7, null, 0, 0, false ],
-        [ 3, 7, null, 0, 0, false ],
-        [ 4, 7, null, 0, 0, false ],
-        [ 5, 7, null, 0, 0, false ],
-        [ 0, 8, 1, 0, 0, false ],
-        [ 1, 8, null, 0, 0, false ],
-        [ 2, 8, null, 0, 0, false ],
-        [ 3, 8, null, 0, 0, false ],
-        [ 4, 8, null, 0, 0, false ],
-        [ 5, 8, null, 0, 0, false ],
-        [ 0, 9, 2, 0, 0, false ],
-        [ 1, 9, null, 0, 0, false ],
-        [ 2, 9, null, 0, 0, false ],
-        [ 3, 9, null, 0, 0, false ],
-        [ 4, 9, null, 0, 0, false ],
-        [ 5, 9, null, 0, 0, false ],
-        [ 0, 10, 3, 0, 0, false ],
-        [ 1, 10, null, 0, 0, false ],
-        [ 2, 10, null, 0, 0, false ],
-        [ 3, 10, null, 0, 0, false ],
-        [ 4, 10, null, 0, 0, false ],
-        [ 5, 10, null, 0, 0, false ] 
-      ]
-    ])
+    snapshot[0] = playfield.snap
+    playfield.update()
+    snapshot[1] = playfield.snap
+    playfield.update()
+    snapshot[2] = playfield.snap
+    playfield.update()
+    snapshot[0][1].should.eql(1000)
+    snapshot[1][1].should.eql(999)
+    snapshot[2][1].should.eql(998)
   })
 
   describe('#load()' ,function(){

@@ -394,7 +394,9 @@ module.exports = function(game){
         game.sounds.land()
         this.land = false
       }
-
+      if(this.pi === 0){
+        //console.log('p',this.stage.tick,this.push_counter)
+      }
 
     }
     shutdown() {

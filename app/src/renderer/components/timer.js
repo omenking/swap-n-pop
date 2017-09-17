@@ -35,11 +35,9 @@ module.exports = function(game){
             this.d0.frame = minutes
           }
           if (seconds <= 9){
-            console.log('seconds',seconds)
             this.d1.frame = 0
             this.d2.frame = seconds
           } else {
-            console.log('seconds',seconds)
             this.d1.frame = parseInt(`${seconds}`.charAt(0))
             this.d2.frame = parseInt(`${seconds}`.charAt(1))
           }

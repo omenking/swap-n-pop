@@ -5,6 +5,7 @@ const sinon = require('sinon')
 const Game = require(APP.path.spec('helpers','game_spec'))
 const game = new Game()
 const CoreSnapshots = require(APP.path.core('snapshots'))(game)
+const Playfield  = require(APP.path.components('playfield'))(game)
 
 chai.should()
 
@@ -22,6 +23,15 @@ describe('Snapshots', function() {
 
       snapshots.index_tick = 120
       snapshots.cindex(114).should.eql(114)
+    }) // it
+  }) // describe
+  describe('#load()', function(){
+    it('should work', function(){
+      const p0 = new Playfield(0)
+      const p1 = new Playfield(1)
+      const snapshots = new CoreSnapshots()
+      snapshots.create(p0,p1) //suppose to pass playfields but don't care right now
+      console.log('ss',snapshots.snapshot[0][1])
     }) // it
   }) // describe
 })
