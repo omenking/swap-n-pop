@@ -1,6 +1,7 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const _f = require(APP.path.core('filters'))
+  const ss = require('shuffle-seed')
   const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
   const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
@@ -117,6 +118,7 @@ module.exports = function(game){
         throw new Error("must pass at least x,y,countdown and panels")
       }
 
+
       this.stage            = stage
       this.should_push      = opts.push      || false
       this.should_countdown = opts.countdown || false
@@ -124,8 +126,17 @@ module.exports = function(game){
       this.height = (ROWS+1) * UNIT
       this.width  = COLS     * UNIT
 
-      this.x = opts.x;
-      this.y = opts.y;
+      this.x = opts.x
+      this.y = opts.y
+      const ch = ss.shuffle(['00','01','02','03',
+                             '04','05','06','07',
+                             '08','09','10','11','12'],
+                             this.stage.rng())
+      this.bg = game.add.sprite(this.x+48, this.y-1, `playfield_char${ch[0]}`)
+      this.bg.anchor.set(0.5,0)
+      if (this.pi === 0) {
+        this.bg.scale.x = -1
+      }
 
       this.layer_block  = game.add.group()
       this.layer_block.x  = this.x

@@ -84,6 +84,20 @@ module.exports = function(game){
       game.load.spritesheet('playfield_countdown'     , './assets/playfield_countdown.png', 62, 38, 4)
       game.load.spritesheet('panels'                  , './assets/panels.png'  , 16, 16, 136)
 
+      game.load.image('playfield_char00', './assets/char00.png')
+      game.load.image('playfield_char01', './assets/char01.png')
+      game.load.image('playfield_char02', './assets/char02.png')
+      game.load.image('playfield_char03', './assets/char03.png')
+      game.load.image('playfield_char04', './assets/char04.png')
+      game.load.image('playfield_char05', './assets/char05.png')
+      game.load.image('playfield_char06', './assets/char06.png')
+      game.load.image('playfield_char07', './assets/char07.png')
+      game.load.image('playfield_char08', './assets/char08.png')
+      game.load.image('playfield_char09', './assets/char09.png')
+      game.load.image('playfield_char10', './assets/char10.png')
+      game.load.image('playfield_char11', './assets/char11.png')
+      game.load.image('playfield_char12', './assets/char12.png')
+
       game.load.start()
     }
   }
