@@ -155,12 +155,13 @@ module.exports = function(game){
       this.danger_check()
       if (tick === false) {
         this.inputs.update(this.tick,true)
+        game.controls.update()
         this.snapshots.snap(this.tick)
       } else {
         this.inputs.update(tick,false)
+        game.controls.update()
         this.snapshots.snap(tick)
       }
-      game.controls.update()
     }
     render(){
       if(this.debug){
