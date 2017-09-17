@@ -14,7 +14,8 @@ module.exports = function(game){
       this.playfield1 = p1
       this.index      = -1
       this.index_tick = 0
-      this.snapshot   = new Array(120).fill([[],[]])
+      this.push_counter = new Array(120)
+      this.snapshot   = new Array(120).fill(null)
     }
     get playfield0(){ return this._playfield0 }
     set playfield0(v){ this._playfield0 = v}
@@ -23,11 +24,8 @@ module.exports = function(game){
     set playfield1(v){ this._playfield1 = v}
 
     load(tick){
-      console.log('sp0',this.index,this.index_tick,this.snapshot[this.index][0][1])
       this.index      = this.cindex(tick)
       this.index_tick = this.cindex_tick(tick)
-      console.log('sp1',this.index,this.index_tick,this.snapshot[this.index][0][1])
-      console.log('sp3',this.index,this.index_tick,this.snapshot[0][0][1])
 
       this.playfield0.load(this.snapshot[this.index][0])
       this.playfield1.load(this.snapshot[this.index][1])
@@ -51,9 +49,9 @@ module.exports = function(game){
         this.index_tick = tick
       }
       this.index++
-      this.snapshot[this.index][0] = this.playfield0.snap
-      this.snapshot[this.index][1] = this.playfield1.snap
-      console.log('sss',tick,this.index,this.snapshot[this.index][0][1])
+      this.snapshot[this.index] =  [this.playfield0.snap,
+                                    this.playfield1.snap]
+      this.push_counter[this.index] =  this.playfield0.snap[1]
     }
   } //klass
 
