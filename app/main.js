@@ -233,3 +233,7 @@ ipc.on('network-connect', (event,data) => {
 ipc.on('settings', (event,name) => {
   click_settings(name)()
 })
+
+ipc.on('fullscreen', (event,name) => {
+  win.setFullScreen(!win.isFullScreen())
+})
