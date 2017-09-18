@@ -41,7 +41,6 @@ if (!store.has('inputs')){
   null  //p0_start
   ])
 }
-
 const template = [
   {
     label: 'Settings',
