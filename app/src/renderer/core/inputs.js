@@ -68,15 +68,17 @@ module.exports = function(game){
       //console.log('unpack__:',data.frames)
       for (let tick = frame_start; frame_end >= tick; tick++) {
         let byte = data.frames[tick-data.ack0]
-        if( tick > this.tick) {
+        if(typeof this.inputs[1][tick] !== 'undefined') {
+          if (byte === 0x01){ console.log('+',this.tick,tick) }
           this.inputs[1].push(byte)
         } else {
+          if (byte === 0x01){ console.log('=',this.tick,tick) }
           this.inputs[1][tick] = byte
         }
       }
       // Tell the stage (mode_vs) that we want to roll from..to
       // the next time update is called.
-      this.stage.roll.ready = true
+      this.stae.roll.ready = true
       if (this.stage.roll.from === null){
         this.stage.roll.from = this.ack[0]
       } else {
