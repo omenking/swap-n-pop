@@ -110,7 +110,7 @@ module.exports = function(game){
       this.state = STATIC
       this.chain = false
 
-      this.sprite = game.make.sprite(0, 0, 'panels',0);
+      this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
       this.playfield.layer_block.add(this.sprite);
     }
     get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
