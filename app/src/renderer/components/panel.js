@@ -127,6 +127,7 @@ module.exports = function(game){
              ((this.left.kind  === kind) && (this.left2.kind  === kind)) ||
              ((this.right.kind === kind) && (this.right2.kind === kind))
     }
+    get frame(){ return this.sprite.frame }
     set frame(i){ this.sprite.frame = (this.kind * 8) + i}
     set(i){
       switch (i) {
@@ -140,15 +141,11 @@ module.exports = function(game){
     update(i){
       if (!this.playfield.running) { return; }
       if (this.newline){ return; }
-      if (this.counter_popping > 0) {
-        this.counter_popping--;
-      }
 
       if (this.counter > 0) {
         this.counter--
         if (this.counter > 0) { return }
       }
-      if (this.counter_popping === 0) { this.counter_popping = null; }
 
       switch (this.state) {
         case SWAP_L:
@@ -271,7 +268,7 @@ module.exports = function(game){
       return !this.playfield.stack(this.x,0).hidden
     }
     get newline(){
-      return this.playfield.should_push && this.y === (ROWS)
+      return this.playfield.should_push && this.y === ROWS
     }
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }

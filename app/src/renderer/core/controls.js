@@ -315,15 +315,9 @@ module.exports = function(game){
       }
 
       if      (this.check_down(sim,`pl${pi}_up`)  ){ 
-        if(pi === 0 && sim === false){
-          console.log('up',this._down[`pl${pi}_up`])
-        }
         this.trigger(`pl${pi}_up`)  }
       else if (this.check_down(sim,`pl${pi}_down`)){ this.trigger(`pl${pi}_down`)}
       else {
-        if(pi === 0 && sim === false){
-          console.log('_')
-        }
         this._down[`pl${pi}_up`]   = 0
         this._down[`pl${pi}_down`] = 0
       }
