@@ -72,8 +72,8 @@ module.exports = function(game){
       const stack = new Stack(this.rng)
       stack.create()
 
-      this.playfield1.create(this, {countdown: false, push: true, x: offset+8  , y: 24, panels: stack.panels})
-      this.playfield2.create(this, {countdown: false, push: true, x: offset+152, y: 24, panels: stack.panels})
+      this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stack.panels})
+      this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()

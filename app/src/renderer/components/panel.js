@@ -111,7 +111,13 @@ module.exports = function(game){
       this.chain = false
 
       this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
-      this.playfield.layer_block.add(this.sprite);
+      this.playfield.layer_block.add(this.sprite)
+      // shouldn't have to call visible false
+      // here as it should be taken care of in render
+      // but without it here, it causes a flicker at
+      // start of match. If we can find someone way to
+      // move this in the render that would be ideal.
+      this.sprite.visible = false
     }
     get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
     get support()   {  return this.state !== FALL && !this.hidden }
@@ -173,7 +179,9 @@ module.exports = function(game){
             this.counter = 0
           }
           if (this.danger && this.counter === 0) {
-            this.counter = FRAME_DANGER.length
+            // we add 1 otherwise we will miss out on one frame
+            // since counter can never really hit zero and render
+            this.counter = FRAME_DANGER.length+1
           }
           //if (this.under === blank) {
             //this.chain = false
@@ -357,13 +365,12 @@ module.exports = function(game){
         }
         this.frame = FRAME_LIVE
       } else if (this.danger){
-        this.frame = FRAME_DANGER[FRAME_DANGER.length - this.counter]
+        this.frame = FRAME_DANGER[FRAME_DANGER.length - this.counter+1]
       } else {
         this.frame = FRAME_LIVE
       }
     }
     render(){
-      if (!this.sprite) { return; }
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
