@@ -84,7 +84,7 @@ module.exports = function(game){
       }
 
       this.stage.roll.to = this.tick
-      this.ack[0] = frame_end
+      this.ack[0] = Math.max(frame_end,this.ack[0])
       this.ack[1] = Math.max(this.ack[1],data.ack1)
     }
 

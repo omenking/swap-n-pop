@@ -101,9 +101,12 @@ class game_controller {
       },
       keyboard: {
         reset: sinon.stub(),
-        addKey: sinon.stub()
+        addKey: function(){
+          return {isDown: false}
+        }
       }
     }
+
     this.server = {
       ping: sinon.stub(),
       on: sinon.stub(),

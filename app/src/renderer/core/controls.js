@@ -100,8 +100,8 @@ module.exports = function(game){
       let inputs = store.get('inputs')
       game.input.keyboard.reset()
       this.keys = {}
-      //player 1
       this.keys.pl0_up    = this.add_input(inputs[0])
+      //player 1
       this.keys.pl0_down  = this.add_input(inputs[1])
       this.keys.pl0_left  = this.add_input(inputs[2])
       this.keys.pl0_right = this.add_input(inputs[3])
@@ -190,7 +190,6 @@ module.exports = function(game){
     }
     trigger(name){
       this.callbacks[name](this._down[name]++)
-      //console.log(name,this._down[name])
     }
     load(snapshot){
       this._down.pl0_up    = snapshot[0][0]

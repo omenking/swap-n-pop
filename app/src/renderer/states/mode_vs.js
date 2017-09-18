@@ -115,14 +115,14 @@ module.exports = function(game){
 
       if (d1 || d2) {
         if (this.danger === false) {
-          game.sounds.stage_music('danger');
+          game.sounds.stage_music('danger')
         }
-        return this.danger = true;
+        this.danger = true
       } else {
         if (this.danger === true) {
-          game.sounds.stage_music('active');
+          game.sounds.stage_music('active')
         }
-        return this.danger = false
+        this.danger = false
       }
     }
     roll_to(from,to){
@@ -141,9 +141,7 @@ module.exports = function(game){
       if (this.roll.ready){
         this.roll_to(this.roll.from,this.roll.to)
       }
-      console.log('push0',this.playfield1.push_counter)
       this.step(false)
-      console.log('push1',this.playfield1.push_counter)
       //console.log('<-',this.tick,'-------------------------------->')
     }
     step(tick){

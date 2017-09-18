@@ -43,7 +43,7 @@ describe('Inputs', function() {
       inputs.inputs[1] = [0x00,0x00,0x01,0x01,0x02,0x02,0x00,0x00]
       inputs.tick  = 7
       inputs.ack = [5,0]
-      inputs.stage = {}
+      inputs.stage = {roll: {ready: false, from: null, to: null}}
       inputs.unpack({
         ack0: 3, //last frame we acknowledge we recieved for their stack
         ack1: 0, //last frame they acknowledge to recieved about our stack
@@ -71,7 +71,7 @@ describe('Inputs', function() {
       inputs.inputs[1] = [0x00,0x00,0x00,0x00,0x00,0x00]
       inputs.tick      = 5
       inputs.ack       = [0,0]
-      inputs.stage     = {}
+      inputs.stage = {roll: {ready: false, from: null, to: null}}
       inputs.unpack({
         ack0: 0,
         ack1: 0,

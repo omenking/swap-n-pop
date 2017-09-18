@@ -311,14 +311,11 @@ module.exports = function(game){
       if (this.cursor.can_push()) {
         this.push_counter -= 100
       } else {
-        console.log('up0',this.push_counter)
         this.push_counter--
-        console.log('up1',this.push_counter)
       }
       if (this.push_counter <= 0) {
-        console.log('upr',this.push_counter)
         this.push_counter   = TIME_PUSH
-        this.score        += this.push()
+        this.score         += this.push()
       }
     }
     score_combo(combo){
