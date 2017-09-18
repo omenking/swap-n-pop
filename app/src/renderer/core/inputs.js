@@ -68,7 +68,7 @@ module.exports = function(game){
       //console.log('unpack__:',data.frames)
       for (let tick = frame_start; frame_end >= tick; tick++) {
         let byte = data.frames[tick-data.ack0]
-        if(typeof this.inputs[1][tick] !== 'undefined') {
+        if(typeof this.inputs[1][tick] === 'undefined') {
           if (byte === 0x01){ console.log('+',this.tick,tick) }
           this.inputs[1].push(byte)
         } else {

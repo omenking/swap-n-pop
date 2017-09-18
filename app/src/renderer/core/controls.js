@@ -304,7 +304,7 @@ module.exports = function(game){
     }
     update(sim){
       this.update_pl(sim,0)
-      this.update_pl(sim,1)
+      this.update_pl(true,1)
     }
     update_pl(sim,pi){
       if      (this.check_down(sim,`pl${pi}_left`) ){ this.trigger(`pl${pi}_left`) }
