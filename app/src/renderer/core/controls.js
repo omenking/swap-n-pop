@@ -192,7 +192,6 @@ module.exports = function(game){
       this.callbacks[name](this._down[name]++)
     }
     load(snapshot){
-      console.log('LOAD', snapshot[0][0])
       this._down.pl0_up    = snapshot[0][0]
       this._down.pl0_down  = snapshot[0][1]
       this._down.pl0_left  = snapshot[0][2]
