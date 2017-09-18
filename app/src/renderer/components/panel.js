@@ -141,14 +141,11 @@ module.exports = function(game){
     update(i){
       if (!this.playfield.running) { return; }
       if (this.newline){ return; }
-
-      if (this.counter > 0) {
-        this.counter--
-        if (this.counter > 0) { return }
-      }
+      if (this.counter > 0) { this.counter--}
 
       switch (this.state) {
         case SWAP_L:
+          if (this.counter > 0) { return }
           const i1 = this.kind
           const i2 = this.right.kind
           this.kind       = i2
@@ -158,18 +155,25 @@ module.exports = function(game){
           this.counter = TIME_SWAP
           break
         case SWAP_R:
+          if (this.counter > 0) { return }
           this.state   = SWAPPING_R
           this.counter = TIME_SWAP
           break
         case SWAPPING_L:
+          if (this.counter > 0) { return }
           this.state = STATIC
           break
         case SWAPPING_R:
+          if (this.counter > 0) { return }
           this.state = STATIC
           break
         case STATIC:
           if ((this.under.empty && !this.empty) || this.under.state === HANG) {
-            this.state = HANG
+            this.state   = HANG
+            this.counter = 0
+          }
+          if (this.danger && this.counter === 0) {
+            this.counter = FRAME_DANGER.length
           }
           //if (this.under === blank) {
             //this.chain = false
@@ -184,9 +188,11 @@ module.exports = function(game){
           //}
           break;
         case HANG:
+          if (this.counter > 0) { return }
           this.state = FALL
           break;
         case FALL:
+          if (this.counter > 0) { return }
           if (this.under.empty) {
             this.under.kind    = this.kind
             this.under.state   = this.state
@@ -212,6 +218,7 @@ module.exports = function(game){
             //this.counter = FRAME_LAND.length
           break;
         case CLEAR:
+          if (this.counter > 0) { return }
           this.state   = STATIC
           this.kind    = null
           this.counter = 0
@@ -221,6 +228,7 @@ module.exports = function(game){
           }
           break;
         case LAND:
+          if (this.counter > 0) { return }
           this.state = STATIC
           break;
         default:
@@ -349,10 +357,7 @@ module.exports = function(game){
         }
         this.frame = FRAME_LIVE
       } else if (this.danger){
-        // create a new state DANGER and using counter we can maybe
-        // make this deterministic.
-        //console.log(this.danger)
-        //this.play_danger()
+        this.frame = FRAME_DANGER[FRAME_DANGER.length - this.counter]
       } else {
         this.frame = FRAME_LIVE
       }
