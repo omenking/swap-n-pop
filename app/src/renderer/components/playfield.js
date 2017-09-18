@@ -90,6 +90,7 @@ module.exports = function(game){
     }
     get snap() {
       const snap_cursor = this.cursor.snap
+      const snap_countdown = this.countdown.snap
       const snap_stack  = []
       for (let panel of this.stack()){
         snap_stack.push(panel.snap)
@@ -98,7 +99,8 @@ module.exports = function(game){
         this.running,
         this.push_counter,
         snap_cursor,
-        snap_stack
+        snap_stack,
+        snap_countdown
       ]
     }
     load(snapshot){
@@ -108,6 +110,7 @@ module.exports = function(game){
       for (let i = 0; i < this.stack_len; i++) {
         this.stack(i).load(snapshot[3][i])
       }
+      this.countdown.load(snapshot[4])
     }
     create(stage,opts){
       if (stage === null) {
@@ -214,11 +217,11 @@ module.exports = function(game){
     }
     pause(pi){
       this.menu_pause.pause(pi);
-      return this.running = false;
+      this.running = false
     }
     resume() {
-      this.running = true;
-      return this.cursor.map_controls()
+      this.running = true
+      this.cursor.map_controls()
     }
     game_over() {
       this.running = false
@@ -308,9 +311,12 @@ module.exports = function(game){
       if (this.cursor.can_push()) {
         this.push_counter -= 100
       } else {
+        console.log('up0',this.push_counter)
         this.push_counter--
+        console.log('up1',this.push_counter)
       }
       if (this.push_counter <= 0) {
+        console.log('upr',this.push_counter)
         this.push_counter   = TIME_PUSH
         this.score        += this.push()
       }
@@ -384,6 +390,9 @@ module.exports = function(game){
       this.menu_pause.update()
       this.score_lbl.update(this.chain, this.score)
 
+      if (!this.running){
+        console.log('not running')
+      }
       if (!this.running) { return; }
 
       if (this.should_push) { this.update_push() }
@@ -397,10 +406,6 @@ module.exports = function(game){
         game.sounds.land()
         this.land = false
       }
-      if(this.pi === 0){
-        //console.log('p',this.stage.tick,this.push_counter)
-      }
-
     }
     shutdown() {
       return this.cursor.shutdown()

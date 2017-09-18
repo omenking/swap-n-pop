@@ -141,7 +141,9 @@ module.exports = function(game){
       if (this.roll.ready){
         this.roll_to(this.roll.from,this.roll.to)
       }
+      console.log('push0',this.playfield1.push_counter)
       this.step(false)
+      console.log('push1',this.playfield1.push_counter)
       //console.log('<-',this.tick,'-------------------------------->')
     }
     step(tick){

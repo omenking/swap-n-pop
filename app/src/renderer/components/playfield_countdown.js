@@ -4,7 +4,18 @@ module.exports = function(game){
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
 
+      this.load = this.load.bind(this)
+
       this.start = this.start.bind(this)
+    }
+
+    load(snapshot){
+      this.state   = snapshot[0]
+      this.counter = snapshot[1]
+    }
+
+    get snap(){
+      return [this.state, this.counter]
     }
 
     create(playfield){

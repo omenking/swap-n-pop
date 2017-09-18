@@ -82,9 +82,6 @@ module.exports = function(game){
       } else {
         this.stage.roll.from = Math.min(this.ack[0],this.stage.roll.from)
       }
-      if(this.stage.roll.from > this.stage.roll.to){
-        console.log('d', data)
-      }
 
       this.stage.roll.to = this.tick
       this.ack[0] = frame_end
