@@ -78,7 +78,7 @@ module.exports = function(game){
       }
       // Tell the stage (mode_vs) that we want to roll from..to
       // the next time update is called.
-      this.stae.roll.ready = true
+      this.stage.roll.ready = true
       if (this.stage.roll.from === null){
         this.stage.roll.from = this.ack[0]
       } else {
