@@ -65,10 +65,14 @@ module.exports = function(game){
       const frame_end   = data.ack0+data.frame_count-1
 
       //console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
+      //console.log('unpack__:',data.frames)
       for (let tick = frame_start; frame_end >= tick; tick++) {
         let byte = data.frames[tick-data.ack0]
         //console.log(this.tick,tick,byte)
 
+        //if (byte !== 0x00){
+          //console.log('upack',this.tick,tick,byte)
+        //}
         if( tick > this.tick) {
           this.inputs[1].push(byte)
         } else {
@@ -90,13 +94,17 @@ module.exports = function(game){
 
     update_input(pi,tick){
       const byte = game.controls.serialize(pi)
-      //console.log('upp',byte)
+      if (pi === 0 && byte !== 0x00){
+        console.log('upp',pi,byte)
+      }
       this.inputs[pi].push(byte)
     }
 
     replay_input(pi,tick){
       const byte = this.inputs[pi][tick]
-      //console.log('rep',pi,tick,byte)
+      if (pi === 1 && byte !== 0x00) {
+        //console.log('rep',pi,tick,byte)
+      }
       game.controls.execute(pi,byte)
     }
 

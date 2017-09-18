@@ -159,15 +159,15 @@ module.exports = function(game){
     }
     serialize(pi){
       var byte = 0x00
-      if(this.check_down(`pl${pi}_up`   )){byte = byte | 0x01} //0000 0001
-      if(this.check_down(`pl${pi}_down` )){byte = byte | 0x02} //0000 0010
-      if(this.check_down(`pl${pi}_left` )){byte = byte | 0x04} //0000 0100
-      if(this.check_down(`pl${pi}_right`)){byte = byte | 0x08} //0000 1000
-      if(this.check_down(`pl${pi}_a`    )){byte = byte | 0x10} //0001 0000
-      if(this.check_down(`pl${pi}_b`    )){byte = byte | 0x20} //0010 0000
-      if(this.check_down(`pl${pi}_r`    )||
-         this.check_down(`pl${pi}_l`    )){byte = byte | 0x40} //0100 0000
-      if(this.check_down(`pl${pi}_start`)){byte = byte | 0x80} //1000 0000
+      if(this.check_down(false,`pl${pi}_up`   )){byte = byte | 0x01} //0000 0001
+      if(this.check_down(false,`pl${pi}_down` )){byte = byte | 0x02} //0000 0010
+      if(this.check_down(false,`pl${pi}_left` )){byte = byte | 0x04} //0000 0100
+      if(this.check_down(false,`pl${pi}_right`)){byte = byte | 0x08} //0000 1000
+      if(this.check_down(false,`pl${pi}_a`    )){byte = byte | 0x10} //0001 0000
+      if(this.check_down(false,`pl${pi}_b`    )){byte = byte | 0x20} //0010 0000
+      if(this.check_down(false,`pl${pi}_r`    )||
+         this.check_down(false,`pl${pi}_l`    )){byte = byte | 0x40} //0100 0000
+      if(this.check_down(false,`pl${pi}_start`)){byte = byte | 0x80} //1000 0000
       return byte
     }
     execute(pi,byte){
@@ -286,6 +286,7 @@ module.exports = function(game){
             else if (input[2] === 'D') { return this.pad.axis(input[1]) >  0.1}
             else if (input[2] === 'L') { return this.pad.axis(input[1]) < -0.1}
             else if (input[2] === 'R') { return this.pad.axis(input[1]) >  0.1}
+            else { return false }
           }
         } else {
           return false
@@ -293,7 +294,7 @@ module.exports = function(game){
       } else if (input !== undefined){
         return input.isDown
       } else {
-        this._simdown[key] = false
+        return false
       }
     }
     update(sim){
