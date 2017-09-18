@@ -95,6 +95,9 @@ module.exports = function(game){
 
     replay_input(pi,tick){
       const byte = this.inputs[pi][tick]
+      if(pi === 1) {
+        console.log('r',byte)
+      }
       game.controls.execute(pi,byte)
     }
 
