@@ -127,9 +127,7 @@ module.exports = function(game){
     }
     roll_to(from,to){
       if (from > to) { // rollback
-        console.log('<-----')
       } else { //rollforward
-        console.log(`${from} ${to}----->`)
         this.snapshots.load(from)
         // since we loaded a snapshot, maybe we don't need to step
         // throuh the frame we loaded the snapshot on.
@@ -141,7 +139,6 @@ module.exports = function(game){
     }
     update() {
       if (this.roll.ready){
-        console.log(this.tick,'-rolling-----------')
         this.roll_to(this.roll.from,this.roll.to)
       }
       this.step(false)
