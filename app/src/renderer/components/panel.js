@@ -119,7 +119,7 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
     }
-    get swappable() {  return (this.above.state !== HANG) && (this.counter === 0); }
+    get swappable() {  return (this.above.state !== HANG) && this.state === STATIC; }
     get support()   {  return this.state !== FALL && !this.hidden }
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
@@ -256,6 +256,9 @@ module.exports = function(game){
     swap() {
       if (this.hidden && this.right.hidden) { return }
 
+      this.counter        = 0
+      this.right.counter  = 0
+
       this.chain       = false
       this.right.chain = false
 
@@ -365,7 +368,8 @@ module.exports = function(game){
         }
         this.frame = FRAME_LIVE
       } else if (this.danger){
-        this.frame = FRAME_DANGER[FRAME_DANGER.length - this.counter+1]
+        const i = FRAME_DANGER[FRAME_DANGER.length - this.counter+1]
+        this.frame = i
       } else {
         this.frame = FRAME_LIVE
       }
