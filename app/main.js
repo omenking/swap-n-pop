@@ -14,9 +14,9 @@ const WIN_HEIGHT = 224
 let win, win_settings = null
 Replay.dir()
 
-if (!store.has('network.host_port')) { store.set('network.host_port',4848) }
+if (!store.has('network.host_port')) { store.set('network.host_port',22022) }
 if (!store.has('network.join_host')) { store.set('network.join_host','192.168.0.0') }
-if (!store.has('network.join_port')) { store.set('network.join_port',4848) }
+if (!store.has('network.join_port')) { store.set('network.join_port',22022) }
 
 // maybe move to inputs
 if (!store.has('inputs')){
