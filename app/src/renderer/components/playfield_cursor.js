@@ -94,6 +94,7 @@ module.exports = function(game){
     }
     up(tick) {
       if (tick > 0) { return }
+      console.log('MOVE',this.y)
       game.sounds.select()
       if (this.y > 0) { this.y--; }
     }

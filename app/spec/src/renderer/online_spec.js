@@ -150,16 +150,14 @@ describe('Online Simulation', function() {
 
   it('#should move cursor', function(){
     down(0,'up')    // player 1 move up
+    stage0.inputs.ack[0] = 0
     const p = _stage0.playfield1
     curs(p,2,6)
-    update({ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]}          ,null) //1
-    curs(p,2,5)
-    update({ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x01]}     ,null) //2
-    curs(p,2,4)
-    update({ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x01,0x01,0x01]},null) //4
-    curs(p,2,3)
+    _stage0.update() //5
+    _stage0.update() //4
+    _stage0.update() //3
     stage0.inputs.unpack({ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x08]})
-    update({ack0: 0, ack1: 3, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //5
+    update({ack0: 0, ack1: 3, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //2
     curs(p,2,2)
   }) //it
 
@@ -168,14 +166,11 @@ describe('Online Simulation', function() {
     stage0.inputs.ack[0] = 4
     const p = _stage0.playfield1
     curs(p,2,6)
-    update({ack0: 0, ack1: 4, frame_count: 2, frames: [0x00,0x01]}          ,null) //1
-    curs(p,2,5)
-    update({ack0: 0, ack1: 4, frame_count: 3, frames: [0x00,0x01,0x01]}     ,null) //2
-    curs(p,2,4)
-    update({ack0: 0, ack1: 4, frame_count: 4, frames: [0x00,0x01,0x01,0x01]},null) //4
-    curs(p,2,3)
+    _stage0.update() //5
+    _stage0.update() //4
+    _stage0.update() //3
     stage0.inputs.unpack({ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x08]})
-    update({ack0: 0, ack1: 4, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //5
+    update({ack0: 0, ack1: 4, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //2
     curs(p,2,2)
   }) //it
 
@@ -183,16 +178,16 @@ describe('Online Simulation', function() {
     down(0,'up')    // player 1 move up
     stage0.inputs.ack[0] = 4
     const p = _stage0.playfield1
-    curs(p,2,6)
-    update({ack0: 0, ack1: 4, frame_count: 2, frames: [0x00,0x01]}          ,null) //1
-    curs(p,2,5)
-    update({ack0: 0, ack1: 4, frame_count: 3, frames: [0x00,0x01,0x01]}     ,null) //2
-    curs(p,2,4)
-    update({ack0: 0, ack1: 4, frame_count: 4, frames: [0x00,0x01,0x01,0x01]},null) //4
-    curs(p,2,3)
-    stage0.inputs.unpack({ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x08]})
-    update({ack0: 0, ack1: 4, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //5
+    _stage0.update() //5
+    _stage0.update() //4
+    _stage0.update() //3
+    stage0.inputs.unpack({ack0: 0, ack1: 0, frame_count: 8, frames: [0x00,0x08,0x08,0x08,0x08,0x08,0x08,0x08]})
+    update({ack0: 0, ack1: 7, frame_count: 5, frames: [0x00,0x01,0x01,0x01,0x01]},null) //2
     curs(p,2,2)
+    update({ack0: 0, ack1: 7, frame_count: 6, frames: [0x00,0x01,0x01,0x01,0x01,0x01]},null) //1
+    curs(p,2,1)
+    update({ack0: 0, ack1: 7, frame_count: 7, frames: [0x00,0x01,0x01,0x01,0x01,0x01,0x01]},null) //0
+    curs(p,2,0)
   }) //it
 
 }) //describe

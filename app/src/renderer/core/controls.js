@@ -192,6 +192,7 @@ module.exports = function(game){
       this.callbacks[name](this._down[name]++)
     }
     load(snapshot){
+      console.log('LOAD', snapshot[0][0])
       this._down.pl0_up    = snapshot[0][0]
       this._down.pl0_down  = snapshot[0][1]
       this._down.pl0_left  = snapshot[0][2]
@@ -273,27 +274,33 @@ module.exports = function(game){
     }
     check_down(sim,key){
       const input = this.keys[key]
-      if (sim && this._simdown[key]){
-        return true
-      } else if (Array.isArray(input)) {
-        if (game.input.gamepad.supported && game.input.gamepad.active && this.pad.connected){
-          if (input.length === 2){
-            return this.pad.isDown(input[1])
-          }
-          else if (input.length === 3){
-            if      (input[2] === 'U') { return this.pad.axis(input[1]) < -0.1}
-            else if (input[2] === 'D') { return this.pad.axis(input[1]) >  0.1}
-            else if (input[2] === 'L') { return this.pad.axis(input[1]) < -0.1}
-            else if (input[2] === 'R') { return this.pad.axis(input[1]) >  0.1}
-            else { return false }
-          }
+      if(sim) {
+        if (this._simdown[key]){ 
+          return true
         } else {
           return false
         }
-      } else if (input !== undefined){
-        return input.isDown
       } else {
-        return false
+        if (Array.isArray(input)) {
+          if (game.input.gamepad.supported && game.input.gamepad.active && this.pad.connected){
+            if (input.length === 2){
+              return this.pad.isDown(input[1])
+            }
+            else if (input.length === 3){
+              if      (input[2] === 'U') { return this.pad.axis(input[1]) < -0.1}
+              else if (input[2] === 'D') { return this.pad.axis(input[1]) >  0.1}
+              else if (input[2] === 'L') { return this.pad.axis(input[1]) < -0.1}
+              else if (input[2] === 'R') { return this.pad.axis(input[1]) >  0.1}
+              else { return false }
+            }
+          } else {
+            return false
+          }
+        } else if (input !== undefined){
+          return input.isDown
+        } else {
+          return false
+        }
       }
     }
     update(sim){
@@ -308,9 +315,16 @@ module.exports = function(game){
         this._down[`pl${pi}_right`] = 0
       }
 
-      if      (this.check_down(sim,`pl${pi}_up`)  ){ this.trigger(`pl${pi}_up`)  }
+      if      (this.check_down(sim,`pl${pi}_up`)  ){ 
+        if(pi === 0 && sim === false){
+          console.log('up',this._down[`pl${pi}_up`])
+        }
+        this.trigger(`pl${pi}_up`)  }
       else if (this.check_down(sim,`pl${pi}_down`)){ this.trigger(`pl${pi}_down`)}
       else {
+        if(pi === 0 && sim === false){
+          console.log('_')
+        }
         this._down[`pl${pi}_up`]   = 0
         this._down[`pl${pi}_down`] = 0
       }

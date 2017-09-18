@@ -138,11 +138,11 @@ module.exports = function(game){
       this.roll = {ready: false, from: null, to: null}
     }
     update() {
+      console.log('<-',this.tick,'-------------------------------->')
       if (this.roll.ready){
         this.roll_to(this.roll.from,this.roll.to)
       }
       this.step(false)
-      //console.log('<-',this.tick,'-------------------------------->')
     }
     step(tick){
       if (tick === false) {
