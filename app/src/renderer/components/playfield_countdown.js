@@ -76,6 +76,7 @@ module.exports = function(game){
       this.playfield.cursor.state = 'active'
       this.playfield.cursor.sprite.visible = true
       this.playfield.running = true
+      this.playfield.stage.timer.running = true
       game.sounds.stage_music('active')
       this.state = null
     }

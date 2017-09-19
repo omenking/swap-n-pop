@@ -106,6 +106,7 @@ module.exports = function(game){
         ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
       }
       game.sounds.stage_music('results')
+      this.timer.running = false
       this.playfield1.game_over()
       this.playfield2.game_over()
     }
@@ -166,7 +167,7 @@ module.exports = function(game){
         console.log('debugger triggered')
         debugger
       }
-      this.timer.render(this.tick)
+      this.timer.render()
       if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
       if (this.online){

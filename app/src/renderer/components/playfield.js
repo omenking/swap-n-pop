@@ -295,7 +295,7 @@ module.exports = function(game){
         if (this.stack(offset+i)         &&
            (this.stack(offset+i).i >= 0) &&
            (this.stack(offset+i).i !== null)) {
-          cols.push(i);
+          cols.push(i)
         }
       }
       if (cols.length > 0) { return cols; } else { return false; }
