@@ -4,7 +4,8 @@ const chai = require('chai')
 const sinon = require('sinon')
 chai.should()
 
-const game = require(APP.path.spec('helpers','game_spec'))
+const Game = require(APP.path.spec('helpers','game_spec'))
+const game = new Game()
 const seedrandom = require('seedrandom')
 const _f         = require(APP.path.core('filters'))
 const Stage      = require(APP.path.states('mode_vs'))(game)
@@ -35,7 +36,7 @@ function load(...arr){
 }
 
 function chec(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).serialize.should.eql(i)}
+  for (i of arr){ _playfield.stack(i[0], i[1]).snap.should.eql(i)}
 }
 
 describe('panel_actions', function() {
@@ -196,7 +197,7 @@ describe('panel_actions', function() {
     playfield.score.should.eql(110)
   })
 
-  it('#chain', function(){
+  it.only('#chain', function(){
     // N 2 N
     // 2 N 2
     // 3 N 3
@@ -212,12 +213,30 @@ describe('panel_actions', function() {
          [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
     playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,2,FALL  ,0,T], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
     playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,2,FALL  ,0,T], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,N,STATIC,0,F], [2,10,2,STATIC,0,F])
     playfield.update()
     chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
          [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
          [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
-         [0,10,2,CLEAR,90,F], [1,10,2,CLEAR ,90,T],[2,10,2,CLEAR,90,F])
+         [0,10,2,STATIC,0,F], [1,10,2,FALL  ,0,T], [2,10,2,STATIC,0,F])
+    playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,STATIC,0,F], [1,10,2,LAND  ,10,T], [2,10,2,STATIC,0,F])
+    playfield.update()
+    chec([0,7 ,N,STATIC,0,F], [1,7 ,N,STATIC,0,F], [2,7 ,N,STATIC,0,F],
+         [0,8 ,2,STATIC,0,F], [1,8 ,N,STATIC,0,F], [2,8 ,2,STATIC,0,F],
+         [0,9 ,3,STATIC,0,F], [1,9 ,N,STATIC,0,F], [2,9 ,3,STATIC,0,F],
+         [0,10,2,CLEAR ,90,T], [1,10,2,CLEAR ,90,T],[2,10,2,CLEAR,90,F])
     playfield.chain.should.eql(1)
   })
 

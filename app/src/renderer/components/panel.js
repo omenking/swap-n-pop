@@ -119,7 +119,13 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
     }
-    get swappable() {  return (this.above.state !== HANG) && this.state === STATIC; }
+    get swappable() {
+      return  this.above.state !== HANG &&
+              (this.state === STATIC ||
+              // LAND will swap but will play must at play least 1 frame.
+              (this.state === LAND && this.counter < FRAME_LAND.length)  
+      )
+    }
     get support()   {  return this.state !== FALL && !this.hidden }
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
@@ -200,7 +206,9 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
+          console.log(this.under.empty)
           if (this.counter > 0) { return }
+          //console.log(this.under.empty)
           if (this.under.empty) {
             this.under.kind    = this.kind
             this.under.state   = this.state
@@ -212,6 +220,7 @@ module.exports = function(game){
             this.counter = 0
             this.chain   = false
           } else {
+            console.log('convert to land')
             this.state   = LAND
             this.counter = FRAME_LAND.length
           }
