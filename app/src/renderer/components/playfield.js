@@ -80,7 +80,7 @@ module.exports = function(game){
     set pushing(v){ this._pushing = v }
 
     stack(v1=null,v2=null){
-      if (v1 >= 0 && v2 >= 0 && v1 !== null & v2 !== null) {
+      if (v1 >= 0 && v2 >= 0 && v1 !== null && v2 !== null) {
         return this._stack[_f.xy2i(v1,v2)]
       } else if (v1 >= 0 && v1 !== null && v2 === null) {
         return this._stack[v1]
@@ -201,7 +201,7 @@ module.exports = function(game){
 
       this.create_newline()
 
-      if (this.cursor.y > 1) { this.cursor.y--; }
+      if (this.cursor.y > 0) { this.cursor.y--; }
       return 1
     }
     create_newline(mode){
