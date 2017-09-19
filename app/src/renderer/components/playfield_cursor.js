@@ -22,7 +22,7 @@ module.exports = function(game){
       this.left = this.left.bind(this)
       this.right = this.right.bind(this)
       this.swap = this.swap.bind(this)
-      this.can_push = this.can_push.bind(this)
+      this.push = this.push.bind(this)
     }
 
     create(playfield){
@@ -85,6 +85,8 @@ module.exports = function(game){
         right: this.right,
         a    : this.swap,
         b    : this.swap,
+        l    : this.push,
+        r    : this.push,
         start: this.pause
       });
     }
@@ -115,14 +117,13 @@ module.exports = function(game){
     }
     swap(tick) {
       if (tick > 0) { return }
-      if (!this.playfield.running || (this.state !== 'active')) { return; }
-      return this.playfield.swap(this.x, this.y);
+      if (!this.playfield.running || (this.state !== 'active')) { return }
+      this.playfield.swap(this.x, this.y)
     }
-    can_push() {
-      return (game.controls.is_down(this.playfield.pi,'l') ||
-              game.controls.is_down(this.playfield.pi,'r')) &&
-              this.playfield.running &&
-              (this.state === 'active')
+    push(tick) {
+      //if (tick > 0) { return }
+      if (!this.playfield.running || (this.state !== 'active')) { return }
+      this.playfield.pushing = true
     }
     update() {
       // should check in a deterministic way for preactive

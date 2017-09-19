@@ -76,6 +76,8 @@ module.exports = function(game){
 
     get push_counter(){ return this._push_counter }
     set push_counter(v){ this._push_counter = v }
+    get pushing(){ return this._pushing }
+    set pushing(v){ this._pushing = v }
 
     stack(v1=null,v2=null){
       if (v1 >= 0 && v2 >= 0 && v1 !== null & v2 !== null) {
@@ -100,7 +102,8 @@ module.exports = function(game){
         this.push_counter,
         snap_cursor,
         snap_stack,
-        snap_countdown
+        snap_countdown,
+        this.pushing
       ]
     }
     load(snapshot){
@@ -111,6 +114,7 @@ module.exports = function(game){
         this.stack(i).load(snapshot[3][i])
       }
       this.countdown.load(snapshot[4])
+      this.pushing = snapshot[5]
     }
     create(stage,opts){
       if (stage === null) {
@@ -308,12 +312,13 @@ module.exports = function(game){
      * updates the sprites to the correct locations in the canvas.
      */
     update_push() {
-      if (this.cursor.can_push()) {
+      if (this.pushing) {
         this.push_counter -= 100
       } else {
         this.push_counter--
       }
       if (this.push_counter <= 0) {
+        this.pushing        = false
         this.push_counter   = TIME_PUSH
         this.score         += this.push()
       }
