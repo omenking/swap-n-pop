@@ -1,6 +1,11 @@
 const APP = require('../app')('../')
 const {ipcRenderer: ipc} = require('electron')
 
+/**
+ * Class to Phaser State
+ * @param {class} klass - The class that will be used to create a Phaser State
+ *
+ */
 function attach_state(klass){
   var state = new klass()
   return {

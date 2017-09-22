@@ -1,4 +1,5 @@
 node_modules
+/app/docs/
 .DS_Store
 /**/*/.DS_Store
 /**/replays/*

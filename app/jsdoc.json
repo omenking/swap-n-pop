@@ -1,0 +1,11 @@
+{
+  "source": {
+      "include": "./src/",
+      "includePattern": ".js$",
+      "excludePattern": "(node_modules/|docs)"
+  },
+  "opts": {
+    "template": "node_modules/docdash",
+    "destination": "./docs/"
+  }
+}
