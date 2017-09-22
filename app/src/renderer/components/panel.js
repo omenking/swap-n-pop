@@ -31,8 +31,8 @@ module.exports = function(game){
 
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
-
-  class controller {
+  /** Class representing a panel. */
+  class Panel {
     get [Symbol.toStringTag](){ return 'Panel' }
     get kind()    { return this.i }
     set kind(val) {        this.i = val }
@@ -56,6 +56,7 @@ module.exports = function(game){
     get under2(){ return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack(this.x  ,this.y+2)}
     get above2(){ return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack(this.x  ,this.y-2)}
 
+    /** */
     constructor() {
       this.create   = this.create.bind(this)
       this.update   = this.update.bind(this)
@@ -75,6 +76,7 @@ module.exports = function(game){
       this.check_neighbours = this.check_neighbours.bind(this)
     }
 
+    /** */
     static initClass() {
       this.prototype.playfield          = null;
       this.prototype.x                  = null;
@@ -83,6 +85,8 @@ module.exports = function(game){
       this.prototype.sprite             = null;
       this.prototype.i                  = null;
     }
+
+    /** */
     get snap() {
       return [
         this.x,
@@ -93,6 +97,8 @@ module.exports = function(game){
         this.chain,
       ];
     }
+
+    /** */
     load(data){
       this.x       = data[0]
       this.y       = data[1]
@@ -101,6 +107,8 @@ module.exports = function(game){
       this.counter = data[4]
       this.chain   = data[5]
     }
+
+    /** */
     create(playfield, x, y){
       this.playfield = playfield
       this.counter   = 0
@@ -119,6 +127,8 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
     }
+
+    /** */
     get swappable() {
       return  this.above.state !== HANG &&
               (this.state === STATIC ||
@@ -126,11 +136,17 @@ module.exports = function(game){
               (this.state === LAND && this.counter < FRAME_LAND.length)  
       )
     }
+    /** */
     get support()   {  return this.state !== FALL && !this.hidden }
+    /** */
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
+    /** */
     get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
+    /** */
     get empty() {      return (this.counter === 0) && this.hidden }
+    /** */
     get hidden(){      return (this.kind === null) }
+    /** */
     matched(kind){
       return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||
              ((this.above.kind === kind) && (this.under.kind  === kind)) ||
@@ -139,8 +155,11 @@ module.exports = function(game){
              ((this.left.kind  === kind) && (this.left2.kind  === kind)) ||
              ((this.right.kind === kind) && (this.right2.kind === kind))
     }
+    /** */
     get frame(){ return this.sprite.frame }
+    /** */
     set frame(i){ this.sprite.frame = (this.kind * 8) + i}
+    /** */
     set(i){
       switch (i) {
         case 'unique':
@@ -150,6 +169,7 @@ module.exports = function(game){
           this.kind = i
       }
     }
+    /** */
     update(i){
       if (!this.playfield.running) { return; }
       if (this.newline){ return; }
@@ -253,6 +273,7 @@ module.exports = function(game){
       }
     }
 
+    /** */
     render_visible(){
       if (this.hidden){
         this.sprite.visible = false
@@ -262,6 +283,7 @@ module.exports = function(game){
         this.sprite.visible = true
       }
     }
+    /** */
     swap() {
       if (this.hidden && this.right.hidden) { return }
 
@@ -276,11 +298,31 @@ module.exports = function(game){
 
       game.sounds.swap()
     }
+    /**
+      Calculates and set the counter for the panel to pop
+      @param {{number}} i
+    */
     popping(i){
       this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
     }
 
-    //should never generate 2 panels on top of each other
+    /**
+     * `nocombo()` will return a number that represents a kind of panel
+     * that will not result in a combo or the same number above.
+     *
+     *  eg. Lets say we have the following stack
+     * ```js
+     *  // 2 0 2
+     *  // 1 3 1
+     *  // 4 4 *
+     * ```
+     * Then we expect `nocombo()` to 
+     * * return either `0,2,3`
+     * * and it should not return `4` because that would result in a match
+     * * and it should not return `1` because above it there is a `1` above
+     * 
+     * @returns {number}
+    */
     nocombo() {
       const arr = [0, 1, 2, 3, 4]
       if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
@@ -289,21 +331,26 @@ module.exports = function(game){
         return this.matched(i) === false
       })
     }
+    /** */
     get danger(){
       return !this.playfield.stack(this.x,1).hidden
     }
+    /** */
     get dead(){
       return !this.playfield.stack(this.x,0).hidden
     }
+    /** */
     get newline(){
       return this.playfield.should_push && this.y === ROWS
     }
+    /** */
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }
       this.state = CLEAR
       this.playfield.clearing.push(this)
       return [1, this.chain]
     }
+    /** */
     chain_and_combo() {
       let combo = 0
       let chain = false
@@ -312,6 +359,7 @@ module.exports = function(game){
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
       return [combo,chain]
     }
+    /** */
     check_neighbours(p1,p2,combo,chain){
       if (
         !p1.comboable          || !p2.comboable ||
@@ -327,8 +375,10 @@ module.exports = function(game){
       if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
       return [combo,chain]
     }
-    // clear index is to determine what frame of clear frame we
-    // are on.
+    /**
+     Returns the index of the current panel clearing and amount of panels clearing
+     @returns {array} - [index,length]
+     */
     get clear_index(){
       if (this.state !== CLEAR) {
         throw(new Error('clear_index called on none CLEAR panel'))
@@ -342,13 +392,10 @@ module.exports = function(game){
       }
       return [panels.indexOf(this),panels.length]
     }
-    //swap
-    //land
-    //clear
-    //live
-    //dead
-    //danger
-    //newline
+
+    /**
+     * Set the current frame of the panel
+     */
     animate(){
       if (this.newline) {
         this.frame = FRAME_NEWLINE
@@ -383,14 +430,16 @@ module.exports = function(game){
         this.frame = FRAME_LIVE
       }
     }
+    /** */
     render(){
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
       this.render_visible()
     }
+    /** */
     shutdown(){}
   } // klass
-  controller.initClass();
-  return controller
+  Panel.initClass()
+  return Panel
 }

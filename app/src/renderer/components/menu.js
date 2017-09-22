@@ -4,7 +4,8 @@ module.exports = function(game){
   const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')
 
-  class controller {
+  /** Class representing a menu. */
+  class Menu {
     constructor() {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
@@ -50,5 +51,5 @@ module.exports = function(game){
     }
   };
 
-  return controller
+  return Menu
 }

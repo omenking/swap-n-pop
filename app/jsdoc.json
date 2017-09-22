@@ -1,9 +1,19 @@
 {
   "source": {
-      "include": "./src/",
+      "include": [
+        "./src/",
+        "./src/main/",
+        "./src/renderer/",
+        "./src/renderer/components/",
+        "./src/renderer/core/",
+        "./src/renderer/states/"
+      ],
       "includePattern": ".js$",
       "excludePattern": "(node_modules/|docs)"
   },
+  "plugins": [
+      "plugins/markdown"
+  ],
   "opts": {
     "template": "node_modules/docdash",
     "destination": "./docs/"
