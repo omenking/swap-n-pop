@@ -37,6 +37,14 @@ module.exports = function(game){
     get kind()    { return this.i }
     set kind(val) {        this.i = val }
 
+    /**
+     *  The panel's counter does two things
+     *
+     *  1. It keeps track of the index of a panel's animation in `animate()`
+     *  2. It's the timer used to determine when to change a panel's state in `update()`
+     *
+     *  @type {number}
+     */
     get counter()    {return this.attr_counter }
     set counter(val) {       this.attr_counter = val }
 
@@ -394,7 +402,17 @@ module.exports = function(game){
     }
 
     /**
-     * Set the current frame of the panel
+     * `animate()` is responsible for setting the panel's current sprite frame
+     *  and in the case of swapping adjusting the sprite's `x` and `y`
+     *
+     * * newline  - when a panel is on a new line and appears greyed out
+     * * dead     - when a panel shows a dead face
+     * * danger   - when a panel is in danger it bounces
+     * * clear    - when a panel is clearing it flashes and then vanishes
+     * * land     - when a panel lands 
+     * * swapping - when two panels swap
+     * * live     - the panel's normal state
+     *
      */
     animate(){
       if (this.newline) {
