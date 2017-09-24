@@ -31,12 +31,22 @@ module.exports = function(game){
 
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
-  /** Class representing a panel. */
+  /** 
+   *
+   */
   class Panel {
     get [Symbol.toStringTag](){ return 'Panel' }
     get kind()    { return this.i }
     set kind(val) {        this.i = val }
 
+    /**
+     *  The panel's counter does two things
+     *
+     *  1. It keeps track of the index of a panel's animation in `animate()`
+     *  2. It's the timer used to determine when to change a panel's state in `update()`
+     *
+     *  @type {number}
+     */
     get counter()    {return this.attr_counter }
     set counter(val) {       this.attr_counter = val }
 
@@ -388,7 +398,12 @@ module.exports = function(game){
       this.playfield.clearing.push(this)
       return [1, this.chain]
     }
-    /** */
+    /**
+     * Checks above and under and then left and right from the current panel
+     * and returns if there  combo count and if there is chain
+     *
+     * @returns {{array}} [chain,combo]
+     * */
     chain_and_combo() {
       let combo = 0
       let chain = false
@@ -397,7 +412,15 @@ module.exports = function(game){
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
       return [combo,chain]
     }
-    /** */
+    /**
+     * Checks to see if the given panels form a combo with the current panel.
+     *
+     * @param {Object} panel1
+     * @param {Object} panel2
+     * @param {{number}} combo
+     * @param {{boolean}} chain
+     * @returns {{array}} [chain,combo]
+     * */
     check_neighbours(p1,p2,combo,chain){
       if (
         !p1.comboable          || !p2.comboable ||
@@ -432,7 +455,17 @@ module.exports = function(game){
     }
 
     /**
-     * Set the current frame of the panel
+     * `animate()` is responsible for setting the panel's current sprite frame
+     *  and in the case of swapping adjusting the sprite's `x` and `y`
+     *
+     * * newline  - when a panel is on a new line and appears greyed out
+     * * dead     - when a panel shows a dead face
+     * * danger   - when a panel is in danger it bounces
+     * * clear    - when a panel is clearing it flashes and then vanishes
+     * * land     - when a panel lands 
+     * * swapping - when two panels swap
+     * * live     - the panel's normal state
+     *
      */
     animate(){
       if (this.newline) {
