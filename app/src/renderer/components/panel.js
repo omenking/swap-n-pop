@@ -157,7 +157,13 @@ module.exports = function(game){
     }
     /** */
     get frame(){ return this.sprite.frame }
-    /** */
+    /**
+     * Sets the current frame based on panel kind
+     *
+     * We use a spritesheet for all the panels graphics.
+     * Each panel kind eg. green, red, blue takes up one row in the spritespeet.
+     *
+     */
     set frame(i){ this.sprite.frame = (this.kind * 8) + i}
     /** */
     set(i){
@@ -169,8 +175,13 @@ module.exports = function(game){
           this.kind = i
       }
     }
-    /** */
-    update(i){
+    /** 
+     * `update(i)` handles the states and its transition to other states.
+     * A panel's state will generally changed when the panel's `counter`
+     * reaches zero.
+     *
+     */
+    update(){
       if (!this.playfield.running) { return; }
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
@@ -273,7 +284,10 @@ module.exports = function(game){
       }
     }
 
-    /** */
+    /**
+     * Determines whether a panel should be visible or not
+     * at the time of render
+     */
     render_visible(){
       if (this.hidden){
         this.sprite.visible = false
@@ -283,7 +297,9 @@ module.exports = function(game){
         this.sprite.visible = true
       }
     }
-    /** */
+    /**
+     * Swaps the this panel with the panel to it's right.
+     */
     swap() {
       if (this.hidden && this.right.hidden) { return }
 
@@ -331,19 +347,41 @@ module.exports = function(game){
         return this.matched(i) === false
       })
     }
-    /** */
+    /** 
+    * `danger()` will check if the this panel's column
+    *  contains any active panel's a few panels from the top.
+    *  and if it does it should return true, because this column
+    *  in the stack is in danger.
+    */
     get danger(){
       return !this.playfield.stack(this.x,1).hidden
     }
-    /** */
+    /** 
+    * `dead()` will check if the this panel's column contains
+    * an active panel in the first row. If this is the case
+    * then the this panel should be considered dead.
+    */
     get dead(){
       return !this.playfield.stack(this.x,0).hidden
     }
-    /** */
+    /** 
+    * `newline()` checks if this panel is a newline.
+    *  A panel is considered a newline when its the last
+    *  row in the stack and the playfield should push panels,
+    *  When a playfield should push panels it will add an extra
+    *  row to the end of stack which for newline.
+    */
     get newline(){
       return this.playfield.should_push && this.y === ROWS
     }
-    /** */
+    /** 
+    * `clear()` will change a panel's state to clear.
+    * it will also on the same tick push this panel to
+    * an array called `clearing`. This clearing array is used
+    * to help set the counter time for the entire duration of the clear.
+    * You can see this in `Playfield.chain_and_combo` where it will then
+    * call `Panel.popping` to set the counter.
+    */
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }
       this.state = CLEAR

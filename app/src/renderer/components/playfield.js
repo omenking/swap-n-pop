@@ -255,7 +255,7 @@ module.exports = function(game){
     }
     update_stack() {
       for (let i of SCAN_BTLR){
-        this.stack(i).update(i)
+        this.stack(i).update()
       }
     }
     chain_and_combo() {
