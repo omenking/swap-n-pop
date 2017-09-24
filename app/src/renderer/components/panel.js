@@ -31,7 +31,9 @@ module.exports = function(game){
 
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
-  /** Class representing a panel. */
+  /** 
+   *
+   */
   class Panel {
     get [Symbol.toStringTag](){ return 'Panel' }
     get kind()    { return this.i }
@@ -358,7 +360,12 @@ module.exports = function(game){
       this.playfield.clearing.push(this)
       return [1, this.chain]
     }
-    /** */
+    /**
+     * Checks above and under and then left and right from the current panel
+     * and returns if there  combo count and if there is chain
+     *
+     * @returns {{array}} [chain,combo]
+     * */
     chain_and_combo() {
       let combo = 0
       let chain = false
@@ -367,7 +374,15 @@ module.exports = function(game){
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
       return [combo,chain]
     }
-    /** */
+    /**
+     * Checks to see if the given panels form a combo with the current panel.
+     *
+     * @param {Object} panel1
+     * @param {Object} panel2
+     * @param {{number}} combo
+     * @param {{boolean}} chain
+     * @returns {{array}} [chain,combo]
+     * */
     check_neighbours(p1,p2,combo,chain){
       if (
         !p1.comboable          || !p2.comboable ||
