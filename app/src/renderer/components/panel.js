@@ -187,7 +187,7 @@ module.exports = function(game){
     }
     /** 
      * `update(i)` handles the states and its transition to other states.
-     * A panel's state will generally changed when the panel's `counter`
+     * A panel's state will usually change when the panel's `counter`
      * reaches zero.
      *
      */
