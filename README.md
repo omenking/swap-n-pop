@@ -4,6 +4,14 @@
 
 An online competitve TA/PdP/PPL clone.
 
+## Stack
+
+* NodeJS
+* Electron
+* ES6 (whatever is supported via chrome without the use of webpack or babel)
+* PhaserCE (the game framework)
+* MithrilJS (the UI)
+
 ## Development
 
 There are two `package.json` files
