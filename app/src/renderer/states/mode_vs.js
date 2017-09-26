@@ -3,6 +3,7 @@ module.exports = function(game){
   const Stack  = require(APP.path.core('stack'))(game)
   const ComponentPlayfield = require(APP.path.components('playfield'))(game)
   const ComponentPing      = require(APP.path.components('ping'))(game)
+  const ComponentDebugFrame      = require(APP.path.components('debug_frame'))(game)
   const ComponentTimer      = require(APP.path.components('timer'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)
   const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
@@ -28,6 +29,7 @@ module.exports = function(game){
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()
+      this.debug_frame  = new ComponentDebugFrame()
       this.timer        = new ComponentTimer()
     }
 
@@ -88,6 +90,7 @@ module.exports = function(game){
       if (this.online){
         this.ping.create()
       }
+      this.debug_frame.create()
     }
 
     pause(pi){
@@ -170,12 +173,12 @@ module.exports = function(game){
       this.timer.render()
       if (this.playfield1) { this.playfield1.render()
         console.log('h',this.playfield1.stack(0).hidden, this.playfield1.stack(0).kind)
-      
       }
       if (this.playfield2) { this.playfield2.render() }
       if (this.online){
         this.ping.render()
       }
+      this.debug_frame.render(this.tick)
     }
     shutdown() {
       console.log('shutdown mode_vs')
