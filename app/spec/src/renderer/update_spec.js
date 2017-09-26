@@ -272,4 +272,32 @@ describe('panel_actions', function() {
          [0,9 ,3,STATIC,0,F], [1,9  ,N,STATIC,0,F], [2,9 ,2,STATIC,0,F],
          [0,10,1,STATIC,0,F], [1,10 ,2,SWAP_L,0,F], [2,10,3,SWAP_R,0,F])
   })
+  it.only('#danger_fall', function(){
+  // A danger panel should hang and fall just like a static panel
+    // 0
+    // N
+    // N
+    // N
+    // N
+    // N
+    // N
+    // N
+    // N
+    // N
+    // N
+    load(
+         [0,1 ,0,STATIC,0,F],
+         [0,2 ,N,STATIC,0,F],
+         [0,3 ,N,STATIC,0,F],
+         [0,4 ,N,STATIC,0,F],
+         [0,5 ,N,STATIC,0,F],
+         [0,6 ,N,STATIC,0,F],
+         [0,6 ,N,STATIC,0,F],
+         [0,7 ,N,STATIC,0,F],
+         [0,8 ,N,STATIC,0,F],
+         [0,9 ,N,STATIC,0,F],
+         [0,10,N,STATIC,0,F])
+    playfield.update()
+    chec([0,1 ,0,HANG,0,F])
+  })
 }) //klass

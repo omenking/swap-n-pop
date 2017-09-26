@@ -153,7 +153,7 @@ module.exports = function(game){
     /** */
     get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
     /** */
-    get empty() {      return (this.counter === 0) && this.hidden }
+    get empty() {      return  this.state === STATIC && this.hidden }
     /** */
     get hidden(){      return (this.kind === null) }
     /** */
@@ -224,8 +224,7 @@ module.exports = function(game){
           if ((this.under.empty && !this.empty) || this.under.state === HANG) {
             this.state   = HANG
             this.counter = 0
-          }
-          if (this.danger && this.counter === 0) {
+          } else if (this.danger && this.counter === 0) {
             // we add 1 otherwise we will miss out on one frame
             // since counter can never really hit zero and render
             this.counter = FRAME_DANGER.length+1

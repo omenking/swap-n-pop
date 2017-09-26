@@ -168,7 +168,10 @@ module.exports = function(game){
         debugger
       }
       this.timer.render()
-      if (this.playfield1) { this.playfield1.render() }
+      if (this.playfield1) { this.playfield1.render()
+        console.log('h',this.playfield1.stack(0).hidden, this.playfield1.stack(0).kind)
+      
+      }
       if (this.playfield2) { this.playfield2.render() }
       if (this.online){
         this.ping.render()

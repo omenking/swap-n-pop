@@ -294,11 +294,10 @@ module.exports = function(game){
     danger(within){
       const offset = COLS*within;
       const cols   = [];
-
       for (let i = 0; i < COLS; i++){
         if (this.stack(offset+i)         &&
-           (this.stack(offset+i).i >= 0) &&
-           (this.stack(offset+i).i !== null)) {
+           (this.stack(offset+i).kind >= 0) &&
+           (this.stack(offset+i).kind !== null)) {
           cols.push(i)
         }
       }
@@ -392,9 +391,6 @@ module.exports = function(game){
       this.menu_pause.update()
       this.score_lbl.update(this.chain, this.score)
 
-      if (!this.running){
-        console.log('not running')
-      }
       if (!this.running) { return; }
 
       if (this.should_push) { this.update_push() }
