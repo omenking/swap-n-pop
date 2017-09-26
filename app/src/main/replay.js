@@ -30,7 +30,7 @@ module.exports = function(app,store){
       throw(new Error('must pass a directory'))
     }
     if (state === 'reset'){
-      dir = path.join(app.getPath('appData'),'swapnpop','replays')
+      dir = path.join(app.getPath('appData'),'swap-n-pop','replays')
       store.set('replay_dir',dir)
     } else if (state === 'change'){
       store.set('replay_dir',dir)
@@ -38,7 +38,7 @@ module.exports = function(app,store){
       if (store.has('replay_dir')){
         dir = store.get('replay_dir')
       } else {
-        dir = path.join(app.getPath('appData'),'swapnpop','replays')
+        dir = path.join(app.getPath('appData'),'swap-n-pop','replays')
         store.set('replay_dir',dir)
       }
     }
