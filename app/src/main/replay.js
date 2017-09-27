@@ -51,7 +51,7 @@ module.exports = function(app,store){
     const dir      = store.get('replay_dir')
     const filename = path.join(dir,`${name}.replay`)
 
-    if (!fs.existsSync(dir)){ fs.mkdirSync(dir); } // create dir if it don't exist.
+    if (!fs.existsSync(dir)){ fx.mkdirSync(dir); } // create dir if it don't exist.
     fs.unlink(filename,function(){}) //delets file if happens to already exist
 
     const int0     = inputs[0].length

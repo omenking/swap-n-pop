@@ -3,6 +3,7 @@ const Store = require('electron-store')
 const store = new Store()
 
 const Replay = require('./src/main/replay')(app,store)
+const Logger = require('./src/main/logger')(app)
 
 const path = require('path')
 const url  = require('url')
@@ -235,4 +236,9 @@ ipc.on('settings', (event,name) => {
 
 ipc.on('fullscreen', (event,name) => {
   win.setFullScreen(!win.isFullScreen())
+})
+
+ipc.on('log', (event,data) => {
+  console.log('log',data)
+  Logger.debug(data)
 })

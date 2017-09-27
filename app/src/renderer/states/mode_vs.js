@@ -66,6 +66,7 @@ module.exports = function(game){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
     }
     create() {
+      ipc.send('log','mode_vs_create')
       this.danger = false
 
       const offset = 0;

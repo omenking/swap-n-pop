@@ -32,6 +32,7 @@
     "mkdir-recursive": "^0.3.0",
     "phaser-ce": "^2.8.4",
     "seedrandom": "^2.4.3",
-    "shuffle-seed": "^1.1.6"
+    "shuffle-seed": "^1.1.6",
+    "strftime": "^0.10.0"
   }
 }
