@@ -165,10 +165,10 @@ module.exports = function(game){
       this.step(false)
       this.log_stack(this.tick,'end')
 
-      ipc.send(
-        'log',
-        `ST ${this.tick}: ${this.log_roll()}`
-      )
+      //ipc.send(
+        //'log',
+        //`ST ${this.tick}: ${this.log_roll()}`
+      //)
     }
 
     log_stack(tick,format=null){
