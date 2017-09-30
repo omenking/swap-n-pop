@@ -63,7 +63,7 @@ module.exports = function(game){
     }
 
     get snap(){
-      let state = rng.state()
+      let state = this.rng.state()
       return [state.i,state.j]
     }
 
