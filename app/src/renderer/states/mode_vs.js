@@ -68,7 +68,7 @@ module.exports = function(game){
     }
 
     load(snapshot){
-      let state = rng.state()
+      let state = this.rng.state()
       state.i = snapshot[0]
       state.j = snapshot[1]
       this.rng = seedrandom(this.seed, {state: state})
