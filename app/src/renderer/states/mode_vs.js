@@ -251,7 +251,7 @@ module.exports = function(game){
       // we need to swap the playfield update order for
       // one of the players otherwise in multipalyer it will
       // generate the panels on the wrong side.
-      if (this.online && this.online.pos === 1) {
+      if (this.online && game.server.pos === 1) {
         this.playfield2.update()
         this.playfield1.update()
       } else {
