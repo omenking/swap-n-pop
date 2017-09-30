@@ -239,6 +239,5 @@ ipc.on('fullscreen', (event,name) => {
 })
 
 ipc.on('log', (event,data) => {
-  console.log('log',data)
   Logger.debug(data)
 })
