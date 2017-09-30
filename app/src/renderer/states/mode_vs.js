@@ -22,7 +22,6 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
-      this.snap         = this.snap.bind(this)
       this.load         = this.load.bind(this)
 
       this.step         = this.step.bind(this)
@@ -68,7 +67,7 @@ module.exports = function(game){
       return [state.i,state.j]
     }
 
-    get load(snapshot){
+    load(snapshot){
       let state = rng.state()
       state.i = snapshot[0]
       state.j = snapshot[1]
