@@ -75,6 +75,7 @@ module.exports = function(game){
 
       this.load = this.load.bind(this)
 
+      this.log              = this.log.bind(this);
       this.matched          = this.matched.bind(this);
       this.set              = this.set.bind(this)
       this.render_visible   = this.render_visible.bind(this)
@@ -156,6 +157,12 @@ module.exports = function(game){
     get empty() {      return  this.state === STATIC && this.hidden }
     /** */
     get hidden(){      return (this.kind === null) }
+
+    log(){
+      const k = (this.kind === null) ? 'N' : this.kind
+      return `${k}`
+    }
+
     /** */
     matched(kind){
       return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||

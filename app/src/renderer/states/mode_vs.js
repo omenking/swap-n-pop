@@ -9,6 +9,10 @@ module.exports = function(game){
   const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
   const {ipcRenderer: ipc} = require('electron')
   const seedrandom         = require('seedrandom')
+  const {
+    ROWS,
+    COLS
+  } = require(APP.path.core('data'))
 
   class controller {
     constructor() {
@@ -26,6 +30,9 @@ module.exports = function(game){
       this.resume       = this.resume.bind(this)
       this.game_over    = this.game_over.bind(this)
       this.danger_check = this.danger_check.bind(this)
+      this.log_stack    = this.log_stack.bind(this)
+      this.log_roll     = this.log_roll.bind(this)
+
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()
@@ -66,7 +73,7 @@ module.exports = function(game){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
     }
     create() {
-      ipc.send('log','mode_vs_create')
+      ipc.send('log',`VS ${this.seed} ------------------------------`)
       this.danger = false
 
       const offset = 0;
@@ -134,21 +141,109 @@ module.exports = function(game){
       if (from > to) { // rollback
       } else { //rollforward
         this.snapshots.load(from)
+        this.log_stack(from,'snap')
         // since we loaded a snapshot, maybe we don't need to step
         // throuh the frame we loaded the snapshot on.
         for (let i = from+1; i <= to; i++) {
           this.step(i)
+          this.log_stack(i)
         }
       }
       this.roll = {ready: false, from: null, to: null}
     }
     update() {
-      //console.log('<-',this.tick,'-------------------------------->')
+      this.roll_log_heading = []
+      this.roll_log_data    = []
+      this.log_stack(this.tick,'start')
       if (this.roll.ready){
+        ipc.send(
+          'log',
+          `RL ${this.tick}: ${this.roll.from} ${this.roll.to}`
+        )
         this.roll_to(this.roll.from,this.roll.to)
       }
       this.step(false)
+      this.log_stack(this.tick,'end')
+
+      ipc.send(
+        'log',
+        `ST ${this.tick}: ${this.log_roll()}`
+      )
     }
+
+    log_stack(tick,format=null){
+      this.roll_log_heading.push({tick: tick, format: format})
+      for (let i = 0; i < ROWS; i++){
+        let line = ''
+        line += this.playfield1._stack[0+(i*COLS)].log()
+        line += this.playfield1._stack[1+(i*COLS)].log()
+        line += this.playfield1._stack[2+(i*COLS)].log()
+        line += ' '
+        line += this.playfield1._stack[3+(i*COLS)].log()
+        line += this.playfield1._stack[4+(i*COLS)].log()
+        line += this.playfield1._stack[5+(i*COLS)].log()
+        line += '  '
+        line += this.playfield2._stack[0+(i*COLS)].log()
+        line += this.playfield2._stack[1+(i*COLS)].log()
+        line += this.playfield2._stack[2+(i*COLS)].log()
+        line += ' '
+        line += this.playfield2._stack[3+(i*COLS)].log()
+        line += this.playfield2._stack[4+(i*COLS)].log()
+        line += this.playfield2._stack[5+(i*COLS)].log()
+        if (this.roll_log_data[i] === undefined){
+          this.roll_log_data[i] = []
+        }
+        this.roll_log_data[i].push(line)
+      }
+    }
+
+    log_roll(){
+      let str    = ""
+      let format = null
+      let tick   = null
+
+      str   += "\n"
+      for (let i = 0; i < this.roll_log_heading.length; i++){
+        tick   = `${this.roll_log_heading[i].tick}                     `
+        tick   = tick.substr(0,22)
+        format = this.roll_log_heading[i].format
+        str += tick
+      }
+
+      for (let i = 0; i < ROWS; i++){
+        str   += "\n"
+
+        if (Math.floor(ROWS/2) === i) {
+          for (let ii = 0; ii < this.roll_log_data[i].length; ii++){
+            format = this.roll_log_heading[ii].format
+            str += this.roll_log_data[i][ii]
+            if (ii < this.roll_log_data[i].length-1){
+               if (format === 'start' ||
+                   format === 'end') {
+                 str += ' -|-> '
+               } else {
+                 str += ' ---> '
+               }
+            }
+          }
+        } else {
+          for (let ii = 0; ii < this.roll_log_data[i].length; ii++){
+            format = this.roll_log_heading[ii].format
+            str += this.roll_log_data[i][ii]
+            if (ii < this.roll_log_data[i].length-1){
+               if (format === 'start' ||
+                   format === 'end') {
+                 str += '  |   '
+               } else {
+                 str += '      '
+               }
+            }
+          }
+        }
+      }
+      return str
+    }
+
     step(tick){
       if (tick === false) {
         this.tick++

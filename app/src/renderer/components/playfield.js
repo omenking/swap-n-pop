@@ -66,6 +66,7 @@ module.exports = function(game){
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
+
       this.pi = pi;
       this.menu_pause = new ComponentMenuPause();
       this.countdown  = new ComponentPlayfieldCountdown();

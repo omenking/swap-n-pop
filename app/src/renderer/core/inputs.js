@@ -1,4 +1,5 @@
 module.exports = function(game){
+  const {ipcRenderer: ipc} = require('electron')
   class controller {
     constructor(inputs,online,stage) {
       this.create = this.create.bind(this)
@@ -64,6 +65,10 @@ module.exports = function(game){
       const frame_start = this.ack[0]
       const frame_end   = data.ack0+data.frame_count-1
 
+      ipc.send(
+        'log',
+        `UN ${this.tick}: ${data.ack0} ${data.ack1} ${data.frames.join(',')}`
+      )
       //console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
       //console.log('unpack__:',data.frames)
       for (let tick = frame_start; frame_end >= tick; tick++) {
@@ -118,6 +123,10 @@ module.exports = function(game){
       }
       if (this.online && send){
         this.last_pack = this.pack()
+        ipc.send(
+          'log',
+          `PK ${tick}: ${this.last_pack.ack0} ${this.last_pack.ack1} ${this.last_pack.frames.join(',')}`
+        )
         game.server.send('framedata',this.last_pack)
       }
     }
