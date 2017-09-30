@@ -22,6 +22,9 @@ module.exports = function(game){
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
 
+      this.snap         = this.snap.bind(this)
+      this.load         = this.load.bind(this)
+
       this.step         = this.step.bind(this)
       this.roll_to      = this.roll_to.bind(this)
       this.create_bg    = this.create_bg.bind(this)
@@ -50,7 +53,7 @@ module.exports = function(game){
       this.seed   = data.seed
       this.cpu    = data.cpu
       this.online = data.online
-      this.rng    = seedrandom(this.seed)
+      this.rng    = seedrandom(this.seed,{state: true})
       this.inputs = new CoreInputs(data.inputs,data.online,this)
       this.snapshots = new CoreSnapshots()
       this.roll = {
@@ -58,6 +61,18 @@ module.exports = function(game){
         from: null,
         to: null
       }
+    }
+
+    get snap(){
+      let state = rng.state()
+      return [state.i,state.j]
+    }
+
+    get load(snapshot){
+      let state = rng.state()
+      state.i = snapshot[0]
+      state.j = snapshot[1]
+      this.rng = seedrandom(this.seed, {state: state})
     }
 
     get online(){  return this._online }
@@ -90,6 +105,7 @@ module.exports = function(game){
       this.timer.create()
 
       this.snapshots.create(
+        this,
         this.playfield1,
         this.playfield2
       )

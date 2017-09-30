@@ -9,13 +9,17 @@ module.exports = function(game){
       this.load   = this.load.bind(this)
       this.snap   = this.snap.bind(this)
     }
-    create(p0,p1){
+    create(stage,p0,p1){
+      this.stage      = stage
       this.playfield0 = p0
       this.playfield1 = p1
       this.index      = -1
       this.index_tick = 0
       this.snapshot   = new Array(120).fill(null)
     }
+    get stage(){ return this._stage }
+    set stage(v){ this._stage = v}
+
     get playfield0(){ return this._playfield0 }
     set playfield0(v){ this._playfield0 = v}
 
@@ -29,6 +33,7 @@ module.exports = function(game){
       this.playfield0.load(this.snapshot[this.index][0])
       this.playfield1.load(this.snapshot[this.index][1])
       game.controls.load(  this.snapshot[this.index][2])
+      this.stage.load(this.snapshot[this.index][3])
     }
 
     cindex(tick){
@@ -51,7 +56,8 @@ module.exports = function(game){
       this.index++
       this.snapshot[this.index] = [this.playfield0.snap,
                                    this.playfield1.snap,
-                                   game.controls.snap]
+                                   game.controls.snap,
+                                   this.stage.snap]
     }
   } //klass
 
