@@ -43,6 +43,9 @@ class controller {
   get seed(){ return this._seed }
   set seed(v){ this._seed = v }
 
+  get pos(){ return this._pos }
+  set pos(v){ this._pos = v }
+
   create(port,host,callback){
     if(port === null) { throw(new Error('port can not be null')) }
     if(host === null) { throw(new Error('host can not be null')) }

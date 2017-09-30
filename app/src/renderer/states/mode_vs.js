@@ -248,8 +248,16 @@ module.exports = function(game){
       if (tick === false) {
         this.tick++
       }
-      this.playfield1.update()
-      this.playfield2.update()
+      // we need to swap the playfield update order for
+      // one of the players otherwise in multipalyer it will
+      // generate the panels on the wrong side.
+      if (this.online && this.online.pos === 1) {
+        this.playfield2.update()
+        this.playfield1.update()
+      } else {
+        this.playfield1.update()
+        this.playfield2.update()
+      }
       this.danger_check()
       if (tick === false) {
         this.inputs.update(this.tick,true)

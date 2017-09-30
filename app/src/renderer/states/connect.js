@@ -36,7 +36,9 @@ module.exports = function(game){
     listening(){
       if (this.mode === 'host') {
         game.server.connected(this.start)
+        game.server.pos = 0
       } else if(this.mode === 'join') {
+        game.server.pos = 1
         game.server.connect(
           this.join_port,
           this.join_host,
