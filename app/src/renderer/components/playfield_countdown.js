@@ -3,6 +3,7 @@ module.exports = function(game){
     constructor() {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
+      this.render = this.render.bind(this)
 
       this.load = this.load.bind(this)
 
@@ -19,7 +20,7 @@ module.exports = function(game){
     }
 
     create(playfield){
-      this.playfield = playfield;
+      this.playfield = playfield
 
       const x = this.playfield.x+16;
       const y = -38;

@@ -5,6 +5,7 @@ module.exports = function(game){
   const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
   const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
+  const ComponentPlayfieldWall      = require(APP.path.components('playfield_wall'))(game)
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
@@ -67,10 +68,11 @@ module.exports = function(game){
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
 
-      this.pi = pi;
-      this.menu_pause = new ComponentMenuPause();
-      this.countdown  = new ComponentPlayfieldCountdown();
-      this.cursor     = new ComponentPlayfieldCursor();
+      this.pi = pi
+      this.menu_pause = new ComponentMenuPause()
+      this.countdown  = new ComponentPlayfieldCountdown()
+      this.cursor     = new ComponentPlayfieldCursor()
+      this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore();
       this.ai         = new ComponentAi();
     }
@@ -159,7 +161,8 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
-      this.score_lbl.create();
+      this.score_lbl.create()
+      this.wall.create(this,this.x,this.y)
     }
     create_after() {
       this.layer_cursor = game.add.group()

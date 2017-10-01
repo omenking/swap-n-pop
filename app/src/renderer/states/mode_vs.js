@@ -64,14 +64,12 @@ module.exports = function(game){
 
     get snap(){
       let state = this.rng.state()
-      console.log(this.tick,'snaprng', state.i, state.j)
       return state
     }
 
     load(snapshot){
       let state = this.rng.state()
       this.rng = seedrandom(this.seed, {state: snapshot})
-      console.log(this.tick, 'loadrng', state.i, state.j)
     }
 
     get online(){  return this._online }
