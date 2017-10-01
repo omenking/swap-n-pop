@@ -199,7 +199,6 @@ module.exports = function(game){
      *
      */
     update(){
-      if (!this.playfield.running) { return; }
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
 
@@ -267,7 +266,6 @@ module.exports = function(game){
             this.counter = 0
             this.chain   = false
           } else {
-            console.log('convert to land')
             this.state   = LAND
             this.counter = FRAME_LAND.length
           }
@@ -358,9 +356,7 @@ module.exports = function(game){
     nocombo() {
       const arr = [0, 1, 2, 3, 4]
       if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
-      let n = this.playfield.stage.rng()
-      console.log(this.playfield.stage.tick,'rng',n, this.playfield.stage.rng.state().i, this.playfield.stage.rng.state().j)
-      let values = ss.shuffle(arr,n)
+      let values = ss.shuffle(arr,this.playfield.stage.rng())
       return this.i = values.find((i)=> {
         return this.matched(i) === false
       })
