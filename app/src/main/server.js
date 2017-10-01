@@ -211,10 +211,10 @@ class controller {
   }
   pong(data){
     // fake delay between 20ms to 2s
-    const s = Math.floor(Math.random() * (20 - 2 + 1)) + 2
-    /setTimeout(function(){
+    //const s = Math.floor(Math.random() * (20 - 2 + 1)) + 2
+    //setTimeout(function(){
       this.send('pong',data)
-    }.bind(this),s*10)
+    //}.bind(this),s*10)
   }
   close(){
     this.server.close()
