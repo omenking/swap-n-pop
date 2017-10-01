@@ -162,7 +162,6 @@ module.exports = function(game){
       this.push_counter = TIME_PUSH
 
       this.score_lbl.create()
-      this.wall.create(this,this.x,this.y)
     }
     create_after() {
       this.layer_cursor = game.add.group()
@@ -173,6 +172,7 @@ module.exports = function(game){
       this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.menu_pause.create(this)
+      this.wall.create(this,this.x,this.y)
     }
     create_stack(data){
       this._stack = []
@@ -381,6 +381,7 @@ module.exports = function(game){
     }
     render() {
       this.cursor.render()
+      this.wall.render()
       this.render_stack()
 
       if (this.should_push) {
@@ -392,6 +393,7 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
+      this.wall.update()
       this.menu_pause.update()
       this.score_lbl.update(this.chain, this.score)
 
