@@ -358,7 +358,9 @@ module.exports = function(game){
     nocombo() {
       const arr = [0, 1, 2, 3, 4]
       if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
-      let values = ss.shuffle(arr,this.playfield.stage.rng())
+      let n = this.playfield.stage.rng()
+      console.log(this.playfield.stage.tick,'rng',n, this.playfield.stage.rng.state().i, this.playfield.stage.rng.state().j)
+      let values = ss.shuffle(arr,n)
       return this.i = values.find((i)=> {
         return this.matched(i) === false
       })

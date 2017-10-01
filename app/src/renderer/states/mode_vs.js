@@ -64,6 +64,7 @@ module.exports = function(game){
 
     get snap(){
       let state = this.rng.state()
+      console.log(this.tick,'snaprng', state.i, state.j)
       return [state.i,state.j]
     }
 
@@ -72,6 +73,7 @@ module.exports = function(game){
       state.i = snapshot[0]
       state.j = snapshot[1]
       this.rng = seedrandom(this.seed, {state: state})
+      console.log(this.tick, 'loadrng', state.i, state.j)
     }
 
     get online(){  return this._online }
@@ -296,9 +298,7 @@ module.exports = function(game){
         debugger
       }
       this.timer.render()
-      if (this.playfield1) { this.playfield1.render()
-        console.log('h',this.playfield1.stack(0).hidden, this.playfield1.stack(0).kind)
-      }
+      if (this.playfield1) { this.playfield1.render() }
       if (this.playfield2) { this.playfield2.render() }
       if (this.online){
         this.ping.render()
