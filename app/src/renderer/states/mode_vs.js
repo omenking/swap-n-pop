@@ -65,14 +65,12 @@ module.exports = function(game){
     get snap(){
       let state = this.rng.state()
       console.log(this.tick,'snaprng', state.i, state.j)
-      return [state.i,state.j]
+      return state
     }
 
     load(snapshot){
       let state = this.rng.state()
-      state.i = snapshot[0]
-      state.j = snapshot[1]
-      this.rng = seedrandom(this.seed, {state: state})
+      this.rng = seedrandom(this.seed, {state: snapshot})
       console.log(this.tick, 'loadrng', state.i, state.j)
     }
 
