@@ -98,6 +98,9 @@ module.exports = function(game){
       game.load.image('playfield_char11', './assets/char11.png')
       game.load.image('playfield_char12', './assets/char12.png')
 
+      game.load.image('playfield_wall0', './assets/playfield_wall0.png')
+      game.load.image('playfield_wall1', './assets/playfield_wall1.png')
+
       game.load.start()
     }
   }

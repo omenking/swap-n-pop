@@ -3,6 +3,7 @@ module.exports = function(game){
     constructor() {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
+      this.render = this.render.bind(this)
 
       this.load = this.load.bind(this)
 
@@ -19,7 +20,7 @@ module.exports = function(game){
     }
 
     create(playfield){
-      this.playfield = playfield;
+      this.playfield = playfield
 
       const x = this.playfield.x+16;
       const y = -38;
@@ -75,7 +76,7 @@ module.exports = function(game){
       this.sprite.visible         = false
       this.playfield.cursor.state = 'active'
       this.playfield.cursor.sprite.visible = true
-      this.playfield.running = true
+      this.playfield.stage.state = 'running'
       this.playfield.stage.timer.running = true
       game.sounds.stage_music('active')
       this.state = null

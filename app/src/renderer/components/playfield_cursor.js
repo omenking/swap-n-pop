@@ -117,12 +117,12 @@ module.exports = function(game){
     }
     swap(tick) {
       if (tick > 0) { return }
-      if (!this.playfield.running || (this.state !== 'active')) { return }
+      if (this.playfield.stage.state !== 'running' || (this.state !== 'active')) { return }
       this.playfield.swap(this.x, this.y)
     }
     push(tick) {
       //if (tick > 0) { return }
-      if (!this.playfield.running || (this.state !== 'active')) { return }
+      if (this.playfield.stage.state !== 'running' || (this.state !== 'active')) { return }
       this.playfield.pushing = true
     }
     update() {

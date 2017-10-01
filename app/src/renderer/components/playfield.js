@@ -5,6 +5,7 @@ module.exports = function(game){
   const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
   const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
+  const ComponentPlayfieldWall      = require(APP.path.components('playfield_wall'))(game)
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
@@ -33,7 +34,6 @@ module.exports = function(game){
       this.prototype.score       = 0
       this.prototype.scoreText   = null
       this.prototype.has_ai      = false
-      this.prototype.running     = false
       this.prototype.land        = false
        // when any panel has landed in the stac
     }
@@ -67,10 +67,11 @@ module.exports = function(game){
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
 
-      this.pi = pi;
-      this.menu_pause = new ComponentMenuPause();
-      this.countdown  = new ComponentPlayfieldCountdown();
-      this.cursor     = new ComponentPlayfieldCursor();
+      this.pi = pi
+      this.menu_pause = new ComponentMenuPause()
+      this.countdown  = new ComponentPlayfieldCountdown()
+      this.cursor     = new ComponentPlayfieldCursor()
+      this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore();
       this.ai         = new ComponentAi();
     }
@@ -99,7 +100,6 @@ module.exports = function(game){
         snap_stack.push(panel.snap)
       }
       return [
-        this.running,
         this.push_counter,
         snap_cursor,
         snap_stack,
@@ -108,14 +108,13 @@ module.exports = function(game){
       ]
     }
     load(snapshot){
-      this.running      = snapshot[0]
-      this.push_counter = snapshot[1]
-      this.cursor.load(   snapshot[2])
+      this.push_counter = snapshot[0]
+      this.cursor.load(   snapshot[1])
       for (let i = 0; i < this.stack_len; i++) {
-        this.stack(i).load(snapshot[3][i])
+        this.stack(i).load(snapshot[2][i])
       }
-      this.countdown.load(snapshot[4])
-      this.pushing = snapshot[5]
+      this.countdown.load(snapshot[3])
+      this.pushing = snapshot[4]
     }
     create(stage,opts){
       if (stage === null) {
@@ -159,7 +158,7 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
-      this.score_lbl.create();
+      this.score_lbl.create()
     }
     create_after() {
       this.layer_cursor = game.add.group()
@@ -170,6 +169,7 @@ module.exports = function(game){
       this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.menu_pause.create(this)
+      this.wall.create(this,this.x,this.y)
     }
     create_stack(data){
       this._stack = []
@@ -222,14 +222,14 @@ module.exports = function(game){
     }
     pause(pi){
       this.menu_pause.pause(pi);
-      this.running = false
+      this.stage.state = 'pause'
     }
     resume() {
-      this.running = true
+      this.stage.state = 'running'
       this.cursor.map_controls()
     }
     game_over() {
-      this.running = false
+      this.stage.state = 'gameover'
       this.push_counter = 0
     }
     create_panels(){
@@ -378,10 +378,11 @@ module.exports = function(game){
     }
     render() {
       this.cursor.render()
+      this.wall.render()
       this.render_stack()
 
       if (this.should_push) {
-        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT);
+        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
         this.layer_block.y  = lift;
         this.layer_cursor.y = lift;
       }
@@ -392,7 +393,10 @@ module.exports = function(game){
       this.menu_pause.update()
       this.score_lbl.update(this.chain, this.score)
 
-      if (!this.running) { return; }
+      if (this.stage.state === 'gameover') {
+        this.wall.update()
+      }
+      if (this.stage.state !== 'running') { return; }
 
       if (this.should_push) { this.update_push() }
       this.update_stack()
