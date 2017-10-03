@@ -127,11 +127,13 @@ module.exports = function(game){
       game.sounds.stage_music('pause')
       this.playfield1.pause(pi)
       this.playfield2.pause(pi)
+      this.timer.running = false;
     }
     resume() {
       game.sounds.stage_music('resume')
       this.playfield1.resume()
       this.playfield2.resume()
+      this.timer.running = true;
     }
     game_over() {
       console.log('gameover')
