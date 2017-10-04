@@ -2,14 +2,14 @@ const N = null
 module.exports = {
   PUZZLE: {
     test: [
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
+      N, N, 1, N, N, N,
       N, N, 2, N, N, N,
+      N, N, 3, N, N, N,
       N, N, 2, N, N, N,
       N, N, 3, N, N, N,
       N, N, 3, N, N, N,
       N, N, 1, N, N, N,
-      N, N, 1, N, N, N,
+      N, N, 2, N, N, N,
       N, N, 1, N, N, N,
       N, N, 3, N, N, N,
       N, N, 2, N, N, N
@@ -64,6 +64,8 @@ module.exports = {
                    3,3,3],
   FRAME_DEAD    : 5,
   FRAME_NEWLINE : 1,
+
+  FRAME_STAR: [1,1,2,2,3,3,4,4,5,5,5,5,5,5,4,4,3,3,2,2,1,1,1,1,1,1,1],
 
   // Timing
   TIME_CLEAR : 60, //the time it takes before the first panel is ready to start popping
