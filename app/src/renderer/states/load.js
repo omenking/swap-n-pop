@@ -101,6 +101,8 @@ module.exports = function(game){
       game.load.image('playfield_wall0', './assets/playfield_wall0.png')
       game.load.image('playfield_wall1', './assets/playfield_wall1.png')
 
+      game.load.spritesheet('playfield_star', './assets/playfield_star.png',16,16,12)
+
       game.load.start()
     }
   }
