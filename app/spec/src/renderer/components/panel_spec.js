@@ -4,7 +4,8 @@ const chai = require('chai')
 const sinon = require('sinon')
 chai.should()
 
-const game = require(APP.path.spec('helpers','game_spec'))
+const Game = require(APP.path.spec('helpers','game_spec'))
+const game = new Game()
 const {STATIC,HANG,FALL,CLEAR,PANELS}  = require(APP.path.core('data'))
 const _f                  = require(APP.path.core('filters'))
 const Stage               = require(APP.path.states('mode_vs'))(game)
@@ -70,7 +71,6 @@ describe('Panel', function() {
       playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
       playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
       playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
-      playfield.running    = true
       playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
       _playfield = playfield
 
@@ -87,17 +87,17 @@ describe('Panel', function() {
       let stack     = null
       let playfield = null
       let panels   = [
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        1   , null, null, null, null, null,
-        1   , null, null, null, null, null,
-        1   , null, null, null, null, null
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N
       ]
       stage = new Stage()
       stage.init({seed: 'test'})
@@ -116,17 +116,17 @@ describe('Panel', function() {
       let stack     = null
       let playfield = null
       let panels   = [
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, null, null, null, null, null,
-        null, 1, null, null, null, null,
-        1   , 1, 1   , null, null, null,
-        null, 1, null, null, null, null
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, 1, N, N, N, N,
+        1, 1, 1, N, N, N,
+        N, 1, N, N, N, N
       ]
       stage = new Stage()
       stage.init({seed: 'test'})
@@ -136,4 +136,55 @@ describe('Panel', function() {
       playfield.stack(1,9).chain_and_combo().should.eql([3,false])
     })
   })
+
+  describe('#dead', function(){
+    it('should not be dead', function(){
+      let stage     = null
+      let stack     = null
+      let playfield = null
+      let panels   = [
+        N, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N
+      ]
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      playfield.stack(0,9).dead.should.eql(false)
+    })
+
+    it('should be dead', function(){
+      let stage     = null
+      let stack     = null
+      let playfield = null
+      let panels   = [
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N,
+        1, N, N, N, N, N
+      ]
+      stage = new Stage()
+      stage.init({seed: 'test'})
+      playfield = new Playfield(0)
+      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
+      playfield.stack(0,9).dead.should.eql(true)
+    })
+  })
+
 }) //klass

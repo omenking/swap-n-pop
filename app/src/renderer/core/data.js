@@ -2,14 +2,14 @@ const N = null
 module.exports = {
   PUZZLE: {
     test: [
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
+      N, N, 1, N, N, N,
       N, N, 2, N, N, N,
+      N, N, 3, N, N, N,
       N, N, 2, N, N, N,
       N, N, 3, N, N, N,
       N, N, 3, N, N, N,
       N, N, 1, N, N, N,
-      N, N, 1, N, N, N,
+      N, N, 2, N, N, N,
       N, N, 1, N, N, N,
       N, N, 3, N, N, N,
       N, N, 2, N, N, N
