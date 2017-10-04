@@ -5,6 +5,7 @@ module.exports = function(game){
   const ComponentPing      = require(APP.path.components('ping'))(game)
   const ComponentDebugFrame      = require(APP.path.components('debug_frame'))(game)
   const ComponentTimer      = require(APP.path.components('timer'))(game)
+  const ComponentMenuPause  = require(APP.path.components('menu_pause'))(game)
   const CoreInputs         = require(APP.path.core('inputs'))(game)
   const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
   const {ipcRenderer: ipc} = require('electron')
@@ -40,6 +41,8 @@ module.exports = function(game){
       this.ping         = new ComponentPing()
       this.debug_frame  = new ComponentDebugFrame()
       this.timer        = new ComponentTimer()
+      
+      this.menu_pause   = new ComponentMenuPause();
     }
 
     static initClass() {
@@ -121,20 +124,28 @@ module.exports = function(game){
         this.ping.create()
       }
       this.debug_frame.create()
+
+      this.menu_pause.create(this);
     }
 
     pause(pi){
-      game.sounds.stage_music('pause')
-      this.playfield1.pause(pi)
-      this.playfield2.pause(pi)
+      console.log("pause called");
+      game.sounds.stage_music('pause');
+
+      this.state = "pause";
       this.timer.running = false;
+      this.menu_pause.pause();
     }
+
     resume() {
-      game.sounds.stage_music('resume')
-      this.playfield1.resume()
-      this.playfield2.resume()
+      console.log("resume called");
+      game.sounds.stage_music('resume');
+
+      this.state = "running";
       this.timer.running = true;
+      this.menu_pause.continue();
     }
+    
     game_over() {
       console.log('gameover')
       if(!this.inputs.replay){
@@ -193,6 +204,8 @@ module.exports = function(game){
         //'log',
         //`ST ${this.tick}: ${this.log_roll()}`
       //)
+
+      this.menu_pause.update();
     }
 
     log_stack(tick,format=null){

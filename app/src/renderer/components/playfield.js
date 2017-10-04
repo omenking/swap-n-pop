@@ -2,7 +2,6 @@ module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
-  const ComponentMenuPause          = require(APP.path.components('menu_pause'))(game)
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
   const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
   const ComponentPlayfieldWall      = require(APP.path.components('playfield_wall'))(game)
@@ -51,8 +50,6 @@ module.exports = function(game){
       this.create_after = this.create_after.bind(this);
       this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
-      this.pause = this.pause.bind(this);
-      this.resume = this.resume.bind(this);
       this.game_over = this.game_over.bind(this);
       this.create_newline = this.create_newline.bind(this);
       this.create_panels = this.create_panels.bind(this);
@@ -68,7 +65,6 @@ module.exports = function(game){
       this.stack         = this.stack.bind(this);
 
       this.pi = pi
-      this.menu_pause = new ComponentMenuPause()
       this.countdown  = new ComponentPlayfieldCountdown()
       this.cursor     = new ComponentPlayfieldCursor()
       this.wall       = new ComponentPlayfieldWall()
@@ -168,7 +164,6 @@ module.exports = function(game){
       this.countdown.create(this)
       this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
-      this.menu_pause.create(this)
       this.wall.create(this,this.x,this.y)
     }
     create_stack(data){
@@ -220,18 +215,12 @@ module.exports = function(game){
         this.stack(i).set('unique')
       }
     }
-    pause(pi){
-      this.menu_pause.pause(pi);
-      this.stage.state = 'pause'
-    }
-    resume() {
-      this.stage.state = 'running'
-      this.cursor.map_controls()
-    }
+    
     game_over() {
       this.stage.state = 'gameover'
       this.push_counter = 0
     }
+
     create_panels(){
       const rows = (ROWS + (this.should_push === true ? 1 : 0 ))
       const size = COLS * rows
@@ -390,7 +379,6 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
-      this.menu_pause.update()
       this.score_lbl.update(this.chain, this.score)
 
       if (this.stage.state === 'gameover') {

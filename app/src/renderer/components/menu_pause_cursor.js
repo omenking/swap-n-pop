@@ -23,8 +23,9 @@ module.exports = function(game){
       this.sprite = game.make.sprite(this.x, this.y+(this.index*UNIT), 'menu_pause_cursor');
       return this.menu.sprite.addChild(this.sprite);
     }
-    map_controls() {
-      return game.controls.map(this.menu.playfield.pi, {
+
+    map_controls(anyPlayerNumber) {
+      return game.controls.map(anyPlayerNumber, {
         up   : this.up,
         down : this.down,
         a    : this.confirm,
@@ -32,11 +33,13 @@ module.exports = function(game){
       }
       );
     }
+
     confirm(tick) {
       if (tick > 0) { return }
       this.sfx_confirm.play();
       return this.menu_items[this.index]();
     }
+
     up(tick) {
       if (tick > 0) { return }
       if (this.index !== 0) {
@@ -44,6 +47,7 @@ module.exports = function(game){
         return this.index--;
       }
     }
+
     down(tick) {
       if (tick > 0) { return }
       if (this.index !== (this.menu_items.length-1)) {
@@ -51,6 +55,7 @@ module.exports = function(game){
         return this.index++;
       }
     }
+    
     update() {
       return this.sprite.y = this.y+(this.index*12);
     }
