@@ -128,8 +128,8 @@ module.exports = function(game){
       this.menu_pause.create(this);
     }
 
-    pause(pi){
-      console.log("pause called");
+    /** turns on the menu, changes it state, turns of the timer from counting */
+    pause(){
       game.sounds.stage_music('pause');
 
       this.state = "pause";
@@ -137,13 +137,14 @@ module.exports = function(game){
       this.menu_pause.pause();
     }
 
+    /** called by the menu and reassigns control to both playfields, timer runs again */
     resume() {
-      console.log("resume called");
       game.sounds.stage_music('resume');
 
       this.state = "running";
       this.timer.running = true;
-      this.menu_pause.continue();
+      this.playfield1.cursor.map_controls();
+      this.playfield2.cursor.map_controls();
     }
     
     game_over() {
