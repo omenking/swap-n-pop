@@ -71,8 +71,6 @@ module.exports = function(game){
       if (!this.paused) 
         return; 
 
-      console.log("update of menu called");
-
       // check for any Input and if any pressed - continue or cancel may be called here
       this.cursor.update();
     }
