@@ -116,7 +116,8 @@ module.exports = function(game){
       this.snapshots.create(
         this,
         this.playfield1,
-        this.playfield2
+        this.playfield2,
+        this.timer
       )
       this.snapshots.snap(0)
 

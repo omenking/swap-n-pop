@@ -5,7 +5,7 @@ module.exports = function(game){
   /** Cursor to handle menu_pause movement and method calls
    *  could maybe be optimized by just calling the menu_pause methods here
    */
-  class controller {
+  class Menu_Pause_Cursor {
     /** only bindings, no new objects */
     constructor() {
       this.create = this.create.bind(this);
@@ -42,10 +42,10 @@ module.exports = function(game){
 
     /**
      * binds controls to methods of this cursor
-     * @param {playerNumber} anyPlayerNumber 
+     * @param {playerNumber} any_player_number 
      */
-    map_controls(anyPlayerNumber) {
-      return game.controls.map(anyPlayerNumber, {
+    map_controls(any_player_number) {
+      return game.controls.map(any_player_number, {
         up   : this.up,
         down : this.down,
         a    : this.confirm,
@@ -56,14 +56,16 @@ module.exports = function(game){
 
     confirm(tick) {
       if (tick > 0) 
-        return 
+        return;
 
       this.sfx_confirm.play();
       return this.menu_items[this.index]();
     }
 
     up(tick) {
-      if (tick > 0) { return }
+      if (tick > 0) 
+        return;
+
       if (this.index !== 0) {
         this.sfx_select.play();
         return this.index--;
@@ -71,7 +73,9 @@ module.exports = function(game){
     }
 
     down(tick) {
-      if (tick > 0) { return }
+      if (tick > 0) 
+        return;
+
       if (this.index !== (this.menu_items.length-1)) {
         this.sfx_select.play();
         return this.index++;
@@ -82,5 +86,6 @@ module.exports = function(game){
       return this.sprite.y = this.y+(this.index*12);
     }
   }
-  return controller
+
+  return Menu_Pause_Cursor
 }
