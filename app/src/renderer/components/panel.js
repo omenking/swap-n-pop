@@ -29,6 +29,7 @@ module.exports = function(game){
     TIME_FALL
   } = require(APP.path.core('data'))
 
+  const ComponentBaubleChain = require(APP.path.components('bauble_chain'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -85,6 +86,8 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.check_neighbours = this.check_neighbours.bind(this)
+
+      this.bauble_chain = new ComponentBaubleChain()
     }
 
     /** */
@@ -137,6 +140,9 @@ module.exports = function(game){
       // start of match. If we can find someone way to
       // move this in the render that would be ideal.
       this.sprite.visible = false
+
+      this.bauble_chain.create(this)
+      this.bauble_chain.set(7)
     }
 
     /** */
@@ -478,13 +484,18 @@ module.exports = function(game){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
         let [i,len] = this.clear_index
+        this.clear_i    = i
+        this.clear_len  = len
+
         let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
         this.time_pop = TIME_CLEAR + (TIME_POP*i)
         this.time_cur = time_max - this.counter
+
         if (FRAME_CLEAR.length > this.time_cur){
-          //if(i === 0){ console.log(time_cur,FRAME_CLEAR[time_cur])}
           this.frame = FRAME_CLEAR[this.time_cur]
         }
+
+
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
       } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
@@ -507,10 +518,12 @@ module.exports = function(game){
     }
     /** */
     render(){
+      this.bauble_chain.group.visible = false
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
       this.render_visible()
+      this.bauble_chain.render()
     }
     /** */
     shutdown(){}

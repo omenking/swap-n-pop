@@ -1,5 +1,10 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
+  const {
+    UNIT,
+    CLEAR,
+    BAUBLE_FLOAT
+  } = require(APP.path.core('data'))
   class BaubleChain {
     get [Symbol.toStringTag](){ return 'BaubleChain' }
 
@@ -13,10 +18,13 @@ module.exports = function(game){
       this.set = this.set.bind(this)
     }
 
-    create(x,y){
+    create(panel){
+      this.panel = panel
       this.group = game.add.group()
-      this.group.x = x
-      this.group.y = y
+      this.group.x = 0
+      this.group.y = 0
+      this.group.visible = false
+
       this.left   = game.make.sprite(0, 0, 'bauble_chainl') // 3px wide
       this.middle = game.make.sprite(3, 0, 'bauble_chainm')
       this.right  = game.make.sprite(3+20, 0, 'bauble_chainr') // 3px wide
@@ -51,6 +59,30 @@ module.exports = function(game){
     }
 
     render(){
+      if (this.panel.state   === CLEAR &&
+          this.panel.clear_i === 0     &&
+          this.panel.clear_len > 3     &&
+           this.panel.time_cur > 0
+      ){
+        this.set(this.panel.clear_len)
+
+        let x = this.panel.playfield.layer_block.x
+        let y = this.panel.playfield.layer_block.y
+
+        x += (this.panel.x * UNIT)
+        y += (this.panel.y * UNIT)
+
+        y -= BAUBLE_FLOAT[this.panel.time_cur]
+
+        this.group.x = x
+        this.group.y = y
+
+        this.group.visible = true
+      } else {
+        this.group.visible = false
+      }
+
+
       if (this.value <= 9) {
         this.large_int.visible  = true
         this.small_int0.visible = false
