@@ -29,7 +29,7 @@ module.exports = function(game){
     TIME_FALL
   } = require(APP.path.core('data'))
 
-  const ComponentBaubleChain = require(APP.path.components('bauble_chain'))(game)
+  const ComponentBaubleChain = require(APP.path.components('bauble'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -142,7 +142,6 @@ module.exports = function(game){
       this.sprite.visible = false
 
       this.bauble_chain.create(this)
-      this.bauble_chain.set(7)
     }
 
     /** */
@@ -518,7 +517,6 @@ module.exports = function(game){
     }
     /** */
     render(){
-      this.bauble_chain.group.visible = false
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
