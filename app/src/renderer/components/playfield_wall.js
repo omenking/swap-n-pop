@@ -14,7 +14,6 @@ module.exports = function(game){
       this.playfield = playfield
       this.sprite    = game.add.sprite(x, (y-1)+192, `playfield_wall${this.playfield.pi}`)
       this.counter   = 0
-      console.log('playfield wall')
     }
 
     update() {

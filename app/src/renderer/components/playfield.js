@@ -234,7 +234,7 @@ module.exports = function(game){
     }
     fill_panels(data){
       for (let i = 0; i < data.length; i++) {
-        this.stack(i).set(data[i])
+          this.stack(i).set(data[i])
       }
 
       if (this.should_push){
@@ -347,17 +347,17 @@ module.exports = function(game){
     }
     score_current(cnc){
       if (cnc[0] > 0) {
-        console.log('combo is ', cnc);
+        //console.log('combo is ', cnc);
         this.score += cnc[0] * 10;
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
-          console.log('chain is ', this.chain + 1);
+          //console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
           this.score += this.score_chain(this.chain + 1);
         }
-        console.log('Score: ', this.score);
+        //console.log('Score: ', this.score);
       }
     }
     render_stack() {

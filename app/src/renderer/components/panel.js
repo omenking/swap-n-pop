@@ -252,7 +252,7 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
-          console.log(this.under.empty)
+          //console.log(this.under.empty)
           if (this.counter > 0) { return }
           //console.log(this.under.empty)
           if (this.under.empty) {
