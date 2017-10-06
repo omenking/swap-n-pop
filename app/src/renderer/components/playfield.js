@@ -63,6 +63,7 @@ module.exports = function(game){
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
+      this.queue_garbage = this.queue_garbage.bind(this);
 
       this.pi = pi
       this.countdown  = new ComponentPlayfieldCountdown()
@@ -177,6 +178,10 @@ module.exports = function(game){
     }
     get stack_size(){
       return this.should_push ? this.stack_len-COLS : this.stack_len
+    }
+
+    queue_garbage(chain){
+      console.log('queue garbage chain', chain)
     }
     push() {
       let i;
@@ -352,6 +357,11 @@ module.exports = function(game){
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
+          if (this.pi === 0) {
+            this.stage.playfield1.queue_garbage(this.chain+1)
+          } else {
+            this.stage.playfield0.queue_garbage(this.chain+1)
+          }
           console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
@@ -391,7 +401,7 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
-      this.score_current(cnc);
+      this.score_current(cnc)
 
       if (this.land === true) {
         game.sounds.land()
