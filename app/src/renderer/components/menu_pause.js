@@ -5,7 +5,7 @@ module.exports = function(game){
   /** A Menu_pause handles the pausing of a stage
    *  new controls are provided to move in the menu and use various options
    */
-  class controller {
+  class Menu_pause {
     /** bindings & new menu cursor created */
     constructor() {
       this.create = this.create.bind(this);
@@ -76,5 +76,5 @@ module.exports = function(game){
     }
   }
 
-  return controller
+  return Menu_pause
 }
