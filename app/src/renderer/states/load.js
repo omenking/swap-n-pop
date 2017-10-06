@@ -103,6 +103,13 @@ module.exports = function(game){
 
       game.load.spritesheet('star_counter', './assets/star_counter.png',16,16,12)
 
+      game.load.image('bauble_chainl', './assets/bauble_chainl.png')
+      game.load.image('bauble_chainm', './assets/bauble_chainm.png')
+      game.load.image('bauble_chainr', './assets/bauble_chainr.png')
+      game.load.image('bauble_chain_times', './assets/bauble_chain_times.png')
+      game.load.spritesheet('bauble_chain_num'      , './assets/bauble_chain_num.png',6,9,8)
+      game.load.spritesheet('bauble_chain_num_small', './assets/bauble_chain_num_small.png',5,9,10)
+
       game.load.start()
     }
   }

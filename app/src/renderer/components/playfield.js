@@ -8,6 +8,7 @@ module.exports = function(game){
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
+  const ComponentBaubleChain        = require(APP.path.components('bauble_chain'))(game)
   const {
     ROWS,
     COLS,
@@ -63,13 +64,15 @@ module.exports = function(game){
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
+      this.queue_garbage = this.queue_garbage.bind(this);
 
       this.pi = pi
       this.countdown  = new ComponentPlayfieldCountdown()
       this.cursor     = new ComponentPlayfieldCursor()
       this.wall       = new ComponentPlayfieldWall()
-      this.score_lbl  = new ComponentScore();
-      this.ai         = new ComponentAi();
+      this.score_lbl  = new ComponentScore()
+      this.ai         = new ComponentAi()
+      this.bauble_chain = new ComponentBaubleChain()
     }
 
     get push_counter(){ return this._push_counter }
@@ -165,6 +168,8 @@ module.exports = function(game){
       this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.wall.create(this,this.x,this.y)
+      this.bauble_chain.create(20,20)
+      this.bauble_chain.set(7)
     }
     create_stack(data){
       this._stack = []
@@ -177,6 +182,10 @@ module.exports = function(game){
     }
     get stack_size(){
       return this.should_push ? this.stack_len-COLS : this.stack_len
+    }
+
+    queue_garbage(chain){
+      console.log('queue garbage chain', chain)
     }
     push() {
       let i;
@@ -352,6 +361,11 @@ module.exports = function(game){
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
+          if (this.pi === 0) {
+            this.stage.playfield1.queue_garbage(this.chain+1)
+          } else {
+            this.stage.playfield0.queue_garbage(this.chain+1)
+          }
           console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
@@ -369,6 +383,7 @@ module.exports = function(game){
       this.cursor.render()
       this.wall.render()
       this.render_stack()
+      this.bauble_chain.render()
 
       if (this.should_push) {
         const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
@@ -391,7 +406,7 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
-      this.score_current(cnc);
+      this.score_current(cnc)
 
       if (this.land === true) {
         game.sounds.land()
