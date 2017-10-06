@@ -1,6 +1,8 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const Stack  = require(APP.path.core('stack'))(game)
+  const StackTwo  = require(APP.path.core('stackTwo'))(game)
+  
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
   const ComponentPing        = require(APP.path.components('ping'))(game)
   const ComponentDebugFrame  = require(APP.path.components('debug_frame'))(game)
@@ -102,14 +104,17 @@ module.exports = function(game){
       this.create_bg()
 
       const stack = new Stack(this.rng)
-      stack.create()
+      //stack.create()
+
+      const stackTwo = new StackTwo();
+      stackTwo.create(5, 10);
 
       if (this.online && game.server.pos === 1) {
-        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
-        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stack.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stackTwo.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stackTwo.panels})
       } else {
-        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stack.panels})
-        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stackTwo.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stackTwo.panels})
       }
 
       this.create_frame(offset)
