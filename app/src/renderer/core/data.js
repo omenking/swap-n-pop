@@ -65,6 +65,8 @@ module.exports = {
   FRAME_DEAD    : 5,
   FRAME_NEWLINE : 1,
 
+  FRAME_STAR: [1,1,2,2,3,3,4,4,5,5,5,5,5,5,4,4,3,3,2,2,1,1,1,1,1,1,1],
+
   // Timing
   TIME_CLEAR : 60, //the time it takes before the first panel is ready to start popping
   TIME_POP   : 9,  //when a panel is ready to pop is needs to wait for time_pop before popping
