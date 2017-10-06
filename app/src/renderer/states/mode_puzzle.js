@@ -36,6 +36,7 @@ module.exports = function(game){
 
     create() {
       this.playfield.create(this, {
+        countdown: false,
         push  : false,
         x     : 40,
         y     : 8,

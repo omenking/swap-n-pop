@@ -1,10 +1,13 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const Stack  = require(APP.path.core('stack'))(game)
-  const ComponentPlayfield = require(APP.path.components('playfield'))(game)
-  const ComponentPing      = require(APP.path.components('ping'))(game)
-  const ComponentDebugFrame      = require(APP.path.components('debug_frame'))(game)
-  const ComponentTimer      = require(APP.path.components('timer'))(game)
+  const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
+  const ComponentPing        = require(APP.path.components('ping'))(game)
+  const ComponentDebugFrame  = require(APP.path.components('debug_frame'))(game)
+  const ComponentTimer       = require(APP.path.components('timer'))(game)
+  const ComponentMenuPause   = require(APP.path.components('menu_pause'))(game)
+  const ComponentStarCounter = require(APP.path.components('star_counter'))(game)
+
   const CoreInputs         = require(APP.path.core('inputs'))(game)
   const CoreSnapshots      = require(APP.path.core('snapshots'))(game)
   const {ipcRenderer: ipc} = require('electron')
@@ -40,6 +43,9 @@ module.exports = function(game){
       this.ping         = new ComponentPing()
       this.debug_frame  = new ComponentDebugFrame()
       this.timer        = new ComponentTimer()
+
+      this.menu_pause   = new ComponentMenuPause()
+      this.star_counter = new ComponentStarCounter()
     }
 
     static initClass() {
@@ -48,6 +54,7 @@ module.exports = function(game){
       this.prototype.roll = {}
     }
     init(data){
+      this.rounds_won = [2,1]
       this.tick   = 0
       this.seed   = data.seed
       this.cpu    = data.cpu
@@ -121,18 +128,30 @@ module.exports = function(game){
         this.ping.create()
       }
       this.debug_frame.create()
+
+      this.menu_pause.create(this)
+      this.star_counter.create(this,55,91)
     }
 
-    pause(pi){
-      game.sounds.stage_music('pause')
-      this.playfield1.pause(pi)
-      this.playfield2.pause(pi)
+    /** turns on the menu, changes it state, turns of the timer from counting */
+    pause(){
+      game.sounds.stage_music('pause');
+
+      this.state = "pause";
+      this.timer.running = false;
+      this.menu_pause.pause();
     }
+
+    /** called by the menu and reassigns control to both playfields, timer runs again */
     resume() {
-      game.sounds.stage_music('resume')
-      this.playfield1.resume()
-      this.playfield2.resume()
+      game.sounds.stage_music('resume');
+
+      this.state = "running";
+      this.timer.running = true;
+      this.playfield1.cursor.map_controls();
+      this.playfield2.cursor.map_controls();
     }
+
     game_over() {
       console.log('gameover')
       if(!this.inputs.replay){
@@ -191,6 +210,9 @@ module.exports = function(game){
         //'log',
         //`ST ${this.tick}: ${this.log_roll()}`
       //)
+
+      this.menu_pause.update()
+      this.star_counter.update()
     }
 
     log_stack(tick,format=null){
@@ -303,6 +325,7 @@ module.exports = function(game){
         this.ping.render()
       }
       this.debug_frame.render(this.tick)
+      this.star_counter.render()
     }
     shutdown() {
       console.log('shutdown mode_vs')

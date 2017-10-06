@@ -474,7 +474,7 @@ module.exports = function(game){
     animate(){
       if (this.newline) {
         this.frame = FRAME_NEWLINE
-      } else if (this.dead){
+      } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
         let [i,len] = this.clear_index

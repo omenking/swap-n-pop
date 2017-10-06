@@ -42,7 +42,7 @@ module.exports = function(game){
     }
     mode_improve() {
       game.state.start('mode_puzzle',true,false,{
-        panels: PUZZLE.skill_chain_demo_2.demo_4,
+        panels: PUZZLE.test,
         cpu: [false,null]
       })
     }
