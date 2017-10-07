@@ -103,7 +103,7 @@ module.exports = function(game){
       this.create_bg()
 
       const stack = new Stack(this.rng);
-      stack.create(5, 20);
+      stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
       if (this.online && game.server.pos === 1) {
         this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
