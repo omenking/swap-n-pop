@@ -84,16 +84,16 @@ module.exports = function(game){
     }
 
     render_chain(x,y){
+      const chain = this.panel.chain
       if (this.panel.state   === CLEAR &&
           this.panel.clear_i === 0     &&
-          this.panel.clear_len > 3     &&
+          chain                > 3     &&
           this.panel.time_cur  > 0
       ){
-        chain = 20
         this.chain.x = x
         this.chain.y = y
 
-        this.chain.visible = true
+        this.chain.visible      = true
         this.chain_left.y       = 0
         this.chain_middle.y     = 0
         this.chain_right.y      = 0
@@ -158,22 +158,25 @@ module.exports = function(game){
       }
     }
     render_combo(x,y){
+      const combo = this.panel.clear_len
+      const chain = this.panel.chain
       if (this.panel.state   === CLEAR &&
           this.panel.clear_i === 0     &&
-          this.panel.clear_len > 3     &&
+          combo                > 3     &&
           this.panel.time_cur  > 0
       ){
         this.combo.x = x
         this.combo.y = y
 
-        this.combo.visible = true
-        this.combo_left.y       = 16
-        this.combo_middle.y     = 16
-        this.combo_right.y      = 16
-        this.combo_int0.y       = 16 + 3
-        this.combo_small_int0.y = 16 + 3
+        const offset = 0
+        if (chain > 3){ offset = 16 }
+        this.combo.visible      = true
+        this.combo_left.y       = offset
+        this.combo_middle.y     = offset
+        this.combo_right.y      = offset
+        this.combo_int0.y       = offset + 3
+        this.combo_small_int0.y = offset + 3
 
-        const combo = this.panel.clear_len
 
         if (combo <= 9) {
           this.combo_int0.frame = combo

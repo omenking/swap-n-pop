@@ -130,7 +130,7 @@ module.exports = function(game){
       this.x = x;
       this.y = y;
       this.state = STATIC
-      this.chain = false
+      this.chain = 0
 
       this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
       this.playfield.layer_block.add(this.sprite)
@@ -241,7 +241,7 @@ module.exports = function(game){
             this.counter = FRAME_DANGER.length+1
           }
           //if (this.under === blank) {
-            //this.chain = false
+            //this.chain = 0
           //} else if (this.under.state === HANG) {
             //this.state = HANG
             //this.counter =  this.under.counter
@@ -249,7 +249,7 @@ module.exports = function(game){
           //} else if (this.under.empty && !this.empty) {
             //this.state = HANG
           //} else {
-            //this.chain = false
+            //this.chain = 0
           //}
           break;
         case HANG:
@@ -269,7 +269,7 @@ module.exports = function(game){
             this.kind    = null
             this.state   = STATIC
             this.counter = 0
-            this.chain   = false
+            this.chain   = 0
           } else {
             this.state   = LAND
             this.counter = FRAME_LAND.length
@@ -289,9 +289,9 @@ module.exports = function(game){
           this.state   = STATIC
           this.kind    = null
           this.counter = 0
-          this.chain   = false
+          this.chain   = 0
           if (this.above && (!this.above.hidden)) {
-            this.above.chain = true
+            this.above.chain += 1
           }
           break;
         case LAND:
@@ -325,8 +325,8 @@ module.exports = function(game){
       this.counter        = 0
       this.right.counter  = 0
 
-      this.chain       = false
-      this.right.chain = false
+      this.chain       = 0
+      this.right.chain = 0
 
       this.state       = SWAP_L
       this.right.state = SWAP_R
@@ -415,7 +415,7 @@ module.exports = function(game){
      * */
     chain_and_combo() {
       let combo = 0
-      let chain = false
+      let chain = 0
       if (!this.comboable) { return [combo,chain] }
       [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
@@ -442,7 +442,7 @@ module.exports = function(game){
       combo  += panel1[0]
       combo  += middle[0]
       combo  += panel2[0]
-      if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
+      if (middle[1] || panel1[1] || panel2[1]) { chain += 1; }
       return [combo,chain]
     }
     /**

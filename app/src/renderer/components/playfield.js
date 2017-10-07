@@ -282,7 +282,7 @@ module.exports = function(game){
     chain_over() {
       let chain = true;
       for (let panel of this.stack()) {
-        if (panel.chain) { chain = false; }
+        if (panel.chain > 0) { chain = false; }
       }
       return chain;
     }
