@@ -55,7 +55,7 @@ module.exports = function(game){
     set state(val) {       this.attr_state = val }
 
     get chain()    {return this.attr_chain }
-    set chain(val) {       this.attr_chain = val }
+    set chain(val) { this.attr_chain = val }
 
     get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack(this.x-1,this.y)   }
     get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack(this.x+1,this.y)   }
@@ -257,7 +257,6 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
-          console.log(this.under.empty)
           if (this.counter > 0) { return }
           //console.log(this.under.empty)
           if (this.under.empty) {
@@ -404,6 +403,7 @@ module.exports = function(game){
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }
       this.state = CLEAR
+      this.chain += 1
       this.playfield.clearing.push(this)
       return [1, this.chain]
     }

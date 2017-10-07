@@ -87,7 +87,7 @@ module.exports = function(game){
       const chain = this.panel.chain
       if (this.panel.state   === CLEAR &&
           this.panel.clear_i === 0     &&
-          chain                > 3     &&
+          chain                > 1     &&
           this.panel.time_cur  > 0
       ){
         this.chain.x = x
@@ -168,8 +168,8 @@ module.exports = function(game){
         this.combo.x = x
         this.combo.y = y
 
-        const offset = 0
-        if (chain > 0){ offset = 16 }
+        let offset = 0
+        if (chain > 1){ offset = 16 }
         this.combo.visible      = true
         this.combo_left.y       = offset
         this.combo_middle.y     = offset
