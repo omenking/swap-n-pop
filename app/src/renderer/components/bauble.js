@@ -169,7 +169,7 @@ module.exports = function(game){
         this.combo.y = y
 
         const offset = 0
-        if (chain > 3){ offset = 16 }
+        if (chain > 0){ offset = 16 }
         this.combo.visible      = true
         this.combo_left.y       = offset
         this.combo_middle.y     = offset
