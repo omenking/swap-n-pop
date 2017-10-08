@@ -357,20 +357,7 @@ module.exports = function(game){
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
-<<<<<<< HEAD
           //console.log('chain is ', this.chain + 1);
-=======
-
-          if (this.stage.cpu[1] !== null) { // if no second player, nothing to queue.
-            if (this.pi === 0) {
-              this.stage.playfield2.queue_garbage(this.chain+1)
-            } else {
-              this.stage.playfield1.queue_garbage(this.chain+1)
-            }
-          }
-
-          console.log('chain is ', this.chain + 1);
->>>>>>> master
         }
         if (this.chain) {
           this.score += this.score_chain(this.chain + 1);

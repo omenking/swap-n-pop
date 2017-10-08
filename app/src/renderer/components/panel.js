@@ -257,10 +257,6 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
-<<<<<<< HEAD
-          //console.log(this.under.empty)
-=======
->>>>>>> master
           if (this.counter > 0) { return }
           //console.log(this.under.empty)
           if (this.under.empty) {
