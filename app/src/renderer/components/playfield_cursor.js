@@ -108,7 +108,7 @@ module.exports = function(game){
      * @returns bool
      */
     pressedThenHeld(tick) {
-      return tick == 0 || tick > PANELCURSOR_CHECK_SPEED;
+      return tick == 0 || tick > 15;
     }
 
     /**
