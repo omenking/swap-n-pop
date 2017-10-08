@@ -47,6 +47,7 @@ module.exports = {
   SWAPPING_R : 7,
   CLEAR      : 8,
   POPPING    : 9,
+  GARBAGE    : 10,
   // Animation Frame
   FRAME_LAND    : [4,4,4,2,2,2,3,3,3,0],
   FRAME_CLEAR   : [6,0,6,0,6,0,6,0,6,0,6,0,

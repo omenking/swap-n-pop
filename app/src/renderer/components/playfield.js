@@ -35,7 +35,6 @@ module.exports = function(game){
       this.prototype.scoreText   = null
       this.prototype.has_ai      = false
       this.prototype.land        = false
-       // when any panel has landed in the stac
     }
     constructor(pi){
       if (pi !== 0 && pi !== 1){ 
