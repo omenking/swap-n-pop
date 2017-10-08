@@ -8,7 +8,7 @@ module.exports = function(game){
     PANELCURSOR_CHECK_SPEED
   } = require(APP.path.core('data'));
   
-  class Player {
+  class Cursor {
     /** bindings only */
     constructor() {
       this.create = this.create.bind(this);
@@ -63,6 +63,8 @@ module.exports = function(game){
       this.sprite.visible = visible;
 
       this.playfield.layer_cursor.add(this.sprite);
+
+      this.ignore = false;
     }
 
     get snap() {
@@ -108,7 +110,13 @@ module.exports = function(game){
      * @returns bool
      */
     pressedThenHeld(tick) {
-      return tick == 0 || tick > 15;
+      if (tick == 0) 
+        this.ignore = false;
+
+      if (tick > 15)
+        this.ignore = true;
+
+      return this.ignore || tick == 0;
     }
 
     /**
@@ -260,5 +268,5 @@ module.exports = function(game){
     }
   }
 
-  return Player;
+  return Cursor;
 }
