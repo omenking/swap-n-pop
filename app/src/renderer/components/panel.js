@@ -85,7 +85,6 @@ module.exports = function(game){
       this.clear            = this.clear.bind(this)
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
-      this.check_neighbours = this.check_neighbours.bind(this)
 
       this.bauble_chain = new ComponentBaubleChain()
     }
@@ -401,49 +400,32 @@ module.exports = function(game){
     * call `Panel.popping` to set the counter.
     */
     clear() {
-      if (this.state === CLEAR) { return [0, this.chain]; }
+      if (this.state === CLEAR) { return }
       this.state = CLEAR
       this.chain += 1
       this.playfield.clearing.push(this)
-      return [1, this.chain]
     }
     /**
-     * Checks above and under and then left and right from the current panel
-     * and returns if there  combo count and if there is chain
+     * Checks above and under and then left and right from the current panel.
+     * Panels will be added to playfield.clearing to determine combo and chain
      *
-     * @returns {{array}} [chain,combo]
      * */
     chain_and_combo() {
-      let combo = 0
-      let chain = 0
-      if (!this.comboable) { return [combo,chain] }
-      [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
-      [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
-      return [combo,chain]
-    }
-    /**
-     * Checks to see if the given panels form a combo with the current panel.
-     *
-     * @param {Object} panel1
-     * @param {Object} panel2
-     * @param {{number}} combo
-     * @param {{boolean}} chain
-     * @returns {{array}} [chain,combo]
-     * */
-    check_neighbours(p1,p2,combo,chain){
-      if (
-        !p1.comboable          || !p2.comboable ||
-         p1.kind !== this.kind || p2.kind !== this.kind
-      ) { return [combo,chain]; }
-      const panel1  = p1.clear()
-      const middle  = this.clear()
-      const panel2  = p2.clear()
+      if (!this.comboable) { return }
 
-      combo  += panel1[0]
-      combo  += middle[0]
-      combo  += panel2[0]
-      if (middle[1] || panel1[1] || panel2[1]) { chain += 1; }
-      return [combo,chain]
+      if (this.left.comboable  && this.left.kind  === this.kind &&
+          this.right.comboable && this.right.kind === this.kind) {
+        this.left.clear()
+        this.clear()
+        this.right.clear()
+      }
+
+      if (this.above.comboable  && this.above.kind  === this.kind &&
+          this.under.comboable  && this.under.kind  === this.kind) {
+        this.above.clear()
+        this.clear()
+        this.under.clear()
+      }
     }
     /**
      Returns the index of the current panel clearing and amount of panels clearing

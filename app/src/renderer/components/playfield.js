@@ -8,6 +8,7 @@ module.exports = function(game){
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
+  const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
     ROWS,
     COLS,
@@ -58,14 +59,13 @@ module.exports = function(game){
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.danger = this.danger.bind(this);
-      this.chain_over    = this.chain_over.bind(this);
       this.update_push   = this.update_push.bind(this);
-      this.score_current = this.score_current.bind(this);
+      this.update_score  = this.update_score.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
-      this.queue_garbage = this.queue_garbage.bind(this);
 
       this.pi = pi
+      this.garbage    = new CoreGarbage()
       this.countdown  = new ComponentPlayfieldCountdown()
       this.cursor     = new ComponentPlayfieldCursor()
       this.wall       = new ComponentPlayfieldWall()
@@ -155,6 +155,10 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
+      if (this.stage.cpu[1] !== null){
+        this.garbage.create(this.stage,this.pi)
+      }
+
       //this.score_lbl.create()
     }
     create_after() {
@@ -180,9 +184,6 @@ module.exports = function(game){
       return this.should_push ? this.stack_len-COLS : this.stack_len
     }
 
-    queue_garbage(chain){
-      console.log('queue garbage chain', chain)
-    }
     push() {
       let i;
       if (this.danger(0)) {
@@ -255,36 +256,24 @@ module.exports = function(game){
     }
     chain_and_combo() {
       let i, panel
-      let combo = 0
-      let chain = false
 
       this.clearing = []
       for (i = 0; i < this.stack_size; i++) {
-        const cnc  = this.stack(i).chain_and_combo()
-        combo += cnc[0]
-        if (cnc[1]) { chain  = true; }
+        this.stack(i).chain_and_combo()
       }
 
+      const combo = this.clearing.length
+      let   chain = 0
       for (let panel of this.clearing){
         panel.popping(this.clearing.length)
+        chain = Math.max(chain,panel.chain)
       }
-
-      if (this.chain && this.chain_over()) { this.chain = 0; }
       return [combo, chain]
     }
     swap(x,y){
       if (this.stack(x,y).swappable && this.stack(x+1,y).swappable) {
         this.stack(x,y).swap()
       }
-    }
-    // Checks if the current chain is over.
-    // returns a boolean
-    chain_over() {
-      let chain = true;
-      for (let panel of this.stack()) {
-        if (panel.chain > 0) { chain = false; }
-      }
-      return chain;
     }
     danger(within){
       const offset = COLS*within;
@@ -350,28 +339,13 @@ module.exports = function(game){
           return 0;
       }
     }
-    score_current(cnc){
-      if (cnc[0] > 0) {
-        console.log('combo is ', cnc);
-        this.score += cnc[0] * 10;
-        this.score += this.score_combo(cnc[0]);
-        if (cnc[1]) {
-          this.chain++;
-
-          if (this.stage.cpu[1] !== null) { // if no second player, nothing to queue.
-            if (this.pi === 0) {
-              this.stage.playfield2.queue_garbage(this.chain+1)
-            } else {
-              this.stage.playfield1.queue_garbage(this.chain+1)
-            }
-          }
-
-          console.log('chain is ', this.chain + 1);
+    update_score(combo,chain){
+      if (combo > 0) {
+        this.score += combo * 10
+        this.score += this.score_combo(combo)
+        if (chain) {
+          this.score += this.score_chain(chain)
         }
-        if (this.chain) {
-          this.score += this.score_chain(this.chain + 1);
-        }
-        console.log('Score: ', this.score);
       }
     }
     render_stack() {
@@ -405,7 +379,11 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
-      this.score_current(cnc)
+
+      if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
+        this.garbage.update(cnc[0],cnc[1])
+      }
+      this.update_score(cnc[0],cnc[1])
 
       if (this.land === true) {
         game.sounds.land()
