@@ -29,6 +29,7 @@ module.exports = function(game){
     TIME_FALL
   } = require(APP.path.core('data'))
 
+  const ComponentBaubleChain = require(APP.path.components('bauble'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -54,7 +55,7 @@ module.exports = function(game){
     set state(val) {       this.attr_state = val }
 
     get chain()    {return this.attr_chain }
-    set chain(val) {       this.attr_chain = val }
+    set chain(val) { this.attr_chain = val }
 
     get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack(this.x-1,this.y)   }
     get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack(this.x+1,this.y)   }
@@ -85,6 +86,8 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.check_neighbours = this.check_neighbours.bind(this)
+
+      this.bauble_chain = new ComponentBaubleChain()
     }
 
     /** */
@@ -127,7 +130,7 @@ module.exports = function(game){
       this.x = x;
       this.y = y;
       this.state = STATIC
-      this.chain = false
+      this.chain = 0
 
       this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
       this.playfield.layer_block.add(this.sprite)
@@ -137,6 +140,8 @@ module.exports = function(game){
       // start of match. If we can find someone way to
       // move this in the render that would be ideal.
       this.sprite.visible = false
+
+      this.bauble_chain.create(this)
     }
 
     /** */
@@ -236,7 +241,7 @@ module.exports = function(game){
             this.counter = FRAME_DANGER.length+1
           }
           //if (this.under === blank) {
-            //this.chain = false
+            //this.chain = 0
           //} else if (this.under.state === HANG) {
             //this.state = HANG
             //this.counter =  this.under.counter
@@ -244,7 +249,7 @@ module.exports = function(game){
           //} else if (this.under.empty && !this.empty) {
             //this.state = HANG
           //} else {
-            //this.chain = false
+            //this.chain = 0
           //}
           break;
         case HANG:
@@ -252,7 +257,10 @@ module.exports = function(game){
           this.state = FALL
           break;
         case FALL:
+<<<<<<< HEAD
           //console.log(this.under.empty)
+=======
+>>>>>>> master
           if (this.counter > 0) { return }
           //console.log(this.under.empty)
           if (this.under.empty) {
@@ -264,7 +272,7 @@ module.exports = function(game){
             this.kind    = null
             this.state   = STATIC
             this.counter = 0
-            this.chain   = false
+            this.chain   = 0
           } else {
             this.state   = LAND
             this.counter = FRAME_LAND.length
@@ -284,9 +292,9 @@ module.exports = function(game){
           this.state   = STATIC
           this.kind    = null
           this.counter = 0
-          this.chain   = false
+          this.chain   = 0
           if (this.above && (!this.above.hidden)) {
-            this.above.chain = true
+            this.above.chain += 1
           }
           break;
         case LAND:
@@ -320,8 +328,8 @@ module.exports = function(game){
       this.counter        = 0
       this.right.counter  = 0
 
-      this.chain       = false
-      this.right.chain = false
+      this.chain       = 0
+      this.right.chain = 0
 
       this.state       = SWAP_L
       this.right.state = SWAP_R
@@ -399,6 +407,7 @@ module.exports = function(game){
     clear() {
       if (this.state === CLEAR) { return [0, this.chain]; }
       this.state = CLEAR
+      this.chain += 1
       this.playfield.clearing.push(this)
       return [1, this.chain]
     }
@@ -410,7 +419,7 @@ module.exports = function(game){
      * */
     chain_and_combo() {
       let combo = 0
-      let chain = false
+      let chain = 0
       if (!this.comboable) { return [combo,chain] }
       [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
       [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
@@ -437,7 +446,7 @@ module.exports = function(game){
       combo  += panel1[0]
       combo  += middle[0]
       combo  += panel2[0]
-      if (middle[1] || panel1[1] || panel2[1]) { chain = true; }
+      if (middle[1] || panel1[1] || panel2[1]) { chain += 1; }
       return [combo,chain]
     }
     /**
@@ -478,13 +487,18 @@ module.exports = function(game){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
         let [i,len] = this.clear_index
+        this.clear_i    = i
+        this.clear_len  = len
+
         let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
         this.time_pop = TIME_CLEAR + (TIME_POP*i)
         this.time_cur = time_max - this.counter
+
         if (FRAME_CLEAR.length > this.time_cur){
-          //if(i === 0){ console.log(time_cur,FRAME_CLEAR[time_cur])}
           this.frame = FRAME_CLEAR[this.time_cur]
         }
+
+
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
       } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
@@ -511,6 +525,7 @@ module.exports = function(game){
       this.sprite.y = this.y * UNIT
       this.animate()
       this.render_visible()
+      this.bauble_chain.render()
     }
     /** */
     shutdown(){}

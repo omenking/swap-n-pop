@@ -63,13 +63,14 @@ module.exports = function(game){
       this.score_current = this.score_current.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
+      this.queue_garbage = this.queue_garbage.bind(this);
 
       this.pi = pi
       this.countdown  = new ComponentPlayfieldCountdown()
       this.cursor     = new ComponentPlayfieldCursor()
       this.wall       = new ComponentPlayfieldWall()
-      this.score_lbl  = new ComponentScore();
-      this.ai         = new ComponentAi();
+      this.score_lbl  = new ComponentScore()
+      this.ai         = new ComponentAi()
     }
 
     get push_counter(){ return this._push_counter }
@@ -154,7 +155,7 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
-      this.score_lbl.create()
+      //this.score_lbl.create()
     }
     create_after() {
       this.layer_cursor = game.add.group()
@@ -177,6 +178,10 @@ module.exports = function(game){
     }
     get stack_size(){
       return this.should_push ? this.stack_len-COLS : this.stack_len
+    }
+
+    queue_garbage(chain){
+      console.log('queue garbage chain', chain)
     }
     push() {
       let i;
@@ -215,7 +220,7 @@ module.exports = function(game){
         this.stack(i).set('unique')
       }
     }
-    
+
     game_over() {
       this.stage.state = 'gameover'
       this.push_counter = 0
@@ -277,7 +282,7 @@ module.exports = function(game){
     chain_over() {
       let chain = true;
       for (let panel of this.stack()) {
-        if (panel.chain) { chain = false; }
+        if (panel.chain > 0) { chain = false; }
       }
       return chain;
     }
@@ -352,7 +357,20 @@ module.exports = function(game){
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
+<<<<<<< HEAD
           //console.log('chain is ', this.chain + 1);
+=======
+
+          if (this.stage.cpu[1] !== null) { // if no second player, nothing to queue.
+            if (this.pi === 0) {
+              this.stage.playfield2.queue_garbage(this.chain+1)
+            } else {
+              this.stage.playfield1.queue_garbage(this.chain+1)
+            }
+          }
+
+          console.log('chain is ', this.chain + 1);
+>>>>>>> master
         }
         if (this.chain) {
           this.score += this.score_chain(this.chain + 1);
@@ -379,7 +397,7 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
-      this.score_lbl.update(this.chain, this.score)
+      //this.score_lbl.update(this.chain, this.score)
 
       if (this.stage.state === 'gameover') {
         this.wall.update()
@@ -391,7 +409,7 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
-      this.score_current(cnc);
+      this.score_current(cnc)
 
       if (this.land === true) {
         game.sounds.land()
