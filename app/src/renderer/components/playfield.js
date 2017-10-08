@@ -8,7 +8,6 @@ module.exports = function(game){
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
-  const ComponentBaubleChain        = require(APP.path.components('bauble_chain'))(game)
   const {
     ROWS,
     COLS,
@@ -72,7 +71,6 @@ module.exports = function(game){
       this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore()
       this.ai         = new ComponentAi()
-      this.bauble_chain = new ComponentBaubleChain()
     }
 
     get push_counter(){ return this._push_counter }
@@ -157,7 +155,7 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
-      this.score_lbl.create()
+      //this.score_lbl.create()
     }
     create_after() {
       this.layer_cursor = game.add.group()
@@ -168,8 +166,6 @@ module.exports = function(game){
       this.cursor.create(this)
       if (this.has_ai) { this.ai.create(this, this.cursor) }
       this.wall.create(this,this.x,this.y)
-      this.bauble_chain.create(20,20)
-      this.bauble_chain.set(7)
     }
     create_stack(data){
       this._stack = []
@@ -224,7 +220,7 @@ module.exports = function(game){
         this.stack(i).set('unique')
       }
     }
-    
+
     game_over() {
       this.stage.state = 'gameover'
       this.push_counter = 0
@@ -286,7 +282,7 @@ module.exports = function(game){
     chain_over() {
       let chain = true;
       for (let panel of this.stack()) {
-        if (panel.chain) { chain = false; }
+        if (panel.chain > 0) { chain = false; }
       }
       return chain;
     }
@@ -361,11 +357,15 @@ module.exports = function(game){
         this.score += this.score_combo(cnc[0]);
         if (cnc[1]) {
           this.chain++;
-          if (this.pi === 0) {
-            this.stage.playfield1.queue_garbage(this.chain+1)
-          } else {
-            this.stage.playfield0.queue_garbage(this.chain+1)
+
+          if (this.stage.cpu[1] !== null) { // if no second player, nothing to queue.
+            if (this.pi === 0) {
+              this.stage.playfield2.queue_garbage(this.chain+1)
+            } else {
+              this.stage.playfield1.queue_garbage(this.chain+1)
+            }
           }
+
           console.log('chain is ', this.chain + 1);
         }
         if (this.chain) {
@@ -383,7 +383,6 @@ module.exports = function(game){
       this.cursor.render()
       this.wall.render()
       this.render_stack()
-      this.bauble_chain.render()
 
       if (this.should_push) {
         const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
@@ -394,7 +393,7 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
-      this.score_lbl.update(this.chain, this.score)
+      //this.score_lbl.update(this.chain, this.score)
 
       if (this.stage.state === 'gameover') {
         this.wall.update()

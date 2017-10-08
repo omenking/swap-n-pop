@@ -2,16 +2,16 @@ const N = null
 module.exports = {
   PUZZLE: {
     test: [
-      N, N, 1, N, N, N,
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
       N, N, 2, N, N, N,
-      N, N, 3, N, N, N,
-      N, N, 2, N, N, N,
-      N, N, 3, N, N, N,
-      N, N, 3, N, N, N,
-      N, N, 1, N, N, N,
       N, N, 2, N, N, N,
       N, N, 1, N, N, N,
-      N, N, 3, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 1, N, N, N,
+      N, N, 2, N, N, N,
       N, N, 2, N, N, N
     ],
     skill_chain_demo_2: {
@@ -93,6 +93,19 @@ module.exports = {
     189,192,192,190,189,189,190,192,192,190,
     192,190,192,191,192,191,192,191,192
   ],
+
+  BAUBLE_FLOAT: [
+    -1,-1,0,1,2,3,4,
+    4,5,5,6,6,7,
+    7,8,8,8,9,9,
+    9,9,9,10,10,
+    10,10,10,10,10,
+    10,10,10,10,10,
+    10,10,10,11,11,
+    11,11,11
+  ],
+
+
   // scan bottom to top, left to right.
   // I was too lazy to use math so I wrote out
   // the indexes by hand.
