@@ -1,7 +1,11 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
+  const _f = require(APP.path.core('filters'))
   const {
+    COLS,
     UNIT,
+    FALL,
+    STATIC,
     GARBAGE
   } = require(APP.path.core('data'))
   class PanelGarbage {
@@ -13,6 +17,8 @@ module.exports = function(game){
       this.update   = this.update.bind(this)
       this.render   = this.render.bind(this)
       this.shutdown = this.shutdown.bind(this)
+
+      this.fall_check = this.fall_check.bind(this)
     }
 
     get state()    {return this._state }
@@ -28,6 +34,35 @@ module.exports = function(game){
     }
 
     update(){
+      switch (this.state) {
+        case FALL:
+          if (this.panel.under.empty && this.fall_check()) {
+            this.panel.under.state               = GARBAGE
+            this.panel.under.panel_garbage.group = this.group
+            this.panel.under.panel_garbage.state = this.state
+
+            this.group = null
+            this.state = null
+
+            this.panel.kind    = null
+            this.panel.state   = STATIC
+            this.panel.counter = 0
+            this.panel.chain   = 0
+          }
+          break;
+      }
+    }
+
+    fall_check(){
+      let fall = true
+      for (let x = 0; x < COLS; x++){
+        let panel = this.panel.playfield.stack(x,this.panel.y)
+        if (panel.state               === GARBAGE &&
+            panel.panel_garbage.group === this.group) {
+          if (panel.under.empty === false) { fall = false}
+        }
+      }
+      return fall
     }
 
     /** */

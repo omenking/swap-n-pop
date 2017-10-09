@@ -264,7 +264,6 @@ module.exports = function(game){
             break;
           case FALL:
             if (this.counter > 0) { return }
-            //console.log(this.under.empty)
             if (this.under.empty) {
               this.under.kind    = this.kind
               this.under.state   = this.state
