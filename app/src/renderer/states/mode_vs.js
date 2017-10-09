@@ -326,7 +326,7 @@ module.exports = function(game){
       if (this.online){
         this.ping.render()
       }
-      this.debug_frame.render(this.tick)
+      //this.debug_frame.render(this.tick)
       this.star_counter.render()
     }
     shutdown() {
