@@ -27,7 +27,7 @@ module.exports = function(game) {
 			this.panels = 0;
 
 			// null block generation
-			this.amountOfSprites = [0, 1, 2, 3, 4];
+			this.kinds = [0, 1, 2, 3, 4, 5];
 			this.wellArray = [];
 			this.chipArray = [];
 		}
@@ -49,7 +49,7 @@ module.exports = function(game) {
 			
 			// generate numbers from top range to bottom
       for (var i = (PANELS - range * COLS); i < PANELS; i++) {
-        let currentNumber = ss.shuffle(this.amountOfSprites, this.rng())[0];
+        let currentNumber = ss.shuffle(this.kinds, this.rng())[0];
 
         // x and y pos to move in the array and detect things
         let indexes = _f.i2xy(i);
@@ -78,7 +78,7 @@ module.exports = function(game) {
 				while (currentNumber != null &&
 							 currentNumber == topNumber ||
 							 currentNumber == lastNumber) {
-					currentNumber = ss.shuffle(this.amountOfSprites, this.rng())[0];
+					currentNumber = ss.shuffle(this.kinds, this.rng())[0];
 				}
 
 				// set last number and send current to array
