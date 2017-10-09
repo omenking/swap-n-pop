@@ -220,7 +220,6 @@ module.exports = function(game){
       } else {
         if (this.newline){ return; }
         if (this.counter > 0) { this.counter--}
-
         switch (this.state) {
           case SWAP_L:
             if (this.counter > 0) { return }
