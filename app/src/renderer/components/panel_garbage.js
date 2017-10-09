@@ -15,6 +15,9 @@ module.exports = function(game){
       this.shutdown = this.shutdown.bind(this)
     }
 
+    get state()    {return this._state }
+    set state(val) {       this._state = val }
+
     get group()    {return this._group }
     set group(val) {       this._group = val }
 
@@ -26,6 +29,7 @@ module.exports = function(game){
 
     update(){
     }
+
     /** */
     render(){
       let str = ''

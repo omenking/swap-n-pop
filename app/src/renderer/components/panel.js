@@ -152,6 +152,7 @@ module.exports = function(game){
     set_garbage(group){
       this.state = GARBAGE
       this.panel_garbage.group = group
+      this.panel_garbage.state = FALL
     }
 
     /** */
@@ -251,19 +252,11 @@ module.exports = function(game){
             } else if (this.danger && this.counter === 0) {
               // we add 1 otherwise we will miss out on one frame
               // since counter can never really hit zero and render
+              this.chain = 0
               this.counter = FRAME_DANGER.length+1
+            } else {
+              this.chain = 0
             }
-            //if (this.under === blank) {
-              //this.chain = 0
-            //} else if (this.under.state === HANG) {
-              //this.state = HANG
-              //this.counter =  this.under.counter
-              //this.chain   = this.under.chain
-            //} else if (this.under.empty && !this.empty) {
-              //this.state = HANG
-            //} else {
-              //this.chain = 0
-            //}
             break;
           case HANG:
             if (this.counter > 0) { return }
@@ -298,13 +291,13 @@ module.exports = function(game){
             break;
           case CLEAR:
             if (this.counter > 0) { return }
+            if (this.above && !this.above.hidden && this.above.state === STATIC) {
+              this.above.chain += 1
+            }
             this.state   = STATIC
             this.kind    = null
             this.counter = 0
             this.chain   = 0
-            if (this.above && (!this.above.hidden)) {
-              this.above.chain += 1
-            }
             break;
           case LAND:
             if (this.counter > 0) { return }

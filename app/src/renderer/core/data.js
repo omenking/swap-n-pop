@@ -5,14 +5,14 @@ module.exports = {
       N, N, N, N, N, N,
       N, N, N, N, N, N,
       N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, N, N, N, N,
+      N, N, 1, N, N, N,
       N, N, 2, N, N, N,
       N, N, 2, N, N, N,
-      N, N, 1, N, N, N,
-      N, N, 1, N, N, N,
-      N, N, 1, N, N, N,
-      N, N, 1, N, N, N,
-      N, N, 2, N, N, N,
-      N, N, 2, N, N, N
+      N, 1, 2, 1, N, N
     ],
     skill_chain_demo_2: {
       demo_4: [

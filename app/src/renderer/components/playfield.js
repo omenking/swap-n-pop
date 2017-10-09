@@ -249,8 +249,8 @@ module.exports = function(game){
       }
     }
     update_stack() {
-      for (let i of SCAN_BTLR){
-        this.stack(i).update()
+      for (let i = 0; i < this.stack_len; i++) {
+        this.stack((this.stack_len-1)-i).update()
       }
     }
     chain_and_combo() {
@@ -265,8 +265,10 @@ module.exports = function(game){
       let   chain = 0
       for (let panel of this.clearing){
         panel.popping(this.clearing.length)
+        if (panel.chain > 0) { console.log(panel.chain) }
         chain = Math.max(chain,panel.chain)
       }
+      for (let panel of this.clearing){ panel.chain = chain }
       return [combo, chain]
     }
     swap(x,y){
