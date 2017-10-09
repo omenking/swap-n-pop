@@ -20,6 +20,7 @@ module.exports = function(game){
       this.trigger     = this.trigger.bind(this)
       this.add_input   = this.add_input.bind(this)
       this.disable     = this.disable.bind(this)
+      this.toggle_menu = this.toggle_menu.bind(this)
     }
     create() {
       this.callbacks = {
@@ -120,6 +121,14 @@ module.exports = function(game){
       this.keys.pl1_l     = this.add_input(inputs[15])
       this.keys.pl1_r     = this.add_input(inputs[16])
       this.keys.pl1_start = this.add_input(inputs[17])
+      //global binding
+
+      // AB - This should work but refuses to do so.
+      const key = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
+      key.onDown.add(this.toggle_menu,this)
+    }
+    toggle_menu(){
+      console.log('toggle menu')
     }
     add_input(i){
       if(typeof(i) === 'string'){

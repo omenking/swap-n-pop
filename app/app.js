@@ -33,6 +33,13 @@ return {
       args.unshift(root)
       return path.join(...args)
     },
+    ui: function(...args){
+      args.unshift('ui')
+      args.unshift('renderer')
+      args.unshift('src')
+      args.unshift(root)
+      return path.join(...args)
+    },
     spec: function(...args){
       args.unshift('spec')
       args.unshift(root)

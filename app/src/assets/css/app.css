@@ -1,4 +1,5 @@
 * {box-sizing: border-box; }
+
 html,body{ 
   background: rgb(33,33,33);
   margin:0;
@@ -27,6 +28,37 @@ div::-webkit-scrollbar {
 div::-webkit-scrollbar-thumb {
   background: rgb(20,20,20);
   border-radius: 999px;
+}
+
+.hide {
+  position: relative;
+  top: -9999px;
+  left: -9999px;
+}
+
+#game {
+  z-index: 1;
+}
+
+#ui {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.wrap1 {
+  padding: 24px;
+  background: rgb(22,22,22);
+  width: 100%;
+  height: 100%;
+}
+
+.wrap2 {
+  background: rgb(33,33,33);
+  border-radius: 4px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .divider:after {

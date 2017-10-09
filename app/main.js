@@ -55,17 +55,16 @@ const template = [
   {
     label: 'Debug',
     submenu: [
-      {click: click_debug('main')      , label: "Inspector Main"},
-      {click: click_debug('settings')  , label: "Inspector Settings"}
+      {click: click_debug, label: "Inspector"},
     ]
   }
 ]
 
 if (process.platform === 'darwin') {
   template.unshift({
-    label: "Swap N Pop",
+    label: "Swap'N'Pop",
     submenu: [
-      {role: 'about', label: "About Swap N Pop"},
+      {role: 'about', label: "About Swap'N'Pop"},
       {type: 'separator' },
       {click: click_settings('input'), label: "Preferences"},
       {type: 'separator' },
@@ -76,56 +75,21 @@ if (process.platform === 'darwin') {
 
 const menu  = Menu.buildFromTemplate(template)
 
-function click_debug(kind){
-  return function(){
-    switch (kind) {
-      case 'main':
-        if (win !== null) {
-          win.webContents.openDevTools()
-        }
-        break
-      case 'settings':
-        if (win_settings !== null) {
-          win_settings.webContents.openDevTools()
-        }
-        break
-    }
-  }
+function click_debug(){
+  win.webContents.openDevTools()
 }
 
 function click_settings(mode) {
   return function(item, win, ev){
-    if (win_settings !== null){
-      win_settings.custom = {mode: mode}
-      win_settings.webContents.send('reload',{mode: mode})
-      win_settings.show()
-      return
-    }
-    win_settings = new BrowserWindow({
-      title     : "Settings",
-      width     : 500,
-      height    : 500,
-      parent    : win,
-      resizable: false,
-      backgroundColor: '#212121'
-    })
-    win_settings.custom = {mode: mode}
-    win_settings.loadURL(url.format({
-      pathname: path.join(__dirname, 'src', 'settings.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-    win_settings.webContents.on('devtools-opened', () => {setImmediate(function() { win_settings.focus()})})
-    win_settings.on('closed', function () {
-      win_settings = null
-    })
+    win.custom = {mode: mode}
+    win.webContents.send('reload',{mode: mode})
   }
 }
 
 
 function create_window () {
   win = new BrowserWindow({
-    title     : "Swap N Pop",
+    title     : "Swap'N'Pop",
     width     : 2*WIN_WIDTH ,
     height    : 2*WIN_HEIGHT,
     minWidth  : 2*WIN_WIDTH ,
@@ -133,6 +97,7 @@ function create_window () {
     useContentSize: true,
     backgroundColor: '#282828'
   })
+  win.custom = {mode: false}
   win.setTitle("Swap N Pop")
   win.setAspectRatio(8/7,0)
   win.loadURL(url.format({
@@ -174,18 +139,18 @@ ipc.on('controls-update', (event) => {
   win.webContents.send('controls-rebind')
 })
 ipc.on('replay-dir-change', (event) => {
-  dialog.showOpenDialog(win_settings, {
+  dialog.showOpenDialog(win, {
     properties: ['openDirectory']
   },function(data){
     if (data !== undefined && data !== null && data.length > 0){
       let dir = Replay.dir('change',data[0])
-      win_settings.webContents.send('replay-dir',dir)
+      win.webContents.send('replay-dir',dir)
     }
   })
 })
 ipc.on('replay-list', (event) => {
   Replay.list(function(err,files){
-    win_settings.webContents.send('replay-list',files)
+    win.webContents.send('replay-list',files)
   })
 })
 ipc.on('replay-dir-reveal', (event) => {
@@ -194,7 +159,7 @@ ipc.on('replay-dir-reveal', (event) => {
 })
 ipc.on('replay-dir-reset', (event) => {
   let dir = Replay.dir('reset')
-  win_settings.webContents.send('replay-dir',dir)
+  win.webContents.send('replay-dir',dir)
 })
 ipc.on('replay-save', (event, {seed,inputs}) => {
   Replay.save(`${Date.now()}`,seed,inputs,function(err,data){})
@@ -204,7 +169,6 @@ ipc.on('replay-delete', (event,name) => {
 })
 ipc.on('replay-load', (event,name) => {
   Replay.load(name,function(err,data){
-    win_settings.close()
     win.focus()
     win.webContents.send('replay-load',data)
   })
@@ -226,7 +190,6 @@ ipc.on('play-vs', (event,{seed,online,cpu}) => {
 
 ipc.on('network-connect', (event,data) => {
   win.webContents.send('network-connect',data)
-  win_settings.close()
   win.focus()
 })
 
