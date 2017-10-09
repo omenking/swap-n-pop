@@ -8,6 +8,7 @@ module.exports = function(game){
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
+  const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
     ROWS,
     COLS,
@@ -34,7 +35,6 @@ module.exports = function(game){
       this.prototype.scoreText   = null
       this.prototype.has_ai      = false
       this.prototype.land        = false
-       // when any panel has landed in the stac
     }
     constructor(pi){
       if (pi !== 0 && pi !== 1){ 
@@ -58,18 +58,18 @@ module.exports = function(game){
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.danger = this.danger.bind(this);
-      this.chain_over    = this.chain_over.bind(this);
       this.update_push   = this.update_push.bind(this);
-      this.score_current = this.score_current.bind(this);
+      this.update_score  = this.update_score.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
 
       this.pi = pi
+      this.garbage    = new CoreGarbage()
       this.countdown  = new ComponentPlayfieldCountdown()
       this.cursor     = new ComponentPlayfieldCursor()
       this.wall       = new ComponentPlayfieldWall()
-      this.score_lbl  = new ComponentScore();
-      this.ai         = new ComponentAi();
+      this.score_lbl  = new ComponentScore()
+      this.ai         = new ComponentAi()
     }
 
     get push_counter(){ return this._push_counter }
@@ -154,7 +154,11 @@ module.exports = function(game){
       this.chain       = 0
       this.push_counter = TIME_PUSH
 
-      this.score_lbl.create()
+      if (this.stage.cpu[1] !== null){
+        this.garbage.create(this.stage,this.pi)
+      }
+
+      //this.score_lbl.create()
     }
     create_after() {
       this.layer_cursor = game.add.group()
@@ -178,6 +182,7 @@ module.exports = function(game){
     get stack_size(){
       return this.should_push ? this.stack_len-COLS : this.stack_len
     }
+
     push() {
       let i;
       if (this.danger(0)) {
@@ -215,7 +220,7 @@ module.exports = function(game){
         this.stack(i).set('unique')
       }
     }
-    
+
     game_over() {
       this.stage.state = 'gameover'
       this.push_counter = 0
@@ -244,42 +249,32 @@ module.exports = function(game){
       }
     }
     update_stack() {
-      for (let i of SCAN_BTLR){
-        this.stack(i).update()
+      for (let i = 0; i < this.stack_len; i++) {
+        this.stack((this.stack_len-1)-i).update()
       }
     }
     chain_and_combo() {
       let i, panel
-      let combo = 0
-      let chain = false
 
       this.clearing = []
       for (i = 0; i < this.stack_size; i++) {
-        const cnc  = this.stack(i).chain_and_combo()
-        combo += cnc[0]
-        if (cnc[1]) { chain  = true; }
+        this.stack(i).chain_and_combo()
       }
 
+      const combo = this.clearing.length
+      let   chain = 0
       for (let panel of this.clearing){
         panel.popping(this.clearing.length)
+        if (panel.chain > 0) { console.log(panel.chain) }
+        chain = Math.max(chain,panel.chain)
       }
-
-      if (this.chain && this.chain_over()) { this.chain = 0; }
+      for (let panel of this.clearing){ panel.chain = chain }
       return [combo, chain]
     }
     swap(x,y){
       if (this.stack(x,y).swappable && this.stack(x+1,y).swappable) {
         this.stack(x,y).swap()
       }
-    }
-    // Checks if the current chain is over.
-    // returns a boolean
-    chain_over() {
-      let chain = true;
-      for (let panel of this.stack()) {
-        if (panel.chain) { chain = false; }
-      }
-      return chain;
     }
     danger(within){
       const offset = COLS*within;
@@ -345,19 +340,13 @@ module.exports = function(game){
           return 0;
       }
     }
-    score_current(cnc){
-      if (cnc[0] > 0) {
-        //console.log('combo is ', cnc);
-        this.score += cnc[0] * 10;
-        this.score += this.score_combo(cnc[0]);
-        if (cnc[1]) {
-          this.chain++;
-          //console.log('chain is ', this.chain + 1);
+    update_score(combo,chain){
+      if (combo > 0) {
+        this.score += combo * 10
+        this.score += this.score_combo(combo)
+        if (chain) {
+          this.score += this.score_chain(chain)
         }
-        if (this.chain) {
-          this.score += this.score_chain(this.chain + 1);
-        }
-        //console.log('Score: ', this.score);
       }
     }
     render_stack() {
@@ -379,7 +368,7 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
-      this.score_lbl.update(this.chain, this.score)
+      //this.score_lbl.update(this.chain, this.score)
 
       if (this.stage.state === 'gameover') {
         this.wall.update()
@@ -391,7 +380,11 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
-      this.score_current(cnc);
+
+      if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
+        this.garbage.update(cnc[0],cnc[1])
+      }
+      this.update_score(cnc[0],cnc[1])
 
       if (this.land === true) {
         game.sounds.land()

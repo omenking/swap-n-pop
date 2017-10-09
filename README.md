@@ -4,6 +4,16 @@
 
 An online competitve TA/PdP/PPL clone.
 
+## Seperate Licensing for Creative Content
+
+Our Lead Designer and Game Designer is Wish:
+https://c0w-bell.deviantart.com/
+
+Wish is contributing a theme to our game from their existing content, such as characters,
+graphics, storyline that are of their own ownership. The MIT liscnese does not
+apply to these assets and is considered to be All rights reserved by
+Wish for the time being.
+
 ## Stack
 
 * NodeJS
