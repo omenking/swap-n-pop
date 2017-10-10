@@ -46,6 +46,9 @@ module.exports = function(game){
       // gathered from data
       this.panels = data.panels;
       this.steps_left = 3;
+
+      // exclusive conditions
+
     }
 
     /** creates the playfield, menu_pause and timer objects
@@ -90,15 +93,13 @@ module.exports = function(game){
     update() {
       this.tick++;
 
+      if (this.playfield.swap_counter >= this.steps_left || 
+          this.playfield.stack_is_empty()) 
+        this.playfield.reset_stack(this.panels);
+
       game.controls.update();
       this.playfield.update();
       this.inputs.update(this.tick);
-
-      if (this.playfield.swap_counter >= this.steps_left) {
-        this.playfield.delete_stack();
-        this.playfield.swap_counter = 0;
-        console.log("called once");
-      }
 
       this.menu_pause.update();
     }
