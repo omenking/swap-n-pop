@@ -41,7 +41,7 @@ module.exports = function(game){
 
     /** leave the game */
     cancel() {
-      game.state.start('menu')
+      game.state.start('menu');
     }
 
     /** called through cursor, unpauses the menu and turns of the sprite again
@@ -60,10 +60,16 @@ module.exports = function(game){
       this.paused = true;
       this.sprite.visible = true;
 
-      // give player control
-      this.cursor.map_controls(this.stage.playfield1.pi);
-      // below possibly gives 2nd player controls of the menu (didnt test, but didnt break p1.pi control)
-      this.cursor.map_controls(this.stage.playfield2.pi);
+      if (this.stage.playfield1 !== undefined &&
+          this.stage.playfield2 !== undefined) {
+        // give player control
+        this.cursor.map_controls(this.stage.playfield1.pi);
+        // below possibly gives 2nd player controls of the menu (didnt test, but didnt break p1.pi control)
+        this.cursor.map_controls(this.stage.playfield2.pi);
+      }
+      else {
+        this.cursor.map_controls(this.stage.playfield.pi);
+      }
     }
 
     /** once unpaused the menu will update its cursor */
@@ -76,5 +82,5 @@ module.exports = function(game){
     }
   }
 
-  return Menu_pause
+  return Menu_pause;
 }
