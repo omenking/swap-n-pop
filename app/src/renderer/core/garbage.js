@@ -57,10 +57,33 @@ module.exports = function(game){
         playfield.stack(5).empty
       ) {
         const v = this.queue.shift()
-        console.log('queue it up',v)
-        playfield.stack(0).set_garbage(this.stage.tick)
-        playfield.stack(1).set_garbage(this.stage.tick)
-        playfield.stack(2).set_garbage(this.stage.tick)
+        if (v.combo === 4) {
+          playfield.stack(0).set_garbage(this.stage.tick)
+          playfield.stack(1).set_garbage(this.stage.tick)
+          playfield.stack(2).set_garbage(this.stage.tick)
+        } else if (v.combo === 5){
+          playfield.stack(0).set_garbage(this.stage.tick)
+          playfield.stack(1).set_garbage(this.stage.tick)
+          playfield.stack(2).set_garbage(this.stage.tick)
+          playfield.stack(3).set_garbage(this.stage.tick)
+        } else if (v.combo === 6){
+          playfield.stack(0).set_garbage(this.stage.tick)
+          playfield.stack(1).set_garbage(this.stage.tick)
+          playfield.stack(2).set_garbage(this.stage.tick)
+          playfield.stack(4).set_garbage(this.stage.tick)
+        } else if (v.combo === 7){
+          playfield.stack(0).set_garbage(this.stage.tick)
+          playfield.stack(1).set_garbage(this.stage.tick)
+          playfield.stack(2).set_garbage(this.stage.tick)
+          playfield.stack(4).set_garbage(this.stage.tick)
+          playfield.stack(5).set_garbage(this.stage.tick)
+        } else if (v.combo === 8){
+        } else if (v.combo === 9){
+        } else if (v.combo === 10){
+        } else if (v.combo === 11){
+        } else if (v.combo === 12){
+        } else if (v.combo === 7){
+        }
       }
     }
   }
