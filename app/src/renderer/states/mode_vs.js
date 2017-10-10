@@ -116,7 +116,7 @@ module.exports = function(game){
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
-      this.timer.create()
+      this.timer.create({});
 
       this.snapshots.create(
         this,
