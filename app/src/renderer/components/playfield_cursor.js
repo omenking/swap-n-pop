@@ -20,7 +20,7 @@ module.exports = function(game){
       this.entrance = this.entrance.bind(this);
       this.map_controls = this.map_controls.bind(this);
       
-      this.pressedThenHeld = this.pressedThenHeld.bind(this);
+      this.pressed_then_held = this.pressed_then_held.bind(this);
       this.pause = this.pause.bind(this);
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
@@ -109,7 +109,7 @@ module.exports = function(game){
      * @param {integer} tick increasing counter
      * @returns bool
      */
-    pressedThenHeld(tick) {
+    pressed_then_held(tick) {
       if (tick == 0) 
         this.ignore = false;
 
@@ -121,11 +121,11 @@ module.exports = function(game){
 
     /**
      * Moves the cursor up once if it isnt at the top of the playfield,
-     * only when pressedThenHeld returns true
+     * only when pressed_then_held returns true
      * @param {integer} tick increasing counter
      */
     up(tick) {
-      if (this.pressedThenHeld(tick)) 
+      if (this.pressed_then_held(tick)) 
         if (this.y > 0) {
           this.y--; 
           game.sounds.select();
@@ -134,11 +134,11 @@ module.exports = function(game){
     
     /**
      * Moves the cursor down once if it isnt at the bottom of the playfield,
-     * only when pressedThenHeld returns true
+     * only when pressed_then_held returns true
      * @param {integer} tick increasing counter
      */
     down(tick) {
-      if (this.pressedThenHeld(tick))        
+      if (this.pressed_then_held(tick))        
         if (this.y < (ROWS - 1)) {
           this.y++; 
           game.sounds.select();
@@ -147,11 +147,11 @@ module.exports = function(game){
 
     /**
      * Moves the cursor down once if it isnt at the left of the playfield,
-     * only when pressedThenHeld returns true
+     * only when pressed_then_held returns true
      * @param {integer} tick increasing counter
      */
     left(tick) {
-      if (this.pressedThenHeld(tick)) 
+      if (this.pressed_then_held(tick)) 
         if (this.x > 0) { 
             this.x--; 
             game.sounds.select();
@@ -160,11 +160,11 @@ module.exports = function(game){
 
     /**
      * Moves the cursor down once if it isnt at the right of the playfield,
-     * only when pressedThenHeld returns true
+     * only when pressed_then_held returns true
      * @param {integer} tick increasing counter
      */
     right(tick) {
-      if (this.pressedThenHeld(tick)) 
+      if (this.pressed_then_held(tick)) 
         if (this.x < (COLS - 2)) { 
           this.x++; 
           game.sounds.select();
