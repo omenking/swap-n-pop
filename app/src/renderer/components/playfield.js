@@ -62,6 +62,7 @@ module.exports = function(game){
       this.update_score  = this.update_score.bind(this);
       this.render_stack  = this.render_stack.bind(this);
       this.stack         = this.stack.bind(this);
+      this.delete_stack  = this.delete_stack.bind(this);
 
       this.pi = pi
       this.garbage    = new CoreGarbage()
@@ -159,7 +160,11 @@ module.exports = function(game){
       }
 
       //this.score_lbl.create()
+      
+      // for mode_puzzle, couting all swaps
+      this.swap_counter = 0;
     }
+
     create_after() {
       this.layer_cursor = game.add.group()
       this.layer_cursor.x = this.x
@@ -239,7 +244,7 @@ module.exports = function(game){
     }
     fill_panels(data){
       for (let i = 0; i < data.length; i++) {
-          this.stack(i).set(data[i])
+        this.stack(i).set(data[i])
       }
 
       if (this.should_push){
@@ -274,6 +279,7 @@ module.exports = function(game){
     swap(x,y){
       if (this.stack(x,y).swappable && this.stack(x+1,y).swappable) {
         this.stack(x,y).swap()
+        this.swap_counter++;
       }
     }
     danger(within){
@@ -391,6 +397,13 @@ module.exports = function(game){
         this.land = false
       }
     }
+
+    /** testing - bugs out */
+    delete_stack() {
+      for (var i = 0; this.stack_len; i++)
+        this.stack[i] = null;
+    }
+
     shutdown() {
       return this.cursor.shutdown()
     }
