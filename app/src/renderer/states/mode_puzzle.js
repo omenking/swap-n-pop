@@ -1,11 +1,12 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../');
   const ComponentPlayfield = require(APP.path.components('playfield'))(game);
   const ComponentMenuPause = require(APP.path.components('menu_pause'))(game);
-  const ComponentTimer     = require(APP.path.components('timer'))(game)
-  
+  const ComponentTimer     = require(APP.path.components('timer'))(game);
+  const ComponentStepCounter = require(APP.path.components('step_counter'))(game);
+
   const CoreInputs         = require(APP.path.core('inputs'))(game);
-  const {all_levels}       = require(APP.path.core('puzzles'))
+  const {all_levels}       = require(APP.path.core('puzzles'));
   
   const seedrandom         = require('seedrandom');
 
@@ -24,6 +25,7 @@ module.exports = function(game){
       this.playfield  = new ComponentPlayfield(0);
       this.menu_pause = new ComponentMenuPause();
       this.timer      = new ComponentTimer();
+      this.step_display = new ComponentStepCounter();
       this.inputs     = new CoreInputs();
     }
 
@@ -39,6 +41,7 @@ module.exports = function(game){
     change_level(lvl) {
       this.panels = lvl.panels;
       this.steps_left = lvl.steps;
+      this.step_display.step_limit = lvl.steps;
     }
 
     /** creates the playfield, menu_pause and timer objects
@@ -66,6 +69,7 @@ module.exports = function(game){
 
       this.menu_pause.create(this);
       this.timer.create({x: 50, y: 50});
+      this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left });
     }
 
     /** turns on the menu, changes it state, turns of the timer from counting */
@@ -114,6 +118,7 @@ module.exports = function(game){
     /** calls the render functions of the timer and playfield */
     render() {
       this.timer.render();
+      this.step_display.render();
 
       if (this.playfield) 
         this.playfield.render();
