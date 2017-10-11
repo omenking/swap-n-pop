@@ -5,13 +5,13 @@ module.exports = function(game){
   const ComponentTimer     = require(APP.path.components('timer'))(game)
   
   const CoreInputs         = require(APP.path.core('inputs'))(game);
-
+  const {all_levels}       = require(APP.path.core('puzzles'))
+  
   const seedrandom         = require('seedrandom');
 
   class puzzle_stage {
     /** bindings and object creation of components */
     constructor() {
-      this.init      = this.init.bind(this);
       this.create    = this.create.bind(this);
       this.update    = this.update.bind(this);
       this.render    = this.render.bind(this);
@@ -19,6 +19,7 @@ module.exports = function(game){
 
       this.pause     = this.pause.bind(this);
       this.resume    = this.resume.bind(this);
+      this.change_level = this.change_level.bind(this);
 
       this.playfield  = new ComponentPlayfield(0);
       this.menu_pause = new ComponentMenuPause();
@@ -32,29 +33,26 @@ module.exports = function(game){
     }
 
     /**
-     * initialises variables, tick counter
-     * @param {Array} data all panels assigned for the first stage 
+     * changes the panels and steps according to a given level
+     * @param {object} lvl contains an array of panels and the amt of steps the puzzle has 
      */
-    init(data){
-      this.tick   = -1;
-      this.seed   = 'puzzle';
-      this.cpu    = [false, null];
-      this.rng    = seedrandom(this.seed);
-
-      this.level = data.panels;
-
-      // gathered from data
-      this.panels = data.panels;
-      this.steps_left = 3;
-
-      // exclusive conditions
-
+    change_level(lvl) {
+      this.panels = lvl.panels;
+      this.steps_left = lvl.steps;
     }
 
     /** creates the playfield, menu_pause and timer objects
      *  with certain parameters
      */
     create() {
+      this.tick   = -1;
+      this.seed   = 'puzzle';
+      this.cpu    = [false, null];
+      this.rng    = seedrandom(this.seed);
+
+      // gathered from level puzzle data
+      this.change_level(all_levels.level1);
+
       this.playfield.create(this, {
         countdown: false,
         push  : false,
@@ -64,13 +62,14 @@ module.exports = function(game){
       });
 
       this.playfield.create_after();
+      this.playfield.cursor.mode = "puzzle";
 
       this.menu_pause.create(this);
       this.timer.create({x: 50, y: 50});
     }
 
     /** turns on the menu, changes it state, turns of the timer from counting */
-    pause(){
+    pause() {
       game.sounds.stage_music('pause');
 
       this.state = "pause";
@@ -84,7 +83,7 @@ module.exports = function(game){
 
       this.state = "running";
       this.timer.running = true;
-      this.playfield.cursor.map_controls();      
+      this.playfield.cursor.map_controls("puzzle");      
     }
 
     /** updates all important objects, especially the inputs
@@ -93,9 +92,17 @@ module.exports = function(game){
     update() {
       this.tick++;
 
-      if (this.playfield.swap_counter >= this.steps_left || 
-          this.playfield.stack_is_empty()) 
+      if (this.playfield.stack_is_empty()) {
+        this.change_level(all_levels.level2);      
+        this.playfield.cursor.cursor_swap_history = [];
+        this.playfield.reset_stack(this.panels);  
+      }
+
+      // if over a limit overcrossed reset
+      if (this.playfield.swap_counter > this.steps_left) {
+        this.playfield.cursor.cursor_swap_history = [];
         this.playfield.reset_stack(this.panels);
+      }
 
       game.controls.update();
       this.playfield.update();
@@ -113,7 +120,7 @@ module.exports = function(game){
     }
 
     /** shuts down the playfield */
-    shutdown(){
+    shutdown() {
       game.sounds.stage_music('none');
       this.playfield.shutdown();
     }
