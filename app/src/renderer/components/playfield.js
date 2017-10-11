@@ -48,21 +48,24 @@ module.exports = function(game){
       this.load = this.load.bind(this)
 
       this.create_after = this.create_after.bind(this);
-      this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
       this.game_over = this.game_over.bind(this);
       this.create_newline = this.create_newline.bind(this);
-      this.create_panels = this.create_panels.bind(this);
-      this.fill_panels = this.fill_panels.bind(this);
-      this.update_stack = this.update_stack.bind(this);
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.danger = this.danger.bind(this);
       this.update_push   = this.update_push.bind(this);
       this.update_score  = this.update_score.bind(this);
-      this.render_stack  = this.render_stack.bind(this);
+      
+      // stack methods
       this.stack         = this.stack.bind(this);
+      this.create_stack = this.create_stack.bind(this);
+      this.create_panels = this.create_panels.bind(this);
+      this.fill_panels = this.fill_panels.bind(this);
       this.reset_stack  = this.reset_stack.bind(this);
+      this.render_stack  = this.render_stack.bind(this);
+      this.update_stack = this.update_stack.bind(this);
+
 
       this.pi = pi
       this.garbage    = new CoreGarbage()
@@ -282,7 +285,10 @@ module.exports = function(game){
       this.fill_panels(new_Panels);
     }
 
-    /** returns true when the whole stack consists of empty block */
+    /** 
+     * checks if the stack has only empty panels
+     * @returns true when the whole stack consists of empty block
+     */
     stack_is_empty() {
       for (var i = 0; i < PANELS; i++)
         if (!this.stack(i).empty)
@@ -325,8 +331,10 @@ module.exports = function(game){
       if (panelLeft.swappable && panelRight.swappable) {
         panelLeft.swap();
 
-        if (!panelLeft.empty && !panelRight.empty )     
+        if (!panelLeft.empty && !panelRight.empty ) {
           this.swap_counter++;
+          return true;
+        }    
       }
     }
     
