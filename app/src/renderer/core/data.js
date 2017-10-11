@@ -58,11 +58,10 @@ module.exports = {
 
   FRAME_LIVE    :  0,
   FRAME_DANGER  : [0,0,0,
-                   4,4,4,
+                   2,2,2,
                    0,0,0,
                    3,3,3,
-                   2,2,2,
-                   3,3,3],
+                   4,4,4],
   FRAME_DEAD    : 5,
   FRAME_NEWLINE : 1,
 
