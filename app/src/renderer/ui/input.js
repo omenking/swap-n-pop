@@ -87,6 +87,20 @@ module.exports = function(Ui){
   }
 
   document.onkeydown = function (e) {
+    console.log('onkeydown',e)
+
+    if (e.keyCode == 27) { //esc
+      console.log('esc')
+      if (mode === false) {
+        mode = 'input'
+        document.getElementById('game').classList.add('hide')
+      } else {
+        mode = false
+        document.getElementById('game').classList.remove('hide')
+      }
+      m.redraw()
+    }
+
     if (setting != null) {
       storekey(e.keyCode)
     }

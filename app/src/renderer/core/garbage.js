@@ -17,26 +17,27 @@ module.exports = function(game){
       this.stage = stage
       this.pi    = pi
       this.queue = []
+      // 0 1 2 3 4 5
       this.alternate = [
-        {index: 0, frame: [0,1,2,3,4,5]}, // 1 wide garbage
-        {index: 0, frame: [0,2,4]},       // 2 wide garbage
-        {index: 0, frame: [0,3]},         // 3 wide garbage
-        {index: 0, frame: [0,1,2]},       // 4 wide garbage
-        {index: 0, frame: [0,1]},         // 5 wide garbage
-        {index: 0, frame: [0]}            // 6 wide garbage
+        {index: 0, frame: [0,1,2,3,4,5]}, // 1 garbage wide
+        {index: 0, frame: [0,4,2]},       // 2 garbage wide
+        {index: 0, frame: [0,3,1,2]},     // 3 garbage wide
+        {index: 0, frame: [0,2]},         // 4 garbage wide
+        {index: 0, frame: [0,1]},         // 5 garbage wide
+        {index: 0, frame: [0]}            // 6 garbage wide
       ]
 
     }
 
-    alt(combo){
-      this.alternate[combo].frame[
-        this.alternate[combo].index
-      ]
-      this.alternate[combo].index++
-      if (this.alternate[combo].index === this.alternate[combo].frame.length){
-        this.alternate[combo].index = 0
+    alt(size){
+      const x   = this.alternate[size-1].frame[this.alternate[size-1].index]
+      const len = this.alternate[size-1].frame.length
+      console.log('alt',this.alternate[size-1].index,len,x)
+      this.alternate[size-1].index++
+      if (this.alternate[size-1].index >= len){
+        this.alternate[size-1].index = 0
       }
-      return this.alternate[combo].index
+      return x
     }
 
     update(combo,chain){
@@ -79,23 +80,26 @@ module.exports = function(game){
       ) {
         this.left  = !this.left
         const v = this.queue.shift()
-        const o = this.alt(v.combo) //offset
         if (v.combo === 4) {
+          const o = this.alt(3) //offset
           playfield.stack(o+0).set_garbage(this.stage.tick)
           playfield.stack(o+1).set_garbage(this.stage.tick)
           playfield.stack(o+2).set_garbage(this.stage.tick)
         } else if (v.combo === 5){
+          const o = this.alt(4) //offset
           playfield.stack(o+0).set_garbage(this.stage.tick)
           playfield.stack(o+1).set_garbage(this.stage.tick)
           playfield.stack(o+2).set_garbage(this.stage.tick)
           playfield.stack(o+3).set_garbage(this.stage.tick)
         } else if (v.combo === 6){
+          const o = this.alt(5) //offset
           playfield.stack(o+0).set_garbage(this.stage.tick)
           playfield.stack(o+1).set_garbage(this.stage.tick)
           playfield.stack(o+2).set_garbage(this.stage.tick)
           playfield.stack(o+3).set_garbage(this.stage.tick)
           playfield.stack(o+4).set_garbage(this.stage.tick)
         } else if (v.combo === 7){
+          const o = this.alt(6) //offset
           playfield.stack(o+0).set_garbage(this.stage.tick)
           playfield.stack(o+1).set_garbage(this.stage.tick)
           playfield.stack(o+2).set_garbage(this.stage.tick)
