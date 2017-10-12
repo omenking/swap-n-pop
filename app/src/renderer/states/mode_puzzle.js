@@ -6,7 +6,7 @@ module.exports = function(game) {
   const ComponentStepCounter = require(APP.path.components('step_counter'))(game);
 
   const CoreInputs         = require(APP.path.core('inputs'))(game);
-  const {all_levels}       = require(APP.path.core('puzzles'));
+  const {puzzle_levels}       = require(APP.path.core('puzzles'));
   
   const seedrandom         = require('seedrandom');
 
@@ -48,19 +48,22 @@ module.exports = function(game) {
      *  with certain parameters
      */
     create() {
+      game.add.sprite(0, 0, "mode_puzzle_bg");
+
       this.tick   = -1;
       this.seed   = 'puzzle';
       this.cpu    = [false, null];
       this.rng    = seedrandom(this.seed);
 
       // gathered from level puzzle data
-      this.change_level(all_levels.level1);
+      this.level_index = 0;
+      this.change_level(puzzle_levels[this.level_index++]);
 
       this.playfield.create(this, {
         countdown: false,
         push  : false,
-        x     : 100,
-        y     : 8,
+        x     : 88,
+        y     : 40,
         panels: this.panels
       });
 
@@ -68,7 +71,7 @@ module.exports = function(game) {
       this.playfield.cursor.mode = "puzzle";
 
       this.menu_pause.create(this);
-      this.timer.create({x: 50, y: 50});
+      this.timer.create({x: 25, y: 30});
       this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left });
     }
 
@@ -97,15 +100,15 @@ module.exports = function(game) {
       this.tick++;
 
       if (this.playfield.stack_is_empty()) {
-        this.change_level(all_levels.level2);      
+        this.change_level(puzzle_levels[this.level_index++]);      
         this.playfield.cursor.cursor_swap_history = [];
-        this.playfield.reset_stack(this.panels);  
+        this.playfield.reset_stack(this.panels, 0);  
       }
 
       // if over a limit overcrossed reset
       if (this.playfield.swap_counter > this.steps_left) {
         this.playfield.cursor.cursor_swap_history = [];
-        this.playfield.reset_stack(this.panels);
+        this.playfield.reset_stack(this.panels, 0);
       }
 
       game.controls.update();

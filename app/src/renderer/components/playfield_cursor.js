@@ -221,10 +221,9 @@ module.exports = function(game){
       if (tick > 0) 
         return;
 
-      if (this.cursor_swap_history.length !== 0) {
-        this.playfield.reset_stack(this.cursor_swap_history.pop());
-        this.playfield.swap_counter--;
-      }
+      // reset stack, decrease counter by one!
+      if (this.cursor_swap_history.length !== 0) 
+        this.playfield.reset_stack(this.cursor_swap_history.pop(), --this.playfield.swap_counter);
     }
 
     /**
