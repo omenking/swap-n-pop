@@ -81,6 +81,7 @@ module.exports = function(game){
       game.load.spritesheet('playfield_cursor'    , './assets/playfield_cursor.png'  , 38, 22, 2)
       game.load.image('playfield_vs_frame'        , './assets/playfield_vs_frame.png')
       game.load.image('playfield_vs_bg'           , './assets/playfield_vs_bg.png')
+      game.load.image('mode_puzzle_bg'            , './assets/mode_puzzle_bg.png')
       game.load.spritesheet('playfield_countdown' , './assets/playfield_countdown.png', 62, 38, 4)
       game.load.spritesheet('panels'              , './assets/panels.png'  , 16, 16, 136)
       game.load.spritesheet('garbage'             , './assets/garbage.png'  , 16, 16, 13)
