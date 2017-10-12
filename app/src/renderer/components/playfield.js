@@ -279,9 +279,10 @@ module.exports = function(game){
      * Resets the swap_counter - puzzle mode
      * 
      * @param {Array} new_Panels the panels the stack should reset to
+     * @param {integer} new_counter_size size that the swap_counter should be set to
      */
-    reset_stack(new_Panels) {
-      this.swap_counter = 0;        
+    reset_stack(new_Panels, new_counter_size = 0) {
+      this.swap_counter = new_counter_size;        
       this.fill_panels(new_Panels);
     }
 
