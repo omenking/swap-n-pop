@@ -1,6 +1,6 @@
 module.exports = function(game){
 
-  class Step_Counter {
+  class StepCounter {
     constructor() {
       this.create = this.create.bind(this);
       this.render = this.render.bind(this);
@@ -30,5 +30,5 @@ module.exports = function(game){
     }
   }
 
-  return Step_Counter;
+  return StepCounter;
 }
