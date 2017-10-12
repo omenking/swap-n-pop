@@ -1,35 +1,5 @@
 const N = null
 module.exports = {
-  PUZZLE: {
-    test: [
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, N, N, N, N,
-      N, N, 1, N, N, N,
-      N, N, 2, N, N, N,
-      N, N, 2, N, N, N,
-      N, 1, 2, 1, N, N
-    ],
-    skill_chain_demo_2: {
-      demo_4: [
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, 5, 2, 2, N,
-        N, N, 2, 5, 0, N,
-        N, N, 4, 2, 4, N,
-        N, 3, 5, 2, 3, N,
-        N, 3, 0, 4, 0, N,
-        N, 5, 5, 3, 4, N,
-        2, 3, 2, 5, 3, 4
-      ]
-    }
-  },
   ROWS: 11,
   COLS: 6,
   PANELS: 66,

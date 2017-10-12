@@ -18,7 +18,7 @@ module.exports = function(game){
     SCAN_BTLR
   } = require(APP.path.core('data'))
 
-  class controller {
+  class Playfield {
     get [Symbol.toStringTag](){ return 'Playfield' }
     static initClass() {
       this.prototype.history = {};
@@ -48,20 +48,24 @@ module.exports = function(game){
       this.load = this.load.bind(this)
 
       this.create_after = this.create_after.bind(this);
-      this.create_stack = this.create_stack.bind(this);
       this.push = this.push.bind(this);
       this.game_over = this.game_over.bind(this);
       this.create_newline = this.create_newline.bind(this);
-      this.create_panels = this.create_panels.bind(this);
-      this.fill_panels = this.fill_panels.bind(this);
-      this.update_stack = this.update_stack.bind(this);
       this.chain_and_combo = this.chain_and_combo.bind(this);
       this.swap = this.swap.bind(this);
       this.danger = this.danger.bind(this);
       this.update_push   = this.update_push.bind(this);
       this.update_score  = this.update_score.bind(this);
-      this.render_stack  = this.render_stack.bind(this);
+      
+      // stack methods
       this.stack         = this.stack.bind(this);
+      this.create_stack = this.create_stack.bind(this);
+      this.create_panels = this.create_panels.bind(this);
+      this.fill_panels = this.fill_panels.bind(this);
+      this.reset_stack  = this.reset_stack.bind(this);
+      this.render_stack  = this.render_stack.bind(this);
+      this.update_stack = this.update_stack.bind(this);
+
 
       this.pi = pi
       this.garbage    = new CoreGarbage()
@@ -77,6 +81,14 @@ module.exports = function(game){
     get pushing(){ return this._pushing }
     set pushing(v){ this._pushing = v }
 
+    /**
+     * Helper method to acces the stack, either through filters stack(x, y) gets the right index 
+     * or directly as an index stack(0) === stack[0],
+     * also can return the whole stack by stack(), only way to acces the stack itself!
+     * 
+     * @param {integer} v1 if set only this acts as a way to enter stack directly, otherwhise it acts as a filtered x pos
+     * @param {integer} v2 if set this acts as the wanted y pos 
+     */
     stack(v1=null,v2=null){
       if (v1 >= 0 && v2 >= 0 && v1 !== null && v2 !== null) {
         return this._stack[_f.xy2i(v1,v2)]
@@ -159,7 +171,11 @@ module.exports = function(game){
       }
 
       //this.score_lbl.create()
+      
+      // for mode_puzzle, couting all swaps
+      this.swap_counter = 0;
     }
+
     create_after() {
       this.layer_cursor = game.add.group()
       this.layer_cursor.x = this.x
@@ -237,22 +253,51 @@ module.exports = function(game){
         this.stack(i).create(this, x, y)
       }
     }
+    
+    /**
+     * Sets the Stack Panels to data given by the parameter.
+     * Also if a push call was made it also sets the bottom row to unique - not comboable
+     * 
+     * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty  
+     */
     fill_panels(data){
-      for (let i = 0; i < data.length; i++) {
-          this.stack(i).set(data[i])
-      }
+      this.stack().forEach((panel, i) => { panel.set(data[i]); });
 
-      if (this.should_push){
-        for (let i = PANELS; i < PANELS+COLS; i++){
-          this.stack(i).set('unique')
-        }
-      }
+      if (this.should_push)
+        for (let i = PANELS; i < PANELS+COLS; i++)
+          this.stack(i).set('unique');
     }
+
     update_stack() {
       for (let i = 0; i < this.stack_len; i++) {
         this.stack((this.stack_len-1)-i).update()
       }
     }
+
+    /**
+     * Resets this playfields stack to the new given data 
+     * Resets the swap_counter - puzzle mode
+     * 
+     * @param {Array} new_Panels the panels the stack should reset to
+     * @param {integer} new_counter_size size that the swap_counter should be set to
+     */
+    reset_stack(new_Panels, new_counter_size = 0) {
+      this.swap_counter = new_counter_size;        
+      this.fill_panels(new_Panels);
+    }
+
+    /** 
+     * checks if the stack has only empty panels
+     * @returns true when the whole stack consists of empty block
+     */
+    stack_is_empty() {
+      for (var i = 0; i < PANELS; i++)
+        if (!this.stack(i).empty)
+          return false;
+        
+      return true;
+    }
+
     chain_and_combo() {
       let i, panel
 
@@ -271,11 +316,29 @@ module.exports = function(game){
       for (let panel of this.clearing){ panel.chain = chain }
       return [combo, chain]
     }
+    
+    /**
+     * Calls the swap Method through the given parameters on the internal stack.
+     * Only able to swap if both Panels are swappable.
+     * A swap_counter goes up that counts all swaps (no swaps done when both panels are empty).
+     * 
+     * @param {integer} x xpos to be accessed in the stack - 2D Array whise
+     * @param {integer} y ypos to be accessed in the stack - 2D Array whise
+     */
     swap(x,y){
-      if (this.stack(x,y).swappable && this.stack(x+1,y).swappable) {
-        this.stack(x,y).swap()
+      let panelLeft   = this.stack(x, y);
+      let panelRight  = this.stack(x + 1, y);
+
+      if (panelLeft.swappable && panelRight.swappable) {
+        panelLeft.swap();
+
+        if (!panelLeft.empty && !panelRight.empty ) {
+          this.swap_counter++;
+          return true;
+        }    
       }
     }
+    
     danger(within){
       const offset = COLS*within;
       const cols   = [];
@@ -391,11 +454,12 @@ module.exports = function(game){
         this.land = false
       }
     }
+
     shutdown() {
       return this.cursor.shutdown()
     }
   }
-  controller.initClass()
+  Playfield.initClass()
 
-  return controller
+  return Playfield
 }

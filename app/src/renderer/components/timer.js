@@ -37,10 +37,10 @@ module.exports = function(game){
      *  Each Time Digit gets added as a Sprite
      *  Internal tick counter and a bool to stop everything
      */
-    create() {
+    create({x = 112, y = 168}) {
       this.group = game.add.group();
-      this.group.x = 112;
-      this.group.y = 168;
+      this.group.x = x;
+      this.group.y = y;
       this.d0 = game.make.sprite(0 , 0, 'ints_large',0);
       this.d1 = game.make.sprite(16, 0, 'ints_large',0);
       this.d2 = game.make.sprite(24, 0, 'ints_large',0);

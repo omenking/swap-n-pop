@@ -1,11 +1,10 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
-  const {PUZZLE} = require(APP.path.core('data'))
   const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')
-
+  
   /** Class representing a menu. */
-  class Menu {
+  class Menu_Component {
     constructor() {
       this.create = this.create.bind(this)
       this.update = this.update.bind(this)
@@ -18,6 +17,7 @@ module.exports = function(game){
 
       this.cursor = new ComponentMenuCursor()
     }
+    
     create() {
       this.sprite = game.add.sprite(40, 40, 'menu');
       this.cursor.create(this, 26, 39, [
@@ -28,28 +28,32 @@ module.exports = function(game){
         this.mode_option
       ]);
     }
+    
     update() {
       this.cursor.update()
     }
+    
     mode_1p_vs_2p_local() {
       ipc.send('play-vs',{online: false, cpu: [false,false]})
     }
+    
     mode_1p_vs_2p_online() {
       ipc.send('settings','network')
     }
+    
     mode_1p_vs_cpu() {
       ipc.send('play-vs',{online: false, cpu: [false,true]})
     }
+
+    /** starts the mode_puzzle state */
     mode_improve() {
-      game.state.start('mode_puzzle',true,false,{
-        panels: PUZZLE.test,
-        cpu: [false,null]
-      })
+      game.state.start('mode_puzzle',true,false);
     }
+    
     mode_option() {
       ipc.send('settings','replay')
     }
   };
 
-  return Menu
+  return Menu_Component;
 }
