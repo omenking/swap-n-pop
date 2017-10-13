@@ -86,25 +86,23 @@ module.exports = function(Ui){
     }
   }
 
-  document.onkeydown = function (e) {
-    console.log('onkeydown',e)
+/*  document.onkeydown = function (e) {*/
+    //console.log('onkeydown',e)
 
-    if (e.keyCode == 27) { //esc
-      console.log('esc')
-      if (mode === false) {
-        mode = 'input'
-        document.getElementById('game').classList.add('hide')
-      } else {
-        mode = false
-        document.getElementById('game').classList.remove('hide')
-      }
-      m.redraw()
-    }
+    //if (e.keyCode == 27) { //esc
+      //console.log('esc')
+      //if (Ui.mode() === false) {
+        //Ui.show()
+      //} else {
+        //Ui.close()
+      //}
+      //m.redraw()
+    //}
 
-    if (setting != null) {
-      storekey(e.keyCode)
-    }
-  }
+    //if (setting != null) {
+      //storekey(e.keyCode)
+    //}
+  /*}*/
 
   function poll_gamepad(){
     if (setting === null){ return }

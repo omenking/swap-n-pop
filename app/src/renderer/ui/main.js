@@ -9,6 +9,13 @@ Ui = {
   close: function(){
     mode = false
     document.getElementById('game').classList.remove('hide')
+  },
+  show: function(){
+    mode = 'input'
+    document.getElementById('game').classList.add('hide')
+  },
+  mode: function(){
+    return mode
   }
 }
 const UiInput    = require(APP.path.ui('input'  ))(Ui)

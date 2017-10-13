@@ -311,9 +311,9 @@ module.exports = function(game){
         }
       }
     }
-    update(sim){
-      this.update_pl(sim,0)
-      this.update_pl(true,1)
+    update(sim0=false,sim1=false){
+      this.update_pl(sim0,0)
+      this.update_pl(sim1,1)
     }
     update_pl(sim,pi){
       if      (this.check_down(sim,`pl${pi}_left`) ){ this.trigger(`pl${pi}_left`) }
@@ -323,9 +323,8 @@ module.exports = function(game){
         this._down[`pl${pi}_right`] = 0
       }
 
-      if      (this.check_down(sim,`pl${pi}_up`)  ){ 
-        this.trigger(`pl${pi}_up`)  }
-      else if (this.check_down(sim,`pl${pi}_down`)){ this.trigger(`pl${pi}_down`)}
+      if      (this.check_down(sim,`pl${pi}_up`)  ){ this.trigger(`pl${pi}_up`)  }
+      else if (this.check_down(sim,`pl${pi}_down`)){ this.trigger(`pl${pi}_down`) }
       else {
         this._down[`pl${pi}_up`]   = 0
         this._down[`pl${pi}_down`] = 0

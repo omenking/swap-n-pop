@@ -307,11 +307,11 @@ module.exports = function(game){
       this.danger_check()
       if (tick === false) {
         this.inputs.update(this.tick,true)
-        game.controls.update(false)
+        game.controls.update()
         this.snapshots.snap(this.tick)
       } else {
         this.inputs.update(tick,false)
-        game.controls.update(true)
+        game.controls.update(false,true)
         this.snapshots.snap(tick)
       }
     }
