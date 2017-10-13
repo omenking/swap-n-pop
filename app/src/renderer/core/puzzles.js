@@ -58,7 +58,7 @@ module.exports = {
         _, _, b, _, _, _,
         _, b, b, _, b, _
       ],
-      steps: 1  
+      steps: 12
     },
 
     {
