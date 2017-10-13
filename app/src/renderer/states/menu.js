@@ -32,7 +32,7 @@ module.exports = function(game){
 
     /** stops controller support */
     shutdown() {
-      game.controls.disable();
+      game.controls.disable()
     }
   }
 

@@ -9,6 +9,13 @@ Ui = {
   close: function(){
     mode = false
     document.getElementById('game').classList.remove('hide')
+  },
+  show: function(){
+    mode = 'input'
+    document.getElementById('game').classList.add('hide')
+  },
+  mode: function(){
+    return mode
   }
 }
 const UiInput    = require(APP.path.ui('input'  ))(Ui)
@@ -61,20 +68,6 @@ function render(){
 
   el = document.getElementById('ui')
   m.mount(el, app)
-}
-
-document.onkeydown = function (e) {
-  if (e.keyCode == 27) { //esc
-    console.log('esc')
-    if (mode === false) {
-      mode = 'input'
-      document.getElementById('game').classList.add('hide')
-    } else {
-      mode = false
-      document.getElementById('game').classList.remove('hide')
-    }
-    m.redraw()
-  }
 }
 
 ipc.on('reload',function(event,data){
