@@ -282,7 +282,10 @@ module.exports = function(game){
      * @param {integer} new_counter_size size that the swap_counter should be set to
      */
     reset_stack(new_Panels, new_counter_size = 0) {
+      this.stack().forEach((panel) => { panel.soft_reset() });
+      
       this.swap_counter = new_counter_size;        
+      
       this.fill_panels(new_Panels);
     }
 

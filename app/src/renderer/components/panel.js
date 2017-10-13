@@ -88,6 +88,7 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.set_garbage      = this.set_garbage.bind(this)
+      this.soft_reset       = this.soft_reset.bind(this);
 
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
@@ -153,6 +154,12 @@ module.exports = function(game){
       this.state = GARBAGE
       this.panel_garbage.group = group
       this.panel_garbage.state = FALL
+    }
+
+    /** resets this panel to a normal state - stops animation usefull for stack resets */ 
+    soft_reset() {
+      this.counter = 0;
+      this.state = STATIC;
     }
 
     /** */
