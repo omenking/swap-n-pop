@@ -86,23 +86,20 @@ module.exports = function(Ui){
     }
   }
 
-/*  document.onkeydown = function (e) {*/
-    //console.log('onkeydown',e)
+  document.onkeydown = function (e) {
+    if (e.keyCode == 27) { //esc
+      if (Ui.mode() === false) {
+        Ui.show()
+      } else {
+        Ui.close()
+      }
+      m.redraw()
+    }
 
-    //if (e.keyCode == 27) { //esc
-      //console.log('esc')
-      //if (Ui.mode() === false) {
-        //Ui.show()
-      //} else {
-        //Ui.close()
-      //}
-      //m.redraw()
-    //}
-
-    //if (setting != null) {
-      //storekey(e.keyCode)
-    //}
-  /*}*/
+    if (setting != null) {
+      storekey(e.keyCode)
+    }
+  }
 
   function poll_gamepad(){
     if (setting === null){ return }

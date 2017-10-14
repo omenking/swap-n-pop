@@ -88,6 +88,7 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.set_garbage      = this.set_garbage.bind(this)
+      this.clear_garbage    = this.clear_garbage.bind(this)
 
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
@@ -208,6 +209,14 @@ module.exports = function(game){
           this.kind = i
       }
     }
+
+    clear_garbage(){
+      if (this.state === GARBAGE &&
+          this.playfield.clearing_garbage.indexOf(this.panel_garbage.group) !== -1 ){
+        this.panel_garbage.state = CLEAR
+      }
+    }
+
     /** 
      * `update(i)` handles the states and its transition to other states.
      * A panel's state will usually change when the panel's `counter`

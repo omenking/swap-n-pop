@@ -5,6 +5,7 @@ module.exports = function(game){
     COLS,
     UNIT,
     FALL,
+    CLEAR,
     STATIC,
     GARBAGE
   } = require(APP.path.core('data'))
@@ -35,8 +36,23 @@ module.exports = function(game){
 
     update(){
       switch (this.state) {
+        case STATIC:
+          if (this.fall_check()) {
+            this.state = FALL
+          } else if  (
+            this.panel.under.state === CLEAR ||
+            this.panel.above.state === CLEAR ||
+            this.panel.left.state  === CLEAR ||
+            this.panel.right.state === CLEAR
+          ){
+            const i = this.panel.playfield.clearing_garbage.indexOf(this.group)
+            if (i === -1){
+              this.panel.playfield.clearing_garbage.push(this.group)
+            }
+          }
+          break;
         case FALL:
-          if (this.panel.under.empty && this.fall_check()) {
+          if (this.fall_check()) {
             this.panel.under.state               = GARBAGE
             this.panel.under.panel_garbage.group = this.group
             this.panel.under.panel_garbage.state = this.state
@@ -48,18 +64,26 @@ module.exports = function(game){
             this.panel.state   = STATIC
             this.panel.counter = 0
             this.panel.chain   = 0
+          } else {
+            this.state = STATIC
           }
           break;
       }
     }
 
+    /** 
+     * This looks at the current row for panels that belong
+     * to this garbage panel group and then check below each one to
+     * see if all of them are empty underneath so it should fall.
+     *
+     * */
     fall_check(){
       let fall = true
       for (let x = 0; x < COLS; x++){
         let panel = this.panel.playfield.stack(x,this.panel.y)
         if (panel.state               === GARBAGE &&
             panel.panel_garbage.group === this.group) {
-          if (panel.under.empty === false) { fall = false}
+          if (panel.under.empty === false || panel.under.hang) { fall = false}
         }
       }
       return fall
