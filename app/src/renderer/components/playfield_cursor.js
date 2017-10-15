@@ -302,7 +302,7 @@ module.exports = function(game){
 
       if ((this.state === 'entering') ||
           (this.state === 'preactive')) {
-        if (this.counter_flicker > 1) {
+        if (this.counter_flicker === 1) {
           this.sprite.visible = !this.sprite.visible
         }
       }
