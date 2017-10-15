@@ -40,11 +40,32 @@ module.exports = function(game){
       if (pi !== 0 && pi !== 1){ 
         throw new Error("player_number present and must be 0 or 1")
       }
+      this.create   = this.create.bind(this)
+      this.update   = this.update.bind(this)
+      this.render   = this.render.bind(this)
+      this.shutdown = this.shutdown.bind(this)
 
-      // binding all methods to this
-      for (let key in this) 
-        if (typeof this[key] == 'function')
-          user[key] = user[key].bind(this);
+      this.load = this.load.bind(this)
+
+      this.create_after = this.create_after.bind(this);
+      this.push = this.push.bind(this);
+      this.game_over = this.game_over.bind(this);
+      this.create_newline = this.create_newline.bind(this);
+      this.chain_and_combo = this.chain_and_combo.bind(this);
+      this.swap = this.swap.bind(this);
+      this.danger = this.danger.bind(this);
+      this.update_push   = this.update_push.bind(this);
+      this.update_score  = this.update_score.bind(this);
+      
+      // stack methods
+      this.stack         = this.stack.bind(this);
+      this.create_stack = this.create_stack.bind(this);
+      this.create_panels = this.create_panels.bind(this);
+      this.fill_panels = this.fill_panels.bind(this);
+      this.reset_stack  = this.reset_stack.bind(this);
+      this.render_stack  = this.render_stack.bind(this);
+      this.update_stack = this.update_stack.bind(this);
+
 
       this.pi = pi
       this.garbage    = new CoreGarbage()
@@ -151,7 +172,7 @@ module.exports = function(game){
 
       //this.score_lbl.create()
       
-      // for mode_puzzle, counting all swaps
+      // for mode_puzzle, couting all swaps
       this.swap_counter = 0;
     }
 

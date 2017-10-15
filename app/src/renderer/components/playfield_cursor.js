@@ -14,29 +14,27 @@ module.exports = function(game){
       this.create = this.create.bind(this);
       this.update = this.update.bind(this);
       this.render = this.render.bind(this);
-      this.load   = this.load.bind(this);
+      this.shutdown = this.shutdown.bind(this);
 
-      this.map_controls = this.map_controls.bind(this);
+      this.load = this.load.bind(this);
       this.entrance = this.entrance.bind(this);
+      this.map_controls = this.map_controls.bind(this);
       
-      this.left = this.left.bind(this);
-      this.right = this.right.bind(this);
+      // movement keys
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
-
+      this.left = this.left.bind(this);
+      this.right = this.right.bind(this);
+      
+      // actions
       this.swap = this.swap.bind(this);
-      this.pause = this.pause.bind(this);
-      this.push = this.push.bind(this);
       this.undoSwap = this.undoSwap.bind(this);
-      this.shutdown = this.shutdown.bind(this);
-      this.pressed_then_held = this.pressed_then_held.bind(this);
+      this.push = this.push.bind(this);
+      this.pause = this.pause.bind(this);
 
-      /*
-      // binding all methods to this
-      for (let key in this) 
-        if (typeof this[key] == 'function')
-          this[key] = this[key].bind(this);
-    */}
+      // utility methods
+      this.pressed_then_held = this.pressed_then_held.bind(this);
+    }
 
     /**
      * Initialises the Cursor's position in x & y, counter, and its sprite
