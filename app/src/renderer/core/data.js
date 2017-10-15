@@ -45,6 +45,7 @@ module.exports = {
   TIME_FALL  : 3,  //how long to wait after popping last panel before panel falls
   TIME_SWAP : 4,
   TIME_PUSH : 1000,
+  TIME_PARTICLE : 20,   // the time the particle stays on the screen for 
 
   TIME_GARBAGE_CLEAR: 30,
   TIME_GARBAGE_POP  : 12,

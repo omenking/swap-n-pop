@@ -27,11 +27,13 @@ module.exports = function(game){
     TIME_SWAP,
     TIME_CLEAR,
     TIME_POP,
-    TIME_FALL
+    TIME_FALL,
+    TIME_PARTICLE
   } = require(APP.path.core('data'))
 
   const ComponentBaubleChain  = require(APP.path.components('bauble'))(game)
   const ComponentPanelGarbage = require(APP.path.components('panel_garbage'))(game)
+  const ComponentPanelParticle = require(APP.path.components('panel_particle'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -52,6 +54,21 @@ module.exports = function(game){
      */
     get counter()    {return this.attr_counter }
     set counter(val) {       this.attr_counter = val }
+    
+    get clear_i()    {return this._clear_i }
+    set clear_i(val) {       this._clear_i = val }
+   
+    get clear_len()    {return this._clear_len }
+    set clear_len(val) {       this._clear_len = val }
+    
+    get time_cur()    {return this._time_cur }
+    set time_cur(val) {       this._time_cur = val }
+    
+    get time_pop()    {return this._time_pop }
+    set time_pop(val) {       this._time_pop = val }
+
+    get group()       {return this._group }
+    set group(val)    {       this._group = val }
 
     get state()    {return this.attr_state }
     set state(val) {       this.attr_state = val }
@@ -78,6 +95,13 @@ module.exports = function(game){
      
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
+
+      this.particles = [
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle()
+      ];
     }
 
     /** */
@@ -98,7 +122,9 @@ module.exports = function(game){
         this.kind,
         this.state,
         this.counter,
-        this.chain
+        this.chain,
+        this.counter_particle,
+        this.group
       ]
     }
 
@@ -111,6 +137,8 @@ module.exports = function(game){
       this.counter = data[4]
       this.chain   = data[5]
       this.garbage = data[6]
+      this.counter_particle = data[7]
+      this.group   = data[8]
     }
 
     /** */
@@ -134,6 +162,12 @@ module.exports = function(game){
 
       this.panel_garbage.create(this,this.playfield)
       this.bauble_chain.create(this)
+    
+      this.particles.forEach((particle, i) => {
+        particle.create(this, i);
+      });
+    
+      this.counter_particle = 0;
     }
 
     set_garbage(group){
@@ -283,7 +317,26 @@ module.exports = function(game){
               //this.counter = FRAME_LAND.length
             break;
           case CLEAR:
-            if (this.counter > 0) { return }
+            if (this.counter > 0) { 
+              const [xi,xlen] = this.clear_index
+              this.clear_i    = xi
+              this.clear_len  = xlen
+      
+              const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
+              this.time_pop = TIME_CLEAR + (TIME_POP* this.clear_i)
+              this.time_cur = time_max - this.counter
+              
+              if (this.time_cur === this.time_pop) {
+                console.log("should call", this.playfield.stage.tick);
+
+                this.particles.forEach((particle) => {
+                  particle.counter = TIME_PARTICLE;
+                });
+              }
+
+              return 
+            }
+            
             if (this.above && !this.above.hidden && this.above.state === STATIC) {
               this.above.chain += 1
             }
@@ -291,6 +344,7 @@ module.exports = function(game){
             this.kind    = null
             this.counter = 0
             this.chain   = 0
+            this.group   = null
             break;
           case LAND:
             if (this.counter > 0) { return }
@@ -300,6 +354,10 @@ module.exports = function(game){
             throw(new Error('unknown panel state'))
         }
       }
+
+      this.particles.forEach((particle) => {
+        particle.update();
+      });
     }
 
     /**
@@ -311,10 +369,10 @@ module.exports = function(game){
         this.sprite.visible = false
       } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
         this.sprite.visible = false
-        
+
         // only spawns particles once
-        if (this.time_cur === this.time_pop)
-          this.spawn_particles();
+        //if (this.time_cur === this.time_pop)
+          //this.spawn_particles();
       } else {
         this.sprite.visible = true
       }
@@ -409,6 +467,7 @@ module.exports = function(game){
       this.state = CLEAR
       this.chain += 1
       this.playfield.clearing.push(this)
+      this.group = this.playfield.stage.tick;
     }
     /**
      * Checks above and under and then left and right from the current panel.
@@ -433,6 +492,7 @@ module.exports = function(game){
       }
     }
     /**
+     * 
      Returns the index of the current panel clearing and amount of panels clearing
      @returns {array} - [index,length]
      */
@@ -442,8 +502,8 @@ module.exports = function(game){
       }
       let panels = []
       for (let p of this.playfield.stack()){
-        if (p.panel_garbage.group === this.group &&
-            p.panel_garbage.state === CLEAR) {
+        if (p.group === this.group &&
+            p.state === CLEAR) {
           panels.push(p)
         }
       }
@@ -498,13 +558,7 @@ module.exports = function(game){
       } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
-        let [i,len] = this.clear_index
-        this.clear_i    = i
-        this.clear_len  = len
-
-        let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
-        this.time_pop = TIME_CLEAR + (TIME_POP*i)
-        this.time_cur = time_max - this.counter
+        
 
         if (FRAME_CLEAR.length > this.time_cur){
           this.frame = FRAME_CLEAR[this.time_cur]
@@ -537,6 +591,10 @@ module.exports = function(game){
       this.render_visible()
       this.bauble_chain.render()
       this.panel_garbage.render()
+
+      this.particles.forEach((particle) => {
+        particle.render();
+      });
     }
     /** */
     shutdown(){}
