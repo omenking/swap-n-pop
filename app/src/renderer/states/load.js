@@ -110,6 +110,9 @@ module.exports = function(game){
       game.load.spritesheet('bauble_num'      , './assets/bauble_num.png',6,9,10)
       game.load.spritesheet('bauble_num_small', './assets/bauble_num_small.png',5,9,10)
 
+      game.load.image('star_particle', './assets/star_particle.png');
+      game.load.spritesheet('pop-frames', './assets/pop-frames.png', 16, 16, 8);
+      
       game.load.start()
     }
   }
