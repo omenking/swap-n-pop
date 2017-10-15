@@ -71,25 +71,11 @@ module.exports = function(game){
 
     /** */
     constructor() {
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.load = this.load.bind(this)
-
-      this.log              = this.log.bind(this)
-      this.matched          = this.matched.bind(this)
-      this.set              = this.set.bind(this)
-      this.render_visible   = this.render_visible.bind(this)
-      this.swap             = this.swap.bind(this)
-      this.popping          = this.popping.bind(this)
-      this.clear            = this.clear.bind(this)
-      this.nocombo          = this.nocombo.bind(this)
-      this.chain_and_combo  = this.chain_and_combo.bind(this)
-      this.set_garbage      = this.set_garbage.bind(this)
-      this.soft_reset       = this.soft_reset.bind(this);
-
+      // binding all methods to this
+      for (let key in this) 
+        if (typeof this[key] == 'function')
+          user[key] = user[key].bind(this);
+     
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
     }
@@ -175,7 +161,7 @@ module.exports = function(game){
     /** */
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     /** */
-    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
+    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
     /** */
     get empty() {      return  this.state === STATIC && this.hidden }
     /** */
@@ -323,6 +309,10 @@ module.exports = function(game){
         this.sprite.visible = false
       } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
         this.sprite.visible = false
+        
+        // only spawns particles once
+        if (this.time_cur === this.time_pop)
+          this.spawn_particles();
       } else {
         this.sprite.visible = true
       }
@@ -458,6 +448,35 @@ module.exports = function(game){
       return [panels.indexOf(this),panels.length]
     }
 
+    spawn_particles() {
+      var starSprites = [];
+      var tweenSprites = [];
+    
+      // 0. top left, 1. top right, etc
+      var directions = [{x: -1, y: -1},
+                        {x: +1, y: -1},
+                        {x: +1, y: +1},
+                        {x: -1, y: +1}];
+    
+      // save pos since sprite properties cant be used inside tween
+      var tempx = this.sprite.x + this.playfield.layer_block.x;
+      var tempy = this.sprite.y + this.playfield.layer_block.y;
+
+      for (var i = 0; i < 4; i++) {
+        // spwan particle in the middle of the block
+        starSprites[i] = game.add.sprite(tempx, tempy, "pop-frames");
+        starSprites[i].animations.add('pop');
+        starSprites[i].animations.play('pop', game.time.desiredFps / 2, false, true);
+
+        tweenSprites[i] = game.add.tween(starSprites[i]);
+    
+        tweenSprites[i].to({ x: tempx + 24 * directions[i].x,
+                             y: tempy + 24 * directions[i].y,
+                             alpha: 0.5},
+                             300, "Sine.easeOut", true);
+      }
+    }
+
     /**
      * `animate()` is responsible for setting the panel's current sprite frame
      *  and in the case of swapping adjusting the sprite's `x` and `y`
@@ -488,8 +507,6 @@ module.exports = function(game){
         if (FRAME_CLEAR.length > this.time_cur){
           this.frame = FRAME_CLEAR[this.time_cur]
         }
-
-
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
       } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
