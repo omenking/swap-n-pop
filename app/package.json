@@ -26,6 +26,7 @@
     "sinon": "^3.2.1"
   },
   "dependencies": {
+    "electron-reload": "^1.2.2",
     "electron-store": "^1.2.0",
     "glob": "^7.1.2",
     "keycode": "^2.1.9",

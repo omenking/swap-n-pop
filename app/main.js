@@ -11,6 +11,7 @@ const url  = require('url')
 const WIN_WIDTH  = 256
 const WIN_HEIGHT = 224
 
+require('electron-reload')(__dirname);
 
 let win, win_settings = null
 Replay.dir()
