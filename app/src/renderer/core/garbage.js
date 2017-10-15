@@ -32,7 +32,6 @@ module.exports = function(game){
     alt(size){
       const x   = this.alternate[size-1].frame[this.alternate[size-1].index]
       const len = this.alternate[size-1].frame.length
-      console.log('alt',this.alternate[size-1].index,len,x)
       this.alternate[size-1].index++
       if (this.alternate[size-1].index >= len){
         this.alternate[size-1].index = 0

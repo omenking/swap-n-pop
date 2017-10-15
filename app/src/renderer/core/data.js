@@ -1,8 +1,10 @@
 const N = null
 module.exports = {
-  ROWS: 11,
+  ROWS_INV: 13,
+  ROWS_VIS: 11,
+  ROWS: 13 + 11,
   COLS: 6,
-  PANELS: 66,
+  PANELS: (13+11) * 6,
 
   //number of starting blocks
   NRBLOCK : 17,
@@ -43,6 +45,9 @@ module.exports = {
   TIME_FALL  : 3,  //how long to wait after popping last panel before panel falls
   TIME_SWAP : 4,
   TIME_PUSH : 1000,
+
+  TIME_GARBAGE_CLEAR: 30,
+  TIME_GARBAGE_POP  : 12,
 
   UNIT : 16,
   WIN_WIDTH  : 256,

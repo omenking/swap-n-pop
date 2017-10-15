@@ -132,7 +132,7 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
 
-      this.panel_garbage.create(this)
+      this.panel_garbage.create(this,this.playfield)
       this.bauble_chain.create(this)
     }
 
@@ -201,6 +201,8 @@ module.exports = function(game){
           this.kind = i
       }
     }
+
+
     /** 
      * `update(i)` handles the states and its transition to other states.
      * A panel's state will usually change when the panel's `counter`
@@ -440,8 +442,8 @@ module.exports = function(game){
       }
       let panels = []
       for (let p of this.playfield.stack()){
-        if (p.counter === this.counter &&
-            p.state   === CLEAR) {
+        if (p.panel_garbage.group === this.group &&
+            p.panel_garbage.state === CLEAR) {
           panels.push(p)
         }
       }

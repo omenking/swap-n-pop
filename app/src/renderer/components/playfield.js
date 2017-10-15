@@ -10,6 +10,7 @@ module.exports = function(game){
   const ComponentAi                 = require(APP.path.components('ai'))(game)
   const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
+    ROWS_INV,
     ROWS,
     COLS,
     PANELS,
@@ -31,6 +32,7 @@ module.exports = function(game){
       this.prototype.cursor      = null
       this.prototype.blank       = null
       this.prototype.clearing    = null
+      this.prototype.clearing_garbage = null
       this.prototype.score       = 0
       this.prototype.scoreText   = null
       this.prototype.has_ai      = false
@@ -47,24 +49,25 @@ module.exports = function(game){
 
       this.load = this.load.bind(this)
 
-      this.create_after = this.create_after.bind(this);
-      this.push = this.push.bind(this);
-      this.game_over = this.game_over.bind(this);
-      this.create_newline = this.create_newline.bind(this);
-      this.chain_and_combo = this.chain_and_combo.bind(this);
-      this.swap = this.swap.bind(this);
-      this.danger = this.danger.bind(this);
-      this.update_push   = this.update_push.bind(this);
-      this.update_score  = this.update_score.bind(this);
-      
+      this.create_after = this.create_after.bind(this)
+      this.push = this.push.bind(this)
+      this.game_over = this.game_over.bind(this)
+      this.create_newline = this.create_newline.bind(this)
+      this.chain_and_combo = this.chain_and_combo.bind(this)
+      this.swap = this.swap.bind(this)
+      this.danger = this.danger.bind(this)
+      this.update_push   = this.update_push.bind(this)
+      this.update_score  = this.update_score.bind(this)
+
       // stack methods
-      this.stack         = this.stack.bind(this);
-      this.create_stack = this.create_stack.bind(this);
-      this.create_panels = this.create_panels.bind(this);
-      this.fill_panels = this.fill_panels.bind(this);
-      this.reset_stack  = this.reset_stack.bind(this);
-      this.render_stack  = this.render_stack.bind(this);
-      this.update_stack = this.update_stack.bind(this);
+      this.stack                   = this.stack.bind(this)
+      this.create_stack            = this.create_stack.bind(this)
+      this.create_panels           = this.create_panels.bind(this)
+      this.fill_panels             = this.fill_panels.bind(this)
+      this.reset_stack             = this.reset_stack.bind(this)
+      this.render_stack            = this.render_stack.bind(this)
+      this.update_stack            = this.update_stack.bind(this)
+      this.update_garbage_clearing = this.update_garbage_clearing.bind(this)
 
 
       this.pi = pi
@@ -158,7 +161,7 @@ module.exports = function(game){
 
       this.layer_block  = game.add.group()
       this.layer_block.x  = this.x
-      this.layer_block.y  = this.y
+      this.layer_block.y  = this.y - (ROWS_INV*UNIT)
 
       this.create_stack(opts.panels)
 
@@ -171,7 +174,6 @@ module.exports = function(game){
       }
 
       //this.score_lbl.create()
-      
       // for mode_puzzle, couting all swaps
       this.swap_counter = 0;
     }
@@ -297,14 +299,11 @@ module.exports = function(game){
       for (var i = 0; i < PANELS; i++)
         if (!this.stack(i).empty)
           return false;
-        
       return true;
     }
 
     chain_and_combo() {
       let i, panel
-
-      this.clearing = []
       for (i = 0; i < this.stack_size; i++) {
         this.stack(i).chain_and_combo()
       }
@@ -415,6 +414,14 @@ module.exports = function(game){
         }
       }
     }
+    update_garbage_clearing(){
+      if (this.clearing_garbage.length > 0){
+        for (let panel of this.stack()){
+          panel.panel_garbage.popping()
+        }
+      }
+      this.clearing_garbage = []
+    }
     render_stack() {
       for (let panel of this.stack()){
         panel.render()
@@ -426,7 +433,7 @@ module.exports = function(game){
       this.render_stack()
 
       if (this.should_push) {
-        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
+        const lift = (this.y - (ROWS_INV*UNIT)) + ((this.push_counter / TIME_PUSH) * UNIT)
         this.layer_block.y  = lift;
         this.layer_cursor.y = lift;
       }
@@ -442,12 +449,16 @@ module.exports = function(game){
       if (this.stage.state !== 'running') { return; }
 
       if (this.should_push) { this.update_push() }
+      this.clearing         = []
+      this.clearing_garbage = []
+
       this.update_stack()
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
 
       if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
+        this.update_garbage_clearing()
         this.garbage.update(cnc[0],cnc[1])
       }
       this.update_score(cnc[0],cnc[1])
