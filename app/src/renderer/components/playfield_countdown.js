@@ -75,6 +75,12 @@ module.exports = function(game){
       game.sounds.ding()
       this.sprite.visible         = false
       this.playfield.cursor.state = 'active'
+      if (this.playfield.stage.cpu[0] === false ||
+         (this.playfield.stage.online !== false &&
+          this.playfield.pi == 0
+         )){
+        this.playfield.cursor.map_controls()
+      }
       this.playfield.cursor.sprite.visible = true
       this.playfield.stage.state = 'running'
       if (this.playfield.stage.timer) {

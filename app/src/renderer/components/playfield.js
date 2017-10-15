@@ -10,6 +10,7 @@ module.exports = function(game){
   const ComponentAi                 = require(APP.path.components('ai'))(game)
   const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
+    ROWS_INV,
     ROWS,
     COLS,
     PANELS,
@@ -160,7 +161,7 @@ module.exports = function(game){
 
       this.layer_block  = game.add.group()
       this.layer_block.x  = this.x
-      this.layer_block.y  = this.y
+      this.layer_block.y  = this.y - (ROWS_INV*UNIT)
 
       this.create_stack(opts.panels)
 
@@ -283,8 +284,8 @@ module.exports = function(game){
      * @param {integer} new_counter_size size that the swap_counter should be set to
      */
     reset_stack(new_Panels, new_counter_size = 0) {
-      this.swap_counter = new_counter_size;        
-      this.fill_panels(new_Panels);
+      this.swap_counter = new_counter_size
+      this.fill_panels(new_Panels)
     }
 
     /** 
@@ -429,7 +430,7 @@ module.exports = function(game){
       this.render_stack()
 
       if (this.should_push) {
-        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
+        const lift = (this.y - (ROWS_INV*UNIT)) + ((this.push_counter / TIME_PUSH) * UNIT)
         this.layer_block.y  = lift;
         this.layer_cursor.y = lift;
       }

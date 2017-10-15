@@ -2,12 +2,14 @@ module.exports = function(game){
   const APP = require('../../../app')('../../../');
   const {
     COLS,
+    ROWS_INV,
+    ROWS_VIS,
     ROWS,
     UNIT,
     STARTPOS_PANELCURSOR_SPEED,
     PANELCURSOR_CHECK_SPEED
   } = require(APP.path.core('data'));
-  
+
   class Cursor {
     /** bindings only */
     constructor() {
@@ -19,16 +21,16 @@ module.exports = function(game){
       this.load = this.load.bind(this);
       this.entrance = this.entrance.bind(this);
       this.map_controls = this.map_controls.bind(this);
-      
+
       // movement keys
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
       this.left = this.left.bind(this);
       this.right = this.right.bind(this);
-      
+
       // actions
       this.swap = this.swap.bind(this);
-      this.undoSwap = this.undoSwap.bind(this);
+      this.undo_swap = this.undo_swap.bind(this)
       this.push = this.push.bind(this);
       this.pause = this.pause.bind(this);
 
@@ -43,26 +45,31 @@ module.exports = function(game){
      * @param {string} mode B button changes methods depending on the stage
      */
     create(playfield, modetype = "vs"){
-      this.playfield = playfield;
-      this.state      = 'hidden';
+      this.playfield  = playfield
+      this.state      = 'hidden'
 
-      this.counter_flicker = 0;
-      this.counter         = 0;
-      this.x = 2;
-      this.y = 6;
+      this.counter_flicker = 0
+      this.counter         = 0
 
-      const diff = (UNIT / 16) * 3;
-      let x,y, visible;
+      // this is the starting position of the
+      // cursor. We have to offset using ROWS_INV
+      // to get its correct position for visible porition
+      // of the playfield
+      this.x = 2
+      this.y = 6 + ROWS_INV
+
+      let x,y, visible
+
       if(this.playfield.should_countdown){
-        x = (this.x * UNIT) - diff;
-        y = (this.y * UNIT) - diff;
-        visible = true;
+        x = ((COLS-2)*UNIT) - this.offset
+        y = 0               - this.offset
+        visible = false
       } else {
-        x = ((COLS-2)*UNIT)-diff;
-        y = 0-diff;
-        visible = false;
-        this.state = 'active';
-        this.map_controls();
+        x = (this.x * UNIT) - this.offset
+        y = (this.y * UNIT) - this.offset
+        visible = true
+        this.state = 'active'
+        this.map_controls()
       }
       this.sprite = game.make.sprite(x, y, 'playfield_cursor', 0);
       this.sprite.animations.add('idle', [0,1]);
@@ -75,6 +82,14 @@ module.exports = function(game){
 
       this.mode = modetype;
       this.cursor_swap_history = [];
+    }
+
+    /**
+     * This is the offset for the cursor so it appears
+     * perfectly over the panel
+     */
+    get offset(){
+      return (UNIT / 16) * 3
     }
 
     get snap() {
@@ -110,7 +125,7 @@ module.exports = function(game){
         left : this.left,
         right: this.right,
         a    : this.swap,
-        b    : this.mode === "vs" ? this.swap : this.undoSwap,
+        b    : this.mode === "vs" ? this.swap : this.undo_swap,
         l    : this.push,
         r    : this.push,
         start: this.pause
@@ -140,12 +155,12 @@ module.exports = function(game){
      */
     up(tick) {
       if (this.pressed_then_held(tick)) 
-        if (this.y > 0) {
+        if (this.y > ROWS_VIS) {
           this.y--; 
           game.sounds.select();
         }
     }
-    
+
     /**
      * Moves the cursor down once if it isnt at the bottom of the playfield,
      * only when pressed_then_held returns true
@@ -153,7 +168,7 @@ module.exports = function(game){
      * @returns true if actually moved
      */
     down(tick) {
-      if (this.pressed_then_held(tick))        
+      if (this.pressed_then_held(tick))
         if (this.y < (ROWS - 1)) {
           this.y++; 
           game.sounds.select();
@@ -217,7 +232,7 @@ module.exports = function(game){
      * undoes the latest swap - up to the beginning before swapping started
      * @param {integer} tick acts as a timer - allows only keypresses
      */
-    undoSwap(tick) {
+    undo_swap(tick) {
       if (tick > 0) 
         return;
 
@@ -243,19 +258,17 @@ module.exports = function(game){
      * @param {integer} tick increasing counter
      */
     push(tick) {
-      if (this.playfield.stage.state !== 'running' || 
-          this.state !== 'active')  
+      if (this.playfield.stage.state !== 'running' ||
+          this.state !== 'active')
         return;
-      
       this.playfield.pushing = true;
     }
 
     /** updates the internal x & y pos, animation for flickers, setting controls once entered */
     update() {
       // should check in a deterministic way for preactive
-      let diff = (UNIT / 16) * 3;
-      let x = (this.x * UNIT) - diff;
-      let y = (this.y * UNIT) - diff;
+      let x = (this.x * UNIT) - this.offset;
+      let y = (ROWS_INV * UNIT) + (this.y * UNIT) - this.offset;
 
       if ((this.state === 'entering') ||
           (this.state === 'preactive')) {
@@ -284,14 +297,13 @@ module.exports = function(game){
 
     /** updates the actual sprite position, almost the same as update() */
     render(){
-      let diff = (UNIT / 16) * 3;
-      let x = (this.x * UNIT) - diff;
-      let y = (this.y * UNIT) - diff;
+      let x = (this.x * UNIT) - this.offset
+      let y = (this.y * UNIT) - this.offset
 
       if ((this.state === 'entering') ||
           (this.state === 'preactive')) {
         if (this.counter_flicker > 1) {
-          this.sprite.visible = !this.sprite.visible;
+          this.sprite.visible = !this.sprite.visible
         }
       }
       switch (this.state) {
