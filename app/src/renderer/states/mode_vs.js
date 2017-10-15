@@ -1,6 +1,7 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const Stack  = require(APP.path.core('stack'))(game)
+  
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
   const ComponentPing        = require(APP.path.components('ping'))(game)
   const ComponentDebugFrame  = require(APP.path.components('debug_frame'))(game)
@@ -101,8 +102,8 @@ module.exports = function(game){
       const offset = 0;
       this.create_bg()
 
-      const stack = new Stack(this.rng)
-      stack.create()
+      const stack = new Stack(this.rng);
+      stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
       if (this.online && game.server.pos === 1) {
         this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
@@ -115,7 +116,7 @@ module.exports = function(game){
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
-      this.timer.create()
+      this.timer.create({});
 
       this.snapshots.create(
         this,
@@ -306,11 +307,11 @@ module.exports = function(game){
       this.danger_check()
       if (tick === false) {
         this.inputs.update(this.tick,true)
-        game.controls.update(false)
+        game.controls.update()
         this.snapshots.snap(this.tick)
       } else {
         this.inputs.update(tick,false)
-        game.controls.update(true)
+        game.controls.update(false,true)
         this.snapshots.snap(tick)
       }
     }

@@ -11,6 +11,7 @@ module.exports = function(game){
     HANG,
     FALL,
     LAND,
+    GARBAGE,
     CLEAR,
     PANELS,
     COLS,
@@ -29,7 +30,8 @@ module.exports = function(game){
     TIME_FALL
   } = require(APP.path.core('data'))
 
-  const ComponentBaubleChain = require(APP.path.components('bauble'))(game)
+  const ComponentBaubleChain  = require(APP.path.components('bauble'))(game)
+  const ComponentPanelGarbage = require(APP.path.components('panel_garbage'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -76,8 +78,8 @@ module.exports = function(game){
 
       this.load = this.load.bind(this)
 
-      this.log              = this.log.bind(this);
-      this.matched          = this.matched.bind(this);
+      this.log              = this.log.bind(this)
+      this.matched          = this.matched.bind(this)
       this.set              = this.set.bind(this)
       this.render_visible   = this.render_visible.bind(this)
       this.swap             = this.swap.bind(this)
@@ -85,19 +87,21 @@ module.exports = function(game){
       this.clear            = this.clear.bind(this)
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
-      this.check_neighbours = this.check_neighbours.bind(this)
+      this.set_garbage      = this.set_garbage.bind(this)
+      this.clear_garbage    = this.clear_garbage.bind(this)
 
-      this.bauble_chain = new ComponentBaubleChain()
+      this.bauble_chain  = new ComponentBaubleChain()
+      this.panel_garbage = new ComponentPanelGarbage()
     }
 
     /** */
     static initClass() {
-      this.prototype.playfield          = null;
-      this.prototype.x                  = null;
-      this.prototype.y                  = null;
-      this.prototype.chain              = null;
-      this.prototype.sprite             = null;
-      this.prototype.i                  = null;
+      this.prototype.playfield          = null
+      this.prototype.x                  = null
+      this.prototype.y                  = null
+      this.prototype.chain              = null
+      this.prototype.sprite             = null
+      this.prototype.i                  = null
     }
 
     /** */
@@ -108,8 +112,8 @@ module.exports = function(game){
         this.kind,
         this.state,
         this.counter,
-        this.chain,
-      ];
+        this.chain
+      ]
     }
 
     /** */
@@ -120,6 +124,7 @@ module.exports = function(game){
       this.state   = data[3]
       this.counter = data[4]
       this.chain   = data[5]
+      this.garbage = data[6]
     }
 
     /** */
@@ -141,7 +146,14 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
 
+      this.panel_garbage.create(this)
       this.bauble_chain.create(this)
+    }
+
+    set_garbage(group){
+      this.state = GARBAGE
+      this.panel_garbage.group = group
+      this.panel_garbage.state = FALL
     }
 
     /** */
@@ -197,6 +209,14 @@ module.exports = function(game){
           this.kind = i
       }
     }
+
+    clear_garbage(){
+      if (this.state === GARBAGE &&
+          this.playfield.clearing_garbage.indexOf(this.panel_garbage.group) !== -1 ){
+        this.panel_garbage.state = CLEAR
+      }
+    }
+
     /** 
      * `update(i)` handles the states and its transition to other states.
      * A panel's state will usually change when the panel's `counter`
@@ -204,101 +224,95 @@ module.exports = function(game){
      *
      */
     update(){
-      if (this.newline){ return; }
-      if (this.counter > 0) { this.counter--}
+      if (this.state === GARBAGE) {
+        this.panel_garbage.update()
+      } else {
+        if (this.newline){ return; }
+        if (this.counter > 0) { this.counter--}
+        switch (this.state) {
+          case SWAP_L:
+            if (this.counter > 0) { return }
+            const i1 = this.kind
+            const i2 = this.right.kind
+            this.kind       = i2
+            this.right.kind = i1
 
-      switch (this.state) {
-        case SWAP_L:
-          if (this.counter > 0) { return }
-          const i1 = this.kind
-          const i2 = this.right.kind
-          this.kind       = i2
-          this.right.kind = i1
+            this.state   = SWAPPING_L
+            this.counter = TIME_SWAP
+            break
+          case SWAP_R:
+            if (this.counter > 0) { return }
+            this.state   = SWAPPING_R
+            this.counter = TIME_SWAP
+            break
+          case SWAPPING_L:
+            if (this.counter > 0) { return }
+            this.state = STATIC
+            break
+          case SWAPPING_R:
+            if (this.counter > 0) { return }
+            this.state = STATIC
+            break
+          case STATIC:
+            if ((this.under.empty && !this.empty) || this.under.state === HANG) {
+              this.state   = HANG
+              this.counter = 0
+            } else if (this.danger && this.counter === 0) {
+              // we add 1 otherwise we will miss out on one frame
+              // since counter can never really hit zero and render
+              this.chain = 0
+              this.counter = FRAME_DANGER.length+1
+            } else {
+              this.chain = 0
+            }
+            break;
+          case HANG:
+            if (this.counter > 0) { return }
+            this.state = FALL
+            break;
+          case FALL:
+            if (this.counter > 0) { return }
+            if (this.under.empty) {
+              this.under.kind    = this.kind
+              this.under.state   = this.state
+              this.under.counter = this.counter
+              this.under.chain   = this.chain
 
-          this.state   = SWAPPING_L
-          this.counter = TIME_SWAP
-          break
-        case SWAP_R:
-          if (this.counter > 0) { return }
-          this.state   = SWAPPING_R
-          this.counter = TIME_SWAP
-          break
-        case SWAPPING_L:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break
-        case SWAPPING_R:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break
-        case STATIC:
-          if ((this.under.empty && !this.empty) || this.under.state === HANG) {
-            this.state   = HANG
-            this.counter = 0
-          } else if (this.danger && this.counter === 0) {
-            // we add 1 otherwise we will miss out on one frame
-            // since counter can never really hit zero and render
-            this.counter = FRAME_DANGER.length+1
-          }
-          //if (this.under === blank) {
-            //this.chain = 0
-          //} else if (this.under.state === HANG) {
-            //this.state = HANG
-            //this.counter =  this.under.counter
-            //this.chain   = this.under.chain
-          //} else if (this.under.empty && !this.empty) {
-            //this.state = HANG
-          //} else {
-            //this.chain = 0
-          //}
-          break;
-        case HANG:
-          if (this.counter > 0) { return }
-          this.state = FALL
-          break;
-        case FALL:
-          if (this.counter > 0) { return }
-          //console.log(this.under.empty)
-          if (this.under.empty) {
-            this.under.kind    = this.kind
-            this.under.state   = this.state
-            this.under.counter = this.counter
-            this.under.chain   = this.chain
-
-            this.kind    = null
+              this.kind    = null
+              this.state   = STATIC
+              this.counter = 0
+              this.chain   = 0
+            } else {
+              this.state   = LAND
+              this.counter = FRAME_LAND.length
+            }
+            //} else if (this.under.state === CLEAR) {
+              //this.state = STATIC
+            //} else {
+              //this.state   = this.under.state
+              //this.counter = this.under.counter
+              //this.chain   = this.under.chain
+            //}
+              //this.state   = LAND
+              //this.counter = FRAME_LAND.length
+            break;
+          case CLEAR:
+            if (this.counter > 0) { return }
+            if (this.above && !this.above.hidden && this.above.state === STATIC) {
+              this.above.chain += 1
+            }
             this.state   = STATIC
+            this.kind    = null
             this.counter = 0
             this.chain   = 0
-          } else {
-            this.state   = LAND
-            this.counter = FRAME_LAND.length
-          }
-          //} else if (this.under.state === CLEAR) {
-            //this.state = STATIC
-          //} else {
-            //this.state   = this.under.state
-            //this.counter = this.under.counter
-            //this.chain   = this.under.chain
-          //}
-            //this.state   = LAND
-            //this.counter = FRAME_LAND.length
-          break;
-        case CLEAR:
-          if (this.counter > 0) { return }
-          this.state   = STATIC
-          this.kind    = null
-          this.counter = 0
-          this.chain   = 0
-          if (this.above && (!this.above.hidden)) {
-            this.above.chain += 1
-          }
-          break;
-        case LAND:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break;
-        default:
-          throw(new Error('unknown panel state'))
+            break;
+          case LAND:
+            if (this.counter > 0) { return }
+            this.state = STATIC
+            break;
+          default:
+            throw(new Error('unknown panel state'))
+        }
       }
     }
 
@@ -401,49 +415,32 @@ module.exports = function(game){
     * call `Panel.popping` to set the counter.
     */
     clear() {
-      if (this.state === CLEAR) { return [0, this.chain]; }
+      if (this.state === CLEAR) { return }
       this.state = CLEAR
       this.chain += 1
       this.playfield.clearing.push(this)
-      return [1, this.chain]
     }
     /**
-     * Checks above and under and then left and right from the current panel
-     * and returns if there  combo count and if there is chain
+     * Checks above and under and then left and right from the current panel.
+     * Panels will be added to playfield.clearing to determine combo and chain
      *
-     * @returns {{array}} [chain,combo]
      * */
     chain_and_combo() {
-      let combo = 0
-      let chain = 0
-      if (!this.comboable) { return [combo,chain] }
-      [combo,chain] = Array.from(this.check_neighbours(this.left , this.right, combo, chain));
-      [combo,chain] = Array.from(this.check_neighbours(this.above, this.under, combo, chain));
-      return [combo,chain]
-    }
-    /**
-     * Checks to see if the given panels form a combo with the current panel.
-     *
-     * @param {Object} panel1
-     * @param {Object} panel2
-     * @param {{number}} combo
-     * @param {{boolean}} chain
-     * @returns {{array}} [chain,combo]
-     * */
-    check_neighbours(p1,p2,combo,chain){
-      if (
-        !p1.comboable          || !p2.comboable ||
-         p1.kind !== this.kind || p2.kind !== this.kind
-      ) { return [combo,chain]; }
-      const panel1  = p1.clear()
-      const middle  = this.clear()
-      const panel2  = p2.clear()
+      if (!this.comboable) { return }
 
-      combo  += panel1[0]
-      combo  += middle[0]
-      combo  += panel2[0]
-      if (middle[1] || panel1[1] || panel2[1]) { chain += 1; }
-      return [combo,chain]
+      if (this.left.comboable  && this.left.kind  === this.kind &&
+          this.right.comboable && this.right.kind === this.kind) {
+        this.left.clear()
+        this.clear()
+        this.right.clear()
+      }
+
+      if (this.above.comboable  && this.above.kind  === this.kind &&
+          this.under.comboable  && this.under.kind  === this.kind) {
+        this.above.clear()
+        this.clear()
+        this.under.clear()
+      }
     }
     /**
      Returns the index of the current panel clearing and amount of panels clearing
@@ -522,6 +519,7 @@ module.exports = function(game){
       this.animate()
       this.render_visible()
       this.bauble_chain.render()
+      this.panel_garbage.render()
     }
     /** */
     shutdown(){}
