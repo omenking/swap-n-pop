@@ -44,6 +44,9 @@ module.exports = {
   TIME_SWAP : 4,
   TIME_PUSH : 1000,
 
+  TIME_GARBAGE_CLEAR: 30,
+  TIME_GARBAGE_POP  : 12,
+
   UNIT : 16,
   WIN_WIDTH  : 256,
   WIN_HEIGHT : 224,

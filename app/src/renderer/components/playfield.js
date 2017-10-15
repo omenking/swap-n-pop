@@ -413,7 +413,7 @@ module.exports = function(game){
     update_garbage_clearing(){
       if (this.clearing_garbage.length > 0){
         for (let panel of this.stack()){
-          panel.clear_garbage()
+          panel.panel_garbage.popping()
         }
       }
       this.clearing_garbage = []

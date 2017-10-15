@@ -88,7 +88,6 @@ module.exports = function(game){
       this.nocombo          = this.nocombo.bind(this)
       this.chain_and_combo  = this.chain_and_combo.bind(this)
       this.set_garbage      = this.set_garbage.bind(this)
-      this.clear_garbage    = this.clear_garbage.bind(this)
 
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
@@ -146,7 +145,7 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
 
-      this.panel_garbage.create(this)
+      this.panel_garbage.create(this,this.playfield)
       this.bauble_chain.create(this)
     }
 
@@ -210,12 +209,6 @@ module.exports = function(game){
       }
     }
 
-    clear_garbage(){
-      if (this.state === GARBAGE &&
-          this.playfield.clearing_garbage.indexOf(this.panel_garbage.group) !== -1 ){
-        this.panel_garbage.state = CLEAR
-      }
-    }
 
     /** 
      * `update(i)` handles the states and its transition to other states.
@@ -452,8 +445,8 @@ module.exports = function(game){
       }
       let panels = []
       for (let p of this.playfield.stack()){
-        if (p.counter === this.counter &&
-            p.state   === CLEAR) {
+        if (p.panel_garbage.group === this.group &&
+            p.panel_garbage.state === CLEAR) {
           panels.push(p)
         }
       }
