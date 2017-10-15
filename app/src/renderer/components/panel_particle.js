@@ -29,29 +29,26 @@ module.exports = function(game) {
     set counter(val) {       this._counter = val }
 
     update() {
-      this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT);
-      this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT);
+      this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT)
+      this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT)
 
       if (this.counter > 0) {
-        this.counter--;
-        const cur = TIME_PARTICLE - this.counter;
+        this.counter--
+        const cur = TIME_PARTICLE - this.counter
 
         switch (this.i) {
           case 0:     // top left
             this.x -= cur;
             this.y -= cur;
             break;
-        
           case 1:     // top right
             this.x += cur;
             this.y -= cur;
             break;
-            
           case 2:     // bottom right
             this.x += cur;
             this.y += cur;
             break;
-  
           case 3:     // bottom left 
             this.x -= cur;
             this.y += cur;
@@ -61,18 +58,17 @@ module.exports = function(game) {
     }
 
     render() {
-      const cur = TIME_PARTICLE - this.counter;
+      const cur = TIME_PARTICLE - this.counter
       if (cur > 7) {
-        this.sprite.frame = 7;  
+        this.sprite.frame = 7
       }
       else {
-        this.sprite.frame = cur;
+        this.sprite.frame = cur
       }
 
-      this.sprite.x = this.x;
-      this.sprite.y = this.y;
-      
-      this.sprite.visible = (this.counter > 0);
+      this.sprite.x = this.x
+      this.sprite.y = this.y
+      this.sprite.visible = (this.counter > 0)
     }
   }
 

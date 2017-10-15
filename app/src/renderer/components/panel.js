@@ -321,30 +321,26 @@ module.exports = function(game){
               const [xi,xlen] = this.clear_index
               this.clear_i    = xi
               this.clear_len  = xlen
-      
+
               const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
               this.time_pop = TIME_CLEAR + (TIME_POP* this.clear_i)
               this.time_cur = time_max - this.counter
-              
-              if (this.time_cur === this.time_pop) {
-                console.log("should call", this.playfield.stage.tick);
 
+              if (this.time_cur === this.time_pop) {
                 this.particles.forEach((particle) => {
                   particle.counter = TIME_PARTICLE;
                 });
               }
-
-              return 
+            } else {
+              if (this.above && !this.above.hidden && this.above.state === STATIC) {
+                this.above.chain += 1
+              }
+              this.state   = STATIC
+              this.kind    = null
+              this.counter = 0
+              this.chain   = 0
+              this.group   = null
             }
-            
-            if (this.above && !this.above.hidden && this.above.state === STATIC) {
-              this.above.chain += 1
-            }
-            this.state   = STATIC
-            this.kind    = null
-            this.counter = 0
-            this.chain   = 0
-            this.group   = null
             break;
           case LAND:
             if (this.counter > 0) { return }
