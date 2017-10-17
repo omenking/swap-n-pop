@@ -9,7 +9,8 @@ module.exports = function(game){
     STATIC,
     TIME_GARBAGE_CLEAR,
     TIME_GARBAGE_POP,
-    GARBAGE
+    GARBAGE,
+    GARBAGE_SHAKE
   } = require(APP.path.core('data'))
   class PanelGarbage {
     get [Symbol.toStringTag](){ return 'PanelGarbage' }
@@ -108,6 +109,8 @@ module.exports = function(game){
             this.panel.counter = 0
             this.panel.chain   = 0
           } else {
+            this.playfield.shake   = 0
+            this.playfield.counter = GARBAGE_SHAKE[this.playfield.shake].length
             this.state = STATIC
           }
         break;
