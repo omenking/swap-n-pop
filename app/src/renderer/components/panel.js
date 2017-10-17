@@ -55,21 +55,6 @@ module.exports = function(game){
     get counter()    {return this.attr_counter }
     set counter(val) {       this.attr_counter = val }
     
-    get clear_i()    {return this._clear_i }
-    set clear_i(val) {       this._clear_i = val }
-   
-    get clear_len()    {return this._clear_len }
-    set clear_len(val) {       this._clear_len = val }
-    
-    get time_cur()    {return this._time_cur }
-    set time_cur(val) {       this._time_cur = val }
-    
-    get time_pop()    {return this._time_pop }
-    set time_pop(val) {       this._time_pop = val }
-
-    get group()       {return this._group }
-    set group(val)    {       this._group = val }
-
     get state()    {return this.attr_state }
     set state(val) {       this.attr_state = val }
 
@@ -504,35 +489,6 @@ module.exports = function(game){
         }
       }
       return [panels.indexOf(this),panels.length]
-    }
-
-    spawn_particles() {
-      var starSprites = [];
-      var tweenSprites = [];
-    
-      // 0. top left, 1. top right, etc
-      var directions = [{x: -1, y: -1},
-                        {x: +1, y: -1},
-                        {x: +1, y: +1},
-                        {x: -1, y: +1}];
-    
-      // save pos since sprite properties cant be used inside tween
-      var tempx = this.sprite.x + this.playfield.layer_block.x;
-      var tempy = this.sprite.y + this.playfield.layer_block.y;
-
-      for (var i = 0; i < 4; i++) {
-        // spwan particle in the middle of the block
-        starSprites[i] = game.add.sprite(tempx, tempy, "pop-frames");
-        starSprites[i].animations.add('pop');
-        starSprites[i].animations.play('pop', game.time.desiredFps / 2, false, true);
-
-        tweenSprites[i] = game.add.tween(starSprites[i]);
-    
-        tweenSprites[i].to({ x: tempx + 24 * directions[i].x,
-                             y: tempy + 24 * directions[i].y,
-                             alpha: 0.5},
-                             300, "Sine.easeOut", true);
-      }
     }
 
     /**
