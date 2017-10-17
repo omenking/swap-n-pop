@@ -17,7 +17,7 @@ module.exports = function levels() {
    */
   var fill = function(old_array) {
     // spawns nulls until the last 6 lines were chosen
-    let new_array = new Array((ROWS * COLS - old_array.length)).fill(_);
+    let new_array = new Array((PANELS - old_array.length)).fill(_);
     return new_array.concat(old_array);
   }
 
