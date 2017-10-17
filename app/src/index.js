@@ -26,7 +26,7 @@ const States       = require(APP.path.root('src','renderer','states'))(game)
 const CoreControls = require(APP.path.core('controls'))(game)
 const CoreSounds   = require(APP.path.core('sounds'))(game)
 const Server       = require(APP.path.main('server'))
-
+ 
 game.controls = new CoreControls()
 game.sounds   = new CoreSounds()
 game.server   = new Server()
@@ -35,7 +35,7 @@ game.state.add('load'       , attach_state(States.Load))
 game.state.add('menu'       , attach_state(States.Menu))
 game.state.add('connect'    , attach_state(States.Connect))
 game.state.add('mode_vs'    , attach_state(States.ModeVs))
-game.state.add('mode_puzzle', attach_state(States.ModePuzzle))
+game.state.add('mode_puzzle', new States.ModePuzzle(game))
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {

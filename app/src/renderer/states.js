@@ -4,7 +4,7 @@ module.exports = function(game){
     Load       : require('./states/load')(game),
     Menu       : require('./states/menu')(game),
     ModeVs     : require('./states/mode_vs')(game),
-    ModePuzzle : require('./states/mode_puzzle')(game),
+    ModePuzzle : require('./states/mode_puzzle'),
     Connect    : require('./states/connect')(game)
   }
 }

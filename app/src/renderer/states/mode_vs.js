@@ -5,7 +5,7 @@ module.exports = function(game){
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
   const ComponentPing        = require(APP.path.components('ping'))(game)
   const ComponentDebugFrame  = require(APP.path.components('debug_frame'))(game)
-  const ComponentTimer       = require(APP.path.components('timer'))(game)
+  const ComponentTimer       = require(APP.path.components('timer'))
   const ComponentMenuPause   = require(APP.path.components('menu_pause'))(game)
   const ComponentStarCounter = require(APP.path.components('star_counter'))(game)
 
@@ -43,7 +43,7 @@ module.exports = function(game){
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()
       this.debug_frame  = new ComponentDebugFrame()
-      this.timer        = new ComponentTimer()
+      this.timer        = new ComponentTimer(game)
 
       this.menu_pause   = new ComponentMenuPause()
       this.star_counter = new ComponentStarCounter()
