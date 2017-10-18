@@ -45,7 +45,6 @@ module.exports = function(game){
       }
     }
     down(tick) {
-      console.log('down')
       if (tick > 0) { return }
       if (this.index !== (this.menu_items.length-1)) {
         game.sounds.select()

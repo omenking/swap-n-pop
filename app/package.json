@@ -1,6 +1,6 @@
 {
   "name": "swap-n-pop",
-  "version": "0.0.2",
+  "version": "0.4.0",
   "description": "An open-source built for competitive online tetris attack.",
   "main": "main.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "sinon": "^3.2.1"
   },
   "dependencies": {
+    "electron-reload": "^1.2.2",
     "electron-store": "^1.2.0",
     "glob": "^7.1.2",
     "keycode": "^2.1.9",

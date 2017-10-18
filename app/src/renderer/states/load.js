@@ -83,8 +83,9 @@ module.exports = function(game){
       game.load.image('playfield_vs_bg'           , './assets/playfield_vs_bg.png')
       game.load.image('mode_puzzle_bg'            , './assets/mode_puzzle_bg.png')
       game.load.spritesheet('playfield_countdown' , './assets/playfield_countdown.png', 62, 38, 4)
-      game.load.spritesheet('panels'              , './assets/panels.png'  , 16, 16, 48)
-      game.load.spritesheet('garbage'             , './assets/garbage.png'  , 16, 16, 13)
+
+      game.load.spritesheet('panels'              , './assets/panels.png'  , 16, 16, 136)
+      game.load.spritesheet('garbage'             , './assets/garbage.png'  , 16, 16, 14)
 
       game.load.image('playfield_char00', './assets/char00.png')
       game.load.image('playfield_char01', './assets/char01.png')
@@ -110,6 +111,8 @@ module.exports = function(game){
       game.load.spritesheet('bauble_num'      , './assets/bauble_num.png',6,9,10)
       game.load.spritesheet('bauble_num_small', './assets/bauble_num_small.png',5,9,10)
 
+      game.load.spritesheet('panel_particles', './assets/pop-frames.png', 16, 16, 8);
+      
       game.load.start()
     }
   }

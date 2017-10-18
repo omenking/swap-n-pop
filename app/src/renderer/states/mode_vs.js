@@ -146,10 +146,15 @@ module.exports = function(game){
 
     /** called by the menu and reassigns control to both playfields, timer runs again */
     resume() {
-      game.sounds.stage_music('resume');
-
-      this.state = "running";
-      this.timer.running = true;
+      // only resumes the game if countdown's are over
+      if (this.playfield1.countdown.state === null ||
+          this.playfield2.countdown.state === null) {
+        game.sounds.stage_music('resume');
+        
+        this.state = "running";
+        this.timer.running = true;
+      }
+      
       this.playfield1.cursor.map_controls();
       this.playfield2.cursor.map_controls();
     }

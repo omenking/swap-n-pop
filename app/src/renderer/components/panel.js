@@ -27,11 +27,13 @@ module.exports = function(game){
     TIME_SWAP,
     TIME_CLEAR,
     TIME_POP,
-    TIME_FALL
+    TIME_FALL,
+    TIME_PARTICLE
   } = require(APP.path.core('data'))
 
   const ComponentBaubleChain  = require(APP.path.components('bauble'))(game)
   const ComponentPanelGarbage = require(APP.path.components('panel_garbage'))(game)
+  const ComponentPanelParticle = require(APP.path.components('panel_particle'))(game)
   const _f = require(APP.path.core('filters'))
   const ss = require('shuffle-seed')
   /** 
@@ -52,6 +54,21 @@ module.exports = function(game){
      */
     get counter()    {return this.attr_counter }
     set counter(val) {       this.attr_counter = val }
+    
+    get clear_i()    {return this._clear_i }
+    set clear_i(val) {       this._clear_i = val }
+   
+    get clear_len()    {return this._clear_len }
+    set clear_len(val) {       this._clear_len = val }
+    
+    get time_cur()    {return this._time_cur }
+    set time_cur(val) {       this._time_cur = val }
+    
+    get time_pop()    {return this._time_pop }
+    set time_pop(val) {       this._time_pop = val }
+
+    get group()       {return this._group }
+    set group(val)    {       this._group = val }
 
     get state()    {return this.attr_state }
     set state(val) {       this.attr_state = val }
@@ -71,27 +88,20 @@ module.exports = function(game){
 
     /** */
     constructor() {
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.load = this.load.bind(this)
-
-      this.log              = this.log.bind(this)
-      this.matched          = this.matched.bind(this)
-      this.set              = this.set.bind(this)
-      this.render_visible   = this.render_visible.bind(this)
-      this.swap             = this.swap.bind(this)
-      this.popping          = this.popping.bind(this)
-      this.clear            = this.clear.bind(this)
-      this.nocombo          = this.nocombo.bind(this)
-      this.chain_and_combo  = this.chain_and_combo.bind(this)
-      this.set_garbage      = this.set_garbage.bind(this)
-      this.clear_garbage    = this.clear_garbage.bind(this)
-
+      // binding all methods to this
+      for (let key in this) 
+        if (typeof this[key] == 'function')
+          user[key] = user[key].bind(this);
+     
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
+
+      this.particles = [
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle(),
+        new ComponentPanelParticle()
+      ];
     }
 
     /** */
@@ -112,7 +122,9 @@ module.exports = function(game){
         this.kind,
         this.state,
         this.counter,
-        this.chain
+        this.chain,
+        this.counter_particle,
+        this.group
       ]
     }
 
@@ -125,6 +137,8 @@ module.exports = function(game){
       this.counter = data[4]
       this.chain   = data[5]
       this.garbage = data[6]
+      this.counter_particle = data[7]
+      this.group   = data[8]
     }
 
     /** */
@@ -146,14 +160,26 @@ module.exports = function(game){
       // move this in the render that would be ideal.
       this.sprite.visible = false
 
-      this.panel_garbage.create(this)
+      this.panel_garbage.create(this,this.playfield)
       this.bauble_chain.create(this)
+    
+      this.particles.forEach((particle, i) => {
+        particle.create(this, i);
+      });
+    
+      this.counter_particle = 0;
     }
 
     set_garbage(group){
       this.state = GARBAGE
       this.panel_garbage.group = group
       this.panel_garbage.state = FALL
+    }
+
+    /** resets this panel to a normal state - stops animation usefull for stack resets */ 
+    soft_reset() {
+      this.counter = 0;
+      this.state = STATIC;
     }
 
     /** */
@@ -169,7 +195,7 @@ module.exports = function(game){
     /** */
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     /** */
-    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) }
+    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
     /** */
     get empty() {      return  this.state === STATIC && this.hidden }
     /** */
@@ -210,12 +236,6 @@ module.exports = function(game){
       }
     }
 
-    clear_garbage(){
-      if (this.state === GARBAGE &&
-          this.playfield.clearing_garbage.indexOf(this.panel_garbage.group) !== -1 ){
-        this.panel_garbage.state = CLEAR
-      }
-    }
 
     /** 
      * `update(i)` handles the states and its transition to other states.
@@ -297,14 +317,30 @@ module.exports = function(game){
               //this.counter = FRAME_LAND.length
             break;
           case CLEAR:
-            if (this.counter > 0) { return }
-            if (this.above && !this.above.hidden && this.above.state === STATIC) {
-              this.above.chain += 1
+            if (this.counter > 0) { 
+              const [xi,xlen] = this.clear_index
+              this.clear_i    = xi
+              this.clear_len  = xlen
+
+              const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
+              this.time_pop = TIME_CLEAR + (TIME_POP* this.clear_i)
+              this.time_cur = time_max - this.counter
+
+              if (this.time_cur === this.time_pop) {
+                this.particles.forEach((particle) => {
+                  particle.counter = TIME_PARTICLE;
+                });
+              }
+            } else {
+              if (this.above && !this.above.hidden && this.above.state === STATIC) {
+                this.above.chain += 1
+              }
+              this.state   = STATIC
+              this.kind    = null
+              this.counter = 0
+              this.chain   = 0
+              this.group   = null
             }
-            this.state   = STATIC
-            this.kind    = null
-            this.counter = 0
-            this.chain   = 0
             break;
           case LAND:
             if (this.counter > 0) { return }
@@ -314,6 +350,10 @@ module.exports = function(game){
             throw(new Error('unknown panel state'))
         }
       }
+
+      this.particles.forEach((particle) => {
+        particle.update();
+      });
     }
 
     /**
@@ -325,6 +365,10 @@ module.exports = function(game){
         this.sprite.visible = false
       } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
         this.sprite.visible = false
+
+        // only spawns particles once
+        //if (this.time_cur === this.time_pop)
+          //this.spawn_particles();
       } else {
         this.sprite.visible = true
       }
@@ -419,6 +463,7 @@ module.exports = function(game){
       this.state = CLEAR
       this.chain += 1
       this.playfield.clearing.push(this)
+      this.group = this.playfield.stage.tick;
     }
     /**
      * Checks above and under and then left and right from the current panel.
@@ -443,6 +488,7 @@ module.exports = function(game){
       }
     }
     /**
+     * 
      Returns the index of the current panel clearing and amount of panels clearing
      @returns {array} - [index,length]
      */
@@ -452,12 +498,41 @@ module.exports = function(game){
       }
       let panels = []
       for (let p of this.playfield.stack()){
-        if (p.counter === this.counter &&
-            p.state   === CLEAR) {
+        if (p.group === this.group &&
+            p.state === CLEAR) {
           panels.push(p)
         }
       }
       return [panels.indexOf(this),panels.length]
+    }
+
+    spawn_particles() {
+      var starSprites = [];
+      var tweenSprites = [];
+    
+      // 0. top left, 1. top right, etc
+      var directions = [{x: -1, y: -1},
+                        {x: +1, y: -1},
+                        {x: +1, y: +1},
+                        {x: -1, y: +1}];
+    
+      // save pos since sprite properties cant be used inside tween
+      var tempx = this.sprite.x + this.playfield.layer_block.x;
+      var tempy = this.sprite.y + this.playfield.layer_block.y;
+
+      for (var i = 0; i < 4; i++) {
+        // spwan particle in the middle of the block
+        starSprites[i] = game.add.sprite(tempx, tempy, "pop-frames");
+        starSprites[i].animations.add('pop');
+        starSprites[i].animations.play('pop', game.time.desiredFps / 2, false, true);
+
+        tweenSprites[i] = game.add.tween(starSprites[i]);
+    
+        tweenSprites[i].to({ x: tempx + 24 * directions[i].x,
+                             y: tempy + 24 * directions[i].y,
+                             alpha: 0.5},
+                             300, "Sine.easeOut", true);
+      }
     }
 
     /**
@@ -479,19 +554,11 @@ module.exports = function(game){
       } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
-        let [i,len] = this.clear_index
-        this.clear_i    = i
-        this.clear_len  = len
-
-        let time_max = TIME_CLEAR + (TIME_POP*len) + TIME_FALL
-        this.time_pop = TIME_CLEAR + (TIME_POP*i)
-        this.time_cur = time_max - this.counter
+        
 
         if (FRAME_CLEAR.length > this.time_cur){
           this.frame = FRAME_CLEAR[this.time_cur]
         }
-
-
       } else if (this.state === LAND){
         this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
       } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
@@ -520,6 +587,10 @@ module.exports = function(game){
       this.render_visible()
       this.bauble_chain.render()
       this.panel_garbage.render()
+
+      this.particles.forEach((particle) => {
+        particle.render();
+      });
     }
     /** */
     shutdown(){}

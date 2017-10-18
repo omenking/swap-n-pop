@@ -10,12 +10,13 @@ module.exports = function(game){
   const ComponentAi                 = require(APP.path.components('ai'))(game)
   const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
+    ROWS_INV,
     ROWS,
     COLS,
     PANELS,
     UNIT,
     TIME_PUSH,
-    SCAN_BTLR
+    GARBAGE_SHAKE
   } = require(APP.path.core('data'))
 
   class Playfield {
@@ -78,8 +79,15 @@ module.exports = function(game){
       this.ai         = new ComponentAi()
     }
 
+    get shake(){ return this._shake }
+    set shake(v){ this._shake = v }
+
+    get counter(){ return this._counter }
+    set counter(v){ this._counter = v }
+
     get push_counter(){ return this._push_counter }
     set push_counter(v){ this._push_counter = v }
+
     get pushing(){ return this._pushing }
     set pushing(v){ this._pushing = v }
 
@@ -160,7 +168,7 @@ module.exports = function(game){
 
       this.layer_block  = game.add.group()
       this.layer_block.x  = this.x
-      this.layer_block.y  = this.y
+      this.layer_block.y  = this.y - (ROWS_INV*UNIT)
 
       this.create_stack(opts.panels)
 
@@ -283,8 +291,9 @@ module.exports = function(game){
      * @param {integer} new_counter_size size that the swap_counter should be set to
      */
     reset_stack(new_Panels, new_counter_size = 0) {
-      this.swap_counter = new_counter_size;        
-      this.fill_panels(new_Panels);
+      this.stack().forEach((panel) => { panel.soft_reset() })
+      this.swap_counter = new_counter_size
+      this.fill_panels(new_Panels)
     }
 
     /** 
@@ -413,7 +422,7 @@ module.exports = function(game){
     update_garbage_clearing(){
       if (this.clearing_garbage.length > 0){
         for (let panel of this.stack()){
-          panel.clear_garbage()
+          panel.panel_garbage.popping()
         }
       }
       this.clearing_garbage = []
@@ -428,10 +437,20 @@ module.exports = function(game){
       this.wall.render()
       this.render_stack()
 
+      let shake = 0
+      if (this.shake >= 0 && this.counter > 0) {
+        const shake_i  = GARBAGE_SHAKE[this.shake].length-this.counter
+        shake = GARBAGE_SHAKE[shake][shake_i]
+      }
+
+      const y = this.y - (ROWS_INV*UNIT)
       if (this.should_push) {
-        const lift = this.y + ((this.push_counter / TIME_PUSH) * UNIT)
-        this.layer_block.y  = lift;
-        this.layer_cursor.y = lift;
+        const lift = (this.push_counter / TIME_PUSH) * UNIT
+        this.layer_block.y  = y + lift + shake
+        this.layer_cursor.y = y + lift + shake
+      } else {
+        this.layer_block.y  = y + shake
+        this.layer_cursor.y = y + shake
       }
     }
     update() {
@@ -444,6 +463,9 @@ module.exports = function(game){
       }
       if (this.stage.state !== 'running') { return; }
 
+      if (this.counter > 0) { 
+        console.log('counter',this.counter)
+        this.counter-- }
       if (this.should_push) { this.update_push() }
       this.clearing         = []
       this.clearing_garbage = []

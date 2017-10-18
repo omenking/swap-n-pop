@@ -1,8 +1,10 @@
 const N = null
 module.exports = {
-  ROWS: 11,
+  ROWS_INV: 13,
+  ROWS_VIS: 11,
+  ROWS: 13 + 11,
   COLS: 6,
-  PANELS: 66,
+  PANELS: (13+11) * 6,
 
   //number of starting blocks
   NRBLOCK : 17,
@@ -43,6 +45,10 @@ module.exports = {
   TIME_FALL  : 3,  //how long to wait after popping last panel before panel falls
   TIME_SWAP : 4,
   TIME_PUSH : 1000,
+  TIME_PARTICLE : 20,   // the time the particle stays on the screen for 
+
+  TIME_GARBAGE_CLEAR: 30,
+  TIME_GARBAGE_POP  : 12,
 
   UNIT : 16,
   WIN_WIDTH  : 256,
@@ -51,6 +57,17 @@ module.exports = {
   MENUCURSORBLINK : 12,
 
   STARTPOS_PANELCURSOR_SPEED : 6,
+
+  GARBAGE_SHAKE: [
+    [
+      1,1,1,
+      2,2,2,
+      1,1,1,
+      0,0,0,
+      -1,-1,-1,
+      0,0,0
+    ]
+  ],
 
   WALL_ROLLUP: [
     0,1,0,1,0,1,0,2,0,2,0,
