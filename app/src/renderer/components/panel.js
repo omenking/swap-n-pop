@@ -101,6 +101,11 @@ module.exports = function(game){
 
     /** */
     get snap() {
+      let snap_particles = []
+      this.particles.forEach((particle, i) => {
+        snap_particles[i] = particle.snap
+      })
+
       return [
         this.x,
         this.y,
@@ -108,8 +113,8 @@ module.exports = function(game){
         this.state,
         this.counter,
         this.chain,
-        this.counter_particle,
-        this.group
+        this.group,
+        snap_particles
       ]
     }
 
@@ -122,8 +127,11 @@ module.exports = function(game){
       this.counter = data[4]
       this.chain   = data[5]
       this.garbage = data[6]
-      this.counter_particle = data[7]
-      this.group   = data[8]
+      this.group   = data[7]
+      
+      this.particles.forEach((particle, i) => {
+        particle = data[8][i]
+      })
     }
 
     /** */
@@ -151,8 +159,6 @@ module.exports = function(game){
       this.particles.forEach((particle, i) => {
         particle.create(this, i);
       });
-    
-      this.counter_particle = 0;
     }
 
     set_garbage(group){
@@ -350,10 +356,6 @@ module.exports = function(game){
         this.sprite.visible = false
       } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
         this.sprite.visible = false
-
-        // only spawns particles once
-        //if (this.time_cur === this.time_pop)
-          //this.spawn_particles();
       } else {
         this.sprite.visible = true
       }

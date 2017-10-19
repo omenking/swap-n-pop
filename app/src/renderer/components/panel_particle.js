@@ -3,21 +3,49 @@ module.exports = function(game) {
   const { 
     UNIT,
     TIME_PARTICLE
-  } = require(APP.path.core('data'));
+  } = require(APP.path.core('data'))
 
-  class PanelParticle {
+  /**
+   * A Panel has a particle that gets shown when the Panel gets cleared
+   * A Panel_Particle has 4 directions right now, top left - top right - bottom right - bottom left
+   * Once the counter has been set to the TIME_PARTICLE a counter runs down and the particle will animate
+   */
+  return class PanelParticle {
+    /**
+     * Initializes the sprite defaulted to not visible, inits vars and has arguments
+     * @param {object} panel parent which the pos will depend on
+     * @param {integer} dir which direction to go - 1 = top left, 2 = top right, 3 = bottom right, ...
+     */
     create(panel, dir) {
-      this.sprite = game.add.sprite(0, 0, "panel_particles", 0);
-      this.sprite.visible = false;
+      this.sprite = game.add.sprite(0, 0, "panel_particles", 0)
+      this.sprite.visible = false
 
-      this.x = 0;
-      this.y = 0;
-      this.dir = dir;     // 0 top left, 1 top right, 2 bottom right, 3 bottom left
+      this.x = 0
+      this.y = 0
+      this.dir = dir     // 0 top left, 1 top right, 2 bottom right, 3 bottom left
 
-      this.panel = panel;
+      this.panel = panel
 
-      this.counter = 0;
-      this.ct = 0;
+      this.counter = 0
+      this.frame_counter = 0
+    }
+ 
+    /** @returns an Array of the vars that can be rerolled to to recreate a state completely */
+    get snap() {
+      return [
+        this.x,
+        this.y,
+        this.dir,
+        this.frame_counter,
+      ]
+    }
+
+    /** loads an Array with integer values that each var should get set to */
+    load(data) {
+      this.x = data[0]
+      this.y = data[1]
+      this.dir = data[2]
+      this.frame_counter = data[3]
     }
 
     /** sets the pos of the particle, also sets the dir based on its dir  */
@@ -31,20 +59,20 @@ module.exports = function(game) {
 
         switch (this.dir) {
           case 0:     // top left
-            this.x -= cur;
-            this.y -= cur;
+            this.x -= cur
+            this.y -= cur
             break;
           case 1:     // top right
-            this.x += cur;
-            this.y -= cur;
+            this.x += cur
+            this.y -= cur
             break;
           case 2:     // bottom right
-            this.x += cur;
-            this.y += cur;
+            this.x += cur
+            this.y += cur
             break;
           case 3:     // bottom left 
-            this.x -= cur;
-            this.y += cur;
+            this.x -= cur
+            this.y += cur
             break;
         }
       }
@@ -58,24 +86,23 @@ module.exports = function(game) {
      * @param {integer} current real num from 0 to 1
      * @returns true when current has crossed over ct+1/frames
      */
-    animate_in_intervals(frames, ct, current) {
-      return (((this.ct + 1) / 8) <= current);
+    animate_in_intervals(frames, current) {
+      return (((this.frame_counter + 1) / 8) <= current)
     }
 
     /** draws the sprite contents, animates the sprite when visible */
     render() {
       if (this.counter > 0) {
-        const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE;
+        const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE
 
-        if (this.animate_in_intervals(8, this.ct, cur))
-          this.sprite.frame = this.ct++;
+        if (this.animate_in_intervals(8, cur))
+          this.sprite.frame = this.frame_counter++
       }
+      else this.frame_counter = 0;
 
       this.sprite.x = this.x
       this.sprite.y = this.y
       this.sprite.visible = (this.counter > 0)
     }
   }
-
-  return PanelParticle;
 }
