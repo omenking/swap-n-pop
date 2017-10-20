@@ -1,16 +1,12 @@
-module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this);
-      this.update = this.update.bind(this);
-    }
-
-    create(playfield,cursor){
+module.exports = function(game) {
+  return class controller {
+    create(playfield, cursor) {
       this.playfield = playfield;
       this.cursor = cursor;
       console.log('create ai');
       return this.plan = false;
     }
+
     update() {
       this.cursor.mv_up();
 
@@ -27,5 +23,4 @@ module.exports = function(game){
       return this.plan = true;
     }
   }
-  return controller
 }

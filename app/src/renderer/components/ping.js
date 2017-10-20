@@ -1,10 +1,5 @@
 module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.render = this.render.bind(this)
-    }
-
+  return class controller {
     get ping(){  return this._ping }
     set ping(v){ this._ping = v }
 
@@ -22,10 +17,9 @@ module.exports = function(game){
       }.bind(this),3000)
     }
 
-    render(){
+    render() {
       if (this.ping === null) {return}
       this.lbl.setText(`${this.ping}ms`)
     }
   }
-  return controller
 }

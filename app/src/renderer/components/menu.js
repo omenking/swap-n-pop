@@ -1,20 +1,11 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')
   
   /** Class representing a menu. */
-  class Menu_Component {
+  return class Menu_Component {
     constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-
-      this.mode_1p_vs_2p_local  = this.mode_1p_vs_2p_local.bind(this)
-      this.mode_1p_vs_2p_online = this.mode_1p_vs_2p_online.bind(this)
-      this.mode_1p_vs_cpu       = this.mode_1p_vs_cpu.bind(this)
-      this.mode_improve         = this.mode_improve.bind(this)
-      this.mode_option          = this.mode_option.bind(this)
-
       this.cursor = new ComponentMenuCursor()
     }
     
@@ -53,7 +44,5 @@ module.exports = function(game){
     mode_option() {
       ipc.send('settings','replay')
     }
-  };
-
-  return Menu_Component;
+  }
 }

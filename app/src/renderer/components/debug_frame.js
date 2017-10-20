@@ -1,9 +1,5 @@
 module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.render = this.render.bind(this)
-    }
+  return class controller {
     create() {
       this.lbl = game.add.text(116, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
     }
@@ -12,6 +8,5 @@ module.exports = function(game){
       this.lbl.setText(`F${i}`)
     }
   }
-  return controller
 }
 

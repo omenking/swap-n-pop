@@ -20,25 +20,6 @@ module.exports = function(game){
 
   class controller {
     constructor() {
-      this.init     = this.init.bind(this)
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.load         = this.load.bind(this)
-
-      this.step         = this.step.bind(this)
-      this.roll_to      = this.roll_to.bind(this)
-      this.create_bg    = this.create_bg.bind(this)
-      this.create_frame = this.create_frame.bind(this)
-      this.pause        = this.pause.bind(this)
-      this.resume       = this.resume.bind(this)
-      this.game_over    = this.game_over.bind(this)
-      this.danger_check = this.danger_check.bind(this)
-      this.log_stack    = this.log_stack.bind(this)
-      this.log_roll     = this.log_roll.bind(this)
-
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()

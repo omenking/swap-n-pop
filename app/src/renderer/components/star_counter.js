@@ -1,15 +1,10 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const {
     FRAME_STAR
   } = require(APP.path.core('data'))
-  class StarCounter {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-      this.render = this.render.bind(this)
-    }
 
+  return class StarCounter {
     create(stage,x,y){
       this.stage = stage
       this.group = game.add.group()
@@ -37,7 +32,7 @@ module.exports = function(game){
       }
     }
 
-    render(){
+    render() {
       if (this.stage.rounds_won[0] > 0) {
         this.sprites[0].frame = FRAME_STAR[this.counter]
       } else {
@@ -64,6 +59,4 @@ module.exports = function(game){
       }
     }
   }
-
-  return StarCounter
 }

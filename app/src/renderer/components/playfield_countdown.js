@@ -1,25 +1,15 @@
 module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-      this.render = this.render.bind(this)
-
-      this.load = this.load.bind(this)
-
-      this.start = this.start.bind(this)
-    }
-
-    load(snapshot){
+  return class PlayfieldCountdown {
+    load(snapshot) {
       this.state   = snapshot[0]
       this.counter = snapshot[1]
     }
 
-    get snap(){
+    get snap() {
       return [this.state, this.counter]
     }
 
-    create(playfield){
+    create(playfield) {
       this.playfield = playfield
 
       const x = this.playfield.x+16;
@@ -71,7 +61,8 @@ module.exports = function(game){
         }
       }
     }
-    start(){
+
+    start() {
       game.sounds.ding()
       this.sprite.visible         = false
       this.playfield.cursor.state = 'active'
@@ -90,9 +81,8 @@ module.exports = function(game){
       game.sounds.stage_music('active')
       this.state = null
     }
-    render(){
+
+    render() {
     }
   }
-
-  return controller
 }

@@ -1,18 +1,10 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const {ipcRenderer: ipc} = require('electron')
   const Replay = require('../../../src/main/replay')(null,null)
 
-  class controller {
-    constructor() {
-      this.init   = this.init.bind(this)
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-
-      this.listening = this.listening.bind(this)
-      this.start     = this.start.bind(this)
-    }
-    init(data){
+  return class controller {
+    init(data) {
       this.mode      = data.mode
       this.host_port = data.host_port
       this.join_host = data.join_host
@@ -29,11 +21,12 @@ module.exports = function(game){
     set join_host(v){ this._join_host = v}
     set join_port(v){ this._join_port = v}
 
-    create(){
+    create() {
       this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
       game.server.create(this.host_port,'0.0.0.0',this.listening)
     }
-    listening(){
+
+    listening() {
       if (this.mode === 'host') {
         game.server.connected(this.start)
         game.server.pos = 0
@@ -47,18 +40,18 @@ module.exports = function(game){
         )
       }
     }
-    start(){
+
+    start() {
       ipc.send('play-vs',{
         seed  : game.server.seed,
         online: true,
         cpu   : [false,false]
       })
     }
-    update(){
+
+    update() {
       this.bg.tilePosition.y += 0.5
       this.bg.tilePosition.x -= 0.5
     }
   }
-
-  return controller
 }

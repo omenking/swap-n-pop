@@ -73,11 +73,6 @@ module.exports = function(game){
 
     /** */
     constructor() {
-      // binding all methods to this
-      for (let key in this) 
-        if (typeof this[key] == 'function')
-          user[key] = user[key].bind(this);
-     
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
 

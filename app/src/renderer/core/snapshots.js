@@ -1,16 +1,5 @@
 module.exports = function(game){
-  class Snapshots {
-    /** bindings only */
-    constructor(){
-      this.create  = this.create.bind(this)
-
-      this.cindex      = this.cindex.bind(this)
-      this.cindex_tick = this.cindex_tick.bind(this)
-
-      this.load   = this.load.bind(this)
-      this.snap   = this.snap.bind(this)
-    }
-
+  return class Snapshots {
     /** Saves variables which need to get snapped or loaded
      * @param {mode} stage chosen mode to play in
      * @param {playfield} p0 first one
@@ -84,6 +73,4 @@ module.exports = function(game){
                                    this.timer.snap]
     }
   } 
-
-  return Snapshots
 }

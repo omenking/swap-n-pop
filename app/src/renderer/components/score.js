@@ -1,10 +1,5 @@
-module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this);
-      this.update = this.update.bind(this);
-    }
-
+module.exports = function(game) {
+  return class controller {
     create() {
       this.lbl = game.add.text(0, 10, '0', {
         fontSize: '16px',
@@ -17,11 +12,10 @@ module.exports = function(game){
       this.lbl.lineSpacing  = -7;
     }
 
-    update(chain,score){
+    update(chain,score) {
       let text  = `${score}`;
       if (chain) { text += `\nchain: ${chain+1}`; }
       this.lbl.setText(text);
     }
   }
-  return controller
 }

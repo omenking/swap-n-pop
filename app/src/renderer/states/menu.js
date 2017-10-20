@@ -1,16 +1,12 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const ComponentMenu = require(APP.path.components('menu'))(game)
 
   /**
    * Higher Order Menu that keeps the menu updated - Adds Background
    */
-  class Menu_state {
-    /** bindings and src menu object creation */
+  return class Menu_state {
     constructor() {
-      this.create = this.create.bind(this);
-      this.update = this.update.bind(this);
-
       this.menu   = new ComponentMenu();
     }
 
@@ -35,6 +31,4 @@ module.exports = function(game){
       game.controls.disable()
     }
   }
-
-  return Menu_state;
 }
