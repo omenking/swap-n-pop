@@ -31,9 +31,9 @@ module.exports = function(game) {
       this.rng    = seedrandom(this.seed);
 
       // gathered from level puzzle data
-      this.level_index = 0;
-      this.asd = new PuzzlesModule();
-      this.change_level(this.asd.puzzle_levels[this.level_index++]);
+      this.level_index = 10;
+      this.puzzles = new PuzzlesModule();
+      this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
 
       this.playfield.create(this, {
         countdown: false,
@@ -50,15 +50,49 @@ module.exports = function(game) {
       this.timer.create({x: 25, y: 30});
       this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left });
     }
+    
+    /** shuts down the playfield */
+    shutdown() {
+      game.sounds.stage_music('none');
+      this.playfield.shutdown();
+    }
+
+    /** changes the current level to the next one from the puzzle array - counters go up */
+    change_level(lvl) {
+      this.panels = lvl.panels;
+      this.steps_left = lvl.steps;
+      this.step_display.step_limit = lvl.steps;
+    }
+
+    /** stops all control - plays a sound and stops the timer */
+    pause() {
+      game.sounds.stage_music('pause');
+    
+      this.state = "pause";
+      this.timer.running = false;
+      this.menu_pause.pause();
+    }
+
+    /** regains control over playfield - plays a sound and timer runs again */
+    resume() {
+      game.sounds.stage_music('resume');
+    
+      this.state = "running";
+      this.timer.running = true;
+      this.playfield.cursor.map_controls("puzzle");      
+    }
 
     /** updates all important objects, especially the inputs
      *  based on the interal tick counter thats increasing
      */
     update() {
-      this.tick++;
-
       if (this.playfield.stack_is_empty()) {
-        this.change_level(this.asd.puzzle_levels[this.level_index++]);      
+        if (this.puzzles.puzzle_levels.length === (this.level_index)) {
+          game.state.start("menu");
+          return;
+        }
+
+        this.change_level(this.puzzles.puzzle_levels[this.level_index++]);      
         this.playfield.cursor.cursor_swap_history = [];
         this.playfield.reset_stack(this.panels, 0);  
       }
@@ -68,6 +102,8 @@ module.exports = function(game) {
         this.playfield.cursor.cursor_swap_history = [];
         this.playfield.reset_stack(this.panels, 0);
       }
+
+      this.tick++;
 
       game.controls.update();
       this.playfield.update();
@@ -83,34 +119,6 @@ module.exports = function(game) {
     
       if (this.playfield) 
         this.playfield.render();
-    }
-    
-    /** shuts down the playfield */
-    shutdown() {
-      game.sounds.stage_music('none');
-      this.playfield.shutdown();
-    }
-
-    change_level(lvl) {
-      this.panels = lvl.panels;
-      this.steps_left = lvl.steps;
-      this.step_display.step_limit = lvl.steps;
-    }
-
-    pause() {
-      game.sounds.stage_music('pause');
-    
-      this.state = "pause";
-      this.timer.running = false;
-      this.menu_pause.pause();
-    }
-
-    resume() {
-      game.sounds.stage_music('resume');
-    
-      this.state = "running";
-      this.timer.running = true;
-      this.playfield.cursor.map_controls("puzzle");      
     }
   }
 }
