@@ -299,8 +299,13 @@ module.exports = function(game) {
       }
       switch (this.state) {
         case 'entering':
-          if      (this.sprite.y < y) {this.sprite.y += STARTPOS_PANELCURSOR_SPEED}
-          else if (this.sprite.x > x) {this.sprite.x -= STARTPOS_PANELCURSOR_SPEED}
+          // increases by STARTPOS_PANELCURSOR_SPEED until y is reached, then sets it to y
+          this.sprite.y = this.sprite.y < y ? this.sprite.y + STARTPOS_PANELCURSOR_SPEED : y;
+          
+          // once sprite.y has reached its goal position move x the same way
+          if (this.sprite.y === y)
+            this.sprite.x = this.sprite.x > x ? this.sprite.x - STARTPOS_PANELCURSOR_SPEED : x;
+          
           break;
         case 'preactive': case 'active':
           this.sprite.x = x;
