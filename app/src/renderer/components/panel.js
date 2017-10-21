@@ -15,6 +15,7 @@ module.exports = function(game){
     CLEAR,
     PANELS,
     COLS,
+    ROWS_INV,
     ROWS,
     FRAME_LAND,
     FRAME_CLEAR,
@@ -412,7 +413,7 @@ module.exports = function(game){
     *  in the stack is in danger.
     */
     get danger(){
-      return !this.playfield.stack(this.x,1).hidden
+      return !this.playfield.stack(this.x,1+ROWS_INV).hidden
     }
     /** 
     * `dead()` will check if the this panel's column contains
@@ -420,7 +421,7 @@ module.exports = function(game){
     * then the this panel should be considered dead.
     */
     get dead(){
-      return !this.playfield.stack(this.x,0).hidden
+      return !this.playfield.stack(this.x,0+ROWS_INV).hidden
     }
     /** 
     * `newline()` checks if this panel is a newline.
