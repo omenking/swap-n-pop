@@ -1,27 +1,12 @@
 module.exports = function(game){
   const {ipcRenderer: ipc} = require('electron')
   const Store = require('electron-store')
-  const store = new Store()
+  
   class controller {
     constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-
-      this.update_pl   = this.update_pl.bind(this)
-      this.load        = this.load.bind(this)
-      this.map         = this.map.bind(this)
-      this.map_key     = this.map_key.bind(this)
-      this.serialize   = this.serialize.bind(this)
-      this.execute     = this.execute.bind(this)
-      this.execute_key = this.execute_key.bind(this)
-      this.is_down     = this.is_down.bind(this)
-      this.check_down  = this.check_down.bind(this)
-      this.rebind      = this.rebind.bind(this)
-      this.trigger     = this.trigger.bind(this)
-      this.add_input   = this.add_input.bind(this)
-      this.disable     = this.disable.bind(this)
-      this.toggle_menu = this.toggle_menu.bind(this)
+      this.store = new Store();
     }
+
     create() {
       this.callbacks = {
         pl0_up    : function(){},
@@ -98,7 +83,7 @@ module.exports = function(game){
       })
     }
     rebind(){
-      let inputs = store.get('inputs')
+      let inputs = this.store.get('inputs')
       game.input.keyboard.reset()
       this.keys = {}
       this.keys.pl0_up    = this.add_input(inputs[0])

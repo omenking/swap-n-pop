@@ -5,15 +5,12 @@ module.exports = function(game){
   /** Cursor to handle menu_pause movement and method calls
    *  could maybe be optimized by just calling the menu_pause methods here
    */
-  class Menu_Pause_Cursor {
+  return class MenuPauseCursor {
     /** only bindings, no new objects */
     constructor() {
-      this.create = this.create.bind(this);
-      this.map_controls = this.map_controls.bind(this);
-      this.confirm = this.confirm.bind(this);
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
-      this.update = this.update.bind(this);
+      this.confirm = this.confirm.bind(this);
     }
 
     /**
@@ -86,6 +83,4 @@ module.exports = function(game){
       return this.sprite.y = this.y+(this.index*12);
     }
   }
-
-  return Menu_Pause_Cursor
 }

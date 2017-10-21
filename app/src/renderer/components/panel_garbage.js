@@ -15,18 +15,6 @@ module.exports = function(game){
   class PanelGarbage {
     get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
-    /** */
-    constructor() {
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.fall_check  = this.fall_check.bind(this)
-      this.popping     = this.popping.bind(this)
-      this.render_visible  = this.render_visible.bind(this)
-    }
-
     get state()    {return this._state }
     set state(val) {       this._state = val }
 

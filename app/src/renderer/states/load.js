@@ -1,16 +1,8 @@
-module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-      this.render = this.render.bind(this)
-
-      this.load_start    = this.load_start.bind(this)
-      this.file_complete = this.file_complete.bind(this)
-      this.load_complete = this.load_complete.bind(this)
-      this.load          = this.load.bind(this)
-    }
-
+module.exports = function(game) {
+  /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
+   *  Uses signals to detect once everything has been loaded correctly
+   */
+  return class Loader {
     create() {
       const x = game.world.centerX
       const y = game.world.centerY
@@ -22,32 +14,39 @@ module.exports = function(game){
       this.loader.visible = false
       this.files.visible  = false
       this.file.visible   = false
-
+      
       game.load.onLoadStart.add(this.load_start   , this)
       game.load.onFileComplete.add(this.file_complete, this)
       game.load.onLoadComplete.add(this.load_complete, this)
-      this.load()
+      this.load_all()
     }
+
     load_start() {
+
     }
+    
     file_complete(progress,key,success,cur,total){
       this.files.setText(`Files ${cur} / ${total}`)
       this.file.setText(key)
-    }
+    } 
+
     load_complete() {
       game.controls.create()
       game.sounds.create()
       game.state.start('menu')
     }
+
     update() {
       this.loader.setText(`Loading ${game.load.progress}%`);
     }
-    render(){
+
+    render() {
       //this.loader.visible = true
       //this.files.visible  = true
       //this.file.visible   = true
     }
-    load() {
+
+    load_all() {
       // Music --------
       game.load.audio('msx_stage'         , './assets/msx_stage.mp3')
       game.load.audio('msx_stage_critical', './assets/msx_stage_critical.mp3')
@@ -116,5 +115,4 @@ module.exports = function(game){
       game.load.start()
     }
   }
-  return controller
 }

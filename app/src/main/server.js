@@ -1,31 +1,6 @@
 const dgram  = require('dgram')
 
 class controller {
-  constructor() {
-    this.create    = this.create.bind(this)
-    this.error     = this.error.bind(this)
-    this.message   = this.message.bind(this)
-    this.signal    = this.signal.bind(this)
-    this.msg       = this.msg.bind(this)
-
-    this.listening = this.listening.bind(this)
-    this.send      = this.send.bind(this)
-    this.sent      = this.sent.bind(this)
-    this.close     = this.close.bind(this)
-    this.connect   = this.connect.bind(this)
-    this.connected = this.connected.bind(this)
-    this.on        = this.on.bind(this)
-    this.ping      = this.ping.bind(this)
-    this.pong      = this.pong.bind(this)
-
-    this.buf_str      = this.buf_str.bind(this)
-    this.buf_int      = this.buf_int.bind(this)
-    this.buf_framedata = this.buf_framedata.bind(this)
-
-    this.msg_str      = this.msg_str.bind(this)
-    this.msg_int      = this.msg_int.bind(this)
-    this.msg_framedata = this.msg_framedata.bind(this)
-  }
   get state(){ return this._state }
 
   get address(){ return `${this.host}:${this.port}` }

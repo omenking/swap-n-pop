@@ -5,14 +5,12 @@ module.exports = function(game){
   /** A Menu_pause handles the pausing of a stage
    *  new controls are provided to move in the menu and use various options
    */
-  class Menu_pause {
+  return class Menu_pause {
     /** bindings & new menu cursor created */
     constructor() {
-      this.create = this.create.bind(this);
       this.cancel = this.cancel.bind(this);
       this.continue = this.continue.bind(this);
       this.pause = this.pause.bind(this);
-      this.update = this.update.bind(this);
       
       this.cursor = new ComponentMenuPauseCursor();
     }
@@ -81,6 +79,4 @@ module.exports = function(game){
       this.cursor.update();
     }
   }
-
-  return Menu_pause;
 }

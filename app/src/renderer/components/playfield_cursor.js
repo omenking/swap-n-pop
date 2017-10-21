@@ -1,4 +1,4 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../');
   const {
     COLS,
@@ -10,18 +10,9 @@ module.exports = function(game){
     PANELCURSOR_CHECK_SPEED
   } = require(APP.path.core('data'));
 
-  class Cursor {
+  return class Cursor {
     /** bindings only */
     constructor() {
-      this.create = this.create.bind(this);
-      this.update = this.update.bind(this);
-      this.render = this.render.bind(this);
-      this.shutdown = this.shutdown.bind(this);
-
-      this.load = this.load.bind(this);
-      this.entrance = this.entrance.bind(this);
-      this.map_controls = this.map_controls.bind(this);
-
       // movement keys
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
@@ -322,6 +313,4 @@ module.exports = function(game){
     shutdown() {
     }
   }
-
-  return Cursor;
 }

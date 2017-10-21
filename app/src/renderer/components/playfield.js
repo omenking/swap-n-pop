@@ -1,7 +1,6 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const _f = require(APP.path.core('filters'))
-  const ss = require('shuffle-seed')
   const ComponentPlayfieldCountdown = require(APP.path.components('playfield_countdown'))(game)
   const ComponentPlayfieldCursor    = require(APP.path.components('playfield_cursor'))(game)
   const ComponentPlayfieldWall      = require(APP.path.components('playfield_wall'))(game)
@@ -42,38 +41,11 @@ module.exports = function(game){
       if (pi !== 0 && pi !== 1){ 
         throw new Error("player_number present and must be 0 or 1")
       }
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.load = this.load.bind(this)
-
-      this.create_after = this.create_after.bind(this)
-      this.push = this.push.bind(this)
-      this.game_over = this.game_over.bind(this)
-      this.create_newline = this.create_newline.bind(this)
-      this.chain_and_combo = this.chain_and_combo.bind(this)
-      this.swap = this.swap.bind(this)
-      this.danger = this.danger.bind(this)
-      this.update_push   = this.update_push.bind(this)
-      this.update_score  = this.update_score.bind(this)
-
-      // stack methods
-      this.stack                   = this.stack.bind(this)
-      this.create_stack            = this.create_stack.bind(this)
-      this.create_panels           = this.create_panels.bind(this)
-      this.fill_panels             = this.fill_panels.bind(this)
-      this.reset_stack             = this.reset_stack.bind(this)
-      this.render_stack            = this.render_stack.bind(this)
-      this.update_stack            = this.update_stack.bind(this)
-      this.update_garbage_clearing = this.update_garbage_clearing.bind(this)
-
 
       this.pi = pi
       this.garbage    = new CoreGarbage()
       this.countdown  = new ComponentPlayfieldCountdown()
-      this.cursor     = new ComponentPlayfieldCursor()
+      this.cursor     = new ComponentPlayfieldCursor(game)
       this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore()
       this.ai         = new ComponentAi()
@@ -156,15 +128,6 @@ module.exports = function(game){
 
       this.x = opts.x
       this.y = opts.y
-      //const ch = ss.shuffle(['00','01','02','03',
-      //                       '04','05','06','07',
-      //                       '08','09','10','11','12'],
-      //                       this.stage.rng())
-      //this.bg = game.add.sprite(this.x+48, this.y-1, `playfield_char${ch[0]}`)
-      //this.bg.anchor.set(0.5,0)
-      //if (this.pi === 0) {
-      //  this.bg.scale.x = -1
-      //}
 
       this.layer_block  = game.add.group()
       this.layer_block.x  = this.x

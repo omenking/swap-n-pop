@@ -1,18 +1,6 @@
-module.exports = function(game){
-  class controller {
-    constructor() {
-      this.create      = this.create.bind(this)
-
-      this.blip         = this.blip.bind(this)
-      this.ding         = this.ding.bind(this)
-      this.land         = this.land.bind(this)
-      this.swap         = this.swap.bind(this)
-      this.confirm      = this.confirm.bind(this)
-      this.select       = this.select.bind(this)
-      this.stage_music  = this.stage_music.bind(this)
-    }
-    create(){
-
+module.exports = function(game) {
+  return class controller {
+    create() {
       this.sfx_swap = game.add.audio('sfx_swap')
 
       this.msx_stage_results  = game.add.audio('msx_stage_results')
@@ -32,28 +20,33 @@ module.exports = function(game){
 
       this.sfx_blip  = game.add.audio('sfx_countdown_blip')
       this.sfx_ding  = game.add.audio('sfx_countdown_ding')
-    }
-    land(){
+    } 
+
+    land() {
       this.sfx_land[0].play()
     }
-    swap(){
+
+    swap() {
       this.sfx_swap.play()
     }
-    confirm(){
+
+    confirm() {
       //this.sfx_confirm.play()
     }
-    select(){
+
+    select() {
       this.sfx_select.play()
     }
 
-    blip(){
+    blip() {
       this.sfx_blip.play()
     }
-    ding(){
+
+    ding() {
       this.sfx_ding.play()
     }
 
-    stage_music(state){
+    stage_music(state) {
       return
       switch (state) {
         case 'pause':
@@ -108,7 +101,5 @@ module.exports = function(game){
           break;
       }
     }
-
   }
-  return controller
 }

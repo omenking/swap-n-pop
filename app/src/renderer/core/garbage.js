@@ -1,19 +1,11 @@
-module.exports = function(game){
+module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const {
     GARBAGE
   } = require(APP.path.core('data'))
-  class Garbage {
-    constructor() {
-      this.create = this.create.bind(this)
-      this.update = this.update.bind(this)
-
-      this.push   = this.push.bind(this)
-      this.shift  = this.shift.bind(this)
-      this.alt    = this.alt.bind(this)
-    }
-
-    create(stage,pi){
+  
+  return class Garbage {
+    create(stage, pi){
       this.stage = stage
       this.pi    = pi
       this.queue = []
@@ -29,7 +21,7 @@ module.exports = function(game){
 
     }
 
-    alt(size){
+    alt(size) {
       const x   = this.alternate[size-1].frame[this.alternate[size-1].index]
       const len = this.alternate[size-1].frame.length
       this.alternate[size-1].index++
@@ -38,8 +30,8 @@ module.exports = function(game){
       }
       return x
     }
-
-    update(combo,chain){
+ 
+    update(combo,chain) {
       let ncombo = false
       let nchain = false
       if (combo > 3) { ncombo = combo }
@@ -56,7 +48,7 @@ module.exports = function(game){
       }
     }
 
-    push(combo,chain){
+    push(combo,chain) {
       const delay = 20
       this.queue.push({
         counter: delay,
@@ -65,7 +57,7 @@ module.exports = function(game){
       })
     }
 
-    shift(){
+    shift() {
       let playfield = null
       if (this.pi === 0) { playfield = this.stage.playfield2 }
       else               { playfield = this.stage.playfield1 }
@@ -128,5 +120,4 @@ module.exports = function(game){
       }
     }
   }
-  return Garbage
 }

@@ -1,10 +1,9 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const {UNIT, MENUCURSORBLINK} = require(APP.path.core('data'))
-  class controller {
+  
+  return class controller {
     constructor() {
-      this.create = this.create.bind(this);
-      this.map_controls = this.map_controls.bind(this);
       this.up = this.up.bind(this);
       this.down = this.down.bind(this);
       this.confirm = this.confirm.bind(this);
@@ -12,7 +11,7 @@ module.exports = function(game){
       this.update = this.update.bind(this);
     }
 
-    create(menu,x,y,menu_items){
+    create(menu,x,y,menu_items) {
       this.menu = menu;
       this.x = x;
       this.y = y;
@@ -26,7 +25,8 @@ module.exports = function(game){
       this.map_controls(0)
       this.map_controls(1)
     }
-    map_controls(pi){
+
+    map_controls(pi) {
       return game.controls.map(pi, {
         up   : this.up,
         down : this.down,
@@ -35,6 +35,7 @@ module.exports = function(game){
         start: this.confirm
       });
     }
+
     up(tick) {
       if (tick > 0) { return }
       if (this.index !== 0) {
@@ -44,6 +45,7 @@ module.exports = function(game){
         return this.index--;
       }
     }
+
     down(tick) {
       if (tick > 0) { return }
       if (this.index !== (this.menu_items.length-1)) {
@@ -53,15 +55,18 @@ module.exports = function(game){
         return this.index++;
       }
     }
+
     confirm(tick) {
       if (tick > 0) { return }
       game.sounds.confirm()
       return this.menu_items[this.index]()
     }
+
     cancel(tick) {
       if (tick > 0) { return }
       return console.log('cancel');
     }
+
     update() {
       this.sprite.y = this.y+(this.index*UNIT);
       this.counter++;
@@ -70,7 +75,5 @@ module.exports = function(game){
         return this.sprite.visible = !this.sprite.visible;
       }
     }
-  };
-
-  return controller
+  }
 }

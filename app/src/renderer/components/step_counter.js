@@ -1,17 +1,10 @@
-module.exports = function(game){
+module.exports = function(game) {
 
   /**
    * A StepCounter is used in the Puzzle Mode to show the current amount of steps you have left.
    * The internal step_limit always has to get updated to the next room change.
    */
-  class StepCounter {
-    /** bindings */
-    constructor() {
-      this.create = this.create.bind(this);
-      this.render = this.render.bind(this);
-      this.getDigit = this.getDigit.bind(this);
-    }
-
+  return class StepCounter {
     /**
      * Add a Sprite group set the parent pos and create sprites on a relative position.
      * @param {object} mulitple vars defaulted - playfield reference is expected.  
@@ -60,6 +53,4 @@ module.exports = function(game){
       return Math.floor((number / Math.pow(10, n - 1)) % 10);
     }
   }
-
-  return StepCounter;
 }

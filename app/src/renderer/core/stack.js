@@ -14,15 +14,11 @@ module.exports = function(game) {
 	 * The Algorithm creates the Numbers carefully so 
 	 * no combos are done once finished
 	 */
-	class Stack {
+	return class Stack {
 		/** Panels Array that saves the numbers being generated 
 		 * @param {object} rng seed that the randomness is based on 
 		 */
 		constructor(rng) {
-			this.create = this.create.bind(this);
-			this.setArrayToSize = this.setArrayToSize.bind(this);
-			this.logArrayLikeAPlayfield = this.logArrayLikeAPlayfield.bind(this);
-
 			this.rng = rng;
 			this.panels = 0;
 
@@ -142,6 +138,4 @@ module.exports = function(game) {
       }
     }
 	}
-
-	return Stack;
 }

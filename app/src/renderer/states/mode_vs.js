@@ -5,7 +5,7 @@ module.exports = function(game){
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
   const ComponentPing        = require(APP.path.components('ping'))(game)
   const ComponentDebugFrame  = require(APP.path.components('debug_frame'))(game)
-  const ComponentTimer       = require(APP.path.components('timer'))(game)
+  const ComponentTimer       = require(APP.path.components('timer'))
   const ComponentMenuPause   = require(APP.path.components('menu_pause'))(game)
   const ComponentStarCounter = require(APP.path.components('star_counter'))(game)
 
@@ -20,30 +20,11 @@ module.exports = function(game){
 
   class controller {
     constructor() {
-      this.init     = this.init.bind(this)
-      this.create   = this.create.bind(this)
-      this.update   = this.update.bind(this)
-      this.render   = this.render.bind(this)
-      this.shutdown = this.shutdown.bind(this)
-
-      this.load         = this.load.bind(this)
-
-      this.step         = this.step.bind(this)
-      this.roll_to      = this.roll_to.bind(this)
-      this.create_bg    = this.create_bg.bind(this)
-      this.create_frame = this.create_frame.bind(this)
-      this.pause        = this.pause.bind(this)
-      this.resume       = this.resume.bind(this)
-      this.game_over    = this.game_over.bind(this)
-      this.danger_check = this.danger_check.bind(this)
-      this.log_stack    = this.log_stack.bind(this)
-      this.log_roll     = this.log_roll.bind(this)
-
       this.playfield1   = new ComponentPlayfield(0)
       this.playfield2   = new ComponentPlayfield(1)
       this.ping         = new ComponentPing()
       this.debug_frame  = new ComponentDebugFrame()
-      this.timer        = new ComponentTimer()
+      this.timer        = new ComponentTimer(game)
 
       this.menu_pause   = new ComponentMenuPause()
       this.star_counter = new ComponentStarCounter()
