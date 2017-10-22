@@ -47,7 +47,6 @@ module.exports = function(game) {
     }
 
     stage_music(state) {
-      return
       switch (state) {
         case 'pause':
           switch (this.state_music) {
@@ -78,7 +77,7 @@ module.exports = function(game) {
         case 'active':
           if (this.state_music != 'active') {
             this.state_music = state;
-            this.msx_stage.play();
+            this.msx_stage.play('',0,0.5,true);
             this.msx_stage_critical.stop();
             this.msx_stage_results.stop();
           }
