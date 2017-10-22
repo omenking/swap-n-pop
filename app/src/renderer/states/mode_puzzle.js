@@ -31,7 +31,7 @@ module.exports = function(game) {
       this.rng    = seedrandom(this.seed);
 
       // gathered from level puzzle data
-      this.level_index = 10;
+      this.level_index = 0;
       this.puzzles = new PuzzlesModule();
       this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
 
