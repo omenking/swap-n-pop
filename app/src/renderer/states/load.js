@@ -63,6 +63,20 @@ module.exports = function(game) {
       game.load.audio('sfx_drop1'   , './assets/sfx_drop1.mp3')
       game.load.audio('sfx_drop2'   , './assets/sfx_drop2.mp3')
       game.load.audio('sfx_drop3'   , './assets/sfx_drop3.mp3')
+
+      game.load.audio('sfx_pop0', './assets/popping/sfx_sine_pop0.mp3');
+      game.load.audio('sfx_pop1', './assets/popping/sfx_sine_pop1.mp3');
+      game.load.audio('sfx_pop2', './assets/popping/sfx_sine_pop2.mp3');
+      game.load.audio('sfx_pop3', './assets/popping/sfx_sine_pop3.mp3');
+      game.load.audio('sfx_pop4', './assets/popping/sfx_sine_pop4.mp3');
+      game.load.audio('sfx_pop5', './assets/popping/sfx_sine_pop5.mp3');
+
+      game.load.audio('sfx_2pop0', './assets/popping2/sfx_pop0.mp3');
+      game.load.audio('sfx_2pop1', './assets/popping2/sfx_pop1.mp3');
+      game.load.audio('sfx_2pop2', './assets/popping2/sfx_pop2.mp3');
+      game.load.audio('sfx_2pop3', './assets/popping2/sfx_pop3.mp3');
+      game.load.audio('sfx_2pop4', './assets/popping2/sfx_pop4.mp3');
+      game.load.audio('sfx_2pop5', './assets/popping2/sfx_pop5.mp3');
       // Bg -----------
       game.load.image('bg_blue'  , './assets/bg_blue.png')
       game.load.image('bg_green' , './assets/bg_green.png')
@@ -112,6 +126,7 @@ module.exports = function(game) {
 
       game.load.spritesheet('panel_particles', './assets/pop-frames.png', 16, 16, 8);
       
+
       game.load.start()
     }
   }

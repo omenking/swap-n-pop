@@ -107,7 +107,7 @@ module.exports = function(game) {
      * @returns true when current has crossed over ct+1/frames
      */
     animate_in_intervals(frames, current) {
-      return (((this.frame_counter + 1) / 8) <= current);
+      return (((this.frame_counter + 1) / frames) <= current);
     }
 
     /** draws the sprite contents, animates the sprite when visible */

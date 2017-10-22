@@ -322,6 +322,8 @@ module.exports = function(game){
                 this.particles.forEach((particle) => {
                   particle.counter = TIME_PARTICLE;
                 });
+
+                this.clear_i < 6 ? game.sound.play("sfx_pop" + this.clear_i) : game.sound.play("sfx_pop5");
               }
             } else {
               if (this.above && !this.above.hidden && this.above.state === STATIC) {
@@ -383,7 +385,7 @@ module.exports = function(game){
       @param {{number}} i
     */
     popping(i){
-      this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
+      this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL     
     }
 
     /**
