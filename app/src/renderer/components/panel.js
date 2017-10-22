@@ -77,12 +77,10 @@ module.exports = function(game){
       this.bauble_chain  = new ComponentBaubleChain()
       this.panel_garbage = new ComponentPanelGarbage()
 
-      this.particles = [
-        new ComponentPanelParticle(),
-        new ComponentPanelParticle(),
-        new ComponentPanelParticle(),
-        new ComponentPanelParticle()
-      ];
+      // each panel has 5 particles - in create these are set to follow a circular path!
+      this.particles = [];
+      for (let i = 0; i < 5; i++) 
+        this.particles[i] = new ComponentPanelParticle();
     }
 
     /** */
@@ -152,8 +150,15 @@ module.exports = function(game){
       this.panel_garbage.create(this,this.playfield)
       this.bauble_chain.create(this)
     
+      // circular path is getting set, 
+      // angle needs to be defined so the particles know where to start properly
+      // if type: "normal" you should only define 4 ComponentParticles, not more not less,
+      // if type: "rotate" the amount of particles doesnt matter
+      let angle = 0;
+      let step = (2 * Math.PI) / this.particles.length;
       this.particles.forEach((particle, i) => {
-        particle.create(this, i);
+        particle.create({panel: this, type: "rotate", id: i, angle: angle});
+        angle += step;
       });
     }
 
