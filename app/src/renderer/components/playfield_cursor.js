@@ -261,28 +261,11 @@ module.exports = function(game) {
       let x = (this.x * UNIT) - this.offset;
       let y = (ROWS_INV * UNIT) + (this.y * UNIT) - this.offset;
 
-      if ((this.state === 'entering') ||
-          (this.state === 'preactive')) {
+      if (this.state === 'entering' || this.state === 'preactive') {
         this.counter_flicker++;
-        if (this.counter_flicker > 1) {
+        
+        if (this.counter_flicker > 1) 
           this.counter_flicker = 0;
-        }
-      }
-      switch (this.state) {
-        case 'entering':
-
-          if      (this.sprite.y < y){}
-          else if (this.sprite.x > x){}
-          else {
-            this.state = 'preactive'
-            if (this.playfield.stage.cpu[0] === false ||
-               (this.playfield.stage.online !== false &&
-                this.playfield.pi == 0
-               )){
-              this.map_controls();
-            }
-          }
-          break;
       }
     }
 
@@ -299,8 +282,18 @@ module.exports = function(game) {
       }
       switch (this.state) {
         case 'entering':
-          if      (this.sprite.y < y) {this.sprite.y += STARTPOS_PANELCURSOR_SPEED}
-          else if (this.sprite.x > x) {this.sprite.x -= STARTPOS_PANELCURSOR_SPEED}
+          // increases by STARTPOS_PANELCURSOR_SPEED until y is reached, then sets it to y
+          this.sprite.y = this.sprite.y < y ? this.sprite.y + STARTPOS_PANELCURSOR_SPEED : y;
+          
+          // once sprite.y has reached its goal position move x the same way
+          if (this.sprite.y === y)
+            this.sprite.x = this.sprite.x > x ? this.sprite.x - STARTPOS_PANELCURSOR_SPEED : x;
+        
+          if (this.sprite.x === x && this.sprite.y === y) {
+            this.map_controls();
+            this.state = "preactive";
+          }
+
           break;
         case 'preactive': case 'active':
           this.sprite.x = x;

@@ -4,6 +4,12 @@ module.exports = function(game) {
     UNIT,
     TIME_PARTICLE
   } = require(APP.path.core('data'))
+  const normalType = [
+    {x:  1, y:  1},
+    {x: -1, y:  1},
+    {x:  1, y: -1},
+    {x: -1, y: -1}
+  ]
 
   /**
    * A Panel has a particle that gets shown when the Panel gets cleared
@@ -16,18 +22,30 @@ module.exports = function(game) {
      * @param {object} panel parent which the pos will depend on
      * @param {integer} dir which direction to go - 1 = top left, 2 = top right, 3 = bottom right, ...
      */
-    create(panel, dir) {
-      this.sprite = game.add.sprite(0, 0, "panel_particles", 0)
-      this.sprite.visible = false
+    create({panel, type = "normal", id, angle = 0}) {
+      this.sprite = game.add.sprite(0, 0, "panel_particles", 0);
+      this.sprite.visible = false;
 
-      this.x = 0
-      this.y = 0
-      this.dir = dir     // 0 top left, 1 top right, 2 bottom right, 3 bottom left
+      this.x = 0;
+      this.y = 0;
 
-      this.panel = panel
+      // these shouldnt change over time, they dont get snapped
+      this.id = id;
+      this.type = type;
+      this.panel = panel;
 
-      this.counter = 0
-      this.frame_counter = 0
+      // which type and angle set 
+      this.angle = angle;
+
+      // orientation
+      if (this.type === "normal") {
+        this.xdir = normalType[this.id].x;
+        this.ydir = normalType[this.id].y;
+      }
+
+      // handling animation
+      this.counter = 0;
+      this.frame_counter = 0;
     }
  
     /** @returns an Array of the vars that can be rerolled to to recreate a state completely */
@@ -35,44 +53,46 @@ module.exports = function(game) {
       return [
         this.x,
         this.y,
-        this.dir,
+        this.xdir,
+        this.ydir,
+        this.counter,
         this.frame_counter,
+        this.angle
       ]
     }
 
     /** loads an Array with integer values that each var should get set to */
     load(data) {
-      this.x = data[0]
-      this.y = data[1]
-      this.dir = data[2]
-      this.frame_counter = data[3]
+      this.x = data[0];
+      this.y = data[1];
+      this.xdir = data[2];
+      this.ydir = data[3];
+      this.counter = data[4];
+      this.frame_counter = data[5];
+      this.angle = data[6];
     }
 
     /** sets the pos of the particle, also sets the dir based on its dir  */
     update() {
-      this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT)
-      this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT)
+      this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT);
+      this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT);
 
       if (this.counter > 0) {
-        this.counter--
-        const cur = TIME_PARTICLE - this.counter
+        this.counter--;
+        const cur = TIME_PARTICLE - this.counter;
 
-        switch (this.dir) {
-          case 0:     // top left
-            this.x -= cur
-            this.y -= cur
+        switch (this.type) {
+          case "normal": 
+            this.x += this.xdir * cur;
+            this.y += this.ydir * cur;
             break;
-          case 1:     // top right
-            this.x += cur
-            this.y -= cur
-            break;
-          case 2:     // bottom right
-            this.x += cur
-            this.y += cur
-            break;
-          case 3:     // bottom left 
-            this.x -= cur
-            this.y += cur
+        
+          case "rotate": 
+            this.x += Math.cos(this.angle) * cur;
+            this.y += Math.sin(this.angle) * cur;
+            
+            this.angle += 0.1;
+
             break;
         }
       }
@@ -87,22 +107,22 @@ module.exports = function(game) {
      * @returns true when current has crossed over ct+1/frames
      */
     animate_in_intervals(frames, current) {
-      return (((this.frame_counter + 1) / 8) <= current)
+      return (((this.frame_counter + 1) / 8) <= current);
     }
 
     /** draws the sprite contents, animates the sprite when visible */
     render() {
       if (this.counter > 0) {
-        const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE
+        const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE;
 
         if (this.animate_in_intervals(8, cur))
-          this.sprite.frame = this.frame_counter++
+          this.sprite.frame = this.frame_counter++;
       }
       else this.frame_counter = 0;
 
-      this.sprite.x = this.x
-      this.sprite.y = this.y
-      this.sprite.visible = (this.counter > 0)
+      this.sprite.x = this.x;
+      this.sprite.y = this.y;
+      this.sprite.visible = (this.counter > 0);
     }
   }
 }
