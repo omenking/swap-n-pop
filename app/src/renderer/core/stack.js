@@ -6,7 +6,6 @@ module.exports = function(game) {
 		PANELS
 	} = require(APP.path.core('data'));
 	const _f = require(APP.path.core('filters'));
-  const ss = require('shuffle-seed');
 	
 	/** 
 	 * Creates a randomized 1d Array with numbers 
@@ -15,15 +14,14 @@ module.exports = function(game) {
 	 * no combos are done once finished
 	 */
 	return class Stack {
-		/** Panels Array that saves the numbers being generated 
-		 * @param {object} rng seed that the randomness is based on 
-		 */
-		constructor(rng) {
-			this.rng = rng;
+		/** Panels Array that saves the numbers being generated */
+		constructor() {
 			this.panels = 0;
 
+			console.log(game.rnd.state());
+
 			// null block generation
-			this.kinds = [0, 1, 2, 3, 4, 5];
+			this.range = 5;
 			this.wellArray = [];
 			this.chipArray = [];
 		}
@@ -36,7 +34,7 @@ module.exports = function(game) {
 		create({ range = 5, ground = 1, wells = "average", chips = "average" }) {
 			this.panels = new Array(PANELS).fill(null);
 
-			this.wellArray = this.setArrayToSize({ noun: wells, lowest: 10, average: 20, highest: 40});
+			this.wellArray = this.setArrayToSize({ noun: wells, lowest: 10, average: 20, highest: 40 });
 			this.chipArray = this.setArrayToSize({ noun: chips, lowest: 2, average: 4, highest: 8 });
 			
       // fill with nulls so empty space will result in unvisible blocks
@@ -45,7 +43,7 @@ module.exports = function(game) {
 			
 			// generate numbers from top range to bottom
       for (var i = (PANELS - range * COLS); i < PANELS; i++) {
-        let currentNumber = ss.shuffle(this.kinds, this.rng())[0];
+				let currentNumber = game.rnd.integerInRange(0, this.range);
 
         // x and y pos to move in the array and detect things
         let indexes = _f.i2xy(i);
@@ -56,13 +54,13 @@ module.exports = function(game) {
 				// random chance that currentnumber is simply null
 				if (this.wellArray.length != 1) 							// only if wellArray size has been set
 					if (i < (PANELS - ground * COLS))						// only generate nulls above ground
-						if (ss.shuffle(this.wellArray, this.rng())[0] == 1) 
+						if (game.rnd.pick(this.wellArray) == 1)	
 							currentNumber = null;
 
 				// random chance to have null blocks through chips sets created
 				if (this.chipArray.length != 1) 
 					if (i < PANELS - ((range - 1) * COLS))		// chips are only the top layer
-						if (ss.shuffle(this.chipArray, this.rng())[0] == 1)
+						if (game.rnd.pick(this.chipArray) == 1)	
 							currentNumber = null;
 
 				// if x = 0 we dont need to detect the left neighbor color so we set last to something different
@@ -74,7 +72,7 @@ module.exports = function(game) {
 				while (currentNumber != null &&
 							 currentNumber == topNumber ||
 							 currentNumber == lastNumber) {
-					currentNumber = ss.shuffle(this.kinds, this.rng())[0];
+					currentNumber = game.rnd.integerInRange(0, this.range);
 				}
 
 				// set last number and send current to array
@@ -95,24 +93,14 @@ module.exports = function(game) {
 		 * @param {object} noun and supposed to be array sizes, the larger the less chances
 		 * @returns {Array} 
 		 */
-		setArrayToSize({noun, lowest, average, highest}) {
+		setArrayToSize({ noun, lowest, average, highest }) {
 			let size = 0;
 			
 			switch (noun) {
-				case "none": break;
-			
-				case "many":
-					size = lowest; 
-					break;
-
-				case "average": 
-					size = average;
-					break;
-
-				case "few": 
-					size = highest;
-					break;
-
+				case "none": 										break;
+				case "many": 		size = lowest; 	break;
+				case "average": size = average; break;
+				case "few": 		size = highest; break;
 				default: console.log("not existing statement sent"); break;
 			}
 
@@ -136,6 +124,6 @@ module.exports = function(game) {
 
         console.log(str);
       }
-    }
+		}
 	}
 }

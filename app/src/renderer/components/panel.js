@@ -221,10 +221,11 @@ module.exports = function(game){
     set(i){
       switch (i) {
         case 'unique':
-          this.nocombo()
+          this.kind = this.nocombo();
           break;
         default:
-          this.kind = i
+          this.kind = i;
+          break;
       }
     }
 
@@ -403,16 +404,36 @@ module.exports = function(game){
      * * and it should not return `4` because that would result in a match
      * * and it should not return `1` because above it there is a `1` above
      * 
-     * @returns {number}
+     * @returns {number} new kind to be set to!
     */
     nocombo() {
-      const arr = [0, 1, 2, 3, 4]
-      if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
-      let values = ss.shuffle(arr,this.playfield.stage.rng())
-      return this.i = values.find((i)=> {
-        return this.matched(i) === false
-      })
+      const possible_kinds = [0, 1, 2, 3, 4, 5];
+      
+      // code into multiple parts, avoid short circuiting with 2 ifs, both should always be true!
+      this.kind_is_indifferent = function(kind) {
+        if (this.matched(kind) === false)
+          if (this.above.kind !== kind)
+            return true;
+
+        return false;
+      }
+
+      /*
+      // solution with phaser internal shuffle - not hash based, pure math!!!
+      Phaser.ArrayUtils.shuffle(possible_kinds);
+
+      return possible_kinds.find((kind) => {
+        return this.kind_is_indifferent(kind);
+      });*/
+
+      for (let i = 0; i < possible_kinds.length; i++) {
+        let possible_kind = game.rnd.pick(possible_kinds);
+
+        if (this.kind_is_indifferent(possible_kind))
+          return possible_kind;
+      }
     }
+    
     /** 
     * `danger()` will check if the this panel's column
     *  contains any active panel's a few panels from the top.

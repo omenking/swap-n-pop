@@ -41,7 +41,9 @@ module.exports = function(game){
       this.seed   = data.seed
       this.cpu    = data.cpu
       this.online = data.online
-      this.rng    = seedrandom(this.seed,{state: true})
+      //this.rng    = seedrandom(this.seed,{state: true})
+      game.rnd.sow([this.seed]);   // set the game rnd to seed, only string needs to be saved
+      console.log("rng from mode ", this.seed);
       this.inputs = new CoreInputs(data.inputs,data.online,this)
       this.snapshots = new CoreSnapshots()
       this.roll = {
@@ -52,13 +54,15 @@ module.exports = function(game){
     }
 
     get snap(){
-      return [this.rng.state(),this.state]
+      return [game.rnd.state()];
     }
 
     load(snapshot){
-      let state = this.rng.state()
-      this.rng = seedrandom(this.seed, {state: snapshot[0]})
-      this.state = snapshot[1]
+      //let state = game.rnd.state()
+      //this.rng = seedrandom(this.seed, {state: snapshot[0]})
+      
+      //this.state = snapshot[1]
+      game.rnd.state(snapshot[0].state());    
     }
 
     get state(){ return this._state }
@@ -83,7 +87,7 @@ module.exports = function(game){
       const offset = 0;
       this.create_bg()
 
-      const stack = new Stack(this.rng);
+      const stack = new Stack();
       stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
       if (this.online && game.server.pos === 1) {
