@@ -8,7 +8,27 @@ module.exports = function(game) {
 
     pixelate() {
       game.stage.disableVisibilityChange = true
-      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+
+      game.scale.pageAlignHorizontally = true;
+      game.scale.pageAlignVertically = true;
+
+      game.scale.setResizeCallback(function () {
+        var height = window.innerHeight;
+        var width = window.innerWidth;
+       
+        var resize_black_bars = () => {
+          this.game.width = height;
+          this.game.height = height;
+        }
+        
+        var resize_fully = () => {
+          this.game.width = width;
+          this.game.height = height;
+        }
+
+        resize_black_bars();        
+      }, this);
+
       game.renderer.renderSession.roundPixels = true
       Phaser.Canvas.setImageRenderingCrisp(game.canvas)
     }
