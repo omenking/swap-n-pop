@@ -100,7 +100,7 @@ function create_window () {
   })
   win.custom = {mode: false}
   win.setTitle("Swap N Pop")
-  win.setAspectRatio(8/7,0)
+  //win.setAspectRatio(8/7,0)   // MAC only function
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'src', 'index.html'),
     protocol: 'file:',
