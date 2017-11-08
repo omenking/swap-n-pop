@@ -10,8 +10,8 @@ module.exports = function(game) {
     }
     
     create() {
-      this.sprite = game.add.sprite(40, 40, 'menu');
-      this.cursor.create(this, 26, 39, [
+      this.sprite = game.add.sprite(40*2, 40*2, 'menu');
+      this.cursor.create(this, 26*2, 39*2, [
         this.mode_1p_vs_2p_local,
         this.mode_1p_vs_2p_online,
         this.mode_1p_vs_cpu,

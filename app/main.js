@@ -8,8 +8,8 @@ const Logger = require('./src/main/logger')(app)
 const path = require('path')
 const url  = require('url')
 
-const WIN_WIDTH  = 398
-const WIN_HEIGHT = 224
+const WIN_WIDTH  = 398 * 2
+const WIN_HEIGHT = 224 * 2
 
 require('electron-reload')(__dirname);
 
