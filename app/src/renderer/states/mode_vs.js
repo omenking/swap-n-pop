@@ -80,24 +80,24 @@ module.exports = function(game){
       ipc.send('log',`VS ${this.seed} ------------------------------`)
       this.danger = false
 
-      const offset = 71;
+      const offset = px(55);
       this.create_bg()
 
       const stack = new Stack(this.rng);
       stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
       if (this.online && game.server.pos === 1) {
-        this.playfield2.create(this, {countdown: true, push: true, x: (offset+152)*2, y: 24*2, panels: stack.panels})
-        this.playfield1.create(this, {countdown: true, push: true, x: (offset+8  )*2, y: 24*2, panels: stack.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
       } else {
-        this.playfield1.create(this, {countdown: true, push: true, x: (offset+8  )*2, y: 24*2, panels: stack.panels})
-        this.playfield2.create(this, {countdown: true, push: true, x: (offset+152)*2, y: 24*2, panels: stack.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
       }
 
-      this.create_frame(offset)
+      this.create_frame(px(offset))
       this.playfield1.create_after()
       this.playfield2.create_after()
-      this.timer.create((offset+112)*2,168*2);
+      this.timer.create(offset+px(128),px(168));
 
       this.snapshots.create(
         this,
@@ -113,7 +113,7 @@ module.exports = function(game){
       this.debug_frame.create()
 
       this.menu_pause.create(this)
-      this.star_counter.create(this,91*2,91*2)
+      this.star_counter.create(this,px(91),px(91))
     }
 
     /** turns on the menu, changes it state, turns of the timer from counting */

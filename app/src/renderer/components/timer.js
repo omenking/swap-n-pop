@@ -28,9 +28,9 @@ module.exports = function Timer(game) {
     this.group = game.add.group();
     this.group.x = x;
     this.group.y = y;
-    this.d0 = game.make.sprite(0 , 0, 'ints_large',0);
-    this.d1 = game.make.sprite(16, 0, 'ints_large',0);
-    this.d2 = game.make.sprite(24, 0, 'ints_large',0);
+    this.d0 = game.make.sprite(px(0) , 0, 'ints_large',0);
+    this.d1 = game.make.sprite(px(16), 0, 'ints_large',0);
+    this.d2 = game.make.sprite(px(24), 0, 'ints_large',0);
     this.group.add(this.d0);
     this.group.add(this.d1);
     this.group.add(this.d2);

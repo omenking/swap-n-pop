@@ -11,10 +11,10 @@ module.exports = function(game) {
       this.group.x = x
       this.group.y = y
       this.sprites = []
-      this.sprites[0] = game.make.sprite(x   , y   , `star_counter`,0)
-      this.sprites[1] = game.make.sprite(x+18, y   , `star_counter`,6)
-      this.sprites[2] = game.make.sprite(x   , y+17, `star_counter`,0)
-      this.sprites[3] = game.make.sprite(x+18, y+17, `star_counter`,6)
+      this.sprites[0] = game.make.sprite(x       , y       , `star_counter`,0)
+      this.sprites[1] = game.make.sprite(x+px(18), y       , `star_counter`,6)
+      this.sprites[2] = game.make.sprite(x       , y+px(17), `star_counter`,0)
+      this.sprites[3] = game.make.sprite(x+px(18), y+px(17), `star_counter`,6)
 
       this.group.add(this.sprites[0])
       this.group.add(this.sprites[1])

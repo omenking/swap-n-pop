@@ -1,4 +1,5 @@
 module.exports = function(game){
+  const {px} = require(APP.path.core('filters'))
   return class PlayfieldCountdown {
     load(snapshot) {
       this.state   = snapshot[0]
@@ -12,8 +13,8 @@ module.exports = function(game){
     create(playfield) {
       this.playfield = playfield
 
-      const x = this.playfield.x+16;
-      const y = -38;
+      const x = this.playfield.x+px(16);
+      const y = px(-38);
       this.sprite = game.add.sprite(x, y, 'playfield_countdown', 0)
 
       if(this.playfield.should_countdown){
@@ -27,8 +28,8 @@ module.exports = function(game){
     update() {
       if (this.state === 'skip') { this.start() }
       if (this.state === 'moving') {
-        if (this.sprite.y < 80) {
-          this.sprite.y += 4;
+        if (this.sprite.y < px(80)) {
+          this.sprite.y += px(4);
         } else {
           this.sprite.frame = 1;
           this.state = 3;
