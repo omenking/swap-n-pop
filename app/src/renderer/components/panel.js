@@ -407,31 +407,12 @@ module.exports = function(game){
      * @returns {number} new kind to be set to!
     */
     nocombo() {
-      const possible_kinds = [0, 1, 2, 3, 4, 5];
-      
-      // code into multiple parts, avoid short circuiting with 2 ifs, both should always be true!
-      this.kind_is_indifferent = function(kind) {
-        if (this.matched(kind) === false)
-          if (this.above.kind !== kind)
-            return true;
-
-        return false;
-      }
-
-      /*
-      // solution with phaser internal shuffle - not hash based, pure math!!!
-      Phaser.ArrayUtils.shuffle(possible_kinds);
-
-      return possible_kinds.find((kind) => {
-        return this.kind_is_indifferent(kind);
-      });*/
-
-      for (let i = 0; i < possible_kinds.length; i++) {
-        let possible_kind = game.rnd.pick(possible_kinds);
-
-        if (this.kind_is_indifferent(possible_kind))
-          return possible_kind;
-      }
+      const arr = [0, 1, 2, 3, 4] 
+      if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)} 
+      let values = ss.shuffle(arr,this.playfield.stage.rng()) 
+      return this.i = values.find((i)=> { 
+        return this.matched(i) === false 
+      }) 
     }
     
     /** 

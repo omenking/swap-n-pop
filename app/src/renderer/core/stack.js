@@ -5,6 +5,7 @@ module.exports = function(game) {
 		ROWS, 
 		PANELS
 	} = require(APP.path.core('data'));
+	const ss = require('shuffle-seed');
 	const _f = require(APP.path.core('filters'));
 	
 	/** 
@@ -14,14 +15,15 @@ module.exports = function(game) {
 	 * no combos are done once finished
 	 */
 	return class Stack {
-		/** Panels Array that saves the numbers being generated */
-		constructor() {
+		 /** Panels Array that saves the numbers being generated  
+     * @param {object} rng seed that the randomness is based on  
+     */ 
+    constructor(rng) { 
+      this.rng = rng; 
 			this.panels = 0;
 
-			console.log(game.rnd.state());
-
 			// null block generation
-			this.range = 5;
+			this.kinds = [0, 1, 2, 3, 4, 5]; 
 			this.wellArray = [];
 			this.chipArray = [];
 		}
@@ -43,7 +45,7 @@ module.exports = function(game) {
 			
 			// generate numbers from top range to bottom
       for (var i = (PANELS - range * COLS); i < PANELS; i++) {
-				let currentNumber = game.rnd.integerInRange(0, this.range);
+				let currentNumber = ss.shuffle(this.kinds, this.rng())[0]; 
 
         // x and y pos to move in the array and detect things
         let indexes = _f.i2xy(i);
@@ -54,13 +56,13 @@ module.exports = function(game) {
 				// random chance that currentnumber is simply null
 				if (this.wellArray.length != 1) 							// only if wellArray size has been set
 					if (i < (PANELS - ground * COLS))						// only generate nulls above ground
-						if (game.rnd.pick(this.wellArray) == 1)	
+						if (ss.shuffle(this.wellArray, this.rng())[0] == 1)  	
 							currentNumber = null;
 
 				// random chance to have null blocks through chips sets created
 				if (this.chipArray.length != 1) 
 					if (i < PANELS - ((range - 1) * COLS))		// chips are only the top layer
-						if (game.rnd.pick(this.chipArray) == 1)	
+						if (ss.shuffle(this.chipArray, this.rng())[0] == 1) 
 							currentNumber = null;
 
 				// if x = 0 we dont need to detect the left neighbor color so we set last to something different
@@ -72,7 +74,7 @@ module.exports = function(game) {
 				while (currentNumber != null &&
 							 currentNumber == topNumber ||
 							 currentNumber == lastNumber) {
-					currentNumber = game.rnd.integerInRange(0, this.range);
+					currentNumber = ss.shuffle(this.kinds, this.rng())[0]; 
 				}
 
 				// set last number and send current to array
