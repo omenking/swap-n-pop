@@ -2,6 +2,7 @@ module.exports = function(game) {
   const APP = require('../../../app')('../../../')
   const ComponentMenuCursor = require(APP.path.components('menu_cursor'))(game)
   const {ipcRenderer: ipc} = require('electron')
+  const {px} = require(APP.path.core('filters'))
   
   /** Class representing a menu. */
   return class Menu_Component {
@@ -10,8 +11,8 @@ module.exports = function(game) {
     }
     
     create() {
-      this.sprite = game.add.sprite(40*2, 40*2, 'menu');
-      this.cursor.create(this, 26*2, 39*2, [
+      this.sprite = game.add.sprite(px(40), px(40), 'menu');
+      this.cursor.create(this, px(26), px(39), [
         this.mode_1p_vs_2p_local,
         this.mode_1p_vs_2p_online,
         this.mode_1p_vs_cpu,

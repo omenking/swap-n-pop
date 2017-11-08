@@ -1,4 +1,5 @@
 module.exports = function(game) {
+  const {px} = require(APP.path.core('filters'))
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly
    */
@@ -75,8 +76,8 @@ module.exports = function(game) {
       game.load.image('bg_green' , './assets/images/bg_green.png')
       game.load.image('bg_purple', './assets/images/bg_purple.png')
       // UI -----------
-      game.load.spritesheet('ints_small' , './assets/images/ints_small.png'  , 8*2, 8 *2, 18)
-      game.load.spritesheet('ints_large' , './assets/images/ints_large.png'  , 8*2, 14*2,18)
+      game.load.spritesheet('ints_small' , './assets/images/ints_small.png'  , px(8), px(8 ), 18)
+      game.load.spritesheet('ints_large' , './assets/images/ints_large.png'  , px(8), px(14),18)
       // Menus --------
       game.load.image('menu'             , './assets/images/menu.png')
       game.load.image('menu_cursor'      , './assets/images/menu_cursor.png')
@@ -84,14 +85,14 @@ module.exports = function(game) {
       game.load.image('menu_pause'       , './assets/images/menu_pause.png')
       game.load.image('pause'            , './assets/images/pause.png')
       // Playfield ----
-      game.load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , 38*2, 22*2, 2)
+      game.load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , px(38), px(22), 2)
       game.load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')
       game.load.image('playfield_vs_bg'           , './assets/images/playfield_vs_bg.png')
       game.load.image('mode_puzzle_bg'            , './assets/images/mode_puzzle_bg.png')
-      game.load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', 62*2, 38*2, 4)
+      game.load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', px(62), px(38), 4)
 
-      game.load.spritesheet('panels'              , './assets/images/panels.png'   , 16*2, 16*2, 136)
-      game.load.spritesheet('garbage'             , './assets/images/garbage.png'  , 16*2, 16*2, 14)
+      game.load.spritesheet('panels'              , './assets/images/panels.png'   , px(16), px(16), 136)
+      game.load.spritesheet('garbage'             , './assets/images/garbage.png'  , px(16), px(16), 14)
 
       game.load.image('playfield_char00', './assets/images/characters/char00.png')
       game.load.image('playfield_char01', './assets/images/characters/char01.png')
@@ -110,14 +111,14 @@ module.exports = function(game) {
       game.load.image('playfield_wall0', './assets/images/playfield_wall0.png')
       game.load.image('playfield_wall1', './assets/images/playfield_wall1.png')
 
-      game.load.spritesheet('star_counter', './assets/images/star_counter.png',16*2,16*2,12)
+      game.load.spritesheet('star_counter', './assets/images/star_counter.png',px(16),px(16),12)
 
-      game.load.spritesheet('bauble'          , './assets/images/bauble.png',3*2,16*2,6)
+      game.load.spritesheet('bauble'          , './assets/images/bauble.png',px(3),px(16),6)
       game.load.image(      'bauble_times'    , './assets/images/bauble_times.png')
-      game.load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',6*2,9*2,10)
-      game.load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',5*2,9*2,10)
+      game.load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',px(6),px(9),10)
+      game.load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',px(5),px(9),10)
 
-      game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', 16*2, 16*2, 8);
+      game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
 
       game.load.start()
     }
