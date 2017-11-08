@@ -24,7 +24,7 @@ module.exports = function Timer(game) {
    *  Each Time Digit gets added as a Sprite
    *  Internal tick counter and a bool to stop everything
    */
-  this.create = function({x = 112, y = 168}) {
+  this.create = function(x,y) {
     this.group = game.add.group();
     this.group.x = x;
     this.group.y = y;

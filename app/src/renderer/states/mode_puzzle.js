@@ -47,7 +47,7 @@ module.exports = function(game) {
       this.playfield.cursor.mode = "puzzle";
 
       this.menu_pause.create(this);
-      this.timer.create({x: 25, y: 30});
+      this.timer.create(25,30);
       this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left });
     }
     
