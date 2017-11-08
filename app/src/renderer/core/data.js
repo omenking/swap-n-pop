@@ -54,7 +54,7 @@ module.exports = {
   TIME_GARBAGE_POP  : 12,
 
   UNIT : 16,
-  WIN_WIDTH  : 256,
+  WIN_WIDTH  : 398,//256,
   WIN_HEIGHT : 224,
 
   MENUCURSORBLINK : 12,

@@ -8,7 +8,7 @@ const Logger = require('./src/main/logger')(app)
 const path = require('path')
 const url  = require('url')
 
-const WIN_WIDTH  = 256
+const WIN_WIDTH  = 398
 const WIN_HEIGHT = 224
 
 require('electron-reload')(__dirname);
@@ -100,7 +100,8 @@ function create_window () {
   })
   win.custom = {mode: false}
   win.setTitle("Swap N Pop")
-  win.setAspectRatio(8/7,0)
+  //win.setAspectRatio(8/7,0) //SNES original aspect ratio
+  win.setAspectRatio(16/9,0) //Widescreen
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'src', 'index.html'),
     protocol: 'file:',
