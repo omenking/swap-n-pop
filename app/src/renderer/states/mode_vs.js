@@ -97,7 +97,7 @@ module.exports = function(game){
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
-      this.timer.create({});
+      this.timer.create(offset+112,168);
 
       this.snapshots.create(
         this,
@@ -113,7 +113,7 @@ module.exports = function(game){
       this.debug_frame.create()
 
       this.menu_pause.create(this)
-      this.star_counter.create(this,36+55,91)
+      this.star_counter.create(this,91,91)
     }
 
     /** turns on the menu, changes it state, turns of the timer from counting */
