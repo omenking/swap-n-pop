@@ -87,7 +87,6 @@ module.exports = function(Ui){
   }
 
   document.onkeydown = function (e) {
-    console.log('e',e.keyCode)
     if (e.keyCode === 70) { //f (for fullscreen)
       ipc.send('fullscreen')
     } else if (e.keyCode === 27) { //esc
