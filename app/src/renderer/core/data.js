@@ -1,10 +1,12 @@
 const N = null
 module.exports = {
-  ROWS_INV: 13,
+  ROWS_INV: 12,
   ROWS_VIS: 11,
-  ROWS: 13 + 11,
+  ROWS: 12 + 11,
   COLS: 6,
-  PANELS: (13+11) * 6,
+  PANELS: (12+11) * 6,
+
+  STOPTIME: 60*3,
 
   //number of starting blocks
   NRBLOCK : 17,

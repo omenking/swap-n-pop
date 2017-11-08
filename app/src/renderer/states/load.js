@@ -48,84 +48,76 @@ module.exports = function(game) {
 
     load_all() {
       // Music --------
-      game.load.audio('msx_stage'         , './assets/msx_stage.mp3')
-      game.load.audio('msx_stage_critical', './assets/msx_stage_critical.mp3')
-      game.load.audio('msx_stage_results' , './assets/msx_stage_results.mp3')
+      game.load.audio('msx_stage'         , './assets/music/stage.mp3')
+      game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
+      game.load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
       // SFX ----------
-      game.load.audio('sfx_confirm', './assets/sfx_confirm.mp3')
-      game.load.audio('sfx_select' , './assets/sfx_select.mp3')
-      game.load.audio('sfx_swap'   , './assets/sfx_swap.mp3')
+      game.load.audio('sfx_confirm', './assets/sound_effects/confirm.mp3')
+      game.load.audio('sfx_select' , './assets/sound_effects/select.mp3')
+      game.load.audio('sfx_swap'   , './assets/sound_effects/swap.mp3')
 
-      game.load.audio('sfx_countdown_blip'   , './assets/sfx_countdown_blip.mp3')
-      game.load.audio('sfx_countdown_ding'   , './assets/sfx_countdown_ding.mp3')
+      game.load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.mp3')
+      game.load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.mp3')
 
-      game.load.audio('sfx_drop0'   , './assets/sfx_drop0.mp3')
-      game.load.audio('sfx_drop1'   , './assets/sfx_drop1.mp3')
-      game.load.audio('sfx_drop2'   , './assets/sfx_drop2.mp3')
-      game.load.audio('sfx_drop3'   , './assets/sfx_drop3.mp3')
+      game.load.audio('sfx_drop0'   , './assets/sound_effects/drop0.mp3')
+      game.load.audio('sfx_drop1'   , './assets/sound_effects/drop1.mp3')
+      game.load.audio('sfx_drop2'   , './assets/sound_effects/drop2.mp3')
+      game.load.audio('sfx_drop3'   , './assets/sound_effects/drop3.mp3')
 
-      game.load.audio('sfx_pop0', './assets/popping/sfx_sine_pop0.mp3');
-      game.load.audio('sfx_pop1', './assets/popping/sfx_sine_pop1.mp3');
-      game.load.audio('sfx_pop2', './assets/popping/sfx_sine_pop2.mp3');
-      game.load.audio('sfx_pop3', './assets/popping/sfx_sine_pop3.mp3');
-      game.load.audio('sfx_pop4', './assets/popping/sfx_sine_pop4.mp3');
-      game.load.audio('sfx_pop5', './assets/popping/sfx_sine_pop5.mp3');
-
-      game.load.audio('sfx_2pop0', './assets/popping2/sfx_pop0.mp3');
-      game.load.audio('sfx_2pop1', './assets/popping2/sfx_pop1.mp3');
-      game.load.audio('sfx_2pop2', './assets/popping2/sfx_pop2.mp3');
-      game.load.audio('sfx_2pop3', './assets/popping2/sfx_pop3.mp3');
-      game.load.audio('sfx_2pop4', './assets/popping2/sfx_pop4.mp3');
-      game.load.audio('sfx_2pop5', './assets/popping2/sfx_pop5.mp3');
+      game.load.audio('sfx_pop0', './assets/sound_effects/pop0.mp3');
+      game.load.audio('sfx_pop1', './assets/sound_effects/pop1.mp3');
+      game.load.audio('sfx_pop2', './assets/sound_effects/pop2.mp3');
+      game.load.audio('sfx_pop3', './assets/sound_effects/pop3.mp3');
+      game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
+      game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
       // Bg -----------
-      game.load.image('bg_blue'  , './assets/bg_blue.png')
-      game.load.image('bg_green' , './assets/bg_green.png')
-      game.load.image('bg_purple', './assets/bg_purple.png')
+      game.load.image('bg_blue'  , './assets/images/bg_blue.png')
+      game.load.image('bg_green' , './assets/images/bg_green.png')
+      game.load.image('bg_purple', './assets/images/bg_purple.png')
       // UI -----------
-      game.load.spritesheet('ints_small' , './assets/ints_small.png'  , 8, 8, 18)
-      game.load.spritesheet('ints_large' , './assets/ints_large.png'  , 8, 14,18)
+      game.load.spritesheet('ints_small' , './assets/images/ints_small.png'  , 8, 8, 18)
+      game.load.spritesheet('ints_large' , './assets/images/ints_large.png'  , 8, 14,18)
       // Menus --------
-      game.load.image('menu'             , './assets/menu.png')
-      game.load.image('menu_cursor'      , './assets/menu_cursor.png')
-      game.load.image('menu_pause_cursor', './assets/menu_pause_cursor.png')
-      game.load.image('menu_pause'       , './assets/menu_pause.png')
-      game.load.image('pause'            , './assets/pause.png')
+      game.load.image('menu'             , './assets/images/menu.png')
+      game.load.image('menu_cursor'      , './assets/images/menu_cursor.png')
+      game.load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png')
+      game.load.image('menu_pause'       , './assets/images/menu_pause.png')
+      game.load.image('pause'            , './assets/images/pause.png')
       // Playfield ----
-      game.load.spritesheet('playfield_cursor'    , './assets/playfield_cursor.png'  , 38, 22, 2)
-      game.load.image('playfield_vs_frame'        , './assets/playfield_vs_frame.png')
-      game.load.image('playfield_vs_bg'           , './assets/playfield_vs_bg.png')
-      game.load.image('mode_puzzle_bg'            , './assets/mode_puzzle_bg.png')
-      game.load.spritesheet('playfield_countdown' , './assets/playfield_countdown.png', 62, 38, 4)
+      game.load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , 38, 22, 2)
+      game.load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')
+      game.load.image('playfield_vs_bg'           , './assets/images/playfield_vs_bg.png')
+      game.load.image('mode_puzzle_bg'            , './assets/images/mode_puzzle_bg.png')
+      game.load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', 62, 38, 4)
 
-      game.load.spritesheet('panels'              , './assets/panels.png'  , 16, 16, 136)
-      game.load.spritesheet('garbage'             , './assets/garbage.png'  , 16, 16, 14)
+      game.load.spritesheet('panels'              , './assets/images/panels.png'  , 16, 16, 136)
+      game.load.spritesheet('garbage'             , './assets/images/garbage.png'  , 16, 16, 14)
 
-      game.load.image('playfield_char00', './assets/char00.png')
-      game.load.image('playfield_char01', './assets/char01.png')
-      game.load.image('playfield_char02', './assets/char02.png')
-      game.load.image('playfield_char03', './assets/char03.png')
-      game.load.image('playfield_char04', './assets/char04.png')
-      game.load.image('playfield_char05', './assets/char05.png')
-      game.load.image('playfield_char06', './assets/char06.png')
-      game.load.image('playfield_char07', './assets/char07.png')
-      game.load.image('playfield_char08', './assets/char08.png')
-      game.load.image('playfield_char09', './assets/char09.png')
-      game.load.image('playfield_char10', './assets/char10.png')
-      game.load.image('playfield_char11', './assets/char11.png')
-      game.load.image('playfield_char12', './assets/char12.png')
+      game.load.image('playfield_char00', './assets/images/characters/char00.png')
+      game.load.image('playfield_char01', './assets/images/characters/char01.png')
+      game.load.image('playfield_char02', './assets/images/characters/char02.png')
+      game.load.image('playfield_char03', './assets/images/characters/char03.png')
+      game.load.image('playfield_char04', './assets/images/characters/char04.png')
+      game.load.image('playfield_char05', './assets/images/characters/char05.png')
+      game.load.image('playfield_char06', './assets/images/characters/char06.png')
+      game.load.image('playfield_char07', './assets/images/characters/char07.png')
+      game.load.image('playfield_char08', './assets/images/characters/char08.png')
+      game.load.image('playfield_char09', './assets/images/characters/char09.png')
+      game.load.image('playfield_char10', './assets/images/characters/char10.png')
+      game.load.image('playfield_char11', './assets/images/characters/char11.png')
+      game.load.image('playfield_char12', './assets/images/characters/char12.png')
 
-      game.load.image('playfield_wall0', './assets/playfield_wall0.png')
-      game.load.image('playfield_wall1', './assets/playfield_wall1.png')
+      game.load.image('playfield_wall0', './assets/images/playfield_wall0.png')
+      game.load.image('playfield_wall1', './assets/images/playfield_wall1.png')
 
-      game.load.spritesheet('star_counter', './assets/star_counter.png',16,16,12)
+      game.load.spritesheet('star_counter', './assets/images/star_counter.png',16,16,12)
 
-      game.load.spritesheet('bauble'          , './assets/bauble.png',3,16,6)
-      game.load.image(      'bauble_times'    , './assets/bauble_times.png')
-      game.load.spritesheet('bauble_num'      , './assets/bauble_num.png',6,9,10)
-      game.load.spritesheet('bauble_num_small', './assets/bauble_num_small.png',5,9,10)
+      game.load.spritesheet('bauble'          , './assets/images/bauble.png',3,16,6)
+      game.load.image(      'bauble_times'    , './assets/images/bauble_times.png')
+      game.load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',6,9,10)
+      game.load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',5,9,10)
 
-      game.load.spritesheet('panel_particles', './assets/pop-frames.png', 16, 16, 8);
-      
+      game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', 16, 16, 8);
 
       game.load.start()
     }
