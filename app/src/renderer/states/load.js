@@ -52,24 +52,24 @@ module.exports = function(game) {
       game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
       game.load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
       // SFX ----------
-      game.load.audio('sfx_confirm', './assets/sound_effects/confirm.mp3')
-      game.load.audio('sfx_select' , './assets/sound_effects/select.mp3')
-      game.load.audio('sfx_swap'   , './assets/sound_effects/swap.mp3')
+      game.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
+      game.load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
+      game.load.audio('sfx_swap'   , './assets/sound_effects/swap.ogg')
 
-      game.load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.mp3')
-      game.load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.mp3')
+      game.load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.ogg')
+      game.load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.ogg')
 
-      game.load.audio('sfx_drop0'   , './assets/sound_effects/drop0.mp3')
+      game.load.audio('sfx_drop0'   , './assets/sound_effects/drop0.ogg')
       game.load.audio('sfx_drop1'   , './assets/sound_effects/drop1.mp3')
       game.load.audio('sfx_drop2'   , './assets/sound_effects/drop2.mp3')
       game.load.audio('sfx_drop3'   , './assets/sound_effects/drop3.mp3')
 
-      game.load.audio('sfx_pop0', './assets/sound_effects/pop0.mp3');
-      game.load.audio('sfx_pop1', './assets/sound_effects/pop1.mp3');
-      game.load.audio('sfx_pop2', './assets/sound_effects/pop2.mp3');
+      game.load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
+      game.load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
+      game.load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
       game.load.audio('sfx_pop3', './assets/sound_effects/pop3.mp3');
-      game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
-      game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
+      //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
+      //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
       // Bg -----------
       game.load.image('bg_blue'  , './assets/images/bg_blue.png')
       game.load.image('bg_green' , './assets/images/bg_green.png')
