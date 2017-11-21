@@ -87,14 +87,13 @@ function click_settings(mode) {
   }
 }
 
-
 function create_window () {
   win = new BrowserWindow({
     title     : "Swap'N'Pop",
     width     : 2*WIN_WIDTH ,
     height    : 2*WIN_HEIGHT,
-    minWidth  : 2*WIN_WIDTH ,
-    minHeight : 2*WIN_HEIGHT,
+    minWidth  : WIN_WIDTH ,
+    minHeight : WIN_HEIGHT,
     useContentSize: true,
     backgroundColor: '#282828'
   })
