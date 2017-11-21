@@ -1,6 +1,7 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
   const ComponentMenuPauseCursor = require(APP.path.components('menu_pause_cursor'))(game)
+  const {px} = require(APP.path.core('filters'));
 
   /** A Menu_pause handles the pausing of a stage
    *  new controls are provided to move in the menu and use various options
@@ -21,17 +22,18 @@ module.exports = function(game){
      * create a cursor with no controls provided yet 
      * @param {mode_vs} stage reference to call both playfields 
      */
-    create(stage){
+    create(stage) {
       this.paused = false;
 
       this.stage = stage;
 
       // for now playfield.x changed to a value
-      this.sprite = game.add.sprite(100 + 4, 100, 'menu_pause');
+      this.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'menu_pause');
+      this.sprite.anchor.setTo(0.5);   
       this.sprite.visible = false;
 
       // create a controller with this menu given as a reference, push 2 methods of the menu
-      return this.cursor.create(this, 8, 8, [
+      return this.cursor.create(this, -70, -16, [
         this.continue,
         this.cancel
       ]);
@@ -54,7 +56,7 @@ module.exports = function(game){
     /** unpauses update method of the menu, 
      * make this object visible and 
      * reassigns controls to both playfields registered players */
-    pause(){
+    pause() {
       this.paused = true;
       this.sprite.visible = true;
 

@@ -1,6 +1,7 @@
-module.exports = function(game){
-  const APP = require('../../../app')('../../../')
-  const {UNIT} = require(APP.path.core('data'))
+module.exports = function(game) {
+  const APP = require('../../../app')('../../../');
+  const {UNIT} = require(APP.path.core('data'));
+  const {px}   = require(APP.path.core('filters'));
 
   /** Cursor to handle menu_pause movement and method calls
    *  could maybe be optimized by just calling the menu_pause methods here
@@ -33,7 +34,7 @@ module.exports = function(game){
       this.sfx_confirm = game.add.audio('sfx_confirm');
       this.sfx_select  = game.add.audio('sfx_select');
 
-      this.sprite = game.make.sprite(this.x, this.y+(this.index*UNIT), 'menu_pause_cursor');
+      this.sprite = game.make.sprite(this.x, this.y, 'menu_pause_cursor');
       return this.menu.sprite.addChild(this.sprite);
     }
 
@@ -80,7 +81,7 @@ module.exports = function(game){
     }
     
     update() {
-      return this.sprite.y = this.y+(this.index*12);
+      return this.sprite.y = this.y + (this.index * px(12));
     }
   }
 }

@@ -11,8 +11,11 @@ module.exports = function(game) {
     }
     
     create() {
-      this.sprite = game.add.sprite(px(40), px(40), 'menu');
-      this.cursor.create(this, px(26), px(39), [
+      // create sprite, choose centerXY and anchor to the middle of the sprite - remembered when rescaling
+      this.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'menu');
+      this.sprite.anchor.setTo(0.5);               
+
+      this.cursor.create(this, -90, -46, [
         this.mode_1p_vs_2p_local,
         this.mode_1p_vs_2p_online,
         this.mode_1p_vs_cpu,
@@ -39,7 +42,7 @@ module.exports = function(game) {
 
     /** starts the mode_puzzle state */
     mode_improve() {
-      game.state.start('mode_puzzle_select', true, false);
+      game.state.start('puzzle_menu', true, false);
     }
     
     mode_option() {
