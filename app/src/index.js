@@ -1,3 +1,4 @@
+
 const APP = require('../app')('../')
 const {ipcRenderer: ipc} = require('electron')
 const ui = require(APP.path.ui('main'))
@@ -19,7 +20,8 @@ game.state.add('load'       , States.Load)
 game.state.add('menu'       , States.Menu)
 game.state.add('connect'    , States.Connect)
 game.state.add('mode_vs'    , States.ModeVs)
-game.state.add('mode_puzzle', States.ModePuzzle)
+game.state.add('mode_puzzle_select', States.ModePuzzle.PuzzleSelect)
+game.state.add('mode_puzzle', States.ModePuzzle.PuzzleMode)
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {

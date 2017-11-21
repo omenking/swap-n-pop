@@ -38,7 +38,7 @@ module.exports = function(game) {
 
     /** starts the mode_puzzle state */
     mode_improve() {
-      game.state.start('mode_puzzle',true,false);
+      game.state.start('mode_puzzle_select', true, false);
     }
     
     mode_option() {
