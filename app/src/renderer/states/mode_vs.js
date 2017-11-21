@@ -1,5 +1,6 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
+  const {px} = require(APP.path.core('filters'))
   const Stack  = require(APP.path.core('stack'))(game)
   
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
@@ -94,7 +95,7 @@ module.exports = function(game){
         this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
       }
 
-      this.create_frame(px(offset))
+      this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
       this.timer.create(offset+px(128),px(168));

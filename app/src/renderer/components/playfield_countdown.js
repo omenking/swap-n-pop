@@ -1,4 +1,5 @@
 module.exports = function(game){
+  const APP = require('../../../app')('../../../')
   const {px} = require(APP.path.core('filters'))
   return class PlayfieldCountdown {
     load(snapshot) {

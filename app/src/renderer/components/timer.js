@@ -2,6 +2,8 @@
  *  the Time through Sprite Digits
  */
 module.exports = function Timer(game) {
+  const APP = require('../../../app')('../../../')
+  const {px} = require(APP.path.core('filters'))
   /** get snapshot of the timer, get only to not let this be modifyable */
   this.snap = function get() {
     return [

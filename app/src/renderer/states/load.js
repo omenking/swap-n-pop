@@ -1,4 +1,5 @@
 module.exports = function(game) {
+  const APP = require('../../../app')('../../../')
   const {px} = require(APP.path.core('filters'))
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly

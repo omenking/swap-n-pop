@@ -1,5 +1,6 @@
 module.exports = function(game) {
   const APP = require('../../../app')('../../../')
+  const {px} = require(APP.path.core('filters'))
   const {
     FRAME_STAR
   } = require(APP.path.core('data'))
