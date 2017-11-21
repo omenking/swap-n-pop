@@ -15,6 +15,7 @@ module.exports = function(game){
     PANELS,
     UNIT,
     TIME_PUSH,
+    STOPTIME,
     GARBAGE_SHAKE
   } = require(APP.path.core('data'))
 
@@ -50,6 +51,9 @@ module.exports = function(game){
       this.score_lbl  = new ComponentScore()
       this.ai         = new ComponentAi()
     }
+
+    get stoptime(){ return this._stoptime }
+    set stoptime(v){ this._stoptime = v }
 
     get shake(){ return this._shake }
     set shake(v){ this._shake = v }
@@ -135,9 +139,10 @@ module.exports = function(game){
 
       this.create_stack(opts.panels)
 
-      this.score       = 0
-      this.chain       = 0
+      this.score        = 0
+      this.chain        = 0
       this.push_counter = TIME_PUSH
+      this.stoptime     = STOPTIME
 
       if (this.stage.cpu[1] !== null){
         this.garbage.create(this.stage,this.pi)
@@ -173,11 +178,6 @@ module.exports = function(game){
 
     push() {
       let i;
-      if (this.danger(0)) {
-        this.stage.game_over()
-        return 0
-      }
-
       // move all panels up the stack
       const stack = new Array(this.stack_len)
       for (i = COLS; i < this.stack_len; i++) {
@@ -310,7 +310,7 @@ module.exports = function(game){
     }
     
     danger(within){
-      const offset = COLS*within;
+      const offset = COLS*(within+ROWS_INV);
       const cols   = [];
       for (let i = 0; i < COLS; i++){
         if (this.stack(offset+i)         &&
@@ -328,13 +328,14 @@ module.exports = function(game){
      * spawn possible garbage,
      * updates the sprites to the correct locations in the canvas.
      */
-    update_push() {
+    update_push(danger) {
+      if (!this.should_push) {return}
       if (this.pushing) {
         this.push_counter -= 100
       } else {
         this.push_counter--
       }
-      if (this.push_counter <= 0) {
+      if (this.push_counter <= 0 && !danger) {
         this.pushing        = false
         this.push_counter   = TIME_PUSH
         this.score         += this.push()
@@ -420,16 +421,27 @@ module.exports = function(game){
       this.countdown.update()
       this.cursor.update()
       //this.score_lbl.update(this.chain, this.score)
+      let danger = null
+      if (this.stage.state === 'running'){
+        danger = this.danger(0)
+        if (danger) {
+          this.stoptime--
+          console.log('stoptime',this.stoptime)
+          if (this.stoptime <= 0){
+            this.stage.game_over()
+          }
+        } else {
+          this.stoptime = STOPTIME
+        }
+      }
 
       if (this.stage.state === 'gameover') {
         this.wall.update()
       }
       if (this.stage.state !== 'running') { return; }
 
-      if (this.counter > 0) { 
-        console.log('counter',this.counter)
-        this.counter-- }
-      if (this.should_push) { this.update_push() }
+      if (this.counter > 0) { this.counter-- }
+      this.update_push(danger)
       this.clearing         = []
       this.clearing_garbage = []
 
@@ -448,6 +460,7 @@ module.exports = function(game){
         game.sounds.land()
         this.land = false
       }
+
     }
 
     shutdown() {

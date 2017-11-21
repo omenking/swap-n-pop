@@ -1,10 +1,12 @@
 const N = null
 module.exports = {
-  ROWS_INV: 13,
+  ROWS_INV: 12,
   ROWS_VIS: 11,
-  ROWS: 13 + 11,
+  ROWS: 12 + 11,
   COLS: 6,
-  PANELS: (13+11) * 6,
+  PANELS: (12+11) * 6,
+
+  STOPTIME: 60*3,
 
   //number of starting blocks
   NRBLOCK : 17,
@@ -29,11 +31,12 @@ module.exports = {
                    5,5,5,5,5,5,5,5,5,5,5,5],
 
   FRAME_LIVE    :  0,
-  FRAME_DANGER  : [0,0,0,
-                   2,2,2,
-                   0,0,0,
-                   3,3,3,
-                   4,4,4],
+  FRAME_DANGER  : [0,0,0,0,
+                   2,2,2,2,
+                   0,0,0,0,
+                   3,3,3,3,
+                   4,4,4,4],
+
   FRAME_DEAD    : 5,
   FRAME_NEWLINE : 1,
 
@@ -50,9 +53,9 @@ module.exports = {
   TIME_GARBAGE_CLEAR: 30,
   TIME_GARBAGE_POP  : 12,
 
-  UNIT : 16,
-  WIN_WIDTH  : 256,
-  WIN_HEIGHT : 224,
+  UNIT : 32,
+  WIN_WIDTH  : 398 * 2,//256,
+  WIN_HEIGHT : 224 * 2,
 
   MENUCURSORBLINK : 12,
 

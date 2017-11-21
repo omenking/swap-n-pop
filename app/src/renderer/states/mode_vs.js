@@ -1,5 +1,6 @@
 module.exports = function(game){
   const APP = require('../../../app')('../../../')
+  const {px} = require(APP.path.core('filters'))
   const Stack  = require(APP.path.core('stack'))(game)
   
   const ComponentPlayfield   = require(APP.path.components('playfield'))(game)
@@ -72,7 +73,7 @@ module.exports = function(game){
     set cpu(v){ this._cpu = v }
 
     create_bg() {
-      this.bg = game.add.sprite(-89,0, 'playfield_vs_bg');
+      this.bg = game.add.sprite(0,0, 'playfield_vs_bg');
     }
     create_frame(offset){
       this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
@@ -81,24 +82,24 @@ module.exports = function(game){
       ipc.send('log',`VS ${this.seed} ------------------------------`)
       this.danger = false
 
-      const offset = 0;
+      const offset = px(55);
       this.create_bg()
 
       const stack = new Stack(this.rng);
       stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
       if (this.online && game.server.pos === 1) {
-        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
-        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stack.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
       } else {
-        this.playfield1.create(this, {countdown: true, push: true, x: offset+8  , y: 24, panels: stack.panels})
-        this.playfield2.create(this, {countdown: true, push: true, x: offset+152, y: 24, panels: stack.panels})
+        this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+        this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
       }
 
       this.create_frame(offset)
       this.playfield1.create_after()
       this.playfield2.create_after()
-      this.timer.create({});
+      this.timer.create(offset+px(128),px(168));
 
       this.snapshots.create(
         this,
@@ -114,7 +115,7 @@ module.exports = function(game){
       this.debug_frame.create()
 
       this.menu_pause.create(this)
-      this.star_counter.create(this,55,91)
+      this.star_counter.create(this,px(91),px(91))
     }
 
     /** turns on the menu, changes it state, turns of the timer from counting */

@@ -2,6 +2,8 @@
  *  the Time through Sprite Digits
  */
 module.exports = function Timer(game) {
+  const APP = require('../../../app')('../../../')
+  const {px} = require(APP.path.core('filters'))
   /** get snapshot of the timer, get only to not let this be modifyable */
   this.snap = function get() {
     return [
@@ -24,13 +26,13 @@ module.exports = function Timer(game) {
    *  Each Time Digit gets added as a Sprite
    *  Internal tick counter and a bool to stop everything
    */
-  this.create = function({x = 112, y = 168}) {
+  this.create = function(x,y) {
     this.group = game.add.group();
     this.group.x = x;
     this.group.y = y;
-    this.d0 = game.make.sprite(0 , 0, 'ints_large',0);
-    this.d1 = game.make.sprite(16, 0, 'ints_large',0);
-    this.d2 = game.make.sprite(24, 0, 'ints_large',0);
+    this.d0 = game.make.sprite(px(0) , 0, 'ints_large',0);
+    this.d1 = game.make.sprite(px(16), 0, 'ints_large',0);
+    this.d2 = game.make.sprite(px(24), 0, 'ints_large',0);
     this.group.add(this.d0);
     this.group.add(this.d1);
     this.group.add(this.d2);

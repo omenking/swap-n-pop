@@ -1,6 +1,10 @@
 const APP         = require('../../../app')('../../../')
 const {COLS,ROWS} = require(APP.path.core('data'))
 module.exports = {
+  /* upscale base pixels to the correct size */
+  px: function(px){
+    return px * 2
+  },
   i2xy: function(i){
     const y = Math.floor(i / COLS);
     const x = i % COLS;
