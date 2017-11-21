@@ -9,100 +9,11 @@ module.exports = function(game) {
   const seedrandom         = require('seedrandom');
   
   const { UNIT } = require(APP.path.core('data'));
+  const { px }   = require(APP.path.core('filters'));
   const PuzzlesModule = require(APP.path.core('puzzles'));
-  
-  class PuzzleSelectCursor {
-    constructor() {
-      this.up = this.up.bind(this);
-      this.down = this.down.bind(this);
-      this.confirm = this.confirm.bind(this);
-      this.cancel = this.cancel.bind(this);
-      this.update = this.update.bind(this);
-    }
 
-    create(parent_sprite, x, y) {
-      this.x = x;
-      this.y = y;
-      this.index  = 0;
-
-      this.sprite = game.make.sprite(this.x, this.y + (this.index * UNIT), 'menu_cursor');
-      parent_sprite.addChild(this.sprite);
-      
-      this.map_controls(0);
-      this.map_controls(1);
-    }
-
-    map_controls(pi) {
-      return game.controls.map(pi, {
-        up   : this.up,
-        down : this.down,
-        a    : this.confirm,
-        b    : this.cancel,
-        start: this.confirm
-      });
-    }
-
-    up(tick) {
-      if (tick > 0) 
-        return;
-
-      console.log(this.index, " should decrease index");
-      --this.index;
-    }
-
-    down(tick) {
-      if (tick > 0) 
-        return;
-      
-      console.log(this.index, " should increase index until limit");
-      ++this.index;
-    }
-
-    confirm(tick) {
-      console.log("select level");
-      game.state.start("mode_puzzle", true, false, { chosen_index: this.index });
-    }
-
-    cancel(tick) {
-      if (tick > 0)
-        return; 
-
-      game.state.start("menu");
-    }
-
-    update() {
-      this.sprite.y = this.y + (this.index * UNIT);
-    }
-  }
-
-  class PuzzleSelect {
-    constructor() {
-      this.cursor = new PuzzleSelectCursor()
-    }
-
-    create() {
-      this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green');
-      
-      this.sprite = game.add.sprite(10, 40, 'menu_puzzle');
-
-      this.puzzles = new PuzzlesModule()
-      this.cursor.create(this.sprite, 26, 39, this.puzzles.puzzle_levels);
-    }
- 
-    update() {
-      this.cursor.update()
-      game.controls.update();
-      this.bg.tilePosition.y -= 0.5;
-      this.bg.tilePosition.x += 0.5;
-    }
-
-    /** stops controller support */
-    shutdown() {
-      game.controls.disable()
-    }
-  }
-
-  class PuzzleMode {
+  /** run by phaser state.start */
+  return class PuzzleMode {
     constructor() {
       this.playfield  = new ComponentPlayfield(0);
       this.menu_pause = new ComponentMenuPause();
@@ -215,10 +126,5 @@ module.exports = function(game) {
       if (this.playfield) 
         this.playfield.render();
     }
-  }
-
-  return {
-    PuzzleSelect: PuzzleSelect,
-    PuzzleMode: PuzzleMode
   }
 }
