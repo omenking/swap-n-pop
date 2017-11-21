@@ -86,6 +86,7 @@ module.exports = function(game) {
       game.load.spritesheet('ints_large' , './assets/ints_large.png'  , 8, 14,18)
       // Menus --------
       game.load.image('menu'             , './assets/menu.png')
+      game.load.image('menu_puzzle'      , './assets/puzzle_menu.png')
       game.load.image('menu_cursor'      , './assets/menu_cursor.png')
       game.load.image('menu_pause_cursor', './assets/menu_pause_cursor.png')
       game.load.image('menu_pause'       , './assets/menu_pause.png')
@@ -97,7 +98,7 @@ module.exports = function(game) {
       game.load.image('mode_puzzle_bg'            , './assets/mode_puzzle_bg.png')
       game.load.spritesheet('playfield_countdown' , './assets/playfield_countdown.png', 62, 38, 4)
 
-      game.load.spritesheet('panels'              , './assets/panels.png'  , 16, 16, 136)
+      game.load.spritesheet('panels'              , './assets/panels.png'  , 32, 32, 136)
       game.load.spritesheet('garbage'             , './assets/garbage.png'  , 16, 16, 14)
 
       game.load.image('playfield_char00', './assets/char00.png')
