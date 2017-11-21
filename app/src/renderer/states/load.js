@@ -50,9 +50,9 @@ module.exports = function(game) {
 
     load_all() {
       // Music --------
-      game.load.audio('msx_stage'         , './assets/music/msx_stage.mp3')
-      game.load.audio('msx_stage_critical', './assets/music/msx_stage_critical.mp3')
-      game.load.audio('msx_stage_results' , './assets/music/msx_stage_results.mp3')
+      game.load.audio('msx_stage'         , './assets/music/mx_stage.mp3')
+      game.load.audio('msx_stage_critical', './assets/music/mx_stage_critical.mp3')
+      game.load.audio('msx_stage_results' , './assets/music/mx_stage_results.mp3')
       // SFX ----------
       game.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
       game.load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
@@ -122,6 +122,14 @@ module.exports = function(game) {
 
       game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
 
+      //zephyr
+      var zephyr = filename => `./assets/images/zephyr/${filename}.png`;
+      game.load.spritesheet('zephyr_standing',  zephyr("Zypher_Stand_strip8"),    48, 48, 8);
+      game.load.spritesheet('zephyr_attack',    zephyr("Zypher_Attack_strip9"),   48, 48, 9);
+      game.load.spritesheet('zephyr_attacked',  zephyr("Zypher_Attacked_strip9"), 48, 48, 9);
+      game.load.spritesheet('zephyr_lose',      zephyr("Zypher_Lose_strip12"),    48, 48, 12);
+      game.load.spritesheet('zephyr_losing',    zephyr("Zypher_Losing_strip4"),   48, 48, 4);
+      
       game.load.start()
     }
   }
