@@ -6,6 +6,7 @@ module.exports = function(game){
   const ComponentPlayfieldWall      = require(APP.path.components('playfield_wall'))(game)
   const ComponentScore              = require(APP.path.components('score'))(game)
   const ComponentPanel              = require(APP.path.components('panel'))(game)
+  const ComponentCharacter          = require(APP.path.components('character'))(game)
   const ComponentAi                 = require(APP.path.components('ai'))(game)
   const CoreGarbage                 = require(APP.path.core('garbage'))(game)
   const {
@@ -50,6 +51,7 @@ module.exports = function(game){
       this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore()
       this.ai         = new ComponentAi()
+      this.zepyhr     = new ComponentCharacter()
     }
 
     get stoptime(){ return this._stoptime }
@@ -151,6 +153,15 @@ module.exports = function(game){
       //this.score_lbl.create()
       // for mode_puzzle, couting all swaps
       this.swap_counter = 0;
+      this.zepyhr.create(
+        ["zephyr_standing",
+         "zephyr_attack"],
+        {
+          x: game.world.centerX - 30,
+          y: game.world.centerY - 100
+        },
+        this.pi
+      );
     }
 
     create_after() {
@@ -296,6 +307,7 @@ module.exports = function(game){
      * @param {integer} y ypos to be accessed in the stack - 2D Array whise
      */
     swap(x,y){
+      this.zepyhr.attack();
       let panelLeft   = this.stack(x, y);
       let panelRight  = this.stack(x + 1, y);
 
@@ -461,6 +473,7 @@ module.exports = function(game){
         this.land = false
       }
 
+      this.zepyhr.update();
     }
 
     shutdown() {
