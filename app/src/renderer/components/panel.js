@@ -139,7 +139,6 @@ module.exports = function(game){
       this.chain = 0
 
       this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
-      this.sprite.scale = new Phaser.Point(0.5, 0.5);
       this.playfield.layer_block.add(this.sprite)
       // shouldn't have to call visible false
       // here as it should be taken care of in render

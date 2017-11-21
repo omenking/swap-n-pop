@@ -50,9 +50,9 @@ module.exports = function(game) {
 
     load_all() {
       // Music --------
-      game.load.audio('msx_stage'         , './assets/music/stage.mp3')
-      game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
-      game.load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
+      game.load.audio('msx_stage'         , './assets/music/msx_stage.mp3')
+      game.load.audio('msx_stage_critical', './assets/music/msx_stage_critical.mp3')
+      game.load.audio('msx_stage_results' , './assets/music/msx_stage_results.mp3')
       // SFX ----------
       game.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
       game.load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
@@ -69,7 +69,7 @@ module.exports = function(game) {
       game.load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
       game.load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
       game.load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
-      game.load.audio('sfx_pop3', './assets/sound_effects/pop3.mp3');
+      game.load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
       //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
       //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
       // Bg -----------
@@ -85,6 +85,7 @@ module.exports = function(game) {
       game.load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png')
       game.load.image('menu_pause'       , './assets/images/menu_pause.png')
       game.load.image('pause'            , './assets/images/pause.png')
+      game.load.image('puzzle_menu'       , './assets/images/puzzle_menu.png')
       // Playfield ----
       game.load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , px(38), px(22), 2)
       game.load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')

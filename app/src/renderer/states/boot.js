@@ -16,7 +16,7 @@ module.exports = function(game) {
         var height = window.innerHeight;
         var width = window.innerWidth;
        
-        var resize_black_bars = () => {
+        var resize_vertical_black_bars = () => {
           this.game.width = height;
           this.game.height = height;
         }
@@ -26,7 +26,7 @@ module.exports = function(game) {
           this.game.height = height;
         }
 
-        resize_black_bars();        
+        resize_fully();
       }, this);
 
       game.renderer.renderSession.roundPixels = true
