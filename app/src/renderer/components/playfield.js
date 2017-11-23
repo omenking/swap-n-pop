@@ -288,7 +288,7 @@ module.exports = function(game){
       let   chain = 0
       for (let panel of this.clearing){
         panel.popping(this.clearing.length)
-        if (panel.chain > 0) { console.log(panel.chain) }
+      if (panel.chain > 0) { /*console.log(panel.chain)*/ }
         chain = Math.max(chain,panel.chain)
       }
       for (let panel of this.clearing){ panel.chain = chain }
@@ -436,9 +436,11 @@ module.exports = function(game){
         danger = this.danger(0)
         if (danger) {
           this.stoptime--
+          this.character.sprite.play("losing");
           console.log('stoptime',this.stoptime)
           if (this.stoptime <= 0){
             this.stage.game_over()
+            this.character.sprite.play("lost");
           }
         } else {
           this.stoptime = STOPTIME
