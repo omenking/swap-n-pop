@@ -99,8 +99,6 @@ module.exports = function(game){
           } else {
             this.playfield.shake   = 0
             this.playfield.counter = GARBAGE_SHAKE[this.playfield.shake].length
-
-            this.playfield.character.sprite.play("attacked");
             this.state = STATIC
           }
         break;

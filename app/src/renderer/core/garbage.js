@@ -55,6 +55,9 @@ module.exports = function(game) {
         combo  : combo,
         chain  : chain
       })
+
+      console.log(chain);
+      this.stage.playfield1.character.sprite.play("attack");
     }
 
     shift() {
