@@ -51,7 +51,7 @@ module.exports = function(game){
       this.wall       = new ComponentPlayfieldWall()
       this.score_lbl  = new ComponentScore()
       this.ai         = new ComponentAi()
-      this.zepyhr     = new ComponentCharacter()
+      this.character     = new ComponentCharacter()
     }
 
     get stoptime(){ return this._stoptime }
@@ -153,13 +153,10 @@ module.exports = function(game){
       //this.score_lbl.create()
       // for mode_puzzle, couting all swaps
       this.swap_counter = 0;
-      this.zepyhr.create(
-        ["zephyr_standing",
-         "zephyr_attack"],
-        {
-          x: game.world.centerX - 30,
-          y: game.world.centerY - 100
-        },
+      this.character.create(
+        "zephyr",
+        game.world.centerX - 30,
+        game.world.centerY - 100,
         this.pi
       );
     }
@@ -291,7 +288,7 @@ module.exports = function(game){
       let   chain = 0
       for (let panel of this.clearing){
         panel.popping(this.clearing.length)
-        if (panel.chain > 0) { console.log(panel.chain) }
+      if (panel.chain > 0) { /*console.log(panel.chain)*/ }
         chain = Math.max(chain,panel.chain)
       }
       for (let panel of this.clearing){ panel.chain = chain }
@@ -307,7 +304,6 @@ module.exports = function(game){
      * @param {integer} y ypos to be accessed in the stack - 2D Array whise
      */
     swap(x,y){
-      this.zepyhr.attack();
       let panelLeft   = this.stack(x, y);
       let panelRight  = this.stack(x + 1, y);
 
@@ -349,7 +345,7 @@ module.exports = function(game){
       }
       if (this.push_counter <= 0 && !danger) {
         this.pushing        = false
-        this.push_counter   = TIME_PUSH
+        this.push_counter   = TIME_PUSH       
         this.score         += this.push()
       }
     }
@@ -432,15 +428,19 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
+      this.character.update()
+      
       //this.score_lbl.update(this.chain, this.score)
       let danger = null
       if (this.stage.state === 'running'){
         danger = this.danger(0)
         if (danger) {
           this.stoptime--
+          this.character.sprite.play("losing");
           console.log('stoptime',this.stoptime)
           if (this.stoptime <= 0){
             this.stage.game_over()
+            this.character.sprite.play("lost");
           }
         } else {
           this.stoptime = STOPTIME
@@ -472,8 +472,6 @@ module.exports = function(game){
         game.sounds.land()
         this.land = false
       }
-
-      this.zepyhr.update();
     }
 
     shutdown() {
