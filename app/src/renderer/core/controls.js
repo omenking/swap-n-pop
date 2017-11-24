@@ -109,8 +109,8 @@ module.exports = function(game){
       //global binding
 
       // AB - This should work but refuses to do so.
-      const key = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
-      key.onDown.add(this.toggle_menu,this)
+      //const key = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
+      //key.onDown.add(this.toggle_menu,this)
     }
     toggle_menu(){
       console.log('toggle menu')

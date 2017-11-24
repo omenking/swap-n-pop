@@ -48,11 +48,13 @@ stub_sprite.returns({
   },
   addChild: sinon.stub(),
   anchor: {
-    set: sinon.stub()
+    set: sinon.stub(),
+    setTo: sinon.stub()
   },
   scale: {
     x: null,
     y: null
+    set: 
   }
 })
 
@@ -76,6 +78,10 @@ class game_controller {
     }
     this.make = {
       sprite: stub_sprite
+    }
+    this.world = {
+      centerX: null,
+      centery: null
     }
     this.time = {
       desiredFps: 60

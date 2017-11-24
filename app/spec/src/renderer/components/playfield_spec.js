@@ -208,7 +208,7 @@ describe('Playfield', function() {
         3,N,N,N,N,N
       ]
     let stage = new Stage()
-    stage.init({seed: 'test'})
+    stage.init({seed: 'test', cpu: [false,null] })
 
     const playfield = new Playfield(0)
     const snapshot  = new Array(3)
