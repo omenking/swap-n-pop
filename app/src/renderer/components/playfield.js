@@ -343,6 +343,10 @@ module.exports = function(game){
       } else {
         this.push_counter--
       }
+      /* ensure push_counter never goes into the negative */
+      if (this.push_counter < 0)
+        this.push_counter = 0
+
       if (this.push_counter <= 0 && !danger) {
         this.pushing        = false
         this.push_counter   = TIME_PUSH       
@@ -434,7 +438,7 @@ module.exports = function(game){
       let danger = null
       if (this.stage.state === 'running'){
         danger = this.danger(0)
-        if (danger) {
+        if (danger && this.push_counter <= 0) {
           this.stoptime--
           this.character.sprite.play("losing");
           console.log('stoptime',this.stoptime)
