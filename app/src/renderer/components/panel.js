@@ -517,8 +517,6 @@ module.exports = function(game){
       } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
         this.frame = FRAME_DEAD
       } else if (this.state === CLEAR){
-        
-
         if (FRAME_CLEAR.length > this.time_cur){
           this.frame = FRAME_CLEAR[this.time_cur]
         }

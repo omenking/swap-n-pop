@@ -50,9 +50,9 @@ module.exports = function(game) {
 
     load_all() {
       // Music --------
-      game.load.audio('msx_stage'         , './assets/music/mx_stage.mp3')
-      game.load.audio('msx_stage_critical', './assets/music/mx_stage_critical.mp3')
-      game.load.audio('msx_stage_results' , './assets/music/mx_stage_results.mp3')
+      game.load.audio('msx_stage'         , './assets/music/stage.mp3')
+      game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
+      game.load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
       // SFX ----------
       game.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
       game.load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
