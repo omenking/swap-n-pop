@@ -101,10 +101,10 @@ function create_window () {
   win.setTitle("Swap N Pop")
   //win.setAspectRatio(8/7,0)   // MAC only function
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'src', 'index.html'),
+    pathname: path.join(__static, 'index.html'),
     protocol: 'file:',
     slashes: true,
-    icon: path.join(__dirname, 'src', 'assets', 'icons', 'png', '64x64.png')
+    icon: path.join(__static, 'icons', 'png', '64x64.png')
   }))
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
