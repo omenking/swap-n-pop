@@ -2,8 +2,8 @@ const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = require('electro
 const Store = require('electron-store')
 const store = new Store()
 
-const Replay = require('./src/main/replay')(app,store)
-const Logger = require('./src/main/logger')(app)
+const Replay = require('./replay')(app,store)
+const Logger = require('./logger')(app)
 
 const path = require('path')
 const url  = require('url')
