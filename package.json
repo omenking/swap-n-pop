@@ -9,7 +9,10 @@
     "url": "https://github.com/omenking/swap-n-pop"
   },
   "devDependencies": {
-    "electron-builder": "^19.26.3"
+    "electron": "^1.7.9",
+    "electron-builder": "^19.46.9",
+    "electron-webpack": "^1.11.0",
+    "webpack": "^3.8.1"
   },
   "build": {
     "appId": "com.swap-n-pop.app",
