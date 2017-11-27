@@ -1,37 +1,37 @@
 {
-	"name": "swap-n-pop",
-	"productName": "swap-n-pop",
-	"license": "MIT",
-	"description": "Puzzle Game",
-	"version": "0.4.0",
-	"author": "Andrew Brown",
-	"repository": {
-		"url": "https://github.com/omenking/swap-n-pop"
-	},
-	"devDependencies": {
-		"electron-builder": "^19.26.3"
-	},
-	"build": {
-		"appId": "com.swap-n-pop.app",
-		"mac": {
-			"category": "public.app-category.games",
-			"publish": [
-				"github"
-			],
-			"icon": "./app/src/assets/icons/mac/icon.icns"
-		},
-		"win": {
-			"target": "nsis",
-			"publish": [
-				"github"
-			],
-			"icon": "./app/src/assets/icons/win/icon.ico"
-		}
-	},
-	"scripts": {
-		"pack": "electron-builder --dir",
-		"dist": "electron-builder",
-		"release": "build"
-	},
-	"postinstall": "electron-builder install-app-deps"
+  "name": "swap-n-pop",
+  "productName": "swap-n-pop",
+  "license": "MIT",
+  "description": "Puzzle Game",
+  "version": "0.4.0",
+  "author": "Andrew Brown",
+  "repository": {
+    "url": "https://github.com/omenking/swap-n-pop"
+  },
+  "devDependencies": {
+    "electron-builder": "^19.26.3"
+  },
+  "build": {
+    "appId": "com.swap-n-pop.app",
+    "mac": {
+      "category": "public.app-category.games",
+      "publish": [
+        "github"
+      ],
+      "icon": "./app/src/assets/icons/mac/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "publish": [
+        "github"
+      ],
+      "icon": "./app/src/assets/icons/win/icon.ico"
+    }
+  },
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "release": "build"
+  },
+  "postinstall": "electron-builder install-app-deps"
 }
