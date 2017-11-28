@@ -1,22 +1,7 @@
 import m from 'mithril';
 const {ipcRenderer: ipc} = require('electron')
 
-const {remote} = require('electron')
-let mode = remote.getCurrentWindow().custom.mode
-
-const Ui = {
-  close: function(){
-    mode = false
-    document.getElementById('game').classList.remove('hide')
-  },
-  show: function(){
-    mode = 'input'
-    document.getElementById('game').classList.add('hide')
-  },
-  mode: function(){
-    return mode
-  }
-}
+import Ui         from '@/ui/mode'
 import UiInput    from '@/ui/input'
 import UiNetwork  from '@/ui/network'
 import UiAudio    from '@/ui/audio'
@@ -24,7 +9,7 @@ import UiReplay   from '@/ui/replay'
 
 
 function class_tab(new_mode){
-  if (mode === new_mode){
+  if (Ui.mode === new_mode){
     return 'active'
   } else {
     return ''
@@ -33,7 +18,7 @@ function class_tab(new_mode){
 
 function click_tab(new_mode){
   return function(){
-    mode = new_mode
+    Ui.mode = new_mode
   }
 }
 
@@ -47,15 +32,15 @@ function nav(){
   ])
 }
 function content(){
-  if      (mode === 'input')  { return m('.content.settings_input'  ,UiInput(Ui)   )}
-  else if (mode === 'network'){ return m('.content.settings_network',UiNetwork(Ui) )}
-  else if (mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio(Ui)   )}
-  else if (mode === 'replay') { return m('.content.settings_replay' ,UiReplay(Ui)  )}
+  if      (Ui.mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
+  else if (Ui.mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
+  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio()   )}
+  else if (Ui.mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
 }
 
 function render(){
   const app = {view: function(){
-    if (mode !== false) {
+    if (Ui.mode !== false) {
       return m('.wrap1',
         m('.wrap2',[
           nav(),
@@ -70,7 +55,7 @@ function render(){
 }
 
 ipc.on('reload',function(event,data){
-  mode = data.mode
+  Ui.mode = data.mode
   document.getElementById('game').classList.add('hide')
   m.redraw()
 })

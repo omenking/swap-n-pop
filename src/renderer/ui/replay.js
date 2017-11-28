@@ -1,10 +1,10 @@
 import m from 'mithril';
+import Ui from '@/ui/mode'
 
 const {ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 
-let Ui = null;
 
 let replay_files = []
 let replay_dir   = store.get('replay_dir')
@@ -63,8 +63,7 @@ function settings_replay_items(){
   }
   return items
 }
-function render(ui){
-  Ui = ui
+function render(){
   return m('form',[
     m('.text_field.replay_dir',[
       m('label','Replay Folder Location:'),

@@ -1,10 +1,10 @@
 import m from 'mithril';
+import Ui from '@/ui/mode'
 
 const {ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 
-let Ui = null;
 
 let inputs  = store.get('network.host_port')
 let host_port = {value: store.get('network.host_port'), setValue: function(v) {host_port.value = v}}
@@ -35,8 +35,7 @@ function submit_join(){
   Ui.close()
   return false
 }
-function render(ui){
-  Ui = ui
+function render(){
   return([
     m('form.host.divider',{onsubmit: submit_host}, [
       m('.text_field.port',[m('label','port'),m("input[type='text']",{oninput: m.withAttr('value',host_port.setValue), value: host_port.value })]),

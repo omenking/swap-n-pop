@@ -1,3 +1,4 @@
+import Ui from '@/ui/mode'
 import m from 'mithril';
 const {ipcRenderer: ipc} = require('electron')
 const Store = require('electron-store')
@@ -7,7 +8,6 @@ const keycode = require('keycode')
 var setting = null
 var inputs  = store.get('inputs')
 
-let Ui = null
 
 function setkey(key){
   return(function(){
@@ -39,8 +39,7 @@ function textfield(key,label){
   ])
 }
 
-function render(ui){
- Ui = ui
+function render(){
  return m('form',[
     m('.p0',
     m('.title','Player 1'),
@@ -92,7 +91,7 @@ document.onkeydown = function (e) {
   if (e.keyCode === 70) { //f (for fullscreen)
     ipc.send('fullscreen')
   } else if (e.keyCode === 27) { //esc
-    if (Ui.mode() === false) {
+    if (Ui.mode === false) {
       Ui.show()
     } else {
       Ui.close()

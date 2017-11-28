@@ -1,11 +1,10 @@
-import m from 'mithril';
+import Ui from '@/ui/mode'
+import m  from 'mithril';
 
 let audio_sfx_volume = 100
 let audio_msx_volume = 100
-let Ui = null
 
-function render(ui){
-  Ui = ui
+function render(){
   return m('form',[
     m('.check_box.sfx',[
       m("input[type='range']",{
