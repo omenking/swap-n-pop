@@ -4,7 +4,7 @@ const {ipcRenderer: ipc} = require('electron')
 const {remote} = require('electron')
 let mode = remote.getCurrentWindow().custom.mode
 
-Ui = {
+const Ui = {
   close: function(){
     mode = false
     document.getElementById('game').classList.remove('hide')
@@ -17,10 +17,10 @@ Ui = {
     return mode
   }
 }
-const UiInput    = require('./input')(Ui)
-const UiNetwork  = require('./network')(Ui)
-const UiAudio    = require('./audio')(Ui)
-const UiReplay   = require('./replay')(Ui)
+const UiInput    = require('@/ui/input')(Ui)
+const UiNetwork  = require('@/ui/network')(Ui)
+const UiAudio    = require('@/ui/audio')(Ui)
+const UiReplay   = require('@/ui/replay')(Ui)
 
 
 function class_tab(new_mode){

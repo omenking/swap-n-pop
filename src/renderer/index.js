@@ -1,14 +1,14 @@
 
 const {ipcRenderer: ipc} = require('electron')
-const ui = require('./ui/main')
+const ui = require('@/ui/main')
 
 ui()
 
-import { WIN_WIDTH, WIN_HEIGHT } from './core/data';
+import { WIN_WIDTH, WIN_HEIGHT } from '@/core/data';
 const game         = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
-const States       = require('./states')(game)
-const CoreControls = require('./core/controls')(game)
-const CoreSounds   = require('./core/sounds')(game)
+const States       = require('@/states')(game)
+const CoreControls = require('@/core/controls')(game)
+const CoreSounds   = require('@/core/sounds')(game)
 const Server       = require('../main/server')
  
 game.controls = new CoreControls()
