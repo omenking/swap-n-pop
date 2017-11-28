@@ -1,4 +1,5 @@
 import game from '@/core/game'
+import data from '@/core/data'
 
 const {
   UNIT,

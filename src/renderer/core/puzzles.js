@@ -1,5 +1,7 @@
+import data from '@/core/data'
 
-module.exports = function levels() {
+
+export default function levels() {
   const _ = null;   // empty panel  
   const b = 1;      // blue
   const g = 2;      // green
@@ -7,7 +9,7 @@ module.exports = function levels() {
   const r = 4;      // red
   const y = 5;      // yellow
 
-  const { PANELS } = require('./data');
+  const { PANELS } = data
 
   /**
    * private method to help with array creation

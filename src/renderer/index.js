@@ -5,11 +5,7 @@ const {ipcRenderer: ipc} = electron
 
 ui()
 
-import { WIN_WIDTH, WIN_HEIGHT } from '@/core/data';
 import game             from '@/core/game'
-import CoreControls     from '@/core/controls'
-import CoreSounds       from '@/core/sounds'
-import Server           from 'common/server' // should be moved to common
 import StatesBoot       from '@/states/boot'
 import StatesLoad       from '@/states/load'
 import StatesMenu       from '@/states/menu'
@@ -18,9 +14,6 @@ import StatesModePuzzle from '@/states/mode_puzzle'
 import StatesPuzzleMenu from '@/states/puzzle_menu'
 import StatesConnect    from '@/states/connect'
 
-game.controls = new CoreControls()
-game.sounds   = new CoreSounds()
-game.server   = new Server()
 game.state.add('boot'       , StatesBoot)
 game.state.add('load'       , StatesLoad)
 game.state.add('menu'       , StatesMenu)

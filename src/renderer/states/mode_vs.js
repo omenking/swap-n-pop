@@ -325,4 +325,3 @@ export default class ModeVs {
     this.playfield2.shutdown()
   }
 }
-controller.initClass()

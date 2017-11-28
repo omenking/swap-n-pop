@@ -1,5 +1,8 @@
-const {COLS,ROWS} = require('./data')
-module.exports = {
+import data from '@/core/data'
+
+const {COLS,ROWS} = data
+
+export default {
   /* upscale base pixels to the correct size */
   px: function(px){
     return px * 2

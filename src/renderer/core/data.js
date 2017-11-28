@@ -1,5 +1,5 @@
 const N = null
-module.exports = {
+export default {
   ROWS_INV: 12,
   ROWS_VIS: 11,
   ROWS: 12 + 11,

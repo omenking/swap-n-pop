@@ -87,6 +87,7 @@ function click_settings(mode) {
 
 function create_window () {
   const dev = process.env.NODE_ENV !== 'production';
+  let load_url;
   if (dev) {
     load_url = url.format({
       //pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,

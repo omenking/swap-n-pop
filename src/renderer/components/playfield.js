@@ -1,4 +1,5 @@
 import game        from '@/core/game'
+import data        from '@/core/data'
 import _f          from '@/core/filters'
 import CoreGarbage from '@/core/garbage'
 
