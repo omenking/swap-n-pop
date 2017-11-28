@@ -47,20 +47,20 @@ function nav(){
     m('.clear')
   ])
 }
-function content(){
+function content(game){
   if      (mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
   else if (mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
-  else if (mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio()   )}
+  else if (mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio(game))}
   else if (mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
 }
 
-function render(){
+function render(game){
   const app = {view: function(){
     if (mode !== false) {
       return m('.wrap1',
         m('.wrap2',[
           nav(),
-          content()
+          content(game)
         ])
       )
     }
