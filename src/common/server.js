@@ -1,6 +1,6 @@
-const dgram  = require('dgram')
+import dgram from 'dgram'
 
-class controller {
+export default class Server {
   get state(){ return this._state }
 
   get address(){ return `${this.host}:${this.port}` }
@@ -195,4 +195,3 @@ class controller {
     this.server.close()
   }
 } // klass
-module.exports = controller

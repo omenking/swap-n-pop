@@ -1,12 +1,11 @@
 import path     from 'path'
 import url      from 'url'
 import electron from 'electron'
-import Store    from 'electron-store'
 import Replay   from 'common/replay'
 import Logger   from 'common/logger'
+import store    from 'common/store'
 
 const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = electron
-const store = new Store()
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
 
