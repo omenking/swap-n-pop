@@ -91,13 +91,12 @@ function create_window () {
   const dev = process.env.NODE_ENV !== 'production';
   if (dev) {
     load_url = url.format({
-    pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
-    icon: path.join(__static, 'icons', 'png', '64x64.png')
+      pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
+      icon: path.join(__static, 'icons', 'png', '64x64.png')
     })
   } else {
     load_url = url.format({
-      protocol: 'file://',
-      pathname: `${__static}/index.html`,
+      pathname: `file://${__static}/index.html`,
       icon: path.join(__static, 'icons', 'png', '64x64.png')
     })
   }
