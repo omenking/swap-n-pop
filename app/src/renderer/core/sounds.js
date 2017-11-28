@@ -40,6 +40,18 @@ module.exports = function(game) {
       this.msx_stage_critical.volume = decimal_volume;
     }
 
+    mute_all(bool) {
+      this.sfx_land.forEach(sfx => sfx.mute = bool);
+      this.sfx_confirm.mute = bool;
+      this.sfx_select.mute = bool;
+      this.sfx_blip.mute = bool;
+      this.sfx_ding.mute = bool;
+      this.sfx_swap.mute = bool;
+      this.msx_stage_results.mute = bool;
+      this.msx_stage.mute = bool;
+      this.msx_stage_critical.mute = bool;
+    }
+
     land() {
       this.sfx_land[0].play()
     }
