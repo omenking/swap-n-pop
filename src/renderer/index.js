@@ -3,6 +3,17 @@ import ui from '@/ui/main'
 
 const {ipcRenderer: ipc} = electron
 
+/*
+ * Phaser relies on an element with id #game
+ * UI relies on an element with #ui
+ */
+const div_ui   = document.createElement('div')
+const div_game = document.createElement('div')
+div_ui.setAttribute('id', 'game')
+div_game.setAttribute('id', 'ui')
+document.getElementById('app').appendChild(div_ui)
+document.getElementById('app').appendChild(div_game)
+
 ui()
 
 import { WIN_WIDTH, WIN_HEIGHT } from '@/core/data';

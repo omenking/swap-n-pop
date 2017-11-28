@@ -65,7 +65,7 @@ function render(){
     }
   }}
 
-  el = document.getElementById('ui')
+  const el = document.getElementById('ui')
   m.mount(el, app)
 }
 
