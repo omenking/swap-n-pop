@@ -3,6 +3,7 @@ module.exports = function(Ui){
 
   audio_sfx_volume = 100
   audio_msx_volume = 100
+  muted = false;
   function render(game){
     return m('form',[
       m('.check_box.sfx',[
@@ -34,6 +35,16 @@ module.exports = function(Ui){
           'Music: ',
           audio_msx_volume + '%'
         ])
+      ]),
+      m('.check_box.mute', [
+        m("input[type='checkbox']", {
+          checked: muted,
+          onclick: function(e) { 
+            muted = !muted;
+            game.sounds.mute_all(muted);
+          }
+        }),
+        m('.val', ['Mute all Audio'])
       ])
     ])
   }
