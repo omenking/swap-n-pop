@@ -1,6 +1,6 @@
 import game from '@/core/game'
 
-export default ComponentPing {
+export default class ComponentPing {
   get ping(){  return this._ping }
   set ping(v){ this._ping = v }
 

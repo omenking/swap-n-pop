@@ -40,7 +40,7 @@ const {
 /** 
  *
  */
-export default ComponentPanel {
+export default class ComponentPanel {
   get [Symbol.toStringTag](){ return 'Panel' }
   get kind()    { return this.i }
   set kind(val) {        this.i = val }

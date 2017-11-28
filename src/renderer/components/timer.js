@@ -6,7 +6,7 @@ import filters from '@/core/filters'
  */
 const {px} = filters
 
-export default ComponentTimer {
+export default class ComponentTimer {
   /** get snapshot of the timer, get only to not let this be modifyable */
   get snap() {
     return [

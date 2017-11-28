@@ -14,7 +14,7 @@ const {
   GARBAGE_SHAKE
 } = data
 
-export default ComponentPanelGarbage {
+export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
   get state()    {return this._state }

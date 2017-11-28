@@ -5,7 +5,7 @@ const {px} = filters
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly
    */
-return class StatesLoad {
+export default class StatesLoad {
   create() {
     const x = game.world.centerX
     const y = game.world.centerY
