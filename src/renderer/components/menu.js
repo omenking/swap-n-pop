@@ -1,5 +1,5 @@
 import game from '@/core/game'
-import filters from '@core/filters'
+import filters from '@/core/filters'
 import ComponentMenuCursor from '@/components/menu_cursor'
 import electron from 'electron'
 

@@ -1,5 +1,5 @@
 import ComponentMenuPauseCursor from '@/components/menu_pause_cursor'
-import filters from '@core/filters'
+import filters from '@/core/filters'
 
 const {px} = filters
 
