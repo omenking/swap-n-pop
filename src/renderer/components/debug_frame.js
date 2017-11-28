@@ -1,12 +1,11 @@
-module.exports = function(game){
-  return class controller {
-    create() {
-      this.lbl = game.add.text(116, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
-    }
+import game from '@/core/game'
 
-    render(i){
-      this.lbl.setText(`F${i}`)
-    }
+export default class ComponentDebugFrame {
+  create() {
+    this.lbl = game.add.text(116, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
+  }
+
+  render(i){
+    this.lbl.setText(`F${i}`)
   }
 }
-

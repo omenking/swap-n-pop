@@ -1,13 +1,12 @@
-const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = require('electron')
-const Store = require('electron-store')
+import path     from 'path'
+import url      from 'url'
+import electron from 'electron'
+import Store    from 'electron-store'
+import Replay   from 'common/replay'
+import Logger   from 'common/logger'
+
+const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = electron
 const store = new Store()
-
-const Replay = require('./replay')(app,store)
-const Logger = require('./logger')(app)
-
-const path = require('path')
-const url  = require('url')
-
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
 
@@ -91,7 +90,8 @@ function create_window () {
   const dev = process.env.NODE_ENV !== 'production';
   if (dev) {
     load_url = url.format({
-      pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
+      //pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
+      pathname: `file://${__static}/index.html`,
       icon: path.join(__static, 'icons', 'png', '64x64.png')
     })
   } else {
@@ -113,6 +113,7 @@ function create_window () {
   win.setTitle("Swap'N Pop")
   win.setAspectRatio(8/7,0)   // MAC only function
   win.loadURL(load_url)
+  win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
     app.quit()

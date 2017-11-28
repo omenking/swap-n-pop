@@ -3,36 +3,31 @@ import ui from '@/ui/main'
 
 const {ipcRenderer: ipc} = electron
 
-/*
- * Phaser relies on an element with id #game
- * UI relies on an element with #ui
- */
-const div_ui   = document.createElement('div')
-const div_game = document.createElement('div')
-div_ui.setAttribute('id', 'game')
-div_game.setAttribute('id', 'ui')
-document.getElementById('app').appendChild(div_ui)
-document.getElementById('app').appendChild(div_game)
-
 ui()
 
 import { WIN_WIDTH, WIN_HEIGHT } from '@/core/data';
-const game         = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
-import States       from '@/states'
-import CoreControls from '@/core/controls'
-import CoreSounds   from '@/core/sounds'
-import Server       from '../main/server' // should be moved to common
+import game             from '@/core/game'
+import CoreControls     from '@/core/controls'
+import CoreSounds       from '@/core/sounds'
+import Server           from 'common/server' // should be moved to common
+import StatesBoot       from '@/states/boot'
+import StatesLoad       from '@/states/load'
+import StatesMenu       from '@/states/menu'
+import StatesModeVs     from '@/states/mode_vs'
+import StatesModePuzzle from '@/states/mode_puzzle'
+import StatesPuzzleMenu from '@/states/puzzle_menu'
+import StatesConnect    from '@/states/connect'
 
 game.controls = new CoreControls()
 game.sounds   = new CoreSounds()
 game.server   = new Server()
-game.state.add('boot'       , States.Boot)
-game.state.add('load'       , States.Load)
-game.state.add('menu'       , States.Menu)
-game.state.add('connect'    , States.Connect)
-game.state.add('mode_vs'    , States.ModeVs)
-game.state.add('mode_puzzle', States.ModePuzzle)
-game.state.add('puzzle_menu', States.PuzzleMenu)
+game.state.add('boot'       , StatesBoot)
+game.state.add('load'       , StatesLoad)
+game.state.add('menu'       , StatesMenu)
+game.state.add('connect'    , StatesConnect)
+game.state.add('mode_vs'    , StatesModeVs)
+game.state.add('mode_puzzle', StatesModePuzzle)
+game.state.add('puzzle_menu', StatesPuzzleMenu)
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {
