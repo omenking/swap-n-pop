@@ -14,6 +14,9 @@
     "electron-webpack": "^1.11.0",
     "webpack": "^3.8.1"
   },
+  "resolutions": {
+      "webpack-sources": "1.0.1"
+  },
   "build": {
     "appId": "com.swap-n-pop.app",
     "mac": {

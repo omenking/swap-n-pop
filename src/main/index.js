@@ -11,7 +11,7 @@ const url  = require('url')
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
 
-require('electron-reload')(__dirname);
+//require('electron-reload')(__dirname);
 
 let win, win_settings = null
 Replay.dir()
@@ -88,6 +88,19 @@ function click_settings(mode) {
 }
 
 function create_window () {
+  const dev = process.env.NODE_ENV !== 'production';
+  if (dev) {
+    load_url = url.format({
+    pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
+    icon: path.join(__static, 'icons', 'png', '64x64.png')
+    })
+  } else {
+    load_url = url.format({
+      protocol: 'file://',
+      pathname: `${__static}/index.html`,
+      icon: path.join(__static, 'icons', 'png', '64x64.png')
+    })
+  }
   win = new BrowserWindow({
     title     : "Swap'N'Pop",
     width     : 2*WIN_WIDTH ,
@@ -98,14 +111,9 @@ function create_window () {
     backgroundColor: '#282828'
   })
   win.custom = {mode: false}
-  win.setTitle("Swap N Pop")
-  //win.setAspectRatio(8/7,0)   // MAC only function
-  win.loadURL(url.format({
-    pathname: path.join(__static, 'index.html'),
-    protocol: 'file:',
-    slashes: true,
-    icon: path.join(__static, 'icons', 'png', '64x64.png')
-  }))
+  win.setTitle("Swap'N Pop")
+  win.setAspectRatio(8/7,0)   // MAC only function
+  win.loadURL(load_url)
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
     app.quit()
