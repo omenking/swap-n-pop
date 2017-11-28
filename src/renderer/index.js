@@ -1,16 +1,17 @@
+import electron from 'electron'
+import ui from '@/ui/main'
 
-const {ipcRenderer: ipc} = require('electron')
-const ui = require('@/ui/main')
+const {ipcRenderer: ipc} = electron
 
 ui()
 
 import { WIN_WIDTH, WIN_HEIGHT } from '@/core/data';
 const game         = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
-const States       = require('@/states')(game)
-const CoreControls = require('@/core/controls')(game)
-const CoreSounds   = require('@/core/sounds')(game)
-const Server       = require('../main/server')
- 
+import States       from '@/states'
+import CoreControls from '@/core/controls'
+import CoreSounds   from '@/core/sounds'
+import Server       from '../main/server' // should be moved to common
+
 game.controls = new CoreControls()
 game.sounds   = new CoreSounds()
 game.server   = new Server()

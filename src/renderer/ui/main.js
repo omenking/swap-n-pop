@@ -17,10 +17,10 @@ const Ui = {
     return mode
   }
 }
-const UiInput    = require('@/ui/input')(Ui)
-const UiNetwork  = require('@/ui/network')(Ui)
-const UiAudio    = require('@/ui/audio')(Ui)
-const UiReplay   = require('@/ui/replay')(Ui)
+import UiInput    from '@/ui/input'
+import UiNetwork  from '@/ui/network'
+import UiAudio    from '@/ui/audio'
+import UiReplay   from '@/ui/replay'
 
 
 function class_tab(new_mode){
@@ -47,10 +47,10 @@ function nav(){
   ])
 }
 function content(){
-  if      (mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
-  else if (mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
-  else if (mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio()   )}
-  else if (mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
+  if      (mode === 'input')  { return m('.content.settings_input'  ,UiInput(Ui)   )}
+  else if (mode === 'network'){ return m('.content.settings_network',UiNetwork(Ui) )}
+  else if (mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio(Ui)   )}
+  else if (mode === 'replay') { return m('.content.settings_replay' ,UiReplay(Ui)  )}
 }
 
 function render(){
@@ -75,4 +75,4 @@ ipc.on('reload',function(event,data){
   m.redraw()
 })
 
-module.exports = render
+export default render
