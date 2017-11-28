@@ -1,26 +1,44 @@
 module.exports = function(game) {
   return class controller {
     create() {
-      this.sfx_swap = game.add.audio('sfx_swap')
-
+      
       this.msx_stage_results  = game.add.audio('msx_stage_results')
       this.msx_stage          = game.add.audio('msx_stage')
       this.msx_stage_critical = game.add.audio('msx_stage_critical')
-
+      
       this.state_music = 'none'
-
+      
       this.sfx_land = []
       this.sfx_land[0]  = game.add.audio('sfx_drop0')
       this.sfx_land[1]  = game.add.audio('sfx_drop1')
       this.sfx_land[2]  = game.add.audio('sfx_drop2')
       this.sfx_land[3]  = game.add.audio('sfx_drop3')
-
+      
       this.sfx_confirm = game.add.audio('sfx_confirm')
       this.sfx_select  = game.add.audio('sfx_select')
-
+      
       this.sfx_blip  = game.add.audio('sfx_countdown_blip')
       this.sfx_ding  = game.add.audio('sfx_countdown_ding')
+      this.sfx_swap = game.add.audio('sfx_swap')
+      
+      this.msx_volume = 0.5;
+      this.sfx_volume = 0.5;
     } 
+
+    set_sfx_volume(decimal_volume) {
+      this.sfx_land.forEach(sfx => sfx.volume = decimal_volume);
+      this.sfx_confirm.volume = decimal_volume;
+      this.sfx_select.volume = decimal_volume;
+      this.sfx_blip.volume = decimal_volume;
+      this.sfx_ding.volume = decimal_volume;
+      this.sfx_swap.volume = decimal_volume;
+    }
+
+    set_msx_volume(decimal_volume) {
+      this.msx_stage_results.volume = decimal_volume;
+      this.msx_stage.volume = decimal_volume;
+      this.msx_stage_critical.volume = decimal_volume;
+    }
 
     land() {
       this.sfx_land[0].play()
@@ -31,7 +49,7 @@ module.exports = function(game) {
     }
 
     confirm() {
-      //this.sfx_confirm.play()
+      this.sfx_confirm.play()
     }
 
     select() {
@@ -77,7 +95,7 @@ module.exports = function(game) {
         case 'active':
           if (this.state_music != 'active') {
             this.state_music = state;
-            this.msx_stage.play('',0,0.5,true);
+            this.msx_stage.loopFull(this.msx_volume);
             this.msx_stage_critical.stop();
             this.msx_stage_results.stop();
           }
@@ -86,7 +104,7 @@ module.exports = function(game) {
           if (this.state_music != 'danger') {
             this.state_music = state;
             this.msx_stage.stop();
-            this.msx_stage_critical.play();
+            this.msx_stage_critical.loopFull(this.msx_volume);
             this.msx_stage_results.stop();
           }
           break;
@@ -95,7 +113,7 @@ module.exports = function(game) {
             this.state_music = state;
             this.msx_stage.stop();
             this.msx_stage_critical.stop();
-            this.msx_stage_results.play();
+            this.msx_stage_results.loopFull(this.msx_volume);
           }
           break;
       }
