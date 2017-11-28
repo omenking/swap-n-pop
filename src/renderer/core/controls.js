@@ -1,3 +1,4 @@
+import game     from '@/core/game'
 import electron from 'electron'
 import store    from 'common/store'
 

@@ -1,3 +1,4 @@
+import game from '@/core/game'
 import ComponentMenu from '@/components/menu'
 
 /**
