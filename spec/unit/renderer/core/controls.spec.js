@@ -1,7 +1,6 @@
-const APP = require('../../../../app')('../../../../')
-const chai   = require('chai')
-const sinon  = require('sinon')
-const mock   = require('mock-require')
+import chai  from 'chai'
+import sinon from 'sinon'
+import mock  from 'mock-require'
 
 mock('electron', {
   app: null,

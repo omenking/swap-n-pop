@@ -1,12 +1,13 @@
-const APP = require('../../../../app')('../../../../')
-const chai       = require('chai')
-const sinon      = require('sinon')
-const seedrandom = require('seedrandom')
-const _f         = require(APP.path.core('filters'))
-const Stack      = require(APP.path.core('stack'))(null)
+import chai       from 'chai'
+import sinon      from 'sinon'
+import seedrandom from 'seedrandom'
+import _f         from 'renderer/core/filters'
+import Stack      from 'renderer/core/stack'
+import data       from 'renderer/core/data'
+
 const {
   COLS, ROWS, PANELS
-} = require(APP.path.core('data'))
+} = data
 
 chai.should()
 

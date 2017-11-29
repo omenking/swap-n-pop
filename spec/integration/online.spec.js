@@ -1,18 +1,20 @@
-const APP = require('../../../app')('../../../')
-const fs   = require('fs')
-const chai = require('chai')
-const sinon = require('sinon')
-const mock       = require('mock-require')
+import fs    from 'fs'
+import chai  from 'chai'
+import sinon from 'sinon'
+import mock  from 'mock-require'
+import Game from 'helpers/game_spec'
+import Stage0 from 'renderer/states/mode_vs'
+import Stage1 from 'renderer/states/mode_vs'
+
 chai.should()
 
-const Game = require(APP.path.spec('helpers','game_spec'))
 game0 = new Game()
 game1 = new Game()
-const Stage0 = require(APP.path.states('mode_vs'))(game0)
-const Stage1 = require(APP.path.states('mode_vs'))(game1)
+
 
 var _stage0 = null
 var _stage1 = null
+
 function update(p0,p1){
   if (p0 !== null) { _stage0.update() }
   if (p1 !== null) { _stage1.update() }
@@ -41,8 +43,8 @@ describe('Online Simulation', function() {
       cpu   : [false,false],
       online: true
     }
-    stage0  = new Stage0()
-    stage1  = new Stage1()
+    stage0  = new Stage0(game0)
+    stage1  = new Stage1(game1)
     stage0.init(init)
     stage1.init(init)
     stage0.create()

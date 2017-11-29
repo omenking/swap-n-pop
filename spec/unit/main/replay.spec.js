@@ -1,10 +1,10 @@
-const APP = require('../../../app')('../../../')
-const fs   = require('fs')
-const chai = require('chai')
-const sinon = require('sinon')
+import fs     from 'fs'
+import chai   from 'chai'
+import sinon  from 'sinon'
+import path   from 'path'
+import Replay from 'main/replay'
 chai.should()
 
-const path = require('path')
 
 const app = {
   getPath: sinon.stub()
@@ -18,7 +18,6 @@ const store = {
 store.set.withArgs('replay_dir').returns('/tmp/replays')
 store.get.withArgs('replay_dir').returns('/tmp/replays')
 
-const Replay = require(APP.path.main('replay'))(app,store)
 
 describe('Replay' ,function(){
 

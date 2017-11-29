@@ -1,17 +1,16 @@
-const APP = require('../../../../app')('../../../../')
-const fs   = require('fs')
-const chai = require('chai')
-const sinon = require('sinon')
+import fs         from 'fs'
+import chai       from 'chai'
+import sinon      from 'sinon'
+import seedrandom from 'seedrandom'
+import Game       from 'helpers/game_mock'
+import _f         from 'renderer/core/filters'
+import Stage      from 'renderer/states/mode_vs'
+import Playfield  from 'renderer/components/playfield'
+import Stack      from 'renderer/core/stack'
+
 chai.should()
 
-const Game = require(APP.path.spec('helpers','game_spec'))
 const game = new Game()
-const seedrandom = require('seedrandom')
-const _f         = require(APP.path.core('filters'))
-const Stage      = require(APP.path.states('mode_vs'))(game)
-const Playfield  = require(APP.path.components('playfield'))(game)
-const Stack      = require(APP.path.core('stack'))(game)
-
 const N = null
 
 describe('Playfield', function() {

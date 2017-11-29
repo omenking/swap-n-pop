@@ -1,7 +1,7 @@
-const APP        = require('../../app')('../../')
-const sinon      = require('sinon')
+import sinon from 'sinon'
+import mock  from 'mock-require'
+
 const stub_group = sinon.stub()
-const mock       = require('mock-require')
 
 mock('electron', {
   app: null,
@@ -12,8 +12,7 @@ mock('electron', {
   ipcRenderer: {
     on: sinon.stub()
   }
-}
-)
+})
 
 class fake_electron_store {
   constructor(){

@@ -1,6 +1,5 @@
-const APP = require('../../../../app')('../../../../')
-const chai       = require('chai')
-const _f         = require(APP.path.core('filters'))
+import chai from 'chai'
+import _f   from 'renderer/core/filters'
 
 chai.should()
 

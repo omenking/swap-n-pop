@@ -1,10 +1,9 @@
-const APP = require('../../../../app')('../../../../')
-const chai  = require('chai')
-const sinon = require('sinon')
+import chai       from 'chai'
+import sinon      from 'sinon'
+import Game       from 'helpers/game_mock'
+import CoreInputs from 'renderer/core/inputs'
 
-const Game = require(APP.path.spec('helpers','game_spec'))
 const game = new Game()
-const CoreInputs = require(APP.path.core('inputs'))(game)
 
 chai.should()
 
