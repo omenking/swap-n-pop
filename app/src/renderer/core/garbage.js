@@ -59,9 +59,9 @@ module.exports = function(game) {
       // send out character animation before the 20frames delay
       if (combo > 3) {
         if (this.pi === 0)
-          this.stage.playfield1.character.sprite.play("attack");
+          this.stage.playfield1.character.current_animation = "attack";
         else if (this.pi === 1)
-          this.stage.playfield2.character.sprite.play("attack");
+          this.stage.playfield2.character.current_animation = "attack";
       }
     }
 
@@ -82,7 +82,7 @@ module.exports = function(game) {
 
         // if garbage sent after delay - play attacked on the playfield chosen
         if (v.combo > 3)
-          playfield.character.sprite.play("attacked");
+          playfield.character.current_animation = "attacked";
 
         if (v.combo === 4) {
           const o = this.alt(3) //offset

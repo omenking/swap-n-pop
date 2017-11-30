@@ -100,7 +100,8 @@ module.exports = function(game){
         snap_cursor,
         snap_stack,
         snap_countdown,
-        this.pushing
+        this.pushing,
+        this.character.snap
       ]
     }
     load(snapshot){
@@ -111,6 +112,7 @@ module.exports = function(game){
       }
       this.countdown.load(snapshot[3])
       this.pushing = snapshot[4]
+      this.character.load(snapshot[5])
     }
     create(stage,opts){
       if (stage === null) {
@@ -412,6 +414,7 @@ module.exports = function(game){
       this.cursor.render()
       this.wall.render()
       this.render_stack()
+      this.character.render();
 
       let shake = 0
       if (this.shake >= 0 && this.counter > 0) {
@@ -432,7 +435,6 @@ module.exports = function(game){
     update() {
       this.countdown.update()
       this.cursor.update()
-      this.character.update()
       
       //this.score_lbl.update(this.chain, this.score)
       let danger = null
@@ -440,11 +442,11 @@ module.exports = function(game){
         danger = this.danger(0)
         if (danger && this.push_counter <= 0) {
           this.stoptime--
-          this.character.sprite.play("losing");
+          this.character.current_animation = "losing";
           console.log('stoptime',this.stoptime)
           if (this.stoptime <= 0){
             this.stage.game_over()
-            this.character.sprite.play("lost");
+            this.character.current_animation = "lost";
           }
         } else {
           this.stoptime = STOPTIME
