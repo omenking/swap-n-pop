@@ -4,8 +4,6 @@ import store    from 'common/store'
 import electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
-const store = new Store()
-
 
 let inputs  = store.get('network.host_port')
 let host_port = {value: store.get('network.host_port'), setValue: function(v) {host_port.value = v}}

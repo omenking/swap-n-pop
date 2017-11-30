@@ -5313,16 +5313,14 @@ for (var alias in aliases) {
 
 
 const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_3_electron___default.a
-const store = new Store()
 
-
-let inputs  = store.get('network.host_port')
-let host_port = {value: store.get('network.host_port'), setValue: function(v) {host_port.value = v}}
-let join_host = {value: store.get('network.join_host'), setValue: function(v) {join_host.value = v}}
-let join_port = {value: store.get('network.join_port'), setValue: function(v) {join_port.value = v}}
+let inputs  = __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].get('network.host_port')
+let host_port = {value: __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].get('network.host_port'), setValue: function(v) {host_port.value = v}}
+let join_host = {value: __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].get('network.join_host'), setValue: function(v) {join_host.value = v}}
+let join_port = {value: __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].get('network.join_port'), setValue: function(v) {join_port.value = v}}
 
 function submit_host(){
-  store.set('network.host_port',host_port.value)
+  __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].set('network.host_port',host_port.value)
   ipc.send('network-connect',{
     mode: 'host',
     host_port: host_port.value,
@@ -5334,8 +5332,8 @@ function submit_host(){
 }
 
 function submit_join(){
-  store.set('network.join_host',join_host.value)
-  store.set('network.join_port',join_port.value)
+  __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].set('network.join_host',join_host.value)
+  __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].set('network.join_port',join_port.value)
   ipc.send('network-connect',{
     mode: 'join',
     host_port: host_port.value,
@@ -5429,10 +5427,9 @@ function render(){
 
 
 const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_3_electron___default.a
-const store = new Store()
 
 let replay_files = []
-let replay_dir   = store.get('replay_dir')
+let replay_dir   = __WEBPACK_IMPORTED_MODULE_2_common_store__["a" /* default */].get('replay_dir')
 ipc.send('replay-list')
 ipc.on('replay-dir',function(event,dir){
   replay_dir = dir

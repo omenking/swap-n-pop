@@ -6,6 +6,9 @@ const config_main = {
     path    : path.resolve(__dirname, 'static'),
     filename: 'main.js'
   },
+  node: {
+    __dirname: false
+  },
   externals: [{ 'electron-store': 'require("electron-store")' }],
   resolve: {
     alias: {
@@ -21,6 +24,9 @@ const config_renderer = {
   output: {
     path    : path.resolve(__dirname, 'static'),
     filename: 'renderer.js'
+  },
+  node: {
+    __dirname: false
   },
   externals: [{ 'electron-store': 'require("electron-store")' }],
   resolve: {

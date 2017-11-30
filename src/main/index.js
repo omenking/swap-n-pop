@@ -94,15 +94,21 @@ function create_window () {
     minWidth  : WIN_WIDTH ,
     minHeight : WIN_HEIGHT,
     useContentSize: true,
-    backgroundColor: '#282828'
+    backgroundColor: '#282828',
+    webPreferences: {
+      webSecurity: false
+    }
   })
   win.custom = {mode: false}
   win.setTitle("Swap'N'Pop")
   win.setAspectRatio(8/7,0)   // MAC only function
-  win.loadURL({
-    pathname: `file://${__dirname}/index.html`,
-    icon    : path.join(__dirname, 'icons', 'png', '64x64.png')
-  })
+  win.loadURL(url.format({
+    pathname: path.join(__dirname,'index.html'),
+    protocol: 'file:',
+    slashes: true,
+    icon: path.join(__dirname, 'assets', 'icons', 'png', '64x64.png')
+  }))
+
   win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {

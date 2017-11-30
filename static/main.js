@@ -2637,7 +2637,10 @@ function create_window () {
     minWidth  : WIN_WIDTH ,
     minHeight : WIN_HEIGHT,
     useContentSize: true,
-    backgroundColor: '#282828'
+    backgroundColor: '#282828',
+    webPreferences: {
+      webSecurity: false
+    }
   })
   win.custom = {mode: false}
   win.setTitle("Swap'N'Pop")
@@ -2646,6 +2649,14 @@ function create_window () {
     //pathname: `file://${__dirname}/index.html`,
     //icon    : path.join(__dirname, 'icons', 'png', '64x64.png')
   //})
+
+  win.loadURL(__WEBPACK_IMPORTED_MODULE_1_url___default.a.format({
+    pathname: __WEBPACK_IMPORTED_MODULE_0_path___default.a.join(__dirname,'index.html'),
+    protocol: 'file:',
+    slashes: true,
+    icon: __WEBPACK_IMPORTED_MODULE_0_path___default.a.join(__dirname, 'assets', 'icons', 'png', '64x64.png')
+  }))
+
   win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
