@@ -2645,11 +2645,6 @@ function create_window () {
   win.custom = {mode: false}
   win.setTitle("Swap'N'Pop")
   win.setAspectRatio(8/7,0)   // MAC only function
-  //win.loadURL({
-    //pathname: `file://${__dirname}/index.html`,
-    //icon    : path.join(__dirname, 'icons', 'png', '64x64.png')
-  //})
-
   win.loadURL(__WEBPACK_IMPORTED_MODULE_1_url___default.a.format({
     pathname: __WEBPACK_IMPORTED_MODULE_0_path___default.a.join(__dirname,'index.html'),
     protocol: 'file:',
