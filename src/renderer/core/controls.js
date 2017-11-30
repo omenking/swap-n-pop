@@ -1,6 +1,6 @@
-import game     from '@/core/game'
 import electron from 'electron'
 import store    from 'common/store'
+import game     from 'core/game'
 
 const {ipcRenderer: ipc} = electron
 

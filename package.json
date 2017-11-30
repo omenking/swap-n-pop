@@ -9,19 +9,19 @@
     "url": "https://github.com/omenking/swap-n-pop"
   },
   "devDependencies": {
+    "chai": "^4.1.1",
+    "docdash": "^0.4.0",
     "electron": "^1.7.9",
     "electron-builder": "^19.46.9",
     "electron-webpack": "^1.11.0",
-    "webpack": "^3.8.1",
-    "chai": "^4.1.1",
-    "docdash": "^0.4.0",
     "jsdoc": "^3.5.5",
     "mocha": "^3.5.0",
     "mock-require": "^2.0.2",
-    "sinon": "^3.2.1"
+    "sinon": "^3.2.1",
+    "webpack": "^3.8.1"
   },
   "resolutions": {
-      "webpack-sources": "1.0.1"
+    "webpack-sources": "1.0.1"
   },
   "build": {
     "appId": "com.swap-n-pop.app",
@@ -41,8 +41,9 @@
     }
   },
   "scripts": {
+    "build": "webpack",
     "dev": "electron-webpack dev",
-    "build": "electron-webpack",
+    "start": "webpack && electron static/main.js",
     "dist": "yarn build && electron-builder --dir"
   },
   "postinstall": "electron-builder install-app-deps",

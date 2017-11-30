@@ -1,4 +1,6 @@
-const {remote} = require('electron')
+import electron from 'electron'
+const {remote} = electron
+
 let mode = remote.getCurrentWindow().custom.mode
 class UiMode {
   close(){

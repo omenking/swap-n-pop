@@ -1,4 +1,4 @@
-import game     from '@/core/game'
+import game from 'core/game'
 
 export default class ComponentAi {
   create(playfield, cursor) {

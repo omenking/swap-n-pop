@@ -1,6 +1,6 @@
-import game    from '@/core/game'
-import filters from '@/core/filters'
-import ComponentMenuPauseCursor from '@/components/menu_pause_cursor'
+import game    from 'core/game'
+import filters from 'core/filters'
+import ComponentMenuPauseCursor from 'components/menu_pause_cursor'
 
 const {px} = filters
 

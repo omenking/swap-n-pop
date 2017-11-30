@@ -1,5 +1,5 @@
-import game     from '@/core/game'
 import electron from 'electron'
+import game     from 'core/game'
 import Replay   from 'common/replay'
 
 const {ipcRenderer: ipc} = electron

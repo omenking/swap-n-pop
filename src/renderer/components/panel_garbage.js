@@ -1,6 +1,6 @@
-import game from '@/core/game'
-import _f   from '@/core/filters'
-import data from '@/core/data'
+import game from 'core/game'
+import _f   from 'core/filters'
+import data from 'core/data'
 
 const {
   COLS,

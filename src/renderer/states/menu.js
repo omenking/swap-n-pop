@@ -1,5 +1,5 @@
-import game from '@/core/game'
-import ComponentMenu from '@/components/menu'
+import game          from 'core/game'
+import ComponentMenu from 'components/menu'
 
 /**
  * Higher Order Menu that keeps the menu updated - Adds Background

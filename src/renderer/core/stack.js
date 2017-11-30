@@ -1,6 +1,6 @@
-import game from '@/core/game'
-import data from '@/core/data'
-import _f   from '@/core/filters'
+import game from 'core/game'
+import data from 'core/data'
+import _f   from 'core/filters'
 import ss   from 'shuffle-seed'
 
 const {

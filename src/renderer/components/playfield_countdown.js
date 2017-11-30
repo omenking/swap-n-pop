@@ -1,5 +1,5 @@
-import game from '@/core/game'
-import filters from '@/core/filters'
+import game    from 'core/game'
+import filters from 'core/filters'
 
 const {px} = filters
 

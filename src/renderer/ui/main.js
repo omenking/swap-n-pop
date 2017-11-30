@@ -1,11 +1,12 @@
-import m from 'mithril';
-const {ipcRenderer: ipc} = require('electron')
+import m          from 'mithril'
+import Ui         from 'ui/mode'
+import UiInput    from 'ui/input'
+import UiNetwork  from 'ui/network'
+import UiAudio    from 'ui/audio'
+import UiReplay   from 'ui/replay'
+import electron   from 'electron'
 
-import Ui         from '@/ui/mode'
-import UiInput    from '@/ui/input'
-import UiNetwork  from '@/ui/network'
-import UiAudio    from '@/ui/audio'
-import UiReplay   from '@/ui/replay'
+const {ipcRenderer: ipc} = electron
 
 
 function class_tab(new_mode){

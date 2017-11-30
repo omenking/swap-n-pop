@@ -1,10 +1,10 @@
-import m from 'mithril';
-import Ui from '@/ui/mode'
+import m        from 'mithril';
+import Ui       from 'ui/mode'
+import store    from 'common/store'
+import electron from 'electron'
 
-const {ipcRenderer: ipc} = require('electron')
-const Store = require('electron-store')
+const {ipcRenderer: ipc} = electron
 const store = new Store()
-
 
 let replay_files = []
 let replay_dir   = store.get('replay_dir')

@@ -1,5 +1,5 @@
-import game from '@/core/game'
-import filters from '@/core/filters'
+import game    from 'core/game'
+import filters from 'core/filters'
 
 /** Counts up the actively played Game Time and displays 
  *  the Time through Sprite Digits

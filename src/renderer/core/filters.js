@@ -1,4 +1,4 @@
-import data from '@/core/data'
+import data from 'core/data'
 
 const {COLS,ROWS} = data
 

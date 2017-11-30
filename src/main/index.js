@@ -87,19 +87,6 @@ function click_settings(mode) {
 
 function create_window () {
   const dev = process.env.NODE_ENV !== 'production';
-  let load_url;
-  if (dev) {
-    load_url = url.format({
-      //pathname: `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
-      pathname: `file://${__static}/index.html`,
-      icon: path.join(__static, 'icons', 'png', '64x64.png')
-    })
-  } else {
-    load_url = url.format({
-      pathname: `file://${__static}/index.html`,
-      icon: path.join(__static, 'icons', 'png', '64x64.png')
-    })
-  }
   win = new BrowserWindow({
     title     : "Swap'N'Pop",
     width     : 2*WIN_WIDTH ,
@@ -110,9 +97,12 @@ function create_window () {
     backgroundColor: '#282828'
   })
   win.custom = {mode: false}
-  win.setTitle("Swap'N Pop")
+  win.setTitle("Swap'N'Pop")
   win.setAspectRatio(8/7,0)   // MAC only function
-  win.loadURL(load_url)
+  win.loadURL({
+    pathname: `file://${__dirname}/index.html`,
+    icon    : path.join(__dirname, 'icons', 'png', '64x64.png')
+  })
   win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {

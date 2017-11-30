@@ -1,15 +1,15 @@
-import game        from '@/core/game'
-import data        from '@/core/data'
-import _f          from '@/core/filters'
-import CoreGarbage from '@/core/garbage'
+import game        from 'core/game'
+import data        from 'core/data'
+import _f          from 'core/filters'
+import CoreGarbage from 'core/garbage'
 
-import ComponentPlayfieldCountdown from '@/components/playfield_countdown'
-import ComponentPlayfieldCursor    from '@/components/playfield_cursor'
-import ComponentPlayfieldWall      from '@/components/playfield_wall'
-import ComponentScore              from '@/components/score'
-import ComponentPanel              from '@/components/panel'
-import ComponentCharacter          from '@/components/character'
-import ComponentAi                 from '@/components/ai'
+import ComponentPlayfieldCountdown from 'components/playfield_countdown'
+import ComponentPlayfieldCursor    from 'components/playfield_cursor'
+import ComponentPlayfieldWall      from 'components/playfield_wall'
+import ComponentScore              from 'components/score'
+import ComponentPanel              from 'components/panel'
+import ComponentCharacter          from 'components/character'
+import ComponentAi                 from 'components/ai'
 
 const {
   ROWS_INV,

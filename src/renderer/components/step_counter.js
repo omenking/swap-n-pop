@@ -1,4 +1,4 @@
-import game from '@/core/game'
+import game from 'core/game'
 
 /**
  * A StepCounter is used in the Puzzle Mode to show the current amount of steps you have left.

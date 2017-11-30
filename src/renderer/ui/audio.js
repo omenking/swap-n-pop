@@ -1,4 +1,4 @@
-import Ui from '@/ui/mode'
+import Ui from 'ui/mode'
 import m  from 'mithril';
 
 let audio_sfx_volume = 100

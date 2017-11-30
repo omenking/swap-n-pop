@@ -1,4 +1,4 @@
-import game from '@/core/game'
+import game from 'core/game'
 
 export default class ComponentPing {
   get ping(){  return this._ping }

@@ -1,7 +1,7 @@
-import game from '@/core/game'
+import game from 'core/game'
 
-import PuzzleMenuCursor from '@/components/puzzle_menu_cursor'
-import PuzzlesModule    from '@/core/puzzles'
+import PuzzleMenuCursor from 'components/puzzle_menu_cursor'
+import PuzzlesModule    from 'core/puzzles'
 
 export default class PuzzleSelect {
   constructor() {

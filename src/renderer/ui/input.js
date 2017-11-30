@@ -1,12 +1,12 @@
-import Ui from '@/ui/mode'
-import m from 'mithril';
-const {ipcRenderer: ipc} = require('electron')
-const Store = require('electron-store')
-const store = new Store()
-const keycode = require('keycode')
+import Ui from 'ui/mode'
+import m from 'mithril'
+import electron from 'electron'
+import store   from 'common/store'
+import keycode from 'keycode'
 
-var setting = null
-var inputs  = store.get('inputs')
+const {ipcRenderer: ipc} = electron
+let setting = null
+let inputs  = store.get('inputs')
 
 
 function setkey(key){

@@ -1,6 +1,6 @@
-import game from '@/core/game'
-import data from '@/core/data'
-import filters from '@/core/filters'
+import game    from 'core/game'
+import data    from 'core/data'
+import filters from 'core/filters'
 
 const {UNIT} = data
 const {px}   = filters

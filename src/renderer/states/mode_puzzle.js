@@ -1,13 +1,13 @@
-import game                 from '@/core/game'
-import CoreInputs           from '@/core/inputs'
-import PuzzlesModule        from '@/core/puzzles'
-import ComponentPlayfield   from '@/components/playfield'
-import ComponentMenuPause   from '@/components/menu_pause'
-import ComponentTimer       from '@/components/timer'
-import ComponentStepCounter from '@/components/step_counter'
 import seedrandom           from 'seedrandom'
-import data                 from '@/core/data'
-import filters              from '@/core/filters'
+import game                 from 'core/game'
+import CoreInputs           from 'core/inputs'
+import PuzzlesModule        from 'core/puzzles'
+import ComponentPlayfield   from 'components/playfield'
+import ComponentMenuPause   from 'components/menu_pause'
+import ComponentTimer       from 'components/timer'
+import ComponentStepCounter from 'components/step_counter'
+import data                 from 'core/data'
+import filters              from 'core/filters'
 
 const { UNIT } = data
 const { px }   = filters
