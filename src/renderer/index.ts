@@ -1,5 +1,5 @@
-import electron from 'electron'
-import ui       from 'ui/main'
+import * as electron from 'electron'
+import ui from 'ui/main'
 
 const {ipcRenderer: ipc} = electron
 

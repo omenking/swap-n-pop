@@ -68,6 +68,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_data__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_controls__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_sounds__ = __webpack_require__(38);
@@ -83,7 +84,7 @@ let game = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
 game.controls = new __WEBPACK_IMPORTED_MODULE_1_core_controls__["a" /* default */]()
 game.sounds   = new __WEBPACK_IMPORTED_MODULE_2_core_sounds__["a" /* default */]()
 game.server   = new __WEBPACK_IMPORTED_MODULE_3_common_server__["a" /* default */]()
-/* harmony default export */ __webpack_exports__["a"] = (game);
+/* harmony default export */ __webpack_exports__["default"] = (game);
 
 
 /***/ }),
@@ -2678,7 +2679,7 @@ class CoreInputs {
       this.inputs = [[0x00],[0x00]]
       if (this.online){
         this.ack = [0,0]
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].server.on('framedata',this.unpack)
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].server.on('framedata',this.unpack)
       }
     }
   }
@@ -2749,13 +2750,13 @@ class CoreInputs {
   }
 
   update_input(pi,tick){
-    const byte = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.serialize(pi)
+    const byte = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.serialize(pi)
     this.inputs[pi].push(byte)
   }
 
   replay_input(pi,tick){
     const byte = this.inputs[pi][tick]
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.execute(pi,byte)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.execute(pi,byte)
   }
 
   update(tick,send) {
@@ -2777,7 +2778,7 @@ class CoreInputs {
         'log',
         `PK ${tick}: ${this.last_pack.ack0} ${this.last_pack.ack1} ${this.last_pack.frames.join(',')}`
       )
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].server.send('framedata',this.last_pack)
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].server.send('framedata',this.last_pack)
     }
   }
 
@@ -2864,7 +2865,7 @@ class Playfield {
     this.pi = pi
     this.garbage    = new __WEBPACK_IMPORTED_MODULE_3_core_garbage__["a" /* default */]()
     this.countdown  = new __WEBPACK_IMPORTED_MODULE_4_components_playfield_countdown__["a" /* default */]()
-    this.cursor     = new __WEBPACK_IMPORTED_MODULE_5_components_playfield_cursor__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */])
+    this.cursor     = new __WEBPACK_IMPORTED_MODULE_5_components_playfield_cursor__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_core_game__["default"])
     this.wall       = new __WEBPACK_IMPORTED_MODULE_6_components_playfield_wall__["a" /* default */]()
     this.score_lbl  = new __WEBPACK_IMPORTED_MODULE_7_components_score__["a" /* default */]()
     this.ai         = new __WEBPACK_IMPORTED_MODULE_10_components_ai__["a" /* default */]()
@@ -2952,7 +2953,7 @@ class Playfield {
     this.x = opts.x
     this.y = opts.y
 
-    this.layer_block  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group()
+    this.layer_block  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group()
     this.layer_block.x  = this.x
     this.layer_block.y  = this.y - (ROWS_INV*UNIT)
 
@@ -2972,14 +2973,14 @@ class Playfield {
     this.swap_counter = 0;
     this.character.create(
       "zephyr",
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerX - 30,
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerY - 100,
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerX - 30,
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerY - 100,
       this.pi
     );
   }
 
   create_after() {
-    this.layer_cursor = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group()
+    this.layer_cursor = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group()
     this.layer_cursor.x = this.x
     this.layer_cursor.y = this.y
 
@@ -3290,7 +3291,7 @@ class Playfield {
     this.update_score(cnc[0],cnc[1])
 
     if (this.land === true) {
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.land()
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.land()
       this.land = false
     }
   }
@@ -3342,12 +3343,12 @@ class ComponentTimer {
    *  Internal tick counter and a bool to stop everything
    */
   create(x,y) {
-    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group();
+    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group();
     this.group.x = x;
     this.group.y = y;
-    this.d0 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(0) , 0, 'ints_large',0);
-    this.d1 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(16), 0, 'ints_large',0);
-    this.d2 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(24), 0, 'ints_large',0);
+    this.d0 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(0) , 0, 'ints_large',0);
+    this.d1 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(16), 0, 'ints_large',0);
+    this.d2 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(24), 0, 'ints_large',0);
     this.group.add(this.d0);
     this.group.add(this.d1);
     this.group.add(this.d2);
@@ -3429,7 +3430,7 @@ class ComponentPauseMenu {
     this.stage = stage;
 
     // for now playfield.x changed to a value
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerX, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerY, 'menu_pause');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerX, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerY, 'menu_pause');
     this.sprite.anchor.setTo(0.5);   
     this.sprite.visible = false;
 
@@ -3442,7 +3443,7 @@ class ComponentPauseMenu {
 
   /** leave the game */
   cancel() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start('menu');
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('menu');
   }
 
   /** called through cursor, unpauses the menu and turns of the sprite again
@@ -4835,66 +4836,51 @@ function onceStrict (fn) {
 
 /***/ }),
 /* 29 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ui_main__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_game__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_states_boot__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_states_load__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_states_menu__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_states_mode_vs__ = __webpack_require__(46);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_states_mode_puzzle__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_states_puzzle_menu__ = __webpack_require__(75);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_states_connect__ = __webpack_require__(77);
 
-
-
-const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_0_electron___default.a
-
-Object(__WEBPACK_IMPORTED_MODULE_1_ui_main__["a" /* default */])()
-
-
-
-
-
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('boot'       , __WEBPACK_IMPORTED_MODULE_3_states_boot__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('load'       , __WEBPACK_IMPORTED_MODULE_4_states_load__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('menu'       , __WEBPACK_IMPORTED_MODULE_5_states_menu__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('connect'    , __WEBPACK_IMPORTED_MODULE_9_states_connect__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('mode_vs'    , __WEBPACK_IMPORTED_MODULE_6_states_mode_vs__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('mode_puzzle', __WEBPACK_IMPORTED_MODULE_7_states_mode_puzzle__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.add('puzzle_menu', __WEBPACK_IMPORTED_MODULE_8_states_puzzle_menu__["a" /* default */])
-__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.start('boot')
-
-ipc.on('play-vs', (event, {seed,online,cpu}) => {
-  __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.start('mode_vs',true,false, {
-    seed:   seed,
-    online: online,
-    cpu:    cpu
-  })
-})
-
-ipc.on('replay-load', (event, {seed,inputs}) => {
-  __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.start('mode_vs',true,false, {
-    seed:   seed,
-    online: false,
-    inputs: inputs,
-    cpu: [false,false]
-  })
-})
-
-ipc.on('network-connect', (event, data) => {
-  __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].state.start('connect',true,false,data)
-})
+exports.__esModule = true;
+var electron = __webpack_require__(3);
+var main_1 = __webpack_require__(30);
+var ipc = electron.ipcRenderer;
+main_1["default"]();
+var game_1 = __webpack_require__(0);
+var boot_1 = __webpack_require__(41);
+var load_1 = __webpack_require__(42);
+var menu_1 = __webpack_require__(43);
+var mode_vs_1 = __webpack_require__(46);
+var mode_puzzle_1 = __webpack_require__(73);
+var puzzle_menu_1 = __webpack_require__(75);
+var connect_1 = __webpack_require__(77);
+game_1["default"].state.add('boot', boot_1["default"]);
+game_1["default"].state.add('load', load_1["default"]);
+game_1["default"].state.add('menu', menu_1["default"]);
+game_1["default"].state.add('connect', connect_1["default"]);
+game_1["default"].state.add('mode_vs', mode_vs_1["default"]);
+game_1["default"].state.add('mode_puzzle', mode_puzzle_1["default"]);
+game_1["default"].state.add('puzzle_menu', puzzle_menu_1["default"]);
+game_1["default"].state.start('boot');
+ipc.on('play-vs', function (event, _a) {
+    var seed = _a.seed, online = _a.online, cpu = _a.cpu;
+    game_1["default"].state.start('mode_vs', true, false, {
+        seed: seed,
+        online: online,
+        cpu: cpu
+    });
+});
+ipc.on('replay-load', function (event, _a) {
+    var seed = _a.seed, inputs = _a.inputs;
+    game_1["default"].state.start('mode_vs', true, false, {
+        seed: seed,
+        online: false,
+        inputs: inputs,
+        cpu: [false, false]
+    });
+});
+ipc.on('network-connect', function (event, data) {
+    game_1["default"].state.start('connect', true, false, data);
+});
 
 
 /***/ }),
@@ -4902,6 +4888,7 @@ ipc.on('network-connect', (event, data) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mithril__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mithril___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mithril__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ui_mode__ = __webpack_require__(10);
@@ -4974,7 +4961,7 @@ ipc.on('reload',function(event,data){
   __WEBPACK_IMPORTED_MODULE_0_mithril___default.a.redraw()
 })
 
-/* harmony default export */ __webpack_exports__["a"] = (render);
+/* harmony default export */ __webpack_exports__["default"] = (render);
 
 
 /***/ }),
@@ -5544,8 +5531,8 @@ class CoreControls {
       pl1_start : function(){}
     }
 
-    __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.gamepad.start()
-    this.pad = __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.gamepad.pad1
+    __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.gamepad.start()
+    this.pad = __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.gamepad.pad1
 
     this._simdown = {
       pl0_up    : false,
@@ -5599,7 +5586,7 @@ class CoreControls {
   }
   rebind(){
     let inputs = __WEBPACK_IMPORTED_MODULE_1_common_store__["a" /* default */].get('inputs')
-    __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.keyboard.reset()
+    __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.keyboard.reset()
     this.keys = {}
     this.keys.pl0_up    = this.add_input(inputs[0])
     //player 1
@@ -5645,7 +5632,7 @@ class CoreControls {
         ]
       }
     } else {
-      return __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.keyboard.addKey(i)
+      return __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.keyboard.addKey(i)
     }
   }
   is_down(pi,key){
@@ -5790,7 +5777,7 @@ class CoreControls {
       }
     } else {
       if (Array.isArray(input)) {
-        if (__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.gamepad.supported && __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].input.gamepad.active && this.pad.connected){
+        if (__WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.gamepad.supported && __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].input.gamepad.active && this.pad.connected){
           if (input.length === 2){
             return this.pad.isDown(input[1])
           }
@@ -5851,25 +5838,25 @@ class CoreControls {
 
 class CoreSounds {
   create() {
-    this.sfx_swap = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_swap')
+    this.sfx_swap = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_swap')
 
-    this.msx_stage_results  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('msx_stage_results')
-    this.msx_stage          = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('msx_stage')
-    this.msx_stage_critical = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('msx_stage_critical')
+    this.msx_stage_results  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('msx_stage_results')
+    this.msx_stage          = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('msx_stage')
+    this.msx_stage_critical = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('msx_stage_critical')
 
     this.state_music = 'none'
 
     this.sfx_land = []
-    this.sfx_land[0]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_drop0')
-    this.sfx_land[1]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_drop1')
-    this.sfx_land[2]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_drop2')
-    this.sfx_land[3]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_drop3')
+    this.sfx_land[0]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_drop0')
+    this.sfx_land[1]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_drop1')
+    this.sfx_land[2]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_drop2')
+    this.sfx_land[3]  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_drop3')
 
-    this.sfx_confirm = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_confirm')
-    this.sfx_select  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_select')
+    this.sfx_confirm = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_confirm')
+    this.sfx_select  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_select')
 
-    this.sfx_blip  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_countdown_blip')
-    this.sfx_ding  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_countdown_ding')
+    this.sfx_blip  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_countdown_blip')
+    this.sfx_ding  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_countdown_ding')
   } 
 
   land() {
@@ -6174,22 +6161,23 @@ module.exports = require("dgram");
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
 
 class StatesBoot {
   create() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].stage.backgroundColor = '#282828'
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].stage.backgroundColor = '#282828'
     this.pixelate()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start('load')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('load')
   }
 
   pixelate() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].stage.disableVisibilityChange = true
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].stage.disableVisibilityChange = true
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].scale.pageAlignHorizontally = true;
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].scale.pageAlignVertically = true;
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.pageAlignHorizontally = true;
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.pageAlignVertically = true;
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].scale.setResizeCallback(function () {
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.setResizeCallback(function () {
       var height = window.innerHeight;
       var width = window.innerWidth;
      
@@ -6206,11 +6194,11 @@ class StatesBoot {
       resize_fully();
     }, this);
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].renderer.renderSession.roundPixels = true
-    Phaser.Canvas.setImageRenderingCrisp(__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].canvas)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].renderer.renderSession.roundPixels = true
+    Phaser.Canvas.setImageRenderingCrisp(__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].canvas)
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = StatesBoot;
+/* harmony export (immutable) */ __webpack_exports__["default"] = StatesBoot;
 
 
 
@@ -6219,6 +6207,7 @@ class StatesBoot {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_filters__ = __webpack_require__(2);
 
@@ -6230,20 +6219,20 @@ const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
    */
 class StatesLoad {
   create() {
-    const x = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerX
-    const y = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerY
+    const x = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerX
+    const y = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerY
     const font_style1 = { font: '20px Verdana', fill: '#FFF', align: 'center' }
     const font_style2 = { font: '12px Verdana', fill: '#FFF', align: 'center' }
-    this.loader = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(0,y    , `Loading ${0}%`, font_style1)
-    this.files  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(0,y+40 , "Files 0 / 0"  , font_style2)
-    this.file   = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(0,y+70 , ""             , font_style2)
+    this.loader = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y    , `Loading ${0}%`, font_style1)
+    this.files  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y+40 , "Files 0 / 0"  , font_style2)
+    this.file   = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y+70 , ""             , font_style2)
     this.loader.visible = false
     this.files.visible  = false
     this.file.visible   = false
     
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.onLoadStart.add(this.load_start   , this)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.onFileComplete.add(this.file_complete, this)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.onLoadComplete.add(this.load_complete, this)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onLoadStart.add(this.load_start   , this)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onFileComplete.add(this.file_complete, this)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onLoadComplete.add(this.load_complete, this)
     this.load_all()
   }
 
@@ -6257,13 +6246,13 @@ class StatesLoad {
   } 
 
   load_complete() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.create()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.create()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start('menu')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.create()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.create()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('menu')
   }
 
   update() {
-    this.loader.setText(`Loading ${__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.progress}%`);
+    this.loader.setText(`Loading ${__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.progress}%`);
   }
 
   render() {
@@ -6274,83 +6263,83 @@ class StatesLoad {
 
   load_all() {
     // Music --------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('msx_stage'         , './assets/music/stage.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage'         , './assets/music/stage.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
     // SFX ----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_swap'   , './assets/sound_effects/swap.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_swap'   , './assets/sound_effects/swap.ogg')
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.ogg')
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_drop0'   , './assets/sound_effects/drop0.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_drop1'   , './assets/sound_effects/drop1.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_drop2'   , './assets/sound_effects/drop2.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_drop3'   , './assets/sound_effects/drop3.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop0'   , './assets/sound_effects/drop0.ogg')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop1'   , './assets/sound_effects/drop1.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop2'   , './assets/sound_effects/drop2.mp3')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop3'   , './assets/sound_effects/drop3.mp3')
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
     //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
     //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
     // Bg -----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('bg_blue'  , './assets/images/bg_blue.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('bg_green' , './assets/images/bg_green.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('bg_purple', './assets/images/bg_purple.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_blue'  , './assets/images/bg_blue.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_green' , './assets/images/bg_green.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_purple', './assets/images/bg_purple.png')
     // UI -----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('ints_small' , './assets/images/ints_small.png'  , px(8), px(8 ), 18)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('ints_large' , './assets/images/ints_large.png'  , px(8), px(14),18)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('ints_small' , './assets/images/ints_small.png'  , px(8), px(8 ), 18)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('ints_large' , './assets/images/ints_large.png'  , px(8), px(14),18)
     // Menus --------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('menu'             , './assets/images/menu.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('menu_cursor'      , './assets/images/menu_cursor.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('menu_pause'       , './assets/images/menu_pause.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('pause'            , './assets/images/pause.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('puzzle_menu'       , './assets/images/puzzle_menu.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu'             , './assets/images/menu.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_cursor'      , './assets/images/menu_cursor.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_pause'       , './assets/images/menu_pause.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('pause'            , './assets/images/pause.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('puzzle_menu'       , './assets/images/puzzle_menu.png')
     // Playfield ----
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , px(38), px(22), 2)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_vs_bg'           , './assets/images/playfield_vs_bg.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('mode_puzzle_bg'            , './assets/images/mode_puzzle_bg.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', px(62), px(38), 4)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , px(38), px(22), 2)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_vs_bg'           , './assets/images/playfield_vs_bg.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('mode_puzzle_bg'            , './assets/images/mode_puzzle_bg.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', px(62), px(38), 4)
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('panels'              , './assets/images/panels.png'   , px(16), px(16), 136)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('garbage'             , './assets/images/garbage.png'  , px(16), px(16), 14)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('panels'              , './assets/images/panels.png'   , px(16), px(16), 136)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('garbage'             , './assets/images/garbage.png'  , px(16), px(16), 14)
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char00', './assets/images/characters/char00.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char01', './assets/images/characters/char01.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char02', './assets/images/characters/char02.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char03', './assets/images/characters/char03.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char04', './assets/images/characters/char04.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char05', './assets/images/characters/char05.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char06', './assets/images/characters/char06.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char07', './assets/images/characters/char07.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char08', './assets/images/characters/char08.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char09', './assets/images/characters/char09.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char10', './assets/images/characters/char10.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char11', './assets/images/characters/char11.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_char12', './assets/images/characters/char12.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char00', './assets/images/characters/char00.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char01', './assets/images/characters/char01.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char02', './assets/images/characters/char02.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char03', './assets/images/characters/char03.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char04', './assets/images/characters/char04.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char05', './assets/images/characters/char05.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char06', './assets/images/characters/char06.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char07', './assets/images/characters/char07.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char08', './assets/images/characters/char08.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char09', './assets/images/characters/char09.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char10', './assets/images/characters/char10.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char11', './assets/images/characters/char11.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char12', './assets/images/characters/char12.png')
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_wall0', './assets/images/playfield_wall0.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image('playfield_wall1', './assets/images/playfield_wall1.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_wall0', './assets/images/playfield_wall0.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_wall1', './assets/images/playfield_wall1.png')
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('star_counter', './assets/images/star_counter.png',px(16),px(16),12)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('star_counter', './assets/images/star_counter.png',px(16),px(16),12)
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('bauble'          , './assets/images/bauble.png',px(3),px(16),6)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.image(      'bauble_times'    , './assets/images/bauble_times.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',px(6),px(9),10)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',px(5),px(9),10)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble'          , './assets/images/bauble.png',px(3),px(16),6)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image(      'bauble_times'    , './assets/images/bauble_times.png')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',px(6),px(9),10)
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',px(5),px(9),10)
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 60);
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 60);
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].load.start()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.start()
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = StatesLoad;
+/* harmony export (immutable) */ __webpack_exports__["default"] = StatesLoad;
 
 
 
@@ -6359,6 +6348,7 @@ class StatesLoad {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_components_menu__ = __webpack_require__(44);
 
@@ -6374,7 +6364,7 @@ class StatesMenu {
 
   /** loads the gamebackground, creates the menu object */
   create() {
-    this.bg = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.width, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.height, 'bg_green');
+    this.bg = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.width, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.height, 'bg_green');
     this.menu.create();
   }
 
@@ -6382,7 +6372,7 @@ class StatesMenu {
    *  tilepos is changed to act as a parralax
    */
   update() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.update();
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.update();
     this.menu.update();
     this.bg.tilePosition.y += 0.5;
     this.bg.tilePosition.x -= 0.5;
@@ -6390,10 +6380,10 @@ class StatesMenu {
 
   /** stops controller support */
   shutdown() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.disable()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.disable()
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = StatesMenu;
+/* harmony export (immutable) */ __webpack_exports__["default"] = StatesMenu;
 
 
 
@@ -6423,7 +6413,7 @@ class ComponentMenu {
   
   create() {
     // create sprite, choose centerXY and anchor to the middle of the sprite - remembered when rescaling
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerX, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.centerY, 'menu');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerX, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerY, 'menu');
     this.sprite.anchor.setTo(0.5);               
 
     this.cursor.create(this, -90, -46, [
@@ -6453,7 +6443,7 @@ class ComponentMenu {
 
   /** starts the mode_puzzle state */
   mode_improve() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start('puzzle_menu', true, false);
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('puzzle_menu', true, false);
   }
   
   mode_option() {
@@ -6493,7 +6483,7 @@ class ComponentMenuCursor {
 
     this.counter = 0;
     this.index  = 0;
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(this.x, this.y+(this.index*UNIT), 'menu_cursor');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(this.x, this.y+(this.index*UNIT), 'menu_cursor');
     this.menu.sprite.addChild(this.sprite);
 
     this.map_controls(0)
@@ -6501,7 +6491,7 @@ class ComponentMenuCursor {
   }
 
   map_controls(pi) {
-    return __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.map(pi, {
+    return __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.map(pi, {
       up   : this.up,
       down : this.down,
       a    : this.confirm,
@@ -6513,7 +6503,7 @@ class ComponentMenuCursor {
   up(tick) {
     if (tick > 0) { return }
     if (this.index !== 0) {
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select()
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
       return this.index--;
@@ -6523,7 +6513,7 @@ class ComponentMenuCursor {
   down(tick) {
     if (tick > 0) { return }
     if (this.index !== (this.menu_items.length-1)) {
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select()
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
       return this.index++;
@@ -6532,7 +6522,7 @@ class ComponentMenuCursor {
 
   confirm(tick) {
     if (tick > 0) { return }
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.confirm()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.confirm()
     return this.menu_items[this.index]()
   }
 
@@ -6559,6 +6549,7 @@ class ComponentMenuCursor {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_seedrandom__ = __webpack_require__(12);
@@ -6603,7 +6594,7 @@ class ModeVs {
     this.playfield2   = new __WEBPACK_IMPORTED_MODULE_8_components_playfield__["a" /* default */](1)
     this.ping         = new __WEBPACK_IMPORTED_MODULE_9_components_ping__["a" /* default */]()
     this.debug_frame  = new __WEBPACK_IMPORTED_MODULE_10_components_debug_frame__["a" /* default */]()
-    this.timer        = new __WEBPACK_IMPORTED_MODULE_11_components_timer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */])
+    this.timer        = new __WEBPACK_IMPORTED_MODULE_11_components_timer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_2_core_game__["default"])
 
     this.menu_pause   = new __WEBPACK_IMPORTED_MODULE_12_components_menu_pause__["a" /* default */]()
     this.star_counter = new __WEBPACK_IMPORTED_MODULE_13_components_star_counter__["a" /* default */]()
@@ -6651,10 +6642,10 @@ class ModeVs {
   set cpu(v){ this._cpu = v }
 
   create_bg() {
-    this.bg = __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].add.sprite(0,0, 'playfield_vs_bg');
+    this.bg = __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].add.sprite(0,0, 'playfield_vs_bg');
   }
   create_frame(offset){
-    this.frame = __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].add.sprite(offset,0, 'playfield_vs_frame');
+    this.frame = __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].add.sprite(offset,0, 'playfield_vs_frame');
   }
   create() {
     ipc.send('log',`VS ${this.seed} ------------------------------`)
@@ -6666,7 +6657,7 @@ class ModeVs {
     const stack = new __WEBPACK_IMPORTED_MODULE_7_core_stack__["a" /* default */](this.rng);
     stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
-    if (this.online && __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].server.pos === 1) {
+    if (this.online && __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].server.pos === 1) {
       this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
       this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
     } else {
@@ -6698,7 +6689,7 @@ class ModeVs {
 
   /** turns on the menu, changes it state, turns of the timer from counting */
   pause(){
-    __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('pause');
+    __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('pause');
 
     this.state = "pause";
     this.timer.running = false;
@@ -6710,7 +6701,7 @@ class ModeVs {
     // only resumes the game if countdown's are over
     if (this.playfield1.countdown.state === null ||
         this.playfield2.countdown.state === null) {
-      __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('resume');
+      __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('resume');
       
       this.state = "running";
       this.timer.running = true;
@@ -6725,7 +6716,7 @@ class ModeVs {
     if(!this.inputs.replay){
       ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
     }
-    __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('results')
+    __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('results')
     this.timer.running = false
     this.playfield1.game_over()
     this.playfield2.game_over()
@@ -6736,12 +6727,12 @@ class ModeVs {
 
     if (d1 || d2) {
       if (this.danger === false) {
-        __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('danger')
+        __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('danger')
       }
       this.danger = true
     } else {
       if (this.danger === true) {
-        __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('active')
+        __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('active')
       }
       this.danger = false
     }
@@ -6863,7 +6854,7 @@ class ModeVs {
     // we need to swap the playfield update order for
     // one of the players otherwise in multipalyer it will
     // generate the panels on the wrong side.
-    if (this.online && __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].server.pos === 1) {
+    if (this.online && __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].server.pos === 1) {
       this.playfield2.update()
       this.playfield1.update()
     } else {
@@ -6873,11 +6864,11 @@ class ModeVs {
     this.danger_check()
     if (tick === false) {
       this.inputs.update(this.tick,true)
-      __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].controls.update()
+      __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].controls.update()
       this.snapshots.snap(this.tick)
     } else {
       this.inputs.update(tick,false)
-      __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].controls.update(false,true)
+      __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].controls.update(false,true)
       this.snapshots.snap(tick)
     }
   }
@@ -6897,12 +6888,12 @@ class ModeVs {
   }
   shutdown() {
     console.log('shutdown mode_vs')
-    __WEBPACK_IMPORTED_MODULE_2_core_game__["a" /* default */].sounds.stage_music('none')
+    __WEBPACK_IMPORTED_MODULE_2_core_game__["default"].sounds.stage_music('none')
     this.playfield1.shutdown()
     this.playfield2.shutdown()
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = ModeVs;
+/* harmony export (immutable) */ __webpack_exports__["default"] = ModeVs;
 
 
 
@@ -7885,7 +7876,7 @@ class Snapshots {
     // all objects - subobjects to load with a snapshot
     this.playfield0.load(this.snapshot[this.index][0]);
     this.playfield1.load(this.snapshot[this.index][1]);
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.load(  this.snapshot[this.index][2]);
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.load(  this.snapshot[this.index][2]);
     this.stage.load(this.snapshot[this.index][3]);
     this.timer.load(this.snapshot[this.index][4]);
   }
@@ -7912,7 +7903,7 @@ class Snapshots {
     
     this.snapshot[this.index] = [this.playfield0.snap,
                                  this.playfield1.snap,
-                                 __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.snap,
+                                 __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.snap,
                                  this.stage.snap,
                                  this.timer.snap]
   }
@@ -8320,7 +8311,7 @@ class ComponentPlayfieldCountdown {
 
     const x = this.playfield.x+px(16);
     const y = px(-38);
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(x, y, 'playfield_countdown', 0)
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(x, y, 'playfield_countdown', 0)
 
     if(this.playfield.should_countdown){
       this.counter = 0
@@ -8339,13 +8330,13 @@ class ComponentPlayfieldCountdown {
         this.sprite.frame = 1;
         this.state = 3;
         this.playfield.cursor.entrance()
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.blip()
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.blip()
       }
     }
     if (this.state === 3) {
       this.counter++;
       if (this.counter > 60) {
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.blip()
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.blip()
         this.sprite.frame = 2;
         this.counter = 0;
         this.state = 2;
@@ -8354,7 +8345,7 @@ class ComponentPlayfieldCountdown {
     if (this.state === 2) {
       this.counter++;
       if (this.counter > 60) {
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.blip()
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.blip()
         this.sprite.frame = 3;
         this.counter = 0;
         this.state = 1;
@@ -8369,7 +8360,7 @@ class ComponentPlayfieldCountdown {
   }
 
   start() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.ding()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.ding()
     this.sprite.visible         = false
     this.playfield.cursor.state = 'active'
     if (this.playfield.stage.cpu[0] === false ||
@@ -8384,7 +8375,7 @@ class ComponentPlayfieldCountdown {
       this.playfield.stage.timer.running = true
     }
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.stage_music('active')
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.stage_music('active')
     this.state = null
   }
 
@@ -8467,9 +8458,9 @@ class ComponentCursor {
       this.state = 'active'
       this.map_controls()
     }
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(x, y, 'playfield_cursor', 0);
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(x, y, 'playfield_cursor', 0);
     this.sprite.animations.add('idle', [0,1]);
-    this.sprite.animations.play('idle', Math.round(__WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].time.desiredFps / 10), true);
+    this.sprite.animations.play('idle', Math.round(__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].time.desiredFps / 10), true);
     this.sprite.visible = visible;
 
     this.playfield.layer_cursor.add(this.sprite);
@@ -8515,7 +8506,7 @@ class ComponentCursor {
    * defines the game controls and links the callsbacks to this cursors methods
    */
   map_controls() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.map(this.playfield.pi, {
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.map(this.playfield.pi, {
       up   : this.up,
       down : this.down,
       left : this.left,
@@ -8553,7 +8544,7 @@ class ComponentCursor {
     if (this.pressed_then_held(tick)) 
       if (this.y > ROWS_VIS) {
         this.y--; 
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select();
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select();
       }
   }
 
@@ -8567,7 +8558,7 @@ class ComponentCursor {
     if (this.pressed_then_held(tick))
       if (this.y < (ROWS - 1)) {
         this.y++; 
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select();
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select();
       }
   }
 
@@ -8581,7 +8572,7 @@ class ComponentCursor {
     if (this.pressed_then_held(tick)) 
       if (this.x > 0) { 
           this.x--; 
-          __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select();
+          __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select();
       }
   }
 
@@ -8595,7 +8586,7 @@ class ComponentCursor {
     if (this.pressed_then_held(tick)) 
       if (this.x < (COLS - 2)) { 
         this.x++; 
-        __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.select();
+        __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.select();
       }
   }
 
@@ -8737,7 +8728,7 @@ const {
 class ComponentPlayfieldWall {
   create(playfield,x,y){
     this.playfield = playfield
-    this.sprite    = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(x, y, `playfield_wall${this.playfield.pi}`)
+    this.sprite    = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(x, y, `playfield_wall${this.playfield.pi}`)
     this.counter   = 0
   }
 
@@ -8766,7 +8757,7 @@ class ComponentPlayfieldWall {
 
 class ComponentScore {
   create() {
-    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(0, 10, '0', {
+    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0, 10, '0', {
       fontSize: '16px',
       fill: 0x000000
     });
@@ -8941,7 +8932,7 @@ class ComponentPanel {
     this.state = STATIC
     this.chain = 0
 
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
     this.playfield.layer_block.add(this.sprite)
     // shouldn't have to call visible false
     // here as it should be taken care of in render
@@ -9150,7 +9141,7 @@ class ComponentPanel {
                 particle.counter = TIME_PARTICLE;
               });
 
-              this.clear_i < 6 ? __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sound.play("sfx_pop" + this.clear_i) : __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sound.play("sfx_pop5");
+              this.clear_i < 6 ? __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sound.play("sfx_pop" + this.clear_i) : __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sound.play("sfx_pop5");
             }
           } else {
             if (this.above && !this.above.hidden && this.above.state === STATIC) {
@@ -9205,7 +9196,7 @@ class ComponentPanel {
     this.state       = SWAP_L
     this.right.state = SWAP_R
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].sounds.swap()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.swap()
   }
   /**
     Calculates and set the counter for the panel to pop
@@ -9442,19 +9433,19 @@ class ComponentBauble {
   }
 
   create_chain() {
-    this.chain = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group()
+    this.chain = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group()
     this.chain.visible = false
-    this.chain_left   = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(0)   , px(0), 'bauble',0) // 3px wide
-    this.chain_middle = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(3)   , px(0), 'bauble',1)
-    this.chain_right  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(3+20), px(0), 'bauble',2) // 3px wide
+    this.chain_left   = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(0)   , px(0), 'bauble',0) // 3px wide
+    this.chain_middle = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(3)   , px(0), 'bauble',1)
+    this.chain_right  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(3+20), px(0), 'bauble',2) // 3px wide
 
-    this.chain_times = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(2), px(8), 'bauble_times') // 4px wide
+    this.chain_times = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(2), px(8), 'bauble_times') // 4px wide
 
-    this.chain_int   = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7), px(3), 'bauble_num',0) // 6px wide
+    this.chain_int   = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7), px(3), 'bauble_num',0) // 6px wide
 
-    this.chain_small_int0  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7)   , px(3), 'bauble_num_small',0) // 5px wide
-    this.chain_small_int1  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7+6) , px(3), 'bauble_num_small',0) // 5px wide
-    this.chain_small_int2  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7+12), px(3), 'bauble_num_small',0) // 5px wide
+    this.chain_small_int0  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7)   , px(3), 'bauble_num_small',0) // 5px wide
+    this.chain_small_int1  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7+6) , px(3), 'bauble_num_small',0) // 5px wide
+    this.chain_small_int2  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7+12), px(3), 'bauble_num_small',0) // 5px wide
 
     this.chain.add(this.chain_left)
     this.chain.add(this.chain_middle)
@@ -9467,14 +9458,14 @@ class ComponentBauble {
   }
 
   create_combo() {
-    this.combo = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group()
+    this.combo = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group()
     this.combo.visible = false
-    this.combo_left   = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(0)   , px(0), 'bauble',3) // 3px wide
-    this.combo_middle = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(3)   , px(0), 'bauble',4)
-    this.combo_right  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(3+20), px(0), 'bauble',5) // 3px wide
+    this.combo_left   = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(0)   , px(0), 'bauble',3) // 3px wide
+    this.combo_middle = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(3)   , px(0), 'bauble',4)
+    this.combo_right  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(3+20), px(0), 'bauble',5) // 3px wide
 
-    this.combo_int0       = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7), px(3), 'bauble_num',0)       // 6px wide
-    this.combo_small_int0 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(px(7), px(3), 'bauble_num_small',0) // 5px wide
+    this.combo_int0       = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7), px(3), 'bauble_num',0)       // 6px wide
+    this.combo_small_int0 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(px(7), px(3), 'bauble_num_small',0) // 5px wide
 
     this.combo.add(this.combo_left)
     this.combo.add(this.combo_middle)
@@ -9665,7 +9656,7 @@ class ComponentPanelGarbage {
   create(panel,playfield){
     this.panel     = panel
     this.playfield = playfield
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(0,0, 'garbage',0)
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(0,0, 'garbage',0)
     this.sprite.visible = false
   }
 
@@ -9864,7 +9855,7 @@ class ComponentPanelParticle {
    * @param {integer} dir which direction to go - 1 = top left, 2 = top right, 3 = bottom right, ...
    */
   create({panel, type = "normal", id, angle = 0}) {
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(0, 0, "panel_particles", 0);
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(0, 0, "panel_particles", 0);
     this.sprite.visible = false;
 
     this.x = 0;
@@ -9991,7 +9982,7 @@ class ComponentCharacterTemplate {
     this.animation_speed = 10;
     
     // sprite creation
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(x, y, sprite, 0);
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(x, y, sprite, 0);
     this.sprite.anchor.setTo(0.5);
     this.sprite.scale.set(2);
     this.sprite.smoothed = false;
@@ -10052,7 +10043,6 @@ class ComponentAi {
   create(playfield, cursor) {
     this.playfield = playfield;
     this.cursor = cursor;
-    console.log('create ai');
     return this.plan = false;
   }
 
@@ -10090,15 +10080,15 @@ class ComponentPing {
 
   create() {
     this.ping = null
-    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(6, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
+    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(6, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].server.on('pong',function(data){
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].server.on('pong',function(data){
       this.ping = Math.floor((new Date().getTime()-data) / 2)
     }.bind(this))
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].server.ping()
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].server.ping()
     setInterval(function(){
-      __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].server.ping()
+      __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].server.ping()
     }.bind(this),3000)
   }
 
@@ -10121,7 +10111,7 @@ class ComponentPing {
 
 class ComponentDebugFrame {
   create() {
-    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.text(116, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
+    this.lbl = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(116, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
   }
 
   render(i){
@@ -10175,10 +10165,10 @@ class ComponentMenuPauseCursor {
     this.menu_items = menu_items;
     this.index  = 0;
 
-    this.sfx_confirm = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_confirm');
-    this.sfx_select  = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.audio('sfx_select');
+    this.sfx_confirm = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_confirm');
+    this.sfx_select  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.audio('sfx_select');
 
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(this.x, this.y, 'menu_pause_cursor');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(this.x, this.y, 'menu_pause_cursor');
     return this.menu.sprite.addChild(this.sprite);
   }
 
@@ -10187,7 +10177,7 @@ class ComponentMenuPauseCursor {
    * @param {playerNumber} any_player_number 
    */
   map_controls(any_player_number) {
-    return __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.map(any_player_number, {
+    return __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.map(any_player_number, {
       up   : this.up,
       down : this.down,
       a    : this.confirm,
@@ -10252,14 +10242,14 @@ const {
 class StarCounter {
   create(stage,x,y){
     this.stage = stage
-    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group()
+    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group()
     this.group.x = x
     this.group.y = y
     this.sprites = []
-    this.sprites[0] = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(x       , y       , `star_counter`,0)
-    this.sprites[1] = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(x+px(18), y       , `star_counter`,6)
-    this.sprites[2] = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(x       , y+px(17), `star_counter`,0)
-    this.sprites[3] = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(x+px(18), y+px(17), `star_counter`,6)
+    this.sprites[0] = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(x       , y       , `star_counter`,0)
+    this.sprites[1] = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(x+px(18), y       , `star_counter`,6)
+    this.sprites[2] = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(x       , y+px(17), `star_counter`,0)
+    this.sprites[3] = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(x+px(18), y+px(17), `star_counter`,6)
 
     this.group.add(this.sprites[0])
     this.group.add(this.sprites[1])
@@ -10313,6 +10303,7 @@ class StarCounter {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_seedrandom__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_seedrandom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_seedrandom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_game__ = __webpack_require__(0);
@@ -10344,7 +10335,7 @@ class PuzzleMode {
   constructor() {
     this.playfield  = new __WEBPACK_IMPORTED_MODULE_4_components_playfield__["a" /* default */](0);
     this.menu_pause = new __WEBPACK_IMPORTED_MODULE_5_components_menu_pause__["a" /* default */]();
-    this.timer      = new __WEBPACK_IMPORTED_MODULE_6_components_timer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */]);
+    this.timer      = new __WEBPACK_IMPORTED_MODULE_6_components_timer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1_core_game__["default"]);
     this.step_display = new __WEBPACK_IMPORTED_MODULE_7_components_step_counter__["a" /* default */]();
     this.inputs     = new __WEBPACK_IMPORTED_MODULE_2_core_inputs__["a" /* default */]();
   }
@@ -10357,7 +10348,7 @@ class PuzzleMode {
    *  with certain parameters
    */
   create() {
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].add.sprite(0, 0, "mode_puzzle_bg");
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].add.sprite(0, 0, "mode_puzzle_bg");
 
     this.tick   = -1;
     this.seed   = 'puzzle';
@@ -10386,7 +10377,7 @@ class PuzzleMode {
   
   /** shuts down the playfield */
   shutdown() {
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].sounds.stage_music('none');
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].sounds.stage_music('none');
     this.playfield.shutdown();
   }
 
@@ -10399,7 +10390,7 @@ class PuzzleMode {
 
   /** stops all control - plays a sound and stops the timer */
   pause() {
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].sounds.stage_music('pause');
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].sounds.stage_music('pause');
   
     this.state = "pause";
     this.timer.running = false;
@@ -10408,7 +10399,7 @@ class PuzzleMode {
 
   /** regains control over playfield - plays a sound and timer runs again */
   resume() {
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].sounds.stage_music('resume');
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].sounds.stage_music('resume');
   
     this.state = "running";
     this.timer.running = true;
@@ -10421,7 +10412,7 @@ class PuzzleMode {
   update() {
     if (this.playfield.stack_is_empty()) {
       if (this.puzzles.puzzle_levels.length === (this.level_index)) {
-        __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].state.start("menu");
+        __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].state.start("menu");
         return;
       }
 
@@ -10438,7 +10429,7 @@ class PuzzleMode {
 
     this.tick++;
 
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].controls.update();
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].controls.update();
     this.playfield.update();
     this.inputs.update(this.tick);
 
@@ -10454,7 +10445,7 @@ class PuzzleMode {
       this.playfield.render();
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = PuzzleMode;
+/* harmony export (immutable) */ __webpack_exports__["default"] = PuzzleMode;
 
 
 
@@ -10476,12 +10467,12 @@ class StepCounter {
    * @param {object} mulitple vars defaulted - playfield reference is expected.  
    */
   create({ step_limit = 0, playfield, x = 200, y = 50}) {
-    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.group();
+    this.group = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.group();
     this.group.x = x; 
     this.group.y = y;
 
-    this.d1 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(12, 0, "ints_large", 0);
-    this.d2 = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(0, 0, "ints_large", 0);
+    this.d1 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(12, 0, "ints_large", 0);
+    this.d2 = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(0, 0, "ints_large", 0);
     this.group.add(this.d1);
     this.group.add(this.d2);
 
@@ -10528,6 +10519,7 @@ class StepCounter {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_components_puzzle_menu_cursor__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_puzzles__ = __webpack_require__(22);
@@ -10542,30 +10534,30 @@ class PuzzleSelect {
   }
 
   create() {
-    this.bg = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.width, __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].world.height, 'bg_green');
+    this.bg = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.width, __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.height, 'bg_green');
     
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].add.sprite(0, 0, 'puzzle_menu');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.sprite(0, 0, 'puzzle_menu');
 
     this.puzzles = new __WEBPACK_IMPORTED_MODULE_2_core_puzzles__["a" /* default */]();
     this.cursor.create(this, 26, 39);
   }
 
   update() {
-    this.sprite.x = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].width  / 4 - this.sprite.width  / 2;
-    this.sprite.y = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].height / 8 - this.sprite.height / 2;
+    this.sprite.x = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].width  / 4 - this.sprite.width  / 2;
+    this.sprite.y = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].height / 8 - this.sprite.height / 2;
 
     this.cursor.update()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.update();
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.update();
     this.bg.tilePosition.y += 0.5;
     this.bg.tilePosition.x -= 0.5;
   }
 
   /** stops controller support */
   shutdown() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.disable();
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.disable();
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = PuzzleSelect;
+/* harmony export (immutable) */ __webpack_exports__["default"] = PuzzleSelect;
 
 
 
@@ -10595,7 +10587,7 @@ class PuzzleSelectCursor {
     this.y = y;
     this.index  = 0;
 
-    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].make.sprite(this.x, this.y + (this.index * UNIT), 'menu_cursor');
+    this.sprite = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].make.sprite(this.x, this.y + (this.index * UNIT), 'menu_cursor');
     this.parent = parent;
     this.parent.sprite.addChild(this.sprite);
     
@@ -10604,7 +10596,7 @@ class PuzzleSelectCursor {
   }
 
   map_controls(pi) {
-    return __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].controls.map(pi, {
+    return __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.map(pi, {
       up   : this.up,
       down : this.down,
       a    : this.confirm,
@@ -10630,14 +10622,14 @@ class PuzzleSelectCursor {
   }
 
   confirm(tick) {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start("mode_puzzle", true, false, { chosen_index: this.index });
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start("mode_puzzle", true, false, { chosen_index: this.index });
   }
 
   cancel(tick) {
     if (tick > 0)
       return; 
 
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["a" /* default */].state.start("menu");
+    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start("menu");
   }
 
   update() {
@@ -10653,6 +10645,7 @@ class PuzzleSelectCursor {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_game__ = __webpack_require__(0);
@@ -10682,17 +10675,17 @@ class StatesConnect {
   set join_port(v){ this._join_port = v}
 
   create() {
-    this.bg = __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].world.width, __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].world.height, 'bg_green')
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.create(this.host_port,'0.0.0.0',this.listening)
+    this.bg = __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].world.width, __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].world.height, 'bg_green')
+    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.create(this.host_port,'0.0.0.0',this.listening)
   }
 
   listening() {
     if (this.mode === 'host') {
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.connected(this.start)
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.pos = 0
+      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.connected(this.start)
+      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.pos = 0
     } else if(this.mode === 'join') {
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.pos = 1
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.connect(
+      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.pos = 1
+      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.connect(
         this.join_port,
         this.join_host,
         __WEBPACK_IMPORTED_MODULE_2_common_replay__["a" /* default */].random_seed(), //hacky until we get a game setup screen
@@ -10703,7 +10696,7 @@ class StatesConnect {
 
   start() {
     ipc.send('play-vs',{
-      seed  : __WEBPACK_IMPORTED_MODULE_1_core_game__["a" /* default */].server.seed,
+      seed  : __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.seed,
       online: true,
       cpu   : [false,false]
     })
@@ -10714,7 +10707,7 @@ class StatesConnect {
     this.bg.tilePosition.x -= 0.5
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = StatesConnect;
+/* harmony export (immutable) */ __webpack_exports__["default"] = StatesConnect;
 
 
 

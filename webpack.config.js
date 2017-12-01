@@ -1,7 +1,7 @@
 const path = require('path');
 const config_main = {
   target: 'electron-main',
-  entry: path.resolve(__dirname, 'src/main/index.js'),
+  entry: path.resolve(__dirname, 'src/main/index.ts'),
   output: {
     path    : path.resolve(__dirname, 'static'),
     filename: 'main.js'
@@ -16,14 +16,16 @@ const config_main = {
       common : path.resolve(__dirname, 'src/common/')
     }
   },
-  rules: [
-    { test: /\.ts$/, loader: 'ts-loader' }
-  ]
+  module: {
+    rules: [
+      { test: /\.ts$/, loader: 'ts-loader' }
+    ]
+  }
 };
 
 const config_renderer = {
   target: 'electron-renderer',
-  entry: path.resolve(__dirname, 'src/renderer/index.js'),
+  entry: path.resolve(__dirname, 'src/renderer/index.ts'),
   output: {
     path    : path.resolve(__dirname, 'static'),
     filename: 'renderer.js'
@@ -41,9 +43,11 @@ const config_renderer = {
       common     : path.resolve(__dirname, 'src/common/'),
     }
   },
-  rules: [
-    { test: /\.ts$/, loader: 'ts-loader' }
-  ]
+  module: {
+    rules: [
+      { test: /\.ts$/, loader: 'ts-loader' }
+    ]
+  }
 };
 
 module.exports = [
