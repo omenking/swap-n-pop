@@ -1,9 +1,5 @@
-const APP = require('../../../app')('../../../')
-const fs   = require('fs')
-const chai = require('chai')
-chai.should()
-
-const Server = require(APP.path.main('server'))
+import fs   from 'fs'
+import Server from 'main/server'
 
 describe('Server' ,function(){
   describe('#create()' ,function(){

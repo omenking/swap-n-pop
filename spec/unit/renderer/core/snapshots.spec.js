@@ -1,12 +1,8 @@
-import chai  from 'chai'
-import sinon from 'sinon'
 import Game from 'helpers/game_mock'
-import CoreSnapshots from 'renderer/core/snapshots'
-import Playfield     from 'renderer/components/playfield'
+import CoreSnapshots from 'core/snapshots'
+import Playfield     from 'components/playfield'
 
 const game = new Game()
-
-chai.should()
 
 describe('Snapshots', function() {
   describe('#cindex()', function(){

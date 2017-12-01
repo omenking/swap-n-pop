@@ -1,7 +1,4 @@
-import chai from 'chai'
-import _f   from 'renderer/core/filters'
-
-chai.should()
+import _f   from 'core/filters'
 
 describe('_f', function() {
   // excessive? yeah, but it was annoying me.

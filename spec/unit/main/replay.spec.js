@@ -1,10 +1,6 @@
 import fs     from 'fs'
-import chai   from 'chai'
-import sinon  from 'sinon'
 import path   from 'path'
 import Replay from 'main/replay'
-chai.should()
-
 
 const app = {
   getPath: sinon.stub()
@@ -20,7 +16,6 @@ store.get.withArgs('replay_dir').returns('/tmp/replays')
 
 
 describe('Replay' ,function(){
-
   describe('#save(name,inputs)' ,function(){
     var filename = null;
     before(function(done) {

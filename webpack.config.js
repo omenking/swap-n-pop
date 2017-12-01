@@ -15,7 +15,10 @@ const config_main = {
       main   : path.resolve(__dirname, 'src/main/'),
       common : path.resolve(__dirname, 'src/common/')
     }
-  }
+  },
+  rules: [
+    { test: /\.ts$/, loader: 'ts-loader' }
+  ]
 };
 
 const config_renderer = {
@@ -37,7 +40,10 @@ const config_renderer = {
       ui         : path.resolve(__dirname, 'src/renderer/ui/'),
       common     : path.resolve(__dirname, 'src/common/'),
     }
-  }
+  },
+  rules: [
+    { test: /\.ts$/, loader: 'ts-loader' }
+  ]
 };
 
 module.exports = [

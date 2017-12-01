@@ -1,15 +1,11 @@
-import chai       from 'chai'
-import sinon      from 'sinon'
 import seedrandom from 'seedrandom'
-import _f         from 'renderer/core/filters'
-import Stack      from 'renderer/core/stack'
-import data       from 'renderer/core/data'
+import _f         from 'core/filters'
+import Stack      from 'core/stack'
+import data       from 'core/data'
 
 const {
   COLS, ROWS, PANELS
 } = data
-
-chai.should()
 
 // sRJouZq3sh0yHl2w <-- This seed need to get to ensure its random
 

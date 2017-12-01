@@ -1,6 +1,3 @@
-const chai       = require('chai').should();
-
-const APP = require('../../../../app')('../../../../');
 const {
   COLS, 
   ROWS, 

@@ -4,7 +4,6 @@ export default class ComponentAi {
   create(playfield, cursor) {
     this.playfield = playfield;
     this.cursor = cursor;
-    console.log('create ai');
     return this.plan = false;
   }
 

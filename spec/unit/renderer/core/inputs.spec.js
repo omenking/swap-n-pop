@@ -1,11 +1,7 @@
-import chai       from 'chai'
-import sinon      from 'sinon'
 import Game       from 'helpers/game_mock'
-import CoreInputs from 'renderer/core/inputs'
+import CoreInputs from 'core/inputs'
 
 const game = new Game()
-
-chai.should()
 
 describe('Inputs', function() {
   describe('#pack()', function(){

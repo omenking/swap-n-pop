@@ -1,7 +1,3 @@
-import chai  from 'chai'
-import sinon from 'sinon'
-import mock  from 'mock-require'
-
 mock('electron', {
   app: null,
   remote: { app: null},
@@ -31,8 +27,6 @@ mock('electron-store',fake_electron_store)
 
 const game = require(APP.path.spec('helpers','game_spec'))
 const CoreControls = require(APP.path.core('controls'))(game)
-
-chai.should()
 
 describe('Controls', function() {
   describe('#serialize(pi)' ,function(){
