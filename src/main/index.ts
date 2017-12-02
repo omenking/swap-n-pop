@@ -41,7 +41,7 @@ if (!store.has('inputs')){
   null  //p0_start
   ])
 }
-const template = [
+const template : any = [
   {
     label: 'Settings',
     submenu: [
@@ -78,8 +78,8 @@ function click_debug(){
   win.webContents.openDevTools()
 }
 
-function click_settings(mode) {
-  return function(item, win, ev){
+function click_settings(mode : string) {
+  return function(item?, win?, ev?){
     win.custom = {mode: mode}
     win.webContents.send('reload',{mode: mode})
   }
@@ -102,12 +102,15 @@ function create_window () {
   win.custom = {mode: false}
   win.setTitle("Swap'N'Pop")
   win.setAspectRatio(8/7,0)   // MAC only function
-  win.loadURL(url.format({
+
+  const load_url : any = {
     pathname: path.join(__dirname,'index.html'),
     protocol: 'file:',
     slashes: true,
     icon: path.join(__dirname, 'assets', 'icons', 'png', '64x64.png')
-  }))
+  }
+
+  win.loadURL(url.format(load_url))
 
   win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
