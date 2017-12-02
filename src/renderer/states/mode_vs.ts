@@ -1,4 +1,4 @@
-import electron             from 'electron'
+import * as electron        from 'electron'
 import seedrandom           from 'seedrandom'
 import game                 from 'core/game'
 import filters              from 'core/filters'
@@ -21,6 +21,30 @@ const {
 } = data
 
 export default class ModeVs {
+  private playfield1      : ComponentPlayfield
+  private playfield2      : ComponentPlayfield
+  private ping            : ComponentPing
+  private debug_frame     : ComponentDebugFrame
+  private timer           : ComponentTimer
+  private menu_pause      : ComponentMenuPause
+  private star_counter    : ComponentStarCounter
+  private inputs          : CoreInputs
+  private snapshots       : CoreSnapshots
+  private rng             : any
+  private debug           : boolean
+  private roll            : any
+  public roll_log_heading : Array<any>
+  public roll_log_data    : Array<any>
+  public tick             : number
+  private danger          : boolean
+  private seed            : string
+  private rounds_won      : Array<number>
+  private bg              : Phaser.Sprite
+  private _state          : string
+  private _online         : any
+  private _cpu            : Array<any>
+  private frame           : Phaser.Sprite
+
   constructor() {
     this.playfield1   = new ComponentPlayfield(0)
     this.playfield2   = new ComponentPlayfield(1)
@@ -32,11 +56,6 @@ export default class ModeVs {
     this.star_counter = new ComponentStarCounter()
   }
 
-  static initClass() {
-    this.prototype.rng = null
-    this.prototype.debug = false
-    this.prototype.roll = {}
-  }
   init(data){
     this.rounds_won = [2,1]
     this.tick   = 0
