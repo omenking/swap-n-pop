@@ -1,6 +1,7 @@
 import game    from 'core/game'
 import data    from 'core/data'
 import filters from 'core/filters'
+import ComponentPanel  from 'components/panel'
 
 const {
   UNIT,
@@ -11,6 +12,23 @@ const {px} = filters
 
 export default class ComponentBauble {
   get [Symbol.toStringTag](){ return 'Bauble' }
+
+  private panel            : ComponentPanel
+  private chain            : Phaser.Group
+  private chain_left       : Phaser.Sprite
+  private chain_middle     : Phaser.Sprite
+  private chain_right      : Phaser.Sprite
+  private chain_times      : Phaser.Sprite
+  private chain_int        : Phaser.Sprite
+  private chain_small_int0 : Phaser.Sprite
+  private chain_small_int1 : Phaser.Sprite
+  private chain_small_int2 : Phaser.Sprite
+  private combo            : Phaser.Group
+  private combo_left       : Phaser.Sprite
+  private combo_middle     : Phaser.Sprite
+  private combo_right      : Phaser.Sprite
+  private combo_int0       : Phaser.Sprite
+  private combo_small_int0 : Phaser.Sprite
 
   create(panel) {
     this.panel = panel
