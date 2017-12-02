@@ -1,6 +1,7 @@
 import seedrandom           from 'seedrandom'
 import game                 from 'core/game'
 import CoreInputs           from 'core/inputs'
+import CoreStage            from 'core/stage'
 import Puzzles              from 'core/puzzles'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
@@ -14,7 +15,7 @@ const { px }   = filters
 
 
 /* run by phaser state.start */
-export default class ModePuzzle {
+export default class ModePuzzle extends CoreStage {
   private playfield    : ComponentPlayfield
   private menu_pause   : ComponentMenuPause
   private timer        : ComponentTimer
@@ -29,8 +30,8 @@ export default class ModePuzzle {
   private panels       : Array<number>
   private level_index  : number
   private steps_left   : number
-  private state        : string
   constructor() {
+    super()
     this.playfield    = new ComponentPlayfield(0)
     this.menu_pause   = new ComponentMenuPause()
     this.timer        = new ComponentTimer(game)

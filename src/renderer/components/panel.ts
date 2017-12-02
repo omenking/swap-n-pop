@@ -49,7 +49,7 @@ export default class ComponentPanel {
   private _state        : Symbol
   private _chain        : number
   private bauble_chain  : ComponentBaubleChain
-  private panel_garbage : ComponentPanelGarbage
+  public panel_garbage : ComponentPanelGarbage
   public playfield     : ComponentPlayfield
   public x             : number
   public y             : number
@@ -83,15 +83,15 @@ export default class ComponentPanel {
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack(this.x-1,this.y)   }
-  get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack(this.x+1,this.y)   }
-  get under(){ return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack(this.x  ,this.y+1) }
-  get above(){ return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack(this.x  ,this.y-1) }
+  get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
+  get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
+  get under(){ return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
+  get above(){ return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
 
-  get  left2(){ return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack(this.x-2,this.y)  }
-  get right2(){ return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack(this.x+2,this.y)  }
-  get under2(){ return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack(this.x  ,this.y+2)}
-  get above2(){ return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack(this.x  ,this.y-2)}
+  get  left2(){ return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
+  get right2(){ return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
+  get under2(){ return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
+  get above2(){ return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
 
   /** */
   constructor() {
@@ -435,7 +435,7 @@ export default class ComponentPanel {
   *  in the stack is in danger.
   */
   get danger(){
-    return !this.playfield.stack(this.x,1+ROWS_INV).hidden
+    return !this.playfield.stack_xy(this.x,1+ROWS_INV).hidden
   }
   /** 
   * `dead()` will check if the this panel's column contains
@@ -443,7 +443,7 @@ export default class ComponentPanel {
   * then the this panel should be considered dead.
   */
   get dead(){
-    return !this.playfield.stack(this.x,0+ROWS_INV).hidden
+    return !this.playfield.stack_xy(this.x,0+ROWS_INV).hidden
   }
   /** 
   * `newline()` checks if this panel is a newline.
@@ -502,7 +502,7 @@ export default class ComponentPanel {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
     let panels = []
-    for (let p of this.playfield.stack()){
+    for (let p of this.playfield.stack){
       if (p.group === this.group &&
           p.state === CLEAR) {
         panels.push(p)

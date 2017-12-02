@@ -10,6 +10,7 @@ const {
   FALL,
   CLEAR,
   STATIC,
+  HANG,
   TIME_GARBAGE_CLEAR,
   TIME_GARBAGE_POP,
   GARBAGE,
@@ -50,7 +51,7 @@ export default class ComponentPanelGarbage {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
     let panels = []
-    for (let p of this.playfield.stack()){
+    for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&
           p.panel_garbage.group === this.group) {
         panels.push(p.panel_garbage)
@@ -70,7 +71,7 @@ export default class ComponentPanelGarbage {
 
   get group_len(){
     let len = 0
-    for (let p of this.playfield.stack()){
+    for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&
           p.panel_garbage.group === this.group) {
         len++
@@ -140,10 +141,10 @@ export default class ComponentPanelGarbage {
   fall_check(){
     let fall = true
     for (let x = 0; x < COLS; x++){
-      let panel = this.playfield.stack(x,this.panel.y)
+      let panel = this.playfield.stack_xy(x,this.panel.y)
       if (panel.state               === GARBAGE &&
           panel.panel_garbage.group === this.group) {
-        if (panel.under.empty === false || panel.under.hang) { fall = false}
+        if (panel.under.empty === false || panel.under.state === HANG) { fall = false}
       }
     }
     return fall

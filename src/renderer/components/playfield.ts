@@ -2,6 +2,7 @@ import game        from 'core/game'
 import data        from 'core/data'
 import _f          from 'core/filters'
 import CoreGarbage from 'core/garbage'
+import CoreStage   from 'core/stage'
 
 import ComponentPlayfieldCountdown from 'components/playfield_countdown'
 import ComponentPlayfieldCursor    from 'components/playfield_cursor'
@@ -24,23 +25,47 @@ const {
 
 export default class Playfield {
   get [Symbol.toStringTag](){ return 'Playfield' }
-  static initClass() {
-    this.prototype.history = {};
-    this.prototype.pi          = null  // player number, used to detect input
-    this.prototype.unit        = null
-    this.prototype.rows        = null
-    this.prototype.cols        = null
-    this.prototype.combo       = null
-    this.prototype.chain       = null
-    this.prototype.cursor      = null
-    this.prototype.blank       = null
-    this.prototype.clearing    = null
-    this.prototype.clearing_garbage = null
-    this.prototype.score       = 0
-    this.prototype.scoreText   = null
-    this.prototype.has_ai      = false
-    this.prototype.land        = false
-  }
+
+  public  pi                : number  // player number, used to detect input
+  private rows              : number
+  private cols              : number
+  private combo             : number
+  private chain             : number
+
+  public  stage      : any //CoreStage
+  private garbage    : CoreGarbage
+  public  countdown  : ComponentPlayfieldCountdown
+  public  cursor     : ComponentPlayfieldCursor
+  private wall       : ComponentPlayfieldWall
+  private score_lbl  : ComponentScore
+  private ai         : ComponentAi
+  private character  : ComponentCharacter
+
+  public  should_push      : boolean
+  private should_countdown : boolean
+  private height : number
+  private width : number
+  private x : number
+  private y : number
+  public layer_block : Phaser.Group
+  public layer_cursor : Phaser.Group
+
+  public swap_counter : number
+
+  public  clearing          : Array<ComponentPanel>
+  /* array of panels grouped by number based on tick */
+  public  clearing_garbage  : Array<number> 
+  private score             : number
+  private has_ai            : boolean
+  private land              : boolean
+
+  public _stack    : Array<ComponentPanel>
+  private _stoptime : number
+  private _shake    : number
+  private _counter  : number
+  private _pushing  : boolean
+  private _push_counter  : number
+
   constructor(pi){
     if (pi !== 0 && pi !== 1){ 
       throw new Error("player_number present and must be 0 or 1")
@@ -49,7 +74,7 @@ export default class Playfield {
     this.pi = pi
     this.garbage    = new CoreGarbage()
     this.countdown  = new ComponentPlayfieldCountdown()
-    this.cursor     = new ComponentPlayfieldCursor(game)
+    this.cursor     = new ComponentPlayfieldCursor()
     this.wall       = new ComponentPlayfieldWall()
     this.score_lbl  = new ComponentScore()
     this.ai         = new ComponentAi()
@@ -71,30 +96,23 @@ export default class Playfield {
   get pushing(){ return this._pushing }
   set pushing(v){ this._pushing = v }
 
-  /**
-   * Helper method to acces the stack, either through filters stack(x, y) gets the right index 
-   * or directly as an index stack(0) === stack[0],
-   * also can return the whole stack by stack(), only way to acces the stack itself!
-   * 
-   * @param {integer} v1 if set only this acts as a way to enter stack directly, otherwhise it acts as a filtered x pos
-   * @param {integer} v2 if set this acts as the wanted y pos 
-   */
-  stack(v1=null,v2=null){
-    if (v1 >= 0 && v2 >= 0 && v1 !== null && v2 !== null) {
-      return this._stack[_f.xy2i(v1,v2)]
-    } else if (v1 >= 0 && v1 !== null && v2 === null) {
-      return this._stack[v1]
-    } else if(v1 === null && v2 === null){
-      return this._stack
-    } else {
-      throw(new Error('invalid query to stack'))
-    }
+  get stack(){
+    return this._stack
   }
+
+  stack_i(i){
+    return this._stack[i]
+  }
+
+  stack_xy(x, y){
+    return this._stack[_f.xy2i(x,y)]
+  }
+
   get snap() {
     const snap_cursor = this.cursor.snap
     const snap_countdown = this.countdown.snap
     const snap_stack  = []
-    for (let panel of this.stack()){
+    for (let panel of this.stack){
       snap_stack.push(panel.snap)
     }
     return [
@@ -109,7 +127,7 @@ export default class Playfield {
     this.push_counter = snapshot[0]
     this.cursor.load(   snapshot[1])
     for (let i = 0; i < this.stack_len; i++) {
-      this.stack(i).load(snapshot[2][i])
+      this.stack_i(i).load(snapshot[2][i])
     }
     this.countdown.load(snapshot[3])
     this.pushing = snapshot[4]
@@ -203,7 +221,7 @@ export default class Playfield {
     if (this.cursor.y > 0) { this.cursor.y--; }
     return 1
   }
-  create_newline(mode){
+  create_newline(){
     if (!this.should_push) { return; }
     const rows = (ROWS + (this.should_push ? 1 : 0 ))
 
@@ -211,11 +229,11 @@ export default class Playfield {
     for (let i = PANELS; i < PANELS+COLS; i++){
       const [x,y] = Array.from(_f.i2xy(i))
       this._stack[i] = new ComponentPanel()
-      this.stack(i).create(this, x, y)
+      this.stack_i(i).create(this, x, y)
     }
     // fill panels
     for (let i = PANELS; i < PANELS+COLS; i++){
-      this.stack(i).set('unique')
+      this.stack_i(i).set('unique')
     }
   }
 
@@ -232,7 +250,7 @@ export default class Playfield {
     for (let i = 0; i < size; i++){
       const [x,y] = Array.from(_f.i2xy(i))
       this._stack[i] = new ComponentPanel()
-      this.stack(i).create(this, x, y)
+      this.stack_i(i).create(this, x, y)
     }
   }
   
@@ -243,16 +261,16 @@ export default class Playfield {
    * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty  
    */
   fill_panels(data){
-    this.stack().forEach((panel, i) => { panel.set(data[i]); });
+    this.stack.forEach((panel, i) => { panel.set(data[i]); });
 
     if (this.should_push)
       for (let i = PANELS; i < PANELS+COLS; i++)
-        this.stack(i).set('unique');
+        this.stack_i(i).set('unique');
   }
 
   update_stack() {
     for (let i = 0; i < this.stack_len; i++) {
-      this.stack((this.stack_len-1)-i).update()
+      this.stack_i((this.stack_len-1)-i).update()
     }
   }
 
@@ -264,7 +282,7 @@ export default class Playfield {
    * @param {integer} new_counter_size size that the swap_counter should be set to
    */
   reset_stack(new_Panels, new_counter_size = 0) {
-    this.stack().forEach((panel) => { panel.soft_reset() })
+    this.stack.forEach((panel) => { panel.soft_reset() })
     this.swap_counter = new_counter_size
     this.fill_panels(new_Panels)
   }
@@ -275,7 +293,7 @@ export default class Playfield {
    */
   stack_is_empty() {
     for (var i = 0; i < PANELS; i++)
-      if (!this.stack(i).empty)
+      if (!this.stack_i(i).empty)
         return false;
     return true;
   }
@@ -283,7 +301,7 @@ export default class Playfield {
   chain_and_combo() {
     let i, panel
     for (i = 0; i < this.stack_size; i++) {
-      this.stack(i).chain_and_combo()
+      this.stack_i(i).chain_and_combo()
     }
 
     const combo = this.clearing.length
@@ -306,8 +324,8 @@ export default class Playfield {
    * @param {integer} y ypos to be accessed in the stack - 2D Array whise
    */
   swap(x,y){
-    let panelLeft   = this.stack(x, y);
-    let panelRight  = this.stack(x + 1, y);
+    let panelLeft   = this.stack_xy(x, y);
+    let panelRight  = this.stack_xy(x + 1, y);
 
     if (panelLeft.swappable && panelRight.swappable) {
       panelLeft.swap();
@@ -323,9 +341,9 @@ export default class Playfield {
     const offset = COLS*(within+ROWS_INV);
     const cols   = [];
     for (let i = 0; i < COLS; i++){
-      if (this.stack(offset+i)         &&
-         (this.stack(offset+i).kind >= 0) &&
-         (this.stack(offset+i).kind !== null)) {
+      if (this.stack_i(offset+i)         &&
+         (this.stack_i(offset+i).kind >= 0) &&
+         (this.stack_i(offset+i).kind !== null)) {
         cols.push(i)
       }
     }
@@ -399,14 +417,14 @@ export default class Playfield {
   }
   update_garbage_clearing(){
     if (this.clearing_garbage.length > 0){
-      for (let panel of this.stack()){
+      for (let panel of this.stack){
         panel.panel_garbage.popping()
       }
     }
     this.clearing_garbage = []
   }
   render_stack() {
-    for (let panel of this.stack()){
+    for (let panel of this.stack){
       panel.render()
     }
   }

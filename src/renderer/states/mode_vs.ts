@@ -5,6 +5,7 @@ import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
 import data                 from 'core/data'
 import CoreSnapshots        from 'core/snapshots'
+import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
@@ -20,7 +21,7 @@ const {
   COLS
 } = data
 
-export default class ModeVs {
+export default class ModeVs extends CoreStage {
   public playfield0       : ComponentPlayfield
   public playfield1       : ComponentPlayfield
   private ping            : ComponentPing
@@ -40,12 +41,12 @@ export default class ModeVs {
   private seed            : string
   private rounds_won      : Array<number>
   private bg              : Phaser.Sprite
-  private _state          : string
   private _online         : any
   private _cpu            : Array<any>
   private frame           : Phaser.Sprite
 
   constructor() {
+    super()
     this.playfield0   = new ComponentPlayfield(0)
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
@@ -83,8 +84,6 @@ export default class ModeVs {
     this.state = snapshot[1] 
   }
 
-  get state(){ return this._state }
-  set state(v){ this._state = v }
 
   get online(){  return this._online }
   set online(v){ this._online = v }
