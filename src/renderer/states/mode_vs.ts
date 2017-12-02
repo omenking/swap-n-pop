@@ -21,8 +21,8 @@ const {
 } = data
 
 export default class ModeVs {
-  private playfield1      : ComponentPlayfield
-  private playfield2      : ComponentPlayfield
+  public playfield0       : ComponentPlayfield
+  public playfield1       : ComponentPlayfield
   private ping            : ComponentPing
   private debug_frame     : ComponentDebugFrame
   private timer           : ComponentTimer
@@ -46,8 +46,8 @@ export default class ModeVs {
   private frame           : Phaser.Sprite
 
   constructor() {
-    this.playfield1   = new ComponentPlayfield(0)
-    this.playfield2   = new ComponentPlayfield(1)
+    this.playfield0   = new ComponentPlayfield(0)
+    this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
     this.debug_frame  = new ComponentDebugFrame()
     this.timer        = new ComponentTimer(game)
@@ -109,22 +109,22 @@ export default class ModeVs {
     stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
 
     if (this.online && game.server.pos === 1) {
-      this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
-      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+      this.playfield0.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
     } else {
-      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
-      this.playfield2.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+      this.playfield0.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
     }
 
     this.create_frame(offset)
+    this.playfield0.create_after()
     this.playfield1.create_after()
-    this.playfield2.create_after()
     this.timer.create(offset+px(128),px(168));
 
     this.snapshots.create(
       this,
+      this.playfield0,
       this.playfield1,
-      this.playfield2,
       this.timer
     )
     this.snapshots.snap(0)
@@ -150,16 +150,16 @@ export default class ModeVs {
   /** called by the menu and reassigns control to both playfields, timer runs again */
   resume() {
     // only resumes the game if countdown's are over
-    if (this.playfield1.countdown.state === null ||
-        this.playfield2.countdown.state === null) {
+    if (this.playfield0.countdown.state === null ||
+        this.playfield1.countdown.state === null) {
       game.sounds.stage_music('resume');
       
       this.state = "running";
       this.timer.running = true;
     }
     
+    this.playfield0.cursor.map_controls();
     this.playfield1.cursor.map_controls();
-    this.playfield2.cursor.map_controls();
   }
 
   game_over() {
@@ -169,12 +169,12 @@ export default class ModeVs {
     }
     game.sounds.stage_music('results')
     this.timer.running = false
+    this.playfield0.game_over()
     this.playfield1.game_over()
-    this.playfield2.game_over()
   }
   danger_check() {
-    const d1 = this.playfield1.danger(1)
-    const d2 = this.playfield2.danger(2)
+    const d1 = this.playfield0.danger(1)
+    const d2 = this.playfield1.danger(2)
 
     if (d1 || d2) {
       if (this.danger === false) {
@@ -229,6 +229,14 @@ export default class ModeVs {
     this.roll_log_heading.push({tick: tick, format: format})
     for (let i = 0; i < ROWS; i++){
       let line = ''
+      line += this.playfield0._stack[0+(i*COLS)].log()
+      line += this.playfield0._stack[1+(i*COLS)].log()
+      line += this.playfield0._stack[2+(i*COLS)].log()
+      line += ' '
+      line += this.playfield0._stack[3+(i*COLS)].log()
+      line += this.playfield0._stack[4+(i*COLS)].log()
+      line += this.playfield0._stack[5+(i*COLS)].log()
+      line += '  '
       line += this.playfield1._stack[0+(i*COLS)].log()
       line += this.playfield1._stack[1+(i*COLS)].log()
       line += this.playfield1._stack[2+(i*COLS)].log()
@@ -236,14 +244,6 @@ export default class ModeVs {
       line += this.playfield1._stack[3+(i*COLS)].log()
       line += this.playfield1._stack[4+(i*COLS)].log()
       line += this.playfield1._stack[5+(i*COLS)].log()
-      line += '  '
-      line += this.playfield2._stack[0+(i*COLS)].log()
-      line += this.playfield2._stack[1+(i*COLS)].log()
-      line += this.playfield2._stack[2+(i*COLS)].log()
-      line += ' '
-      line += this.playfield2._stack[3+(i*COLS)].log()
-      line += this.playfield2._stack[4+(i*COLS)].log()
-      line += this.playfield2._stack[5+(i*COLS)].log()
       if (this.roll_log_data[i] === undefined){
         this.roll_log_data[i] = []
       }
@@ -306,11 +306,11 @@ export default class ModeVs {
     // one of the players otherwise in multipalyer it will
     // generate the panels on the wrong side.
     if (this.online && game.server.pos === 1) {
-      this.playfield2.update()
       this.playfield1.update()
+      this.playfield0.update()
     } else {
+      this.playfield0.update()
       this.playfield1.update()
-      this.playfield2.update()
     }
     this.danger_check()
     if (tick === false) {
@@ -329,8 +329,8 @@ export default class ModeVs {
       debugger
     }
     this.timer.render()
+    if (this.playfield0) { this.playfield0.render() }
     if (this.playfield1) { this.playfield1.render() }
-    if (this.playfield2) { this.playfield2.render() }
     if (this.online){
       this.ping.render()
     }
@@ -340,7 +340,7 @@ export default class ModeVs {
   shutdown() {
     console.log('shutdown mode_vs')
     game.sounds.stage_music('none')
+    this.playfield0.shutdown()
     this.playfield1.shutdown()
-    this.playfield2.shutdown()
   }
 }

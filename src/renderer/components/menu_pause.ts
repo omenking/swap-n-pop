@@ -1,6 +1,7 @@
 import game    from 'core/game'
 import filters from 'core/filters'
 import ComponentMenuPauseCursor from 'components/menu_pause_cursor'
+import ModeVs from 'states/mode_vs'
 
 const {px} = filters
 
@@ -9,12 +10,13 @@ const {px} = filters
  */
 export default class ComponentPauseMenu {
   /** bindings & new menu cursor created */
+  private cursor : ComponentMenuPauseCursor
+  private paused : boolean
+  private stage  : ModeVs
+  private sprite : Phaser.Sprite
+
   constructor() {
-    this.cancel = this.cancel.bind(this);
-    this.continue = this.continue.bind(this);
-    this.pause = this.pause.bind(this);
-    
-    this.cursor = new ComponentMenuPauseCursor();
+    this.cursor = new ComponentMenuPauseCursor()
   }
 
   /**
@@ -61,15 +63,15 @@ export default class ComponentPauseMenu {
     this.paused = true;
     this.sprite.visible = true;
 
-    if (this.stage.playfield1 !== undefined &&
-        this.stage.playfield2 !== undefined) {
+    if (this.stage.playfield0 !== undefined &&
+        this.stage.playfield1 !== undefined) {
       // give player control
-      this.cursor.map_controls(this.stage.playfield1.pi);
+      this.cursor.map_controls(this.stage.playfield0.pi);
       // below possibly gives 2nd player controls of the menu (didnt test, but didnt break p1.pi control)
-      this.cursor.map_controls(this.stage.playfield2.pi);
+      this.cursor.map_controls(this.stage.playfield1.pi);
     }
     else {
-      this.cursor.map_controls(this.stage.playfield.pi);
+      this.cursor.map_controls(this.stage.playfield0.pi);
     }
   }
 
