@@ -6,6 +6,10 @@ const {px} = filters
    *  Uses signals to detect once everything has been loaded correctly
    */
 export default class StatesLoad {
+  private loader : Phaser.Text
+  private files : Phaser.Text
+  private file : Phaser.Text
+
   create() {
     const x = game.world.centerX
     const y = game.world.centerY

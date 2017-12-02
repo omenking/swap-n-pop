@@ -197,12 +197,13 @@ const N = null
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_data__ = __webpack_require__(1);
 
 
 const {COLS,ROWS} = __WEBPACK_IMPORTED_MODULE_0_core_data__["a" /* default */]
 
-/* harmony default export */ __webpack_exports__["a"] = ({
+/* harmony default export */ __webpack_exports__["default"] = ({
   /* upscale base pixels to the correct size */
   px: function(px){
     return px * 2
@@ -2897,7 +2898,7 @@ class Playfield {
    */
   stack(v1=null,v2=null){
     if (v1 >= 0 && v2 >= 0 && v1 !== null && v2 !== null) {
-      return this._stack[__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].xy2i(v1,v2)]
+      return this._stack[__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].xy2i(v1,v2)]
     } else if (v1 >= 0 && v1 !== null && v2 === null) {
       return this._stack[v1]
     } else if(v1 === null && v2 === null){
@@ -3007,7 +3008,7 @@ class Playfield {
     // move all panels up the stack
     const stack = new Array(this.stack_len)
     for (i = COLS; i < this.stack_len; i++) {
-      let [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].i2xy(i-COLS))
+      let [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].i2xy(i-COLS))
       stack[i-COLS] = this._stack[i]
       stack[i-COLS].x = x
       stack[i-COLS].y = y
@@ -3025,7 +3026,7 @@ class Playfield {
 
     // create panels
     for (let i = PANELS; i < PANELS+COLS; i++){
-      const [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].i2xy(i))
+      const [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].i2xy(i))
       this._stack[i] = new __WEBPACK_IMPORTED_MODULE_8_components_panel__["a" /* default */]()
       this.stack(i).create(this, x, y)
     }
@@ -3046,7 +3047,7 @@ class Playfield {
     this._stack = new Array().fill(null)
 
     for (let i = 0; i < size; i++){
-      const [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].i2xy(i))
+      const [x,y] = Array.from(__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].i2xy(i))
       this._stack[i] = new __WEBPACK_IMPORTED_MODULE_8_components_panel__["a" /* default */]()
       this.stack(i).create(this, x, y)
     }
@@ -3317,7 +3318,7 @@ class Playfield {
 /** Counts up the actively played Game Time and displays 
  *  the Time through Sprite Digits
  */
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["default"]
 
 class ComponentTimer {
   /** get snapshot of the timer, get only to not let this be modifyable */
@@ -3403,7 +3404,7 @@ class ComponentTimer {
 
 
 
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["default"]
 
 /** A ComponentPauseMenu handles the pausing of a stage
  *  new controls are provided to move in the menu and use various options
@@ -6203,143 +6204,125 @@ exports.default = StatesBoot;
 
 /***/ }),
 /* 42 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_filters__ = __webpack_require__(2);
 
-
-
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
-  /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
-   *  Uses signals to detect once everything has been loaded correctly
-   */
-class StatesLoad {
-  create() {
-    const x = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerX
-    const y = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].world.centerY
-    const font_style1 = { font: '20px Verdana', fill: '#FFF', align: 'center' }
-    const font_style2 = { font: '12px Verdana', fill: '#FFF', align: 'center' }
-    this.loader = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y    , `Loading ${0}%`, font_style1)
-    this.files  = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y+40 , "Files 0 / 0"  , font_style2)
-    this.file   = __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].add.text(0,y+70 , ""             , font_style2)
-    this.loader.visible = false
-    this.files.visible  = false
-    this.file.visible   = false
-    
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onLoadStart.add(this.load_start   , this)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onFileComplete.add(this.file_complete, this)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.onLoadComplete.add(this.load_complete, this)
-    this.load_all()
-  }
-
-  load_start() {
-
-  }
-  
-  file_complete(progress,key,success,cur,total){
-    this.files.setText(`Files ${cur} / ${total}`)
-    this.file.setText(key)
-  } 
-
-  load_complete() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].controls.create()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].sounds.create()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('menu')
-  }
-
-  update() {
-    this.loader.setText(`Loading ${__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.progress}%`);
-  }
-
-  render() {
-    //this.loader.visible = true
-    //this.files.visible  = true
-    //this.file.visible   = true
-  }
-
-  load_all() {
-    // Music --------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage'         , './assets/music/stage.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
-    // SFX ----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_select' , './assets/sound_effects/confirm.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_swap'   , './assets/sound_effects/swap.ogg')
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_countdown_blip'   , './assets/sound_effects/countdown_blip.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_countdown_ding'   , './assets/sound_effects/countdown_ding.ogg')
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop0'   , './assets/sound_effects/drop0.ogg')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop1'   , './assets/sound_effects/drop1.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop2'   , './assets/sound_effects/drop2.mp3')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_drop3'   , './assets/sound_effects/drop3.mp3')
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
-    //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
-    //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
-    // Bg -----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_blue'  , './assets/images/bg_blue.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_green' , './assets/images/bg_green.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('bg_purple', './assets/images/bg_purple.png')
-    // UI -----------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('ints_small' , './assets/images/ints_small.png'  , px(8), px(8 ), 18)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('ints_large' , './assets/images/ints_large.png'  , px(8), px(14),18)
-    // Menus --------
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu'             , './assets/images/menu.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_cursor'      , './assets/images/menu_cursor.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('menu_pause'       , './assets/images/menu_pause.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('pause'            , './assets/images/pause.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('puzzle_menu'       , './assets/images/puzzle_menu.png')
-    // Playfield ----
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('playfield_cursor'    , './assets/images/playfield_cursor.png'  , px(38), px(22), 2)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_vs_frame'        , './assets/images/playfield_vs_frame.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_vs_bg'           , './assets/images/playfield_vs_bg.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('mode_puzzle_bg'            , './assets/images/mode_puzzle_bg.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('playfield_countdown' , './assets/images/playfield_countdown.png', px(62), px(38), 4)
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('panels'              , './assets/images/panels.png'   , px(16), px(16), 136)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('garbage'             , './assets/images/garbage.png'  , px(16), px(16), 14)
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char00', './assets/images/characters/char00.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char01', './assets/images/characters/char01.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char02', './assets/images/characters/char02.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char03', './assets/images/characters/char03.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char04', './assets/images/characters/char04.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char05', './assets/images/characters/char05.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char06', './assets/images/characters/char06.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char07', './assets/images/characters/char07.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char08', './assets/images/characters/char08.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char09', './assets/images/characters/char09.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char10', './assets/images/characters/char10.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char11', './assets/images/characters/char11.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_char12', './assets/images/characters/char12.png')
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_wall0', './assets/images/playfield_wall0.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image('playfield_wall1', './assets/images/playfield_wall1.png')
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('star_counter', './assets/images/star_counter.png',px(16),px(16),12)
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble'          , './assets/images/bauble.png',px(3),px(16),6)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.image(      'bauble_times'    , './assets/images/bauble_times.png')
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',px(6),px(9),10)
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',px(5),px(9),10)
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 60);
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].load.start()
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["default"] = StatesLoad;
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_1 = __webpack_require__(0);
+var filters_1 = __webpack_require__(2);
+var px = filters_1.default.px;
+/** Loads all sprites, spritesheets, sound effects, etc to the phaser game
+ *  Uses signals to detect once everything has been loaded correctly
+ */
+var StatesLoad = /** @class */ (function () {
+    function StatesLoad() {
+    }
+    StatesLoad.prototype.create = function () {
+        var x = game_1.default.world.centerX;
+        var y = game_1.default.world.centerY;
+        var font_style1 = { font: '20px Verdana', fill: '#FFF', align: 'center' };
+        var font_style2 = { font: '12px Verdana', fill: '#FFF', align: 'center' };
+        this.loader = game_1.default.add.text(0, y, "Loading " + 0 + "%", font_style1);
+        this.files = game_1.default.add.text(0, y + 40, "Files 0 / 0", font_style2);
+        this.file = game_1.default.add.text(0, y + 70, "", font_style2);
+        this.loader.visible = false;
+        this.files.visible = false;
+        this.file.visible = false;
+        game_1.default.load.onLoadStart.add(this.load_start, this);
+        game_1.default.load.onFileComplete.add(this.file_complete, this);
+        game_1.default.load.onLoadComplete.add(this.load_complete, this);
+        this.load_all();
+    };
+    StatesLoad.prototype.load_start = function () {
+    };
+    StatesLoad.prototype.file_complete = function (progress, key, success, cur, total) {
+        this.files.setText("Files " + cur + " / " + total);
+        this.file.setText(key);
+    };
+    StatesLoad.prototype.load_complete = function () {
+        game_1.default.controls.create();
+        game_1.default.sounds.create();
+        game_1.default.state.start('menu');
+    };
+    StatesLoad.prototype.update = function () {
+        this.loader.setText("Loading " + game_1.default.load.progress + "%");
+    };
+    StatesLoad.prototype.render = function () {
+        //this.loader.visible = true
+        //this.files.visible  = true
+        //this.file.visible   = true
+    };
+    StatesLoad.prototype.load_all = function () {
+        // Music --------
+        game_1.default.load.audio('msx_stage', './assets/music/stage.mp3');
+        game_1.default.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3');
+        game_1.default.load.audio('msx_stage_results', './assets/music/stage_results.mp3');
+        // SFX ----------
+        game_1.default.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg');
+        game_1.default.load.audio('sfx_select', './assets/sound_effects/confirm.ogg');
+        game_1.default.load.audio('sfx_swap', './assets/sound_effects/swap.ogg');
+        game_1.default.load.audio('sfx_countdown_blip', './assets/sound_effects/countdown_blip.ogg');
+        game_1.default.load.audio('sfx_countdown_ding', './assets/sound_effects/countdown_ding.ogg');
+        game_1.default.load.audio('sfx_drop0', './assets/sound_effects/drop0.ogg');
+        game_1.default.load.audio('sfx_drop1', './assets/sound_effects/drop1.mp3');
+        game_1.default.load.audio('sfx_drop2', './assets/sound_effects/drop2.mp3');
+        game_1.default.load.audio('sfx_drop3', './assets/sound_effects/drop3.mp3');
+        game_1.default.load.audio('sfx_pop0', './assets/sound_effects/pop0.ogg');
+        game_1.default.load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
+        game_1.default.load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
+        game_1.default.load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
+        //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
+        //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
+        // Bg -----------
+        game_1.default.load.image('bg_blue', './assets/images/bg_blue.png');
+        game_1.default.load.image('bg_green', './assets/images/bg_green.png');
+        game_1.default.load.image('bg_purple', './assets/images/bg_purple.png');
+        // UI -----------
+        game_1.default.load.spritesheet('ints_small', './assets/images/ints_small.png', px(8), px(8), 18);
+        game_1.default.load.spritesheet('ints_large', './assets/images/ints_large.png', px(8), px(14), 18);
+        // Menus --------
+        game_1.default.load.image('menu', './assets/images/menu.png');
+        game_1.default.load.image('menu_cursor', './assets/images/menu_cursor.png');
+        game_1.default.load.image('menu_pause_cursor', './assets/images/menu_pause_cursor.png');
+        game_1.default.load.image('menu_pause', './assets/images/menu_pause.png');
+        game_1.default.load.image('pause', './assets/images/pause.png');
+        game_1.default.load.image('puzzle_menu', './assets/images/puzzle_menu.png');
+        // Playfield ----
+        game_1.default.load.spritesheet('playfield_cursor', './assets/images/playfield_cursor.png', px(38), px(22), 2);
+        game_1.default.load.image('playfield_vs_frame', './assets/images/playfield_vs_frame.png');
+        game_1.default.load.image('playfield_vs_bg', './assets/images/playfield_vs_bg.png');
+        game_1.default.load.image('mode_puzzle_bg', './assets/images/mode_puzzle_bg.png');
+        game_1.default.load.spritesheet('playfield_countdown', './assets/images/playfield_countdown.png', px(62), px(38), 4);
+        game_1.default.load.spritesheet('panels', './assets/images/panels.png', px(16), px(16), 136);
+        game_1.default.load.spritesheet('garbage', './assets/images/garbage.png', px(16), px(16), 14);
+        game_1.default.load.image('playfield_char00', './assets/images/characters/char00.png');
+        game_1.default.load.image('playfield_char01', './assets/images/characters/char01.png');
+        game_1.default.load.image('playfield_char02', './assets/images/characters/char02.png');
+        game_1.default.load.image('playfield_char03', './assets/images/characters/char03.png');
+        game_1.default.load.image('playfield_char04', './assets/images/characters/char04.png');
+        game_1.default.load.image('playfield_char05', './assets/images/characters/char05.png');
+        game_1.default.load.image('playfield_char06', './assets/images/characters/char06.png');
+        game_1.default.load.image('playfield_char07', './assets/images/characters/char07.png');
+        game_1.default.load.image('playfield_char08', './assets/images/characters/char08.png');
+        game_1.default.load.image('playfield_char09', './assets/images/characters/char09.png');
+        game_1.default.load.image('playfield_char10', './assets/images/characters/char10.png');
+        game_1.default.load.image('playfield_char11', './assets/images/characters/char11.png');
+        game_1.default.load.image('playfield_char12', './assets/images/characters/char12.png');
+        game_1.default.load.image('playfield_wall0', './assets/images/playfield_wall0.png');
+        game_1.default.load.image('playfield_wall1', './assets/images/playfield_wall1.png');
+        game_1.default.load.spritesheet('star_counter', './assets/images/star_counter.png', px(16), px(16), 12);
+        game_1.default.load.spritesheet('bauble', './assets/images/bauble.png', px(3), px(16), 6);
+        game_1.default.load.image('bauble_times', './assets/images/bauble_times.png');
+        game_1.default.load.spritesheet('bauble_num', './assets/images/bauble_num.png', px(6), px(9), 10);
+        game_1.default.load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png', px(5), px(9), 10);
+        game_1.default.load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
+        game_1.default.load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 60);
+        game_1.default.load.start();
+    };
+    return StatesLoad;
+}());
+exports.default = StatesLoad;
 
 
 /***/ }),
@@ -6402,7 +6385,7 @@ class StatesMenu {
 
 
 const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_3_electron___default.a
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["default"]
 
 /** Class representing a menu. */
 class ComponentMenu {
@@ -6581,7 +6564,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_0_electron___default.a
-const { px } = __WEBPACK_IMPORTED_MODULE_3_core_filters__["a" /* default */]
+const { px } = __WEBPACK_IMPORTED_MODULE_3_core_filters__["default"]
 const {
   ROWS,
   COLS
@@ -7972,10 +7955,10 @@ class Stack {
       let currentNumber = __WEBPACK_IMPORTED_MODULE_3_shuffle_seed___default.a.shuffle(this.kinds, this.rng())[0]; 
 
       // x and y pos to move in the array and detect things
-      let indexes = __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].i2xy(i);
+      let indexes = __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].i2xy(i);
 
       // save the top number, if top number is set the number below it should never be the same
-      let topNumber = savedNumbers[__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].xy2i(indexes[0], indexes[1] - 1)];
+      let topNumber = savedNumbers[__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].xy2i(indexes[0], indexes[1] - 1)];
 
       // random chance that currentnumber is simply null
       if (this.wellArray.length != 1) 							// only if wellArray size has been set
@@ -8046,7 +8029,7 @@ class Stack {
       let str = "";
 
       for (var j = 0; j < COLS; j++)
-        str += arrayToLog[__WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].xy2i(j, i)] + "  ";
+        str += arrayToLog[__WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].xy2i(j, i)] + "  ";
 
       console.log(str);
     }
@@ -8293,7 +8276,7 @@ class ComponentGarbage {
 
 
 
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["default"]
 
 class ComponentPlayfieldCountdown {
   load(snapshot) {
@@ -8717,7 +8700,7 @@ class ComponentCursor {
 
 
 
-const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"]
 const {
   WALL_ROLLUP,
   UNIT,
@@ -8855,15 +8838,15 @@ class ComponentPanel {
   get chain()    {return this.attr_chain }
   set chain(val) { this.attr_chain = val }
 
-  get  left(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x-1,this.y)   ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x-1,this.y)   }
-  get right(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x+1,this.y)   ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x+1,this.y)   }
-  get under(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x  ,this.y+1) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y+1) }
-  get above(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x  ,this.y-1) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y-1) }
+  get  left(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x-1,this.y)   ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x-1,this.y)   }
+  get right(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x+1,this.y)   ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x+1,this.y)   }
+  get under(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x  ,this.y+1) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y+1) }
+  get above(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x  ,this.y-1) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y-1) }
 
-  get  left2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x-2,this.y) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x-2,this.y)  }
-  get right2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x+2,this.y) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x+2,this.y)  }
-  get under2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x,this.y+2) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y+2)}
-  get above2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */].out_of_bounds(this.x,this.y-2) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y-2)}
+  get  left2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x-2,this.y) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x-2,this.y)  }
+  get right2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x+2,this.y) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x+2,this.y)  }
+  get under2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x,this.y+2) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y+2)}
+  get above2(){ return __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"].out_of_bounds(this.x,this.y-2) ? __WEBPACK_IMPORTED_MODULE_3_components_panel_blank__["a" /* default */] : this.playfield.stack(this.x  ,this.y-2)}
 
   /** */
   constructor() {
@@ -9420,7 +9403,7 @@ const {
   CLEAR,
   BAUBLE_FLOAT
 } = __WEBPACK_IMPORTED_MODULE_1_core_data__["a" /* default */]
-const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"]
 
 class ComponentBauble {
   get [Symbol.toStringTag](){ return 'Bauble' }
@@ -9970,7 +9953,7 @@ class ComponentPanelParticle {
 
 
 
-const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_1_core_filters__["default"]
 
 /** a Boilerplate class to be used for characters,
  *  you should only define the sprite animations and pos of the sprite
@@ -10134,7 +10117,7 @@ class ComponentDebugFrame {
 
 
 const {UNIT} = __WEBPACK_IMPORTED_MODULE_1_core_data__["a" /* default */]
-const {px}   = __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */]
+const {px}   = __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"]
 
 /** Cursor to handle menu_pause movement and method calls
  *  could maybe be optimized by just calling the menu_pause methods here
@@ -10233,7 +10216,7 @@ class ComponentMenuPauseCursor {
 
 
 
-const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["a" /* default */]
+const {px} = __WEBPACK_IMPORTED_MODULE_2_core_filters__["default"]
 const {
   FRAME_STAR
 } = __WEBPACK_IMPORTED_MODULE_1_core_data__["a" /* default */]
@@ -10326,7 +10309,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const { UNIT } = __WEBPACK_IMPORTED_MODULE_8_core_data__["a" /* default */]
-const { px }   = __WEBPACK_IMPORTED_MODULE_9_core_filters__["a" /* default */]
+const { px }   = __WEBPACK_IMPORTED_MODULE_9_core_filters__["default"]
 
 
 /* run by phaser state.start */
