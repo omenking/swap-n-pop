@@ -88,8 +88,8 @@ module.exports = function(game) {
             break;
         
           case "rotate": 
-            this.x += Math.cos(this.angle) * cur;
-            this.y += Math.sin(this.angle) * cur;
+            this.x += Math.cos(this.angle) * cur * 2;
+            this.y += Math.sin(this.angle) * cur * 2;
             
             this.angle += 0.1;
 

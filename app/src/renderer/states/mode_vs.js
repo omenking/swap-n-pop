@@ -142,7 +142,7 @@ module.exports = function(game){
       this.playfield2.cursor.map_controls();
     }
 
-    game_over() {
+    game_over(lost_playfield) {
       console.log('gameover')
       if(!this.inputs.replay){
         ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
@@ -151,6 +151,15 @@ module.exports = function(game){
       this.timer.running = false
       this.playfield1.game_over()
       this.playfield2.game_over()
+
+      if (lost_playfield === 0) {
+        this.playfield1.character.current_animation = "lost";
+        this.playfield2.character.current_animation = "won";
+      }
+      else if (lost_playfield === 1) {
+        this.playfield1.character.current_animation = "won";
+        this.playfield2.character.current_animation = "lost";
+      }
     }
     danger_check() {
       const d1 = this.playfield1.danger(1)

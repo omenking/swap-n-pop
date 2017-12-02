@@ -96,9 +96,7 @@ module.exports = function(game){
     /** */
     get snap() {
       let snap_particles = []
-      this.particles.forEach((particle, i) => {
-        snap_particles[i] = particle.snap
-      })
+      this.particles.forEach((particle, i) => snap_particles[i] = particle.snap);
 
       return [
         this.x,
@@ -123,9 +121,7 @@ module.exports = function(game){
       this.garbage = data[6]
       this.group   = data[7]
       
-      this.particles.forEach((particle, i) => {
-        particle = data[8][i]
-      })
+      this.particles.forEach((particle, i) => particle = data[8][i]);
     }
 
     /** */
@@ -187,7 +183,7 @@ module.exports = function(game){
     /** */
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     /** */
-    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.counter === 0)}
+    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
     /** */
     get empty() {      return  this.state === STATIC && this.hidden }
     /** */
@@ -237,6 +233,8 @@ module.exports = function(game){
      *
      */
     update(){
+      this.particles.forEach(particle => particle.update());
+
       if (this.state === GARBAGE) {
         this.panel_garbage.update()
       } else {
@@ -320,11 +318,9 @@ module.exports = function(game){
               this.time_cur = time_max - this.counter
 
               if (this.time_cur === this.time_pop) {
-                this.particles.forEach((particle) => {
-                  particle.counter = TIME_PARTICLE;
-                });
+                this.particles.forEach(particle => particle.counter = TIME_PARTICLE);
 
-                this.clear_i < 6 ? game.sound.play("sfx_pop" + this.clear_i) : game.sound.play("sfx_pop5");
+                this.clear_i < 4 ? game.sounds.pop(this.clear_i) : game.sounds.pop(3);
               }
             } else {
               if (this.above && !this.above.hidden && this.above.state === STATIC) {
@@ -345,10 +341,6 @@ module.exports = function(game){
             throw(new Error('unknown panel state'))
         }
       }
-
-      this.particles.forEach((particle) => {
-        particle.update();
-      });
     }
 
     /**
@@ -542,16 +534,14 @@ module.exports = function(game){
     }
     /** */
     render(){
+      this.particles.forEach(particle => particle.render());
+
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
       this.render_visible()
       this.bauble_chain.render()
       this.panel_garbage.render()
-
-      this.particles.forEach((particle) => {
-        particle.render();
-      });
     }
     /** */
     shutdown(){}

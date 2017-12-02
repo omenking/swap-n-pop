@@ -31,9 +31,6 @@ module.exports = function(game) {
       this.menu_items = menu_items;
       this.index  = 0;
 
-      this.sfx_confirm = game.add.audio('sfx_confirm');
-      this.sfx_select  = game.add.audio('sfx_select');
-
       this.sprite = game.make.sprite(this.x, this.y, 'menu_pause_cursor');
       return this.menu.sprite.addChild(this.sprite);
     }
@@ -56,7 +53,7 @@ module.exports = function(game) {
       if (tick > 0) 
         return;
 
-      this.sfx_confirm.play();
+      game.sounds.confirm();
       return this.menu_items[this.index]();
     }
 
@@ -65,7 +62,7 @@ module.exports = function(game) {
         return;
 
       if (this.index !== 0) {
-        this.sfx_select.play();
+        game.sounds.select();
         return this.index--;
       }
     }
@@ -75,7 +72,7 @@ module.exports = function(game) {
         return;
 
       if (this.index !== (this.menu_items.length-1)) {
-        this.sfx_select.play();
+        game.sounds.select();
         return this.index++;
       }
     }
