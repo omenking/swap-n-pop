@@ -1,7 +1,7 @@
 import seedrandom           from 'seedrandom'
 import game                 from 'core/game'
 import CoreInputs           from 'core/inputs'
-import PuzzlesModule        from 'core/puzzles'
+import Puzzles              from 'core/puzzles'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
@@ -14,13 +14,28 @@ const { px }   = filters
 
 
 /* run by phaser state.start */
-export default class PuzzleMode {
+export default class ModePuzzle {
+  private playfield    : ComponentPlayfield
+  private menu_pause   : ComponentMenuPause
+  private timer        : ComponentTimer
+  private step_display : ComponentStepCounter
+  private inputs       : CoreInputs
+  private puzzles      : Puzzles
+  private tick         : number
+  private seed         : string
+  private cpu          : Array<boolean>
+  private rng          : any
+  private steps        : number
+  private panels       : Array<number>
+  private level_index  : number
+  private steps_left   : number
+  private state        : string
   constructor() {
-    this.playfield  = new ComponentPlayfield(0);
-    this.menu_pause = new ComponentMenuPause();
-    this.timer      = new ComponentTimer(game);
-    this.step_display = new ComponentStepCounter();
-    this.inputs     = new CoreInputs();
+    this.playfield    = new ComponentPlayfield(0)
+    this.menu_pause   = new ComponentMenuPause()
+    this.timer        = new ComponentTimer(game)
+    this.step_display = new ComponentStepCounter()
+    this.inputs       = new CoreInputs()
   }
 
   init(data) {
@@ -31,15 +46,15 @@ export default class PuzzleMode {
    *  with certain parameters
    */
   create() {
-    game.add.sprite(0, 0, "mode_puzzle_bg");
+    game.add.sprite(0, 0, "mode_puzzle_bg")
 
-    this.tick   = -1;
-    this.seed   = 'puzzle';
-    this.cpu    = [false, null];
-    this.rng    = seedrandom(this.seed);
+    this.tick   = -1
+    this.seed   = 'puzzle'
+    this.cpu    = [false, null]
+    this.rng    = seedrandom(this.seed)
 
     // gathered from level puzzle data
-    this.puzzles = new PuzzlesModule();
+    this.puzzles = new Puzzles()
     this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
 
     this.playfield.create(this, {

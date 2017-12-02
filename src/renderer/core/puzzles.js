@@ -1,8 +1,7 @@
 import data from 'core/data'
 
-
 export default function levels() {
-  const _ = null;   // empty panel  
+  const _ = 0;   // empty panel  
   const b = 1;      // blue
   const g = 2;      // green
   const p = 3;      // purple

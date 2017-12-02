@@ -5,6 +5,9 @@ import ComponentMenu from 'components/menu'
  * Higher Order Menu that keeps the menu updated - Adds Background
  */
 export default class StatesMenu {
+  private menu : ComponentMenu
+  private bg : Phaser.TileSprite
+
   constructor() {
     this.menu   = new ComponentMenu();
   }
