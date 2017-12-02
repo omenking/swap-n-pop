@@ -147,7 +147,7 @@ module.exports = function(game){
       this.chain        = 0
       this.push_counter = TIME_PUSH
       this.stoptime     = STOPTIME
-
+      
       if (this.stage.cpu[1] !== null){
         this.garbage.create(this.stage,this.pi)
       }
@@ -445,8 +445,7 @@ module.exports = function(game){
           this.character.current_animation = "losing";
           console.log('stoptime',this.stoptime)
           if (this.stoptime <= 0){
-            this.stage.game_over()
-            this.character.current_animation = "lost";
+            this.stage.game_over(this.pi)
           }
         } else {
           this.stoptime = STOPTIME
@@ -467,6 +466,8 @@ module.exports = function(game){
       if (this.has_ai) { this.ai.update() }
       // combo n chain
       const cnc = this.chain_and_combo()
+      if (cnc[1] > 1)
+        this.character.current_animation = "charge";
 
       if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
         this.update_garbage_clearing()

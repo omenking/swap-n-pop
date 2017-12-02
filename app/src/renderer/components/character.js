@@ -31,12 +31,15 @@ module.exports = function(game) {
       this.add_animation("attacked",  9,  24, "stand");
       this.add_animation("lost",      12, 36, "", true);
       this.add_animation("losing",    4,  48);
+      this.add_animation("charge",    6,  60);
+      this.add_animation("won",       10, 72, "", true);
 
       this.tick_counter = 0;
       this.frame_counter = 0;
       this.stopped = false;
       
       this.current_animation = "stand";
+
       this.last_animation = this.current_animation;
     }
 
