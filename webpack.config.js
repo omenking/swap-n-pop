@@ -35,6 +35,7 @@ const config_renderer = {
   },
   externals: [{ 'electron-store': 'require("electron-store")' }],
   resolve: {
+    extensions: ['.js', '.json', '.ts'],
     alias: {
       components : path.resolve(__dirname, 'src/renderer/components/'),
       core       : path.resolve(__dirname, 'src/renderer/core/'),

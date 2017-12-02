@@ -2533,7 +2533,7 @@ function onceStrict (fn) {
 
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var path = __webpack_require__(0);
 var url = __webpack_require__(15);
 var electron = __webpack_require__(2);
@@ -2545,19 +2545,19 @@ var WIN_WIDTH = 398 * 2;
 var WIN_HEIGHT = 224 * 2;
 //require('electron-reload')(__dirname);
 var win, win_settings = null;
-replay_1["default"].dir();
-if (!store_1["default"].has('network.host_port')) {
-    store_1["default"].set('network.host_port', 22022);
+replay_1.default.dir();
+if (!store_1.default.has('network.host_port')) {
+    store_1.default.set('network.host_port', 22022);
 }
-if (!store_1["default"].has('network.join_host')) {
-    store_1["default"].set('network.join_host', '192.168.0.0');
+if (!store_1.default.has('network.join_host')) {
+    store_1.default.set('network.join_host', '192.168.0.0');
 }
-if (!store_1["default"].has('network.join_port')) {
-    store_1["default"].set('network.join_port', 22022);
+if (!store_1.default.has('network.join_port')) {
+    store_1.default.set('network.join_port', 22022);
 }
 // maybe move to inputs
-if (!store_1["default"].has('inputs')) {
-    store_1["default"].set('inputs', [
+if (!store_1.default.has('inputs')) {
+    store_1.default.set('inputs', [
         38,
         40,
         37,
@@ -2673,33 +2673,33 @@ ipc.on('replay-dir-change', function (event) {
         properties: ['openDirectory']
     }, function (data) {
         if (data !== undefined && data !== null && data.length > 0) {
-            var dir = replay_1["default"].dir('change', data[0]);
+            var dir = replay_1.default.dir('change', data[0]);
             win.webContents.send('replay-dir', dir);
         }
     });
 });
 ipc.on('replay-list', function (event) {
-    replay_1["default"].list(function (err, files) {
+    replay_1.default.list(function (err, files) {
         win.webContents.send('replay-list', files);
     });
 });
 ipc.on('replay-dir-reveal', function (event) {
-    var dir = replay_1["default"].dir();
+    var dir = replay_1.default.dir();
     shell.openItem(dir);
 });
 ipc.on('replay-dir-reset', function (event) {
-    var dir = replay_1["default"].dir('reset');
+    var dir = replay_1.default.dir('reset');
     win.webContents.send('replay-dir', dir);
 });
 ipc.on('replay-save', function (event, _a) {
     var seed = _a.seed, inputs = _a.inputs;
-    replay_1["default"].save("" + Date.now(), seed, inputs, function (err, data) { });
+    replay_1.default.save("" + Date.now(), seed, inputs, function (err, data) { });
 });
 ipc.on('replay-delete', function (event, name) {
-    replay_1["default"].del(name);
+    replay_1.default.del(name);
 });
 ipc.on('replay-load', function (event, name) {
-    replay_1["default"].load(name, function (err, data) {
+    replay_1.default.load(name, function (err, data) {
         win.focus();
         win.webContents.send('replay-load', data);
     });
@@ -2711,7 +2711,7 @@ ipc.on('play-vs', function (event, _a) {
         seed = seed;
     }
     else {
-        seed = replay_1["default"].random_seed();
+        seed = replay_1.default.random_seed();
     }
     console.log('seed_____:1', seed);
     win.webContents.send('play-vs', {
@@ -2731,7 +2731,7 @@ ipc.on('fullscreen', function (event, name) {
     win.setFullScreen(!win.isFullScreen());
 });
 ipc.on('log', function (event, data) {
-    logger_1["default"].debug(data);
+    logger_1.default.debug(data);
 });
 
 

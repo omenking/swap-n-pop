@@ -1,10 +1,5 @@
 import * as electron from 'electron'
-import ui from 'ui/main'
-
-const {ipcRenderer: ipc} = electron
-
-ui()
-
+import ui               from 'ui/main'
 import game             from 'core/game'
 import StatesBoot       from 'states/boot'
 import StatesLoad       from 'states/load'
@@ -13,6 +8,10 @@ import StatesModeVs     from 'states/mode_vs'
 import StatesModePuzzle from 'states/mode_puzzle'
 import StatesPuzzleMenu from 'states/puzzle_menu'
 import StatesConnect    from 'states/connect'
+
+const {ipcRenderer: ipc} = electron
+
+ui()
 
 game.state.add('boot'       , StatesBoot)
 game.state.add('load'       , StatesLoad)

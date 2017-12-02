@@ -4840,11 +4840,9 @@ function onceStrict (fn) {
 
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var electron = __webpack_require__(3);
 var main_1 = __webpack_require__(30);
-var ipc = electron.ipcRenderer;
-main_1["default"]();
 var game_1 = __webpack_require__(0);
 var boot_1 = __webpack_require__(41);
 var load_1 = __webpack_require__(42);
@@ -4853,17 +4851,19 @@ var mode_vs_1 = __webpack_require__(46);
 var mode_puzzle_1 = __webpack_require__(73);
 var puzzle_menu_1 = __webpack_require__(75);
 var connect_1 = __webpack_require__(77);
-game_1["default"].state.add('boot', boot_1["default"]);
-game_1["default"].state.add('load', load_1["default"]);
-game_1["default"].state.add('menu', menu_1["default"]);
-game_1["default"].state.add('connect', connect_1["default"]);
-game_1["default"].state.add('mode_vs', mode_vs_1["default"]);
-game_1["default"].state.add('mode_puzzle', mode_puzzle_1["default"]);
-game_1["default"].state.add('puzzle_menu', puzzle_menu_1["default"]);
-game_1["default"].state.start('boot');
+var ipc = electron.ipcRenderer;
+main_1.default();
+game_1.default.state.add('boot', boot_1.default);
+game_1.default.state.add('load', load_1.default);
+game_1.default.state.add('menu', menu_1.default);
+game_1.default.state.add('connect', connect_1.default);
+game_1.default.state.add('mode_vs', mode_vs_1.default);
+game_1.default.state.add('mode_puzzle', mode_puzzle_1.default);
+game_1.default.state.add('puzzle_menu', puzzle_menu_1.default);
+game_1.default.state.start('boot');
 ipc.on('play-vs', function (event, _a) {
     var seed = _a.seed, online = _a.online, cpu = _a.cpu;
-    game_1["default"].state.start('mode_vs', true, false, {
+    game_1.default.state.start('mode_vs', true, false, {
         seed: seed,
         online: online,
         cpu: cpu
@@ -4871,7 +4871,7 @@ ipc.on('play-vs', function (event, _a) {
 });
 ipc.on('replay-load', function (event, _a) {
     var seed = _a.seed, inputs = _a.inputs;
-    game_1["default"].state.start('mode_vs', true, false, {
+    game_1.default.state.start('mode_vs', true, false, {
         seed: seed,
         online: false,
         inputs: inputs,
@@ -4879,7 +4879,7 @@ ipc.on('replay-load', function (event, _a) {
     });
 });
 ipc.on('network-connect', function (event, data) {
-    game_1["default"].state.start('connect', true, false, data);
+    game_1.default.state.start('connect', true, false, data);
 });
 
 
@@ -6158,48 +6158,47 @@ module.exports = require("dgram");
 
 /***/ }),
 /* 41 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_game__ = __webpack_require__(0);
 
-class StatesBoot {
-  create() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].stage.backgroundColor = '#282828'
-    this.pixelate()
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].state.start('load')
-  }
-
-  pixelate() {
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].stage.disableVisibilityChange = true
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.pageAlignHorizontally = true;
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.pageAlignVertically = true;
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].scale.setResizeCallback(function () {
-      var height = window.innerHeight;
-      var width = window.innerWidth;
-     
-      var resize_vertical_black_bars = () => {
-        this.game.width = height;
-        this.game.height = height;
-      }
-      
-      var resize_fully = () => {
-        this.game.width = width;
-        this.game.height = height;
-      }
-
-      resize_fully();
-    }, this);
-
-    __WEBPACK_IMPORTED_MODULE_0_core_game__["default"].renderer.renderSession.roundPixels = true
-    Phaser.Canvas.setImageRenderingCrisp(__WEBPACK_IMPORTED_MODULE_0_core_game__["default"].canvas)
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["default"] = StatesBoot;
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_1 = __webpack_require__(0);
+var StatesBoot = /** @class */ (function () {
+    function StatesBoot() {
+    }
+    StatesBoot.prototype.create = function () {
+        game_1.default.stage.backgroundColor = '#282828';
+        this.pixelate();
+        game_1.default.state.start('load');
+    };
+    StatesBoot.prototype.pixelate = function () {
+        game_1.default.stage.disableVisibilityChange = true;
+        game_1.default.scale.pageAlignHorizontally = true;
+        game_1.default.scale.pageAlignVertically = true;
+        game_1.default.scale.setResizeCallback(function () {
+            var _this = this;
+            // need to find a solution in typescript for window
+            // maybe this should be done in electron-main
+            // https://ourcodeworld.com/articles/read/285/how-to-get-the-screen-width-and-height-in-electron-framework
+            var height = 224 * 3; // window.innerHeight
+            var width = 398 * 3; // window.innerWidth
+            var resize_vertical_black_bars = function () {
+                _this.game.width = height;
+                _this.game.height = height;
+            };
+            var resize_fully = function () {
+                _this.game.width = width;
+                _this.game.height = height;
+            };
+            resize_fully();
+        }, this);
+        game_1.default.renderer.renderSession.roundPixels = true;
+        Phaser.Canvas.setImageRenderingCrisp(game_1.default.canvas);
+    };
+    return StatesBoot;
+}());
+exports.default = StatesBoot;
 
 
 /***/ }),
@@ -10642,73 +10641,77 @@ class PuzzleSelectCursor {
 
 /***/ }),
 /* 77 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_game__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_common_replay__ = __webpack_require__(78);
 
-
-
-
-const {ipcRenderer: ipc} = __WEBPACK_IMPORTED_MODULE_0_electron___default.a
-
-class StatesConnect {
-  init(data) {
-    this.mode      = data.mode
-    this.host_port = data.host_port
-    this.join_host = data.join_host
-    this.join_port = data.join_port
-  }
-
-  get mode(){      return this._mode      }
-  get host_port(){ return this._host_port }
-  get join_host(){ return this._join_host }
-  get join_port(){ return this._join_port }
-
-  set mode(v){      this._mode      = v}
-  set host_port(v){ this._host_port = v}
-  set join_host(v){ this._join_host = v}
-  set join_port(v){ this._join_port = v}
-
-  create() {
-    this.bg = __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].add.tileSprite(0, 0, __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].world.width, __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].world.height, 'bg_green')
-    __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.create(this.host_port,'0.0.0.0',this.listening)
-  }
-
-  listening() {
-    if (this.mode === 'host') {
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.connected(this.start)
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.pos = 0
-    } else if(this.mode === 'join') {
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.pos = 1
-      __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.connect(
-        this.join_port,
-        this.join_host,
-        __WEBPACK_IMPORTED_MODULE_2_common_replay__["a" /* default */].random_seed(), //hacky until we get a game setup screen
-        this.start
-      )
+Object.defineProperty(exports, "__esModule", { value: true });
+var electron = __webpack_require__(3);
+var game_1 = __webpack_require__(0);
+var replay_1 = __webpack_require__(78);
+var ipc = electron.ipcRenderer;
+var StatesConnect = /** @class */ (function () {
+    function StatesConnect() {
     }
-  }
-
-  start() {
-    ipc.send('play-vs',{
-      seed  : __WEBPACK_IMPORTED_MODULE_1_core_game__["default"].server.seed,
-      online: true,
-      cpu   : [false,false]
-    })
-  }
-
-  update() {
-    this.bg.tilePosition.y += 0.5
-    this.bg.tilePosition.x -= 0.5
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["default"] = StatesConnect;
-
+    StatesConnect.prototype.init = function (data) {
+        this.mode = data.mode;
+        this.host_port = data.host_port;
+        this.join_host = data.join_host;
+        this.join_port = data.join_port;
+    };
+    Object.defineProperty(StatesConnect.prototype, "mode", {
+        get: function () { return this._mode; },
+        set: function (v) { this._mode = v; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StatesConnect.prototype, "host_port", {
+        get: function () { return this._host_port; },
+        set: function (v) { this._host_port = v; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StatesConnect.prototype, "join_host", {
+        get: function () { return this._join_host; },
+        set: function (v) { this._join_host = v; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StatesConnect.prototype, "join_port", {
+        get: function () { return this._join_port; },
+        set: function (v) { this._join_port = v; },
+        enumerable: true,
+        configurable: true
+    });
+    StatesConnect.prototype.create = function () {
+        this.bg = game_1.default.add.tileSprite(0, 0, game_1.default.world.width, game_1.default.world.height, 'bg_green');
+        game_1.default.server.create(this.host_port, '0.0.0.0', this.listening);
+    };
+    StatesConnect.prototype.listening = function () {
+        if (this.mode === 'host') {
+            game_1.default.server.connected(this.start);
+            game_1.default.server.pos = 0;
+        }
+        else if (this.mode === 'join') {
+            game_1.default.server.pos = 1;
+            game_1.default.server.connect(this.join_port, this.join_host, replay_1.default.random_seed(), //hacky until we get a game setup screen
+            this.start);
+        }
+    };
+    StatesConnect.prototype.start = function () {
+        ipc.send('play-vs', {
+            seed: game_1.default.server.seed,
+            online: true,
+            cpu: [false, false]
+        });
+    };
+    StatesConnect.prototype.update = function () {
+        this.bg.tilePosition.y += 0.5;
+        this.bg.tilePosition.x -= 0.5;
+    };
+    return StatesConnect;
+}());
+exports.default = StatesConnect;
 
 
 /***/ }),
@@ -10716,6 +10719,7 @@ class StatesConnect {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_common_store__ = __webpack_require__(11);
@@ -10866,7 +10870,7 @@ function random_seed (howMany=16, chars) {
 }
 
 
-/* harmony default export */ __webpack_exports__["a"] = ({
+/* harmony default export */ __webpack_exports__["default"] = ({
   list: list,
   dir : dir,
   del: del,
