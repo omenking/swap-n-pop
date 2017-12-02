@@ -1,6 +1,7 @@
 import game    from 'core/game'
 import data    from 'core/data'
 import filters from 'core/filters'
+import ComponentPlayfield from 'components/playfield'
 
 const {px} = filters
 const {
@@ -10,6 +11,12 @@ const {
 } = data
 
 export default class ComponentPlayfieldWall {
+  private playfield : ComponentPlayfield
+  private x         : number
+  private y         : number
+  private sprite    : Phaser.Sprite
+  private counter   : number
+
   create(playfield,x,y){
     this.playfield = playfield
     this.sprite    = game.add.sprite(x, y, `playfield_wall${this.playfield.pi}`)

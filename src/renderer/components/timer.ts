@@ -7,6 +7,13 @@ import filters from 'core/filters'
 const {px} = filters
 
 export default class ComponentTimer {
+  private d0      : Phaser.Sprite
+  private d1      : Phaser.Sprite
+  private d2      : Phaser.Sprite
+  private group   : Phaser.Group
+  private tick    : number
+  public running : boolean
+
   /** get snapshot of the timer, get only to not let this be modifyable */
   get snap() {
     return [

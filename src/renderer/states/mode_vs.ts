@@ -51,7 +51,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
     this.debug_frame  = new ComponentDebugFrame()
-    this.timer        = new ComponentTimer(game)
+    this.timer        = new ComponentTimer()
 
     this.menu_pause   = new ComponentMenuPause()
     this.star_counter = new ComponentStarCounter()

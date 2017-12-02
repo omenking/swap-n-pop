@@ -4,13 +4,12 @@ import data from 'core/data'
 const { UNIT } = data
 
 export default class PuzzleSelectCursor {
-  constructor() {
-    this.up = this.up.bind(this);
-    this.down = this.down.bind(this);
-    this.confirm = this.confirm.bind(this);
-    this.cancel = this.cancel.bind(this);
-    this.update = this.update.bind(this);
-  }
+  private x     : number
+  private y     : number
+  private index : number
+  private sprite : Phaser.Sprite
+  // need to figure out what this parent is suppose to be
+  private parent : any
 
   create(parent, x, y) {
     this.x = x;

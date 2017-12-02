@@ -8,6 +8,13 @@ const {
 } = data
 
 export default class StarCounter {
+  private stage   : any
+  private group   : Phaser.Group
+  private sprites : Array<Phaser.Sprite>
+  private x       : number
+  private y       : number
+  private counter : number
+
   create(stage,x,y){
     this.stage = stage
     this.group = game.add.group()

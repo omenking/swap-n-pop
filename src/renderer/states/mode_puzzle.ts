@@ -34,7 +34,7 @@ export default class ModePuzzle extends CoreStage {
     super()
     this.playfield    = new ComponentPlayfield(0)
     this.menu_pause   = new ComponentMenuPause()
-    this.timer        = new ComponentTimer(game)
+    this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
     this.inputs       = new CoreInputs()
   }

@@ -1,10 +1,17 @@
-import game from 'core/game'
+import game               from 'core/game'
+import ComponentPlayfield from 'components/playfield'
 
 /**
  * A StepCounter is used in the Puzzle Mode to show the current amount of steps you have left.
  * The internal step_limit always has to get updated to the next room change.
  */
 export default class StepCounter {
+  private group     : Phaser.Group
+  private d1        : Phaser.Sprite
+  private d2        : Phaser.Sprite
+  private steps     : number
+  private playfield : ComponentPlayfield
+  public  step_limit : number
   /**
    * Add a Sprite group set the parent pos and create sprites on a relative position.
    * @param {object} mulitple vars defaulted - playfield reference is expected.  
