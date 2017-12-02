@@ -6,3 +6,6 @@ node_modules
 /dist
 .yarn-error.log
 app/src/TODO
+
+/static/renderer.js
+/static/main.js
