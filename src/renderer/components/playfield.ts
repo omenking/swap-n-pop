@@ -42,11 +42,11 @@ export default class Playfield {
   private character  : ComponentCharacter
 
   public  should_push      : boolean
-  private should_countdown : boolean
+  public  should_countdown : boolean
   private height : number
   private width : number
-  private x : number
-  private y : number
+  public x : number
+  public y : number
   public layer_block : Phaser.Group
   public layer_cursor : Phaser.Group
 
