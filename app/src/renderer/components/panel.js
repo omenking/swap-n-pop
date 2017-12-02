@@ -187,7 +187,7 @@ module.exports = function(game){
     /** */
     get clearable() {  return this.swappable && this.under.support && !this.hidden }
     /** */
-    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.counter === 0)}
+    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
     /** */
     get empty() {      return  this.state === STATIC && this.hidden }
     /** */
