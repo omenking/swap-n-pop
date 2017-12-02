@@ -156,7 +156,7 @@ export default class Server {
       this._connected(null,true)
       this.send_port = req.port
       this.send_host = req.address
-      this.send('connected')
+      this.send('connected',undefined)
     } else if (sig === 'connected' && this.state === 'connecting'){
       this._state = 'connected'
       if (this.send_port === req.port && this.send_host === req.address){
