@@ -1,9 +1,14 @@
 import game from 'core/game'
 
 import PuzzleMenuCursor from 'components/puzzle_menu_cursor'
-import PuzzlesModule    from 'core/puzzles'
+import Puzzles    from 'core/puzzles'
 
 export default class PuzzleSelect {
+  private bg      : Phaser.TileSprite
+  private sprite  : Phaser.Sprite
+  private cursor  : PuzzleMenuCursor
+  private puzzles : Puzzles
+
   constructor() {
     this.cursor = new PuzzleMenuCursor();
   }
@@ -13,7 +18,7 @@ export default class PuzzleSelect {
     
     this.sprite = game.add.sprite(0, 0, 'puzzle_menu');
 
-    this.puzzles = new PuzzlesModule();
+    this.puzzles = new Puzzles();
     this.cursor.create(this, 26, 39);
   }
 
