@@ -1,6 +1,8 @@
-import game from 'core/game'
-import _f   from 'core/filters'
-import data from 'core/data'
+import game               from 'core/game'
+import _f                 from 'core/filters'
+import data               from 'core/data'
+import ComponentPanel     from 'components/panel'
+import ComponentPlayfield from 'components/playfield'
 
 const {
   COLS,
@@ -17,13 +19,22 @@ const {
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
+  private _state    : Symbol
+  private _group    : number
+  private panel     : ComponentPanel
+  private playfield : ComponentPlayfield
+  private sprite    : Phaser.Sprite
+  private time_max : number
+  private time_pop : number
+  private time_cur : number
+
   get state()    {return this._state }
   set state(val) {       this._state = val }
 
   get group()    {return this._group }
   set group(val) {       this._group = val }
 
-  create(panel,playfield){
+  create(panel : ComponentPanel ,playfield : ComponentPlayfield){
     this.panel     = panel
     this.playfield = playfield
     this.sprite = game.add.sprite(0,0, 'garbage',0)

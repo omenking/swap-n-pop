@@ -1,5 +1,6 @@
 import game from 'core/game'
 import data from 'core/data'
+import ComponentPanel from 'components/panel'
 
 const {
   UNIT,
@@ -18,6 +19,17 @@ const normalType = [
  * Once the counter has been set to the TIME_PARTICLE a counter runs down and the particle will animate
  */
 export default class ComponentPanelParticle {
+  private sprite        : Phaser.Sprite
+  private x             : number
+  private y             : number
+  private xdir          : number
+  private ydir          : number
+  private id            : number
+  private type          : string
+  private panel         : ComponentPanel
+  private angle         : number
+  public  counter       : number
+  private frame_counter : number
   /**
    * Initializes the sprite defaulted to not visible, inits vars and has arguments
    * @param {object} panel parent which the pos will depend on
