@@ -70,8 +70,6 @@ module.exports = function(game) {
       game.load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
       game.load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
       game.load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
-      //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
-      //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
       // Bg -----------
       game.load.image('bg_blue'  , './assets/images/bg_blue.png')
       game.load.image('bg_green' , './assets/images/bg_green.png')

@@ -324,7 +324,7 @@ module.exports = function(game){
                   particle.counter = TIME_PARTICLE;
                 });
 
-                this.clear_i < 6 ? game.sound.play("sfx_pop" + this.clear_i) : game.sound.play("sfx_pop5");
+                this.clear_i < 4 ? game.sounds.pop(this.clear_i) : game.sounds.pop(3);
               }
             } else {
               if (this.above && !this.above.hidden && this.above.state === STATIC) {
