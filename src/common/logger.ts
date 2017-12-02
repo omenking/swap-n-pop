@@ -1,11 +1,11 @@
-import electron from 'electron'
-import path     from 'path'
-import fs       from 'fs'
-import fx       from 'mkdir-recursive'
-import strftime from 'strftime'
-import os       from 'os'
+import * as electron from 'electron'
+import * as path     from 'path'
+import * as fs       from 'fs'
+import * as os       from 'os'
+import fx            from 'mkdir-recursive'
+import strftime      from 'strftime'
 
-const eol = os.eol
+const eol = os.EOL
 const {app} = electron
 
 function debug(data){

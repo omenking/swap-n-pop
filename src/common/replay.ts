@@ -1,10 +1,10 @@
-import electron from 'electron'
-import store    from 'common/store'
-import path     from 'path'
-import fs       from 'fs'
-import fx       from 'mkdir-recursive'
-import glob     from 'glob'
-import crypto   from 'crypto'
+import * as electron from 'electron'
+import store         from 'common/store'
+import * as path     from 'path'
+import * as fs       from 'fs'
+import fx            from 'mkdir-recursive'
+import glob          from 'glob'
+import * as crypto   from 'crypto'
 
 const {app} = electron
 
@@ -110,8 +110,8 @@ function load(name,callback){
     const int1 = buf.readUIntBE(3+lens+len0,len1)
 
     let len = 3+lens+len0+len1
-    buf0 = Buffer.allocUnsafe(int0)
-    buf1 = Buffer.allocUnsafe(int1)
+    const buf0 = Buffer.allocUnsafe(int0)
+    const buf1 = Buffer.allocUnsafe(int1)
     buf.copy(buf0,0,len,len+int0)
     buf.copy(buf1,0,len+int0,len+int0+int1)
     let a0 = Array.prototype.slice.call(buf0, 0)

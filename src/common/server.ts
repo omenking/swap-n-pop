@@ -1,6 +1,17 @@
-import dgram from 'dgram'
+import * as dgram from 'dgram'
 
 export default class Server {
+  private _pos       : number
+  private _state     : string
+  private _host      : string
+  private _port      : number
+  private _send_host : string
+  private _send_port : number
+  private _seed      : string
+  private _connected : Function
+  private states     : any
+  private server     : any
+
   get state(){ return this._state }
 
   get address(){ return `${this.host}:${this.port}` }

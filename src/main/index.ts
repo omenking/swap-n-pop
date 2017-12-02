@@ -1,9 +1,9 @@
 import * as path     from 'path'
 import * as url      from 'url'
 import * as electron from 'electron'
-import Replay   from 'common/replay'
-import Logger   from 'common/logger'
-import store    from 'common/store'
+import Replay from 'common/replay'
+import Logger from 'common/logger'
+import store  from 'common/store'
 
 const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = electron
 const WIN_WIDTH  = 398 * 2
@@ -12,7 +12,7 @@ const WIN_HEIGHT = 224 * 2
 //require('electron-reload')(__dirname);
 
 let win, win_settings = null
-Replay.dir()
+Replay.dir(undefined, undefined)
 
 if (!store.has('network.host_port')) { store.set('network.host_port',22022) }
 if (!store.has('network.join_host')) { store.set('network.join_host','192.168.0.0') }
@@ -161,11 +161,11 @@ ipc.on('replay-list', (event) => {
   })
 })
 ipc.on('replay-dir-reveal', (event) => {
-  let dir = Replay.dir()
+  let dir = Replay.dir(undefined, undefined)
   shell.openItem(dir)
 })
 ipc.on('replay-dir-reset', (event) => {
-  let dir = Replay.dir('reset')
+  let dir = Replay.dir('reset',undefined)
   win.webContents.send('replay-dir',dir)
 })
 ipc.on('replay-save', (event, {seed,inputs}) => {
@@ -185,7 +185,7 @@ ipc.on('play-vs', (event,{seed,online,cpu}) => {
   if (online){
     seed = seed
   } else {
-    seed = Replay.random_seed()
+    seed = Replay.random_seed(16,undefined)
   }
   console.log('seed_____:1',seed)
   win.webContents.send('play-vs',{

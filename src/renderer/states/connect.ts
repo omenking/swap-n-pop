@@ -42,7 +42,7 @@ export default class StatesConnect {
       game.server.connect(
         this.join_port,
         this.join_host,
-        Replay.random_seed(), //hacky until we get a game setup screen
+        Replay.random_seed(16, undefined), //hacky until we get a game setup screen
         this.start
       )
     }
