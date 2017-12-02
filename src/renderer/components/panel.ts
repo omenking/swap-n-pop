@@ -6,7 +6,7 @@ import ComponentBaubleChain   from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
 import ComponentPanelParticle from 'components/panel_particle'
 import ComponentPlayfield     from 'components/playfield'
-import ss from 'shuffle-seed'
+import * as ss from 'shuffle-seed'
 const {
   UNIT,
   SWAP_L,
@@ -63,8 +63,8 @@ export default class ComponentPanel {
   private garbage : any
 
 
-  get kind()    { return this._kind }
-  set kind(val) {        this._kind = val }
+  get kind =()=>    { return this._kind }
+  set kind =(val)=> {        this._kind = val }
 
   /**
    *  The panel's counter does two things
@@ -74,24 +74,24 @@ export default class ComponentPanel {
    *
    *  @type {number}
    */
-  get counter()    {return this._counter }
-  set counter(val) {       this._counter = val }
+  get counter =()=>    {return this._counter }
+  set counter =(val)=> {       this._counter = val }
   
-  get state()    {return this._state }
-  set state(val) {       this._state = val }
+  get state =()=>    {return this._state }
+  set state =(val)=> {       this._state = val }
 
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
-  get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
-  get under(){ return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
-  get above(){ return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
+  get  left =()=> { return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
+  get right =()=> { return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
+  get under =()=> { return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
+  get above =()=> { return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
 
-  get  left2(){ return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
-  get right2(){ return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
-  get under2(){ return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
-  get above2(){ return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
+  get  left2 =()=> { return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
+  get right2 =()=> { return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
+  get under2 =()=> { return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
+  get above2 =()=> { return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
 
   /** */
   constructor() {
@@ -105,7 +105,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  get snap() {
+  get =snap()=> {
     let snap_particles = []
     this.particles.forEach((particle, i) => {
       snap_particles[i] = particle.snap
@@ -124,7 +124,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  load(data){
+  load =(data)=> {
     this.x       = data[0]
     this.y       = data[1]
     this.kind    = data[2]
@@ -140,7 +140,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  create(playfield, x, y){
+  create =(playfield, x, y)=> {
     this.playfield = playfield
     this.counter   = 0
     this.kind = null
@@ -173,20 +173,20 @@ export default class ComponentPanel {
     });
   }
 
-  set_garbage(group){
+  set_garbage =(group)=>{
     this.state = GARBAGE
     this.panel_garbage.group = group
     this.panel_garbage.state = FALL
   }
 
   /** resets this panel to a normal state - stops animation usefull for stack resets */ 
-  soft_reset() {
+  soft_reset =()=> {
     this.counter = 0;
     this.state = STATIC;
   }
 
   /** */
-  get swappable() {
+  get swappable =()=> {
     return  this.above.state !== HANG &&
             (this.state === STATIC ||
             // LAND will swap but will play must at play least 1 frame.
@@ -194,23 +194,23 @@ export default class ComponentPanel {
     )
   }
   /** */
-  get support()   {  return this.state !== FALL && !this.hidden }
+  get =support()=>   {  return this.state !== FALL && !this.hidden }
   /** */
-  get clearable() {  return this.swappable && this.under.support && !this.hidden }
+  get =clearable()=> {  return this.swappable && this.under.support && !this.hidden }
   /** */
-  get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
+  get =comboable()=> {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
   /** */
-  get empty() {      return  this.state === STATIC && this.hidden }
+  get =empty()=> {      return  this.state === STATIC && this.hidden }
   /** */
-  get hidden(){      return (this.kind === null) }
+  get =hidden()=> {      return (this.kind === null) }
 
-  log(){
+  log =()=>{
     const k = (this.kind === null) ? 'N' : this.kind
     return `${k}`
   }
 
   /** */
-  matched(kind){
+  matched =(kind)=>{
     return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||
            ((this.above.kind === kind) && (this.under.kind  === kind)) ||
            ((this.above.kind === kind) && (this.above2.kind === kind)) ||
@@ -219,7 +219,7 @@ export default class ComponentPanel {
            ((this.right.kind === kind) && (this.right2.kind === kind))
   }
   /** */
-  get frame(){ return this.sprite.frame }
+  get =frame()=> { return this.sprite.frame }
   /**
    * Sets the current frame based on panel kind
    *
@@ -227,12 +227,12 @@ export default class ComponentPanel {
    * Each panel kind eg. green, red, blue takes up one row in the spritespeet.
    *
    */
-  set frame(i : any){ 
+  set =frame(i : any)=> { 
     // should not have to parseInt, something is passing in string
     this.sprite.frame = (this.kind * 8) + parseInt(i)
   }
   /** */
-  set(i){
+  set =(i)=> {
     switch (i) {
       case 'unique':
         this.kind = this.nocombo();
@@ -249,7 +249,7 @@ export default class ComponentPanel {
    * reaches zero.
    *
    */
-  update(){
+  update =()=> {
     if (this.state === GARBAGE) {
       this.panel_garbage.update()
     } else {
@@ -368,7 +368,7 @@ export default class ComponentPanel {
    * Determines whether a panel should be visible or not
    * at the time of render
    */
-  render_visible(){
+  render_visible =()=> {
     if (this.hidden){
       this.sprite.visible = false
     } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
@@ -380,7 +380,7 @@ export default class ComponentPanel {
   /**
    * Swaps the this panel with the panel to it's right.
    */
-  swap() {
+  swap =()=> {
     if (this.hidden && this.right.hidden) { return }
 
     this.counter        = 0
@@ -398,7 +398,7 @@ export default class ComponentPanel {
     Calculates and set the counter for the panel to pop
     @param {{number}} i
   */
-  popping(i){
+  popping =(i)=> {
     this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL     
   }
 
@@ -419,7 +419,7 @@ export default class ComponentPanel {
    * 
    * @returns {number} new kind to be set to!
   */
-  nocombo() {
+  nocombo =()=> {
     const arr = [0, 1, 2, 3, 4] 
     if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)} 
     let values = ss.shuffle(arr,this.playfield.stage.rng()) 
@@ -434,7 +434,7 @@ export default class ComponentPanel {
   *  and if it does it should return true, because this column
   *  in the stack is in danger.
   */
-  get danger(){
+  get =danger()=> {
     return !this.playfield.stack_xy(this.x,1+ROWS_INV).hidden
   }
   /** 
@@ -442,7 +442,7 @@ export default class ComponentPanel {
   * an active panel in the first row. If this is the case
   * then the this panel should be considered dead.
   */
-  get dead(){
+  get =dead()=> {
     return !this.playfield.stack_xy(this.x,0+ROWS_INV).hidden
   }
   /** 
@@ -452,7 +452,7 @@ export default class ComponentPanel {
   *  When a playfield should push panels it will add an extra
   *  row to the end of stack which for newline.
   */
-  get newline(){
+  get =newline()=> {
     return this.playfield.should_push && this.y === ROWS
   }
   /** 
@@ -463,7 +463,7 @@ export default class ComponentPanel {
   * You can see this in `Playfield.chain_and_combo` where it will then
   * call `Panel.popping` to set the counter.
   */
-  clear() {
+  clear =()=> {
     if (this.state === CLEAR) { return }
     this.state = CLEAR
     this.chain += 1
@@ -475,7 +475,7 @@ export default class ComponentPanel {
    * Panels will be added to playfield.clearing to determine combo and chain
    *
    * */
-  chain_and_combo() {
+  chain_and_combo =()=> {
     if (!this.comboable) { return }
 
     if (this.left.comboable  && this.left.kind  === this.kind &&
@@ -497,7 +497,7 @@ export default class ComponentPanel {
    Returns the index of the current panel clearing and amount of panels clearing
    @returns {array} - [index,length]
    */
-  get clear_index(){
+  get clear_index =()=>{
     if (this.state !== CLEAR) {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
@@ -524,7 +524,7 @@ export default class ComponentPanel {
    * * live     - the panel's normal state
    *
    */
-  animate(){
+  animate =()=>{
     if (this.newline) {
       this.frame = FRAME_NEWLINE
     } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
@@ -554,7 +554,7 @@ export default class ComponentPanel {
     }
   }
   /** */
-  render(){
+  render =()=>{
     this.sprite.x = this.x * UNIT
     this.sprite.y = this.y * UNIT
     this.animate()
@@ -567,5 +567,5 @@ export default class ComponentPanel {
     });
   }
   /** */
-  shutdown(){}
+  shutdown =()=>{}
 } // klass

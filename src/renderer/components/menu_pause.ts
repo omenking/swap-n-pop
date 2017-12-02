@@ -25,7 +25,7 @@ export default class ComponentPauseMenu {
    * create a cursor with no controls provided yet 
    * @param {mode_vs} stage reference to call both playfields 
    */
-  create(stage) {
+  create =(stage)=> {
     this.paused = false;
 
     this.stage = stage;
@@ -43,14 +43,14 @@ export default class ComponentPauseMenu {
   }
 
   /** leave the game */
-  cancel() {
+  cancel =()=> {
     game.state.start('menu');
   }
 
   /** called through cursor, unpauses the menu and turns of the sprite again
    * also calls the mode_vs||stage resume method which will return new cursor controls
    */
-  continue() {
+  continue =()=> {
     this.paused         = false;
     this.sprite.visible = false;
     this.stage.resume();
@@ -59,7 +59,7 @@ export default class ComponentPauseMenu {
   /** unpauses update method of the menu, 
    * make this object visible and 
    * reassigns controls to both playfields registered players */
-  pause() {
+  pause =()=> {
     this.paused = true;
     this.sprite.visible = true;
 
@@ -76,7 +76,7 @@ export default class ComponentPauseMenu {
   }
 
   /** once unpaused the menu will update its cursor */
-  update() {
+  update =()=> {
     if (!this.paused) 
       return; 
 

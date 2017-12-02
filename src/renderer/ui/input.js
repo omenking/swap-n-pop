@@ -5,6 +5,7 @@ import Store   from 'common/store'
 import keycode from 'keycode'
 
 const store = new Store()
+
 const {ipcRenderer: ipc} = electron
 let setting = null
 let inputs  = store.get('inputs')

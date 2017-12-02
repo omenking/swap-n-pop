@@ -1,5 +1,5 @@
 import * as electron        from 'electron'
-import seedrandom           from 'seedrandom'
+import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'

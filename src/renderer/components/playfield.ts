@@ -81,34 +81,34 @@ export default class Playfield {
     this.character     = new ComponentCharacter()
   }
 
-  get stoptime(){ return this._stoptime }
-  set stoptime(v){ this._stoptime = v }
+  get stoptime =()=>{ return this._stoptime }
+  set stoptime =(v)=>{ this._stoptime = v }
 
-  get shake(){ return this._shake }
-  set shake(v){ this._shake = v }
+  get shake =()=>{ return this._shake }
+  set shake =(v)=>{ this._shake = v }
 
-  get counter(){ return this._counter }
-  set counter(v){ this._counter = v }
+  get counter =()=>{ return this._counter }
+  set counter =(v)=>{ this._counter = v }
 
-  get push_counter(){ return this._push_counter }
-  set push_counter(v){ this._push_counter = v }
+  get push_counter =()=>{ return this._push_counter }
+  set push_counter =(v)=>{ this._push_counter = v }
 
-  get pushing(){ return this._pushing }
-  set pushing(v){ this._pushing = v }
+  get pushing =()=>{ return this._pushing }
+  set pushing =(v)=>{ this._pushing = v }
 
-  get stack(){
+  get stack =()=>{
     return this._stack
   }
 
-  stack_i(i){
+  stack_i =(i)=>{
     return this._stack[i]
   }
 
-  stack_xy(x, y){
+  stack_xy =(x, y)=>{
     return this._stack[_f.xy2i(x,y)]
   }
 
-  get snap() {
+  get snap  =()=> {
     const snap_cursor = this.cursor.snap
     const snap_countdown = this.countdown.snap
     const snap_stack  = []
@@ -123,7 +123,7 @@ export default class Playfield {
       this.pushing
     ]
   }
-  load(snapshot){
+  load =(snapshot)=> {
     this.push_counter = snapshot[0]
     this.cursor.load(   snapshot[1])
     for (let i = 0; i < this.stack_len; i++) {
@@ -132,7 +132,7 @@ export default class Playfield {
     this.countdown.load(snapshot[3])
     this.pushing = snapshot[4]
   }
-  create(stage,opts){
+  create =(stage,opts)=> {
     if (stage === null) {
       throw new Error("must pass stage")
     }
@@ -181,7 +181,7 @@ export default class Playfield {
     );
   }
 
-  create_after() {
+  create_after =()=> {
     this.layer_cursor = game.add.group()
     this.layer_cursor.x = this.x
     this.layer_cursor.y = this.y
@@ -191,20 +191,20 @@ export default class Playfield {
     if (this.has_ai) { this.ai.create(this, this.cursor) }
     this.wall.create(this,this.x,this.y)
   }
-  create_stack(data){
+  create_stack =(data)=>{
     this._stack = []
     this.create_panels()
     this.fill_panels(data)
   }
 
-  get stack_len(){
+  get stack_len =()=>{
     return this._stack.length
   }
-  get stack_size(){
+  get stack_size =()=>{
     return this.should_push ? this.stack_len-COLS : this.stack_len
   }
 
-  push() {
+  push =()=> {
     let i;
     // move all panels up the stack
     const stack = new Array(this.stack_len)
@@ -221,7 +221,7 @@ export default class Playfield {
     if (this.cursor.y > 0) { this.cursor.y--; }
     return 1
   }
-  create_newline(){
+  create_newline =()=>{
     if (!this.should_push) { return; }
     const rows = (ROWS + (this.should_push ? 1 : 0 ))
 
@@ -237,12 +237,12 @@ export default class Playfield {
     }
   }
 
-  game_over() {
+  game_over =()=> {
     this.stage.state = 'gameover'
     this.push_counter = 0
   }
 
-  create_panels(){
+  create_panels =()=>{
     const rows = (ROWS + (this.should_push === true ? 1 : 0 ))
     const size = COLS * rows
     this._stack = new Array().fill(null)
@@ -260,7 +260,7 @@ export default class Playfield {
    * 
    * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty  
    */
-  fill_panels(data){
+  fill_panels =(data)=> {
     this.stack.forEach((panel, i) => { panel.set(data[i]); });
 
     if (this.should_push)
@@ -268,7 +268,7 @@ export default class Playfield {
         this.stack_i(i).set('unique');
   }
 
-  update_stack() {
+  update_stack =()=> {
     for (let i = 0; i < this.stack_len; i++) {
       this.stack_i((this.stack_len-1)-i).update()
     }
@@ -281,7 +281,7 @@ export default class Playfield {
    * @param {Array} new_Panels the panels the stack should reset to
    * @param {integer} new_counter_size size that the swap_counter should be set to
    */
-  reset_stack(new_Panels, new_counter_size = 0) {
+  reset_stack =(new_Panels, new_counter_size = 0)=> {
     this.stack.forEach((panel) => { panel.soft_reset() })
     this.swap_counter = new_counter_size
     this.fill_panels(new_Panels)
@@ -291,14 +291,14 @@ export default class Playfield {
    * checks if the stack has only empty panels
    * @returns true when the whole stack consists of empty block
    */
-  stack_is_empty() {
+  stack_is_empty =()=> {
     for (var i = 0; i < PANELS; i++)
       if (!this.stack_i(i).empty)
         return false;
     return true;
   }
 
-  chain_and_combo() {
+  chain_and_combo =()=> {
     let i, panel
     for (i = 0; i < this.stack_size; i++) {
       this.stack_i(i).chain_and_combo()
@@ -323,7 +323,7 @@ export default class Playfield {
    * @param {integer} x xpos to be accessed in the stack - 2D Array whise
    * @param {integer} y ypos to be accessed in the stack - 2D Array whise
    */
-  swap(x,y){
+  swap =(x,y)=> {
     let panelLeft   = this.stack_xy(x, y);
     let panelRight  = this.stack_xy(x + 1, y);
 
@@ -337,7 +337,7 @@ export default class Playfield {
     }
   }
   
-  danger(within){
+  danger =(within)=> {
     const offset = COLS*(within+ROWS_INV);
     const cols   = [];
     for (let i = 0; i < COLS; i++){
@@ -356,7 +356,7 @@ export default class Playfield {
    * spawn possible garbage,
    * updates the sprites to the correct locations in the canvas.
    */
-  update_push(danger) {
+  update_push =(danger)=> {
     if (!this.should_push) {return}
     if (this.pushing) {
       this.push_counter -= 100
@@ -373,7 +373,7 @@ export default class Playfield {
       this.score         += this.push()
     }
   }
-  score_combo(combo){
+  score_combo =(combo)=> {
     switch (combo) {
       case 4: return 20;
       case 5: return 30;
@@ -388,7 +388,7 @@ export default class Playfield {
         return 0;
     }
   }
-  score_chain(chain){
+  score_chain =(chain)=> {
     switch (chain) {
       case 2:  return 50;
       case 3:  return 80;
@@ -406,7 +406,7 @@ export default class Playfield {
         return 0;
     }
   }
-  update_score(combo,chain){
+  update_score =(combo,chain)=> {
     if (combo > 0) {
       this.score += combo * 10
       this.score += this.score_combo(combo)
@@ -415,7 +415,7 @@ export default class Playfield {
       }
     }
   }
-  update_garbage_clearing(){
+  update_garbage_clearing =()=>{
     if (this.clearing_garbage.length > 0){
       for (let panel of this.stack){
         panel.panel_garbage.popping()
@@ -423,12 +423,12 @@ export default class Playfield {
     }
     this.clearing_garbage = []
   }
-  render_stack() {
+  render_stack =()=> {
     for (let panel of this.stack){
       panel.render()
     }
   }
-  render() {
+  render =()=> {
     this.cursor.render()
     this.wall.render()
     this.render_stack()
@@ -449,7 +449,7 @@ export default class Playfield {
       this.layer_cursor.y = y + shake
     }
   }
-  update() {
+  update =()=> {
     this.countdown.update()
     this.cursor.update()
     this.character.update()
@@ -498,7 +498,7 @@ export default class Playfield {
     }
   }
 
-  shutdown() {
+  shutdown =()=> {
     return this.cursor.shutdown()
   }
 }

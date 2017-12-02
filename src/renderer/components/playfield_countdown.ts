@@ -19,16 +19,16 @@ export default class ComponentPlayfieldCountdown {
 
   private states = []
 
-  load(snapshot) {
+  load =(snapshot)=> {
     this.state   = snapshot[0]
     this.counter = snapshot[1]
   }
 
-  get snap() {
+  get snap =()=> {
     return [this.state, this.counter]
   }
 
-  create(playfield) {
+  create =(playfield)=> {
     this.playfield = playfield
 
     const x = this.playfield.x+px(16);
@@ -43,7 +43,7 @@ export default class ComponentPlayfieldCountdown {
     }
   }
 
-  update() {
+  update =()=> {
     if (this.state === SKIP) { this.start() }
     if (this.state === MOVING) {
       if (this.sprite.y < px(80)) {
@@ -81,7 +81,7 @@ export default class ComponentPlayfieldCountdown {
     }
   }
 
-  start() {
+  start =()=> {
     game.sounds.ding()
     this.sprite.visible         = false
     this.playfield.cursor.state = 'active'
@@ -101,6 +101,6 @@ export default class ComponentPlayfieldCountdown {
     this.state = null
   }
 
-  render() {
+  render =()=> {
   }
 }

@@ -35,7 +35,7 @@ export default class ComponentPanelParticle {
    * @param {object} panel parent which the pos will depend on
    * @param {integer} dir which direction to go - 1 = top left, 2 = top right, 3 = bottom right, ...
    */
-  create({panel, type = "normal", id, angle = 0}) {
+  create =({panel, type = "normal", id, angle = 0})=> {
     this.sprite = game.add.sprite(0, 0, "panel_particles", 0);
     this.sprite.visible = false;
 
@@ -62,7 +62,7 @@ export default class ComponentPanelParticle {
   }
 
   /** @returns an Array of the vars that can be rerolled to to recreate a state completely */
-  get snap() {
+  get snap =()=> {
     return [
       this.x,
       this.y,
@@ -75,7 +75,7 @@ export default class ComponentPanelParticle {
   }
 
   /** loads an Array with integer values that each var should get set to */
-  load(data) {
+  load =(data)=> {
     this.x = data[0];
     this.y = data[1];
     this.xdir = data[2];
@@ -86,7 +86,7 @@ export default class ComponentPanelParticle {
   }
 
   /** sets the pos of the particle, also sets the dir based on its dir  */
-  update() {
+  update =()=> {
     this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT);
     this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT);
 
@@ -119,12 +119,12 @@ export default class ComponentPanelParticle {
    * @param {integer} current real num from 0 to 1
    * @returns true when current has crossed over ct+1/frames
    */
-  animate_in_intervals(frames, current) {
+  animate_in_intervals =(frames, current)=> {
     return (((this.frame_counter + 1) / frames) <= current);
   }
 
   /** draws the sprite contents, animates the sprite when visible */
-  render() {
+  render =()=> {
     if (this.counter > 0) {
       const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE;
 

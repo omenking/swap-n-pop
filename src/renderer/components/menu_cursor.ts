@@ -7,7 +7,7 @@ export default class ComponentMenuCursor {
   private menu       : any
   public x           : number
   public y           : number
-  private menu_items : Array<any>
+  private menu_items : Array<Function>
   private counter    : number
   private index      : number
   private sprite     : Phaser.Sprite
@@ -15,7 +15,7 @@ export default class ComponentMenuCursor {
   constructor() {
   }
 
-  create(menu,x,y,menu_items) {
+  create =(menu,x,y,menu_items)=> {
     this.menu = menu;
     this.x = x;
     this.y = y;
@@ -30,7 +30,7 @@ export default class ComponentMenuCursor {
     this.map_controls(1)
   }
 
-  map_controls(pi) {
+  map_controls =(pi)=> {
     return game.controls.map(pi, {
       up   : this.up,
       down : this.down,
@@ -40,7 +40,7 @@ export default class ComponentMenuCursor {
     });
   }
 
-  up(tick) {
+  up =(tick)=> {
     if (tick > 0) { return }
     if (this.index !== 0) {
       game.sounds.select()
@@ -50,7 +50,7 @@ export default class ComponentMenuCursor {
     }
   }
 
-  down(tick) {
+  down =(tick)=> {
     if (tick > 0) { return }
     if (this.index !== (this.menu_items.length-1)) {
       game.sounds.select()
@@ -60,18 +60,19 @@ export default class ComponentMenuCursor {
     }
   }
 
-  confirm(tick) {
+  confirm =(tick)=> {
     if (tick > 0) { return }
     game.sounds.confirm()
+    console.log(this.menu_items,this.index)
     return this.menu_items[this.index]()
   }
 
-  cancel(tick) {
+  cancel =(tick)=> {
     if (tick > 0) { return }
     return console.log('cancel');
   }
 
-  update() {
+  update =()=> {
     this.sprite.y = this.y+(this.index*UNIT);
     this.counter++;
     if (this.counter > MENUCURSORBLINK) {

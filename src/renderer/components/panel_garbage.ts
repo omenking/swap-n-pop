@@ -29,13 +29,13 @@ export default class ComponentPanelGarbage {
   private time_pop : number
   private time_cur : number
 
-  get state()    {return this._state }
-  set state(val) {       this._state = val }
+  get state =()=>    {return this._state }
+  set state =(val)=> {       this._state = val }
 
-  get group()    {return this._group }
-  set group(val) {       this._group = val }
+  get group =()=>    {return this._group }
+  set group =(val)=> {       this._group = val }
 
-  create(panel : ComponentPanel ,playfield : ComponentPlayfield){
+  create =(panel : ComponentPanel ,playfield : ComponentPlayfield)=> {
     this.panel     = panel
     this.playfield = playfield
     this.sprite = game.add.sprite(0,0, 'garbage',0)
@@ -46,7 +46,7 @@ export default class ComponentPanelGarbage {
    Returns the index of the current panel clearing and amount of panels clearing
    @returns {array} - [index,length]
    */
-  get clear_index(){
+  get clear_index =()=>{
     if (this.state !== CLEAR) {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
@@ -60,7 +60,7 @@ export default class ComponentPanelGarbage {
     return [panels.indexOf(this),panels.length]
   }
 
-  popping(){
+  popping =()=>{
     if (this.panel.state === GARBAGE &&
         this.playfield.clearing_garbage.indexOf(this.group) !== -1 ){
       this.state         = CLEAR
@@ -69,7 +69,7 @@ export default class ComponentPanelGarbage {
     }
   }
 
-  get group_len(){
+  get group_len =()=>{
     let len = 0
     for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&
@@ -80,7 +80,7 @@ export default class ComponentPanelGarbage {
     return len
   }
 
-  update(){
+  update =()=>{
     switch (this.state) {
       case STATIC:
         if (this.fall_check()) {
@@ -138,7 +138,7 @@ export default class ComponentPanelGarbage {
    * see if all of them are empty underneath so it should fall.
    *
    * */
-  fall_check(){
+  fall_check =()=>{
     let fall = true
     for (let x = 0; x < COLS; x++){
       let panel = this.playfield.stack_xy(x,this.panel.y)
@@ -150,7 +150,7 @@ export default class ComponentPanelGarbage {
     return fall
   }
 
-  render_visible(){
+  render_visible =()=>{
     if (this.state === CLEAR){
       this.sprite.visible = this.time_cur < this.time_pop
     } else {
@@ -159,7 +159,7 @@ export default class ComponentPanelGarbage {
   }
 
   /** */
-  render(){
+  render =()=>{
     let str = ''
     if (this.state === CLEAR){
       this.sprite.frame = 13
@@ -198,5 +198,5 @@ export default class ComponentPanelGarbage {
     this.render_visible()
   }
   /** */
-  shutdown(){}
+  shutdown =()=>{}
 } // klass

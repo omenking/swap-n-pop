@@ -2,8 +2,8 @@ import * as electron from 'electron'
 import * as path     from 'path'
 import * as fs       from 'fs'
 import * as os       from 'os'
-import fx            from 'mkdir-recursive'
-import strftime      from 'strftime'
+import * as fx       from 'mkdir-recursive'
+import * as strftime from 'strftime'
 
 const eol = os.EOL
 const {app} = electron
