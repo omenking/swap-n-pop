@@ -30,7 +30,8 @@ module.exports = function(game) {
      *  with certain parameters
      */
     create() {
-      game.add.sprite(0, 0, "mode_puzzle_bg");
+      this.bg = game.add.sprite(0, 0, "mode_puzzle_bg"); 
+      this.bg.anchor.setTo(0.5, 0);
 
       this.tick   = -1;
       this.seed   = 'puzzle';
@@ -44,17 +45,18 @@ module.exports = function(game) {
       this.playfield.create(this, {
         countdown: false,
         push  : false,
-        x     : 88,
-        y     : 40,
+        x     : 320,
+        y     : 80,
         panels: this.panels
       });
 
       this.playfield.create_after();
       this.playfield.cursor.mode = "puzzle";
+      this.playfield.character.sprite.visible = false;
 
       this.menu_pause.create(this);
-      this.timer.create(25,30);
-      this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left });
+      this.timer.create(180, 60);
+      this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left, x: 575, y: 85});
     }
     
     /** shuts down the playfield */
@@ -120,6 +122,7 @@ module.exports = function(game) {
 
     /** calls the render functions of the timer and playfield */
     render() {
+      this.bg.x = game.world.centerX;
       this.timer.render();
       this.step_display.render();
     
