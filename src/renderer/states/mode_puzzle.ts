@@ -102,7 +102,7 @@ export default class ModePuzzle extends CoreStage {
   
     this.state = "running";
     this.timer.running = true;
-    this.playfield.cursor.map_controls("puzzle");      
+    this.playfield.cursor.map_controls()
   }
 
   /** updates all important objects, especially the inputs

@@ -1,5 +1,6 @@
 import game from 'core/game'
 import data from 'core/data'
+import ComponentPlayfield from 'components/playfield'
 
 const {
   COLS,
@@ -11,25 +12,21 @@ const {
   PANELCURSOR_CHECK_SPEED
 } = data
 
-export default class ComponentCursor {
-  /** bindings only */
-  constructor() {
-    // movement keys
-    this.up = this.up.bind(this);
-    this.down = this.down.bind(this);
-    this.left = this.left.bind(this);
-    this.right = this.right.bind(this);
+export default class ComponentPlayfieldCursor {
+  public cursor_swap_history : Array<any>
+  private playfield       : ComponentPlayfield
+  public  state           : string
+  private counter_flicker : number
+  private counter         : number
+  private ignore          : boolean
 
-    // actions
-    this.swap = this.swap.bind(this);
-    this.undo_swap = this.undo_swap.bind(this)
-    this.push = this.push.bind(this);
-    this.pause = this.pause.bind(this);
+  // sprite should never be private, something must be using it externally
+  public sprite          : Phaser.Sprite
 
-    // utility methods
-    this.pressed_then_held = this.pressed_then_held.bind(this);
-  }
-
+  public  mode            : string
+  public  x               : number
+  public  y               : number
+  private  visible        : boolean
   /**
    * Initialises the Cursor's position in x & y, counter, and its sprite
    * Also adds this sprite to a layer above the blocks
@@ -212,11 +209,11 @@ export default class ComponentCursor {
 
     if (this.playfield.swap(this.x, this.y)) 
       if (this.mode === "puzzle") {
-        let stack_in_kind = [];
-        this.playfield.stack().forEach((panel, i) => {
-          stack_in_kind[i] = panel.kind;
+        let kinds = [];
+        this.playfield.stack.forEach((panel, i) => {
+          kinds[i] = panel.kind;
         });
-        this.cursor_swap_history.push(stack_in_kind);
+        this.cursor_swap_history.push(kinds);
       }
   }
 
