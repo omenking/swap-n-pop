@@ -4,12 +4,15 @@ import data from 'core/data'
 const {UNIT, MENUCURSORBLINK} = data
 
 export default class ComponentMenuCursor {
+  private menu       : any
+  public x           : number
+  public y           : number
+  private menu_items : Array<any>
+  private counter    : number
+  private index      : number
+  private sprite     : Phaser.Sprite
+
   constructor() {
-    this.up = this.up.bind(this);
-    this.down = this.down.bind(this);
-    this.confirm = this.confirm.bind(this);
-    this.cancel = this.cancel.bind(this);
-    this.update = this.update.bind(this);
   }
 
   create(menu,x,y,menu_items) {

@@ -1,13 +1,16 @@
+import * as electron       from 'electron'
 import game                from 'core/game'
 import filters             from 'core/filters'
 import ComponentMenuCursor from 'components/menu_cursor'
-import electron            from 'electron'
 
 const {ipcRenderer: ipc} = electron
 const {px} = filters
 
 /** Class representing a menu. */
 export default class ComponentMenu {
+  private sprite : Phaser.Sprite
+  private cursor : ComponentMenuCursor
+
   constructor() {
     this.cursor = new ComponentMenuCursor()
   }
