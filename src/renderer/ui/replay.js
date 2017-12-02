@@ -1,9 +1,10 @@
 import m        from 'mithril';
 import Ui       from 'ui/mode'
-import store    from 'common/store'
+import Store    from 'common/store'
 import electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
+const store = new Store()
 
 let replay_files = []
 let replay_dir   = store.get('replay_dir')

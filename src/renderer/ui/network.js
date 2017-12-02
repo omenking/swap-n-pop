@@ -1,7 +1,9 @@
 import m        from 'mithril'
 import Ui       from 'ui/mode'
-import store    from 'common/store'
+import Store    from 'common/store'
 import electron from 'electron'
+
+const store = new Store()
 
 const {ipcRenderer: ipc} = electron
 

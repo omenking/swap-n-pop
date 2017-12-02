@@ -9,8 +9,8 @@ const config_main = {
   node: {
     __dirname: false
   },
-  externals: [{ 'electron-store': 'require("electron-store")' }],
   resolve: {
+    extensions: ['.js', '.json', '.ts'],
     alias: {
       main   : path.resolve(__dirname, 'src/main/'),
       common : path.resolve(__dirname, 'src/common/')
@@ -33,7 +33,6 @@ const config_renderer = {
   node: {
     __dirname: false
   },
-  externals: [{ 'electron-store': 'require("electron-store")' }],
   resolve: {
     extensions: ['.js', '.json', '.ts'],
     alias: {

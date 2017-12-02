@@ -3,11 +3,12 @@ import * as url      from 'url'
 import * as electron from 'electron'
 import Replay from 'common/replay'
 import Logger from 'common/logger'
-import store  from 'common/store'
+import Store  from 'common/store'
 
 const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = electron
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
+const store = new Store()
 
 //require('electron-reload')(__dirname);
 

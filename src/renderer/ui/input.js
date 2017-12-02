@@ -1,9 +1,10 @@
 import Ui from 'ui/mode'
 import m from 'mithril'
 import electron from 'electron'
-import store   from 'common/store'
+import Store   from 'common/store'
 import keycode from 'keycode'
 
+const store = new Store()
 const {ipcRenderer: ipc} = electron
 let setting = null
 let inputs  = store.get('inputs')
