@@ -5,6 +5,7 @@ import blank                  from 'components/panel_blank'
 import ComponentBaubleChain   from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
 import ComponentPanelParticle from 'components/panel_particle'
+import ComponentPlayfield     from 'components/playfield'
 import ss from 'shuffle-seed'
 const {
   UNIT,
@@ -42,8 +43,28 @@ const {
  */
 export default class ComponentPanel {
   get [Symbol.toStringTag](){ return 'Panel' }
-  get kind()    { return this.i }
-  set kind(val) {        this.i = val }
+
+  private _kind         : number
+  private _counter      : number
+  private _state        : Symbol
+  private _chain        : number
+  private bauble_chain  : ComponentBaubleChain
+  private panel_garbage : ComponentPanelGarbage
+  public playfield     : ComponentPlayfield
+  public x             : number
+  public y             : number
+  private sprite        : Phaser.Sprite
+  private group         : Phaser.Group
+  public time_cur      : number
+  private time_pop      : number
+  private particles     : Array<ComponentPanelParticle>
+  public clear_i       : number
+  public clear_len     : number
+  private garbage : any
+
+
+  get kind()    { return this._kind }
+  set kind(val) {        this._kind = val }
 
   /**
    *  The panel's counter does two things
@@ -53,14 +74,14 @@ export default class ComponentPanel {
    *
    *  @type {number}
    */
-  get counter()    {return this.attr_counter }
-  set counter(val) {       this.attr_counter = val }
+  get counter()    {return this._counter }
+  set counter(val) {       this._counter = val }
   
-  get state()    {return this.attr_state }
-  set state(val) {       this.attr_state = val }
+  get state()    {return this._state }
+  set state(val) {       this._state = val }
 
-  get chain()    {return this.attr_chain }
-  set chain(val) { this.attr_chain = val }
+  get chain()    {return this._chain }
+  set chain(val) { this._chain = val }
 
   get  left(){ return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack(this.x-1,this.y)   }
   get right(){ return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack(this.x+1,this.y)   }
@@ -81,16 +102,6 @@ export default class ComponentPanel {
     this.particles = [];
     for (let i = 0; i < 5; i++) 
       this.particles[i] = new ComponentPanelParticle();
-  }
-
-  /** */
-  static initClass() {
-    this.prototype.playfield          = null
-    this.prototype.x                  = null
-    this.prototype.y                  = null
-    this.prototype.chain              = null
-    this.prototype.sprite             = null
-    this.prototype.i                  = null
   }
 
   /** */
@@ -132,7 +143,7 @@ export default class ComponentPanel {
   create(playfield, x, y){
     this.playfield = playfield
     this.counter   = 0
-    this.i = null
+    this.kind = null
     this.x = x;
     this.y = y;
     this.state = STATIC
@@ -216,7 +227,10 @@ export default class ComponentPanel {
    * Each panel kind eg. green, red, blue takes up one row in the spritespeet.
    *
    */
-  set frame(i){ this.sprite.frame = (this.kind * 8) + i}
+  set frame(i : any){ 
+    // should not have to parseInt, something is passing in string
+    this.sprite.frame = (this.kind * 8) + parseInt(i)
+  }
   /** */
   set(i){
     switch (i) {
@@ -228,30 +242,6 @@ export default class ComponentPanel {
         break;
     }
   }
-
-    /** */
-    get swappable() {
-      return  this.above.state !== HANG &&
-              (this.state === STATIC ||
-              // LAND will swap but will play must at play least 1 frame.
-              (this.state === LAND && this.counter < FRAME_LAND.length)  
-      )
-    }
-    /** */
-    get support()   {  return this.state !== FALL && !this.hidden }
-    /** */
-    get clearable() {  return this.swappable && this.under.support && !this.hidden }
-    /** */
-    get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.counter === 0)}
-    /** */
-    get empty() {      return  this.state === STATIC && this.hidden }
-    /** */
-    get hidden(){      return (this.kind === null) }
-
-    log(){
-      const k = (this.kind === null) ? 'N' : this.kind
-      return `${k}`
-    }
 
   /** 
    * `update(i)` handles the states and its transition to other states.
@@ -433,7 +423,7 @@ export default class ComponentPanel {
     const arr = [0, 1, 2, 3, 4] 
     if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)} 
     let values = ss.shuffle(arr,this.playfield.stage.rng()) 
-    return this.i = values.find((i)=> { 
+    return this.kind = values.find((i)=> { 
       return this.matched(i) === false 
     }) 
   }

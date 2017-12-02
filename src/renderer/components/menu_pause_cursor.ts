@@ -10,10 +10,13 @@ const {px}   = filters
  */
 export default class ComponentMenuPauseCursor {
   /** only bindings, no new objects */
+  private menu       : any
+  private x          : number
+  private y          : number
+  private menu_items : Array<Function>
+  private index      : number
+  private sprite     : Phaser.Sprite
   constructor() {
-    this.up = this.up.bind(this);
-    this.down = this.down.bind(this);
-    this.confirm = this.confirm.bind(this);
   }
 
   /**
@@ -32,9 +35,6 @@ export default class ComponentMenuPauseCursor {
     // array with methods and its accessor index
     this.menu_items = menu_items;
     this.index  = 0;
-
-    this.sfx_confirm = game.add.audio('sfx_confirm');
-    this.sfx_select  = game.add.audio('sfx_select');
 
     this.sprite = game.make.sprite(this.x, this.y, 'menu_pause_cursor');
     return this.menu.sprite.addChild(this.sprite);
@@ -58,7 +58,7 @@ export default class ComponentMenuPauseCursor {
     if (tick > 0) 
       return;
 
-    this.sfx_confirm.play();
+    game.sounds.confirm();
     return this.menu_items[this.index]();
   }
 
@@ -67,8 +67,8 @@ export default class ComponentMenuPauseCursor {
       return;
 
     if (this.index !== 0) {
-      this.sfx_select.play();
-      return this.index--;
+      game.sounds.select()
+      return this.index--
     }
   }
 
@@ -77,7 +77,7 @@ export default class ComponentMenuPauseCursor {
       return;
 
     if (this.index !== (this.menu_items.length-1)) {
-      this.sfx_select.play();
+      game.sounds.play()
       return this.index++;
     }
   }
