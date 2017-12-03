@@ -1,4 +1,4 @@
-import seedrandom           from 'seedrandom'
+import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
@@ -100,7 +100,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** regains control over playfield - plays a sound and timer runs again */
-  resume() {
+  resume =()=> {
     game.sounds.stage_music('resume');
   
     this.state = "running";
@@ -111,7 +111,7 @@ export default class ModePuzzle extends CoreStage {
   /** updates all important objects, especially the inputs
    *  based on the interal tick counter thats increasing
    */
-  update() {
+  update =()=> {
     if (this.playfield.stack_is_empty()) {
       if (this.puzzles.puzzle_levels.length === (this.level_index)) {
         game.state.start("menu");
@@ -139,7 +139,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** calls the render functions of the timer and playfield */
-  render() {
+  render =()=> {
     this.timer.render();
     this.step_display.render();
   
