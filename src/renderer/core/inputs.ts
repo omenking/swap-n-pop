@@ -1,23 +1,22 @@
 import game     from 'core/game'
-import electron from 'electron'
+import * as electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
 
 export default class CoreInputs {
+  public replay      : boolean
+  private ack         : Array<any>
+  private _tick       : number
+  private _stage      : any
+  private _online     : any
+  private _inputs     : Array<any>
+  private _last_pack : any
+
   constructor(inputs,online,stage) {
-    this.create = this.create.bind(this)
-    this.update = this.update.bind(this)
-
-    this.pack   = this.pack.bind(this)
-    this.unpack = this.unpack.bind(this)
-
-    this.update_input = this.update_input.bind(this)
-    this.replay_input = this.replay_input.bind(this)
-
     this.create(inputs,online,stage)
   } //constructor
 
-  create(inputs,online,stage){
+  create =(inputs,online,stage)=> {
     this.stage = stage
     if(inputs){
       this.replay    = true
@@ -51,7 +50,7 @@ export default class CoreInputs {
     return this.inputs
   }
 
-  pack(){
+  pack =()=> {
     const data = []
     for (let i = this.ack[1]; this.tick >= i; i++){
       data.push(this.inputs[0][i])
@@ -64,7 +63,7 @@ export default class CoreInputs {
     }
   }
 
-  unpack(data){
+  unpack =(data)=> {
     const frame_start = this.ack[0]
     const frame_end   = data.ack0+data.frame_count-1
 
@@ -98,17 +97,17 @@ export default class CoreInputs {
     this.ack[1] = Math.max(this.ack[1],data.ack1)
   }
 
-  update_input(pi,tick){
+  update_input =(pi,tick)=> {
     const byte = game.controls.serialize(pi)
     this.inputs[pi].push(byte)
   }
 
-  replay_input(pi,tick){
+  replay_input =(pi,tick)=> {
     const byte = this.inputs[pi][tick]
     game.controls.execute(pi,byte)
   }
 
-  update(tick,send) {
+  update =(tick,send)=> {
     this.tick = tick
     if (this.replay || send === false){
       this.replay_input(0,tick)

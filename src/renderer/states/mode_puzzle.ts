@@ -36,7 +36,7 @@ export default class ModePuzzle extends CoreStage {
     this.menu_pause   = new ComponentMenuPause()
     this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
-    this.inputs       = new CoreInputs()
+    this.inputs       = new CoreInputs(undefined,undefined,undefined)
   }
 
   init =(data)=> {
@@ -130,7 +130,7 @@ export default class ModePuzzle extends CoreStage {
 
     game.controls.update();
     this.playfield.update();
-    this.inputs.update(this.tick);
+    this.inputs.update(this.tick,undefined);
 
     this.menu_pause.update();
   }
