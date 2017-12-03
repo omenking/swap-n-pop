@@ -13,7 +13,7 @@ export default class StatesMenu {
   }
 
   /** loads the gamebackground, creates the menu object */
-  create =()=> {
+  create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green');
     this.menu.create();
   }
@@ -21,7 +21,7 @@ export default class StatesMenu {
   /** controls & and menu are updated to move around,
    *  tilepos is changed to act as a parralax
    */
-  update =()=> {
+  update() {
     game.controls.update();
     this.menu.update();
     this.bg.tilePosition.y += 0.5;
@@ -29,7 +29,7 @@ export default class StatesMenu {
   }
 
   /** stops controller support */
-  shutdown =()=> {
+  shutdown() {
     game.controls.disable()
   }
 }

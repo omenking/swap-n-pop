@@ -13,24 +13,14 @@ const {ipcRenderer: ipc} = electron
 
 ui()
 
-function prep_state(klass){
-  const state = new klass()
-  return {
-    init     : state.init,
-    create   : state.create,
-    update   : state.update,
-    render   : state.render,
-    shutdown : state.shutdown
-  }
-}
 
-game.state.add('boot'       , prep_state(StatesBoot))
-game.state.add('load'       , prep_state(StatesLoad))
-game.state.add('menu'       , prep_state(StatesMenu))
-game.state.add('connect'    , prep_state(StatesConnect))
-game.state.add('mode_vs'    , prep_state(StatesModeVs))
-game.state.add('mode_puzzle', prep_state(StatesModePuzzle))
-game.state.add('puzzle_menu', prep_state(StatesPuzzleMenu))
+game.state.add('boot'       , new StatesBoot())
+game.state.add('load'       , new StatesLoad())
+game.state.add('menu'       , new StatesMenu())
+game.state.add('connect'    , new StatesConnect())
+game.state.add('mode_vs'    , new StatesModeVs())
+game.state.add('mode_puzzle', new StatesModePuzzle())
+game.state.add('puzzle_menu', new StatesPuzzleMenu())
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {
