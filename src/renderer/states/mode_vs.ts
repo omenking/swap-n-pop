@@ -57,6 +57,10 @@ export default class ModeVs extends CoreStage {
     this.star_counter = new ComponentStarCounter()
   }
 
+  get name(): string {
+    return 'mode_vs';
+  }
+
   init(data) {
     this.rounds_won = [2,1]
     this.tick   = 0

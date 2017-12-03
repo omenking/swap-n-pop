@@ -1,15 +1,21 @@
 import game          from 'core/game'
 import ComponentMenu from 'components/menu'
+import State from './base';
 
 /**
  * Higher Order Menu that keeps the menu updated - Adds Background
  */
-export default class StatesMenu {
+export default class MenuState extends State {
   private menu : ComponentMenu
   private bg : Phaser.TileSprite
 
   constructor() {
+    super();
     this.menu   = new ComponentMenu();
+  }
+
+  get name(): string {
+    return 'menu';
   }
 
   /** loads the gamebackground, creates the menu object */

@@ -1,15 +1,20 @@
 import * as electron from 'electron'
 import game     from 'core/game'
 import Replay   from 'common/replay'
+import State from './base';
 
 const {ipcRenderer: ipc} = electron
 
-export default class StatesConnect {
+export default class ConnectState extends State {
   private _mode      : string
   private _host_port : string
   private _join_host : string
   private _join_port : number
   private bg         : Phaser.TileSprite
+
+  get name(): string {
+    return 'connect';
+  }
 
   init(data) {
     this.mode      = data.mode
