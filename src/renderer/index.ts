@@ -1,26 +1,35 @@
-import * as electron from 'electron'
+import { ipcRenderer as ipc } from 'electron';
 import ui               from 'ui/main'
 import game             from 'core/game'
-import StatesBoot       from 'states/boot'
-import StatesLoad       from 'states/load'
-import StatesMenu       from 'states/menu'
-import StatesModeVs     from 'states/mode_vs'
-import StatesModePuzzle from 'states/mode_puzzle'
-import StatesPuzzleMenu from 'states/puzzle_menu'
-import StatesConnect    from 'states/connect'
 
-const {ipcRenderer: ipc} = electron
+import BootState from './states/boot';
+import ConnectState from './states/connect';
+import LoadState from './states/load';
+import MenuState from './states/menu';
+import ModePuzzleState from './states/mode_puzzle';
+import ModeVsState from './states/mode_vs';
+import PuzzleMenuState from './states/puzzle_menu';
+
+const stateClasses = [
+  BootState,
+  LoadState,
+  MenuState,
+  ConnectState,
+  ModeVsState,
+  ModePuzzleState,
+  PuzzleMenuState
+];
 
 ui()
 
+// Create instance of each known state class and register them to the game
+// instance.
+stateClasses.forEach(stateClass => {
+  const stateInstance = new stateClass();
 
-game.state.add('boot'       , new StatesBoot())
-game.state.add('load'       , new StatesLoad())
-game.state.add('menu'       , new StatesMenu())
-game.state.add('connect'    , new StatesConnect())
-game.state.add('mode_vs'    , new StatesModeVs())
-game.state.add('mode_puzzle', new StatesModePuzzle())
-game.state.add('puzzle_menu', new StatesPuzzleMenu())
+  game.state.add(stateInstance.name, stateInstance);
+});
+
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {

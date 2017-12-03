@@ -2,18 +2,24 @@ import game from 'core/game'
 
 import PuzzleMenuCursor from 'components/puzzle_menu_cursor'
 import Puzzles    from 'core/puzzles'
+import State from './base';
 
-export default class PuzzleSelect {
+export default class PuzzleSelectState extends State {
   private bg      : Phaser.TileSprite
   private sprite  : Phaser.Sprite
   private cursor  : PuzzleMenuCursor
   private puzzles : Puzzles
 
   constructor() {
+    super();
     this.cursor = new PuzzleMenuCursor();
   }
 
-  create =()=> {
+  get name() {
+    return 'puzzle_menu';
+  }
+
+  create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green');
     
     this.sprite = game.add.sprite(0, 0, 'puzzle_menu');
@@ -22,7 +28,7 @@ export default class PuzzleSelect {
     this.cursor.create(this, 26, 39);
   }
 
-  update =()=> {
+  update() {
     this.sprite.x = game.width  / 4 - this.sprite.width  / 2;
     this.sprite.y = game.height / 8 - this.sprite.height / 2;
 
@@ -33,7 +39,7 @@ export default class PuzzleSelect {
   }
 
   /** stops controller support */
-  shutdown =()=> {
+  shutdown() {
     game.controls.disable();
   }
 }
