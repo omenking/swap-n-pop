@@ -61,6 +61,10 @@ export default class ComponentPanel {
   public clear_i        : number
   public clear_len      : number
   private garbage       : any
+  private _state_timer   : number
+  private state_enter   : any
+  private state_execute : any
+  private state_exit    : any
 
 
   get kind ()   { return this._kind }
@@ -79,6 +83,9 @@ export default class ComponentPanel {
   
   get state()    {return this._state }
   set state(val) {       this._state = val }
+
+  get state_timer() { return this._state_timer }
+  set state_timer(val) { this._state_timer = val }
 
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
@@ -133,7 +140,6 @@ export default class ComponentPanel {
     this.chain   = data[5]
     this.garbage = data[6]
     this.group   = data[7]
-    
     this.particles.forEach((particle, i) => {
       particle = data[8][i]
     })
@@ -141,6 +147,29 @@ export default class ComponentPanel {
 
   /** */
   create =(playfield, x, y)=> {
+    /************************************************
+    * STATE MACHINE
+    ************************************************/
+    this.state_enter   = new Map()
+    this.state_execute = new Map()
+    this.state_exit    = new Map()
+
+    this.state_execute.set(SWAP_L    , this.swap_l_execute)
+    this.state_execute.set(SWAP_R    , this.swap_r_execute)
+    this.state_enter.set(  SWAPPING_L, this.swapping_l_enter)
+    this.state_execute.set(SWAPPING_L, this.swapping_l_execute)
+    this.state_enter.set(  SWAPPING_R, this.swapping_r_enter)
+    this.state_execute.set(SWAPPING_R, this.swapping_r_execute)
+    this.state_execute.set(STATIC    , this.static_execute)
+    this.state_enter.set(  HANG      , this.hang_enter)
+    this.state_execute.set(HANG      , this.hang_execute)
+    this.state_execute.set(FALL      , this.fall_execute)
+    this.state_enter.set(  CLEAR     , this.clear_enter)
+    this.state_execute.set(CLEAR     , this.clear_execute)
+    this.state_exit.set(   CLEAR     , this.clear_exit)
+    this.state_enter.set(  LAND      , this.land_enter)
+    this.state_execute.set(LAND      , this.land_execute)
+
     this.playfield = playfield
     this.counter   = 0
     this.kind = null
@@ -173,6 +202,109 @@ export default class ComponentPanel {
     });
   }
 
+  swap_l_execute     =(panel)=> { if (panel.counter <= 0) { panel.change_state(SWAPPING_L) } }
+  swap_r_execute     =(panel)=> { if (panel.counter <= 0) { panel.change_state(SWAPPING_R) } }
+  land_execute       =(panel)=> { if (panel.counter <= 0) { panel.change_state(STATIC) } }
+  swapping_l_execute =(panel)=> { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
+  swapping_r_execute =(panel)=> { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
+  hang_execute       =(panel)=> { if (panel.counter <= 0) { panel.change_state(FALL) } }
+
+  swapping_r_enter =(panel)=> {
+    panel.counter = TIME_SWAP
+  }
+
+  hang_enter =(panel)=> {
+    panel.counter = 0
+  }
+
+  swapping_l_enter =(panel)=> {
+    const i1 = panel.kind
+    const i2 = panel.right.kind
+    panel.kind       = i2
+    panel.right.kind = i1
+    panel.counter = TIME_SWAP
+  }
+
+  static_execute =(panel)=> {
+    if ((panel.under.empty && !panel.empty) || panel.under.state === HANG) {
+      panel.change_state(HANG);
+    } else if (panel.danger && panel.counter === 0) {
+      // we add 1 otherwise we will miss out on one frame
+      // since counter can never really hit zero and render
+      panel.chain = 0
+      panel.counter = FRAME_DANGER.length+1
+    } else {
+      panel.chain = 0
+    }
+  }
+
+  land_enter =(panel)=> {
+    panel.counter = FRAME_LAND.length
+  }
+
+  fall_execute =(panel)=> {
+    if (panel.counter > 0) { return }
+      if (panel.under.empty) {
+        panel.under.kind    = panel.kind
+        panel.under.state   = panel.state
+        panel.under.counter = panel.counter
+        panel.under.chain   = panel.chain
+
+        panel.kind    = null
+        panel.state   = STATIC
+        panel.counter = 0
+        panel.chain   = 0
+      } else {
+        panel.change_state(LAND);
+      }
+      //} else if (this.under.state === CLEAR) {
+        //this.state = STATIC
+      //} else {
+        //this.state   = this.under.state
+        //this.counter = this.under.counter
+        //this.chain   = this.under.chain
+      //}
+        //this.state   = LAND
+        //this.counter = FRAME_LAND.length
+  }
+
+  clear_enter =(panel)=> {
+    panel.chain += 1
+    panel.playfield.clearing.push(panel)
+    panel.group = panel.playfield.stage.tick
+  }
+  clear_execute =(panel)=> {
+    if (panel.counter > 0) {
+      const [xi,xlen] = panel.clear_index
+      panel.clear_i    = xi
+      panel.clear_len  = xlen
+
+      const time_max = TIME_CLEAR + (TIME_POP*panel.clear_len) + TIME_FALL
+      panel.time_pop = TIME_CLEAR + (TIME_POP*panel.clear_i)
+      panel.time_cur = time_max - panel.counter
+
+      if (panel.time_cur === panel.time_pop) {
+        panel.particles.forEach((particle) => {
+          particle.counter = TIME_PARTICLE
+        });
+
+        panel.clear_i < 6 ? game.sounds.pop(panel.clear_i) : game.sounds.pop(3);
+      }
+    } else {
+      if (panel.above && !panel.above.hidden && panel.above.state === STATIC)
+        panel.above.chain += 1
+      panel.change_state(STATIC)
+    }
+  }
+  clear_exit =(panel)=> {
+    panel.kind    = null
+    panel.counter = 0
+    panel.chain   = 0
+    panel.group   = null
+  }
+
+
+
   set_garbage =(group)=>{
     this.state = GARBAGE
     this.panel_garbage.group = group
@@ -198,7 +330,7 @@ export default class ComponentPanel {
   /** */
   get clearable() {  return this.swappable && this.under.support && !this.hidden }
   /** */
-  get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this))}
+  get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) && this.state_timer === 0 }
   /** */
   get empty() {      return  this.state === STATIC && this.hidden }
   /** */
@@ -250,118 +382,16 @@ export default class ComponentPanel {
    *
    */
   update =()=> {
+    this.particles.forEach(particle => particle.update())
+
     if (this.state === GARBAGE) {
       this.panel_garbage.update()
     } else {
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
-      switch (this.state) {
-        case SWAP_L:
-          if (this.counter > 0) { return }
-          const i1 = this.kind
-          const i2 = this.right.kind
-          this.kind       = i2
-          this.right.kind = i1
-
-          this.state   = SWAPPING_L
-          this.counter = TIME_SWAP
-          break
-        case SWAP_R:
-          if (this.counter > 0) { return }
-          this.state   = SWAPPING_R
-          this.counter = TIME_SWAP
-          break
-        case SWAPPING_L:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break
-        case SWAPPING_R:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break
-        case STATIC:
-          if ((this.under.empty && !this.empty) || this.under.state === HANG) {
-            this.state   = HANG
-            this.counter = 0
-          } else if (this.danger && this.counter === 0) {
-            // we add 1 otherwise we will miss out on one frame
-            // since counter can never really hit zero and render
-            this.chain = 0
-            this.counter = FRAME_DANGER.length+1
-          } else {
-            this.chain = 0
-          }
-          break;
-        case HANG:
-          if (this.counter > 0) { return }
-          this.state = FALL
-          break;
-        case FALL:
-          if (this.counter > 0) { return }
-          if (this.under.empty) {
-            this.under.kind    = this.kind
-            this.under.state   = this.state
-            this.under.counter = this.counter
-            this.under.chain   = this.chain
-
-            this.kind    = null
-            this.state   = STATIC
-            this.counter = 0
-            this.chain   = 0
-          } else {
-            this.state   = LAND
-            this.counter = FRAME_LAND.length
-          }
-          //} else if (this.under.state === CLEAR) {
-            //this.state = STATIC
-          //} else {
-            //this.state   = this.under.state
-            //this.counter = this.under.counter
-            //this.chain   = this.under.chain
-          //}
-            //this.state   = LAND
-            //this.counter = FRAME_LAND.length
-          break;
-        case CLEAR:
-          if (this.counter > 0) { 
-            const [xi,xlen] = this.clear_index
-            this.clear_i    = xi
-            this.clear_len  = xlen
-
-            const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
-            this.time_pop = TIME_CLEAR + (TIME_POP* this.clear_i)
-            this.time_cur = time_max - this.counter
-
-            if (this.time_cur === this.time_pop) {
-              this.particles.forEach((particle) => {
-                particle.counter = TIME_PARTICLE;
-              });
-
-              this.clear_i < 6 ? game.sound.play("sfx_pop" + this.clear_i) : game.sound.play("sfx_pop5");
-            }
-          } else {
-            if (this.above && !this.above.hidden && this.above.state === STATIC) {
-              this.above.chain += 1
-            }
-            this.state   = STATIC
-            this.kind    = null
-            this.counter = 0
-            this.chain   = 0
-            this.group   = null
-          }
-          break;
-        case LAND:
-          if (this.counter > 0) { return }
-          this.state = STATIC
-          break;
-        default:
-          throw(new Error('unknown panel state'))
-      }
+      this.state_execute.get(this.state)(this)
     }
-
-    this.particles.forEach((particle) => {
-      particle.update();
-    });
+    ++this.state_timer
   }
 
   /**
@@ -464,11 +494,7 @@ export default class ComponentPanel {
   * call `Panel.popping` to set the counter.
   */
   clear =()=> {
-    if (this.state === CLEAR) { return }
-    this.state = CLEAR
-    this.chain += 1
-    this.playfield.clearing.push(this)
-    this.group = this.playfield.stage.tick;
+    this.change_state(CLEAR)
   }
   /**
    * Checks above and under and then left and right from the current panel.
@@ -492,6 +518,19 @@ export default class ComponentPanel {
       this.under.clear()
     }
   }
+
+  /**
+   * exit old state, enter new state, reset state_timer
+   */
+  change_state =(state)=> {
+    this.state_timer = 0
+    if (this.state_exit.has(this.state))
+      this.state_exit.get(this.state)(this)
+    this.state = state
+    if (this.state_enter.has(this.state))
+      this.state_enter.get(this.state)(this)
+  }
+
   /**
    * 
    Returns the index of the current panel clearing and amount of panels clearing
@@ -555,16 +594,14 @@ export default class ComponentPanel {
   }
   /** */
   render =()=>{
+    this.particles.forEach(particle => particle.render())
+
     this.sprite.x = this.x * UNIT
     this.sprite.y = this.y * UNIT
     this.animate()
     this.render_visible()
     this.bauble_chain.render()
     this.panel_garbage.render()
-
-    this.particles.forEach((particle) => {
-      particle.render();
-    });
   }
   /** */
   shutdown =()=>{}

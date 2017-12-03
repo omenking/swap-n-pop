@@ -1,8 +1,9 @@
 import Ui from 'ui/mode'
-import m  from 'mithril';
+import m  from 'mithril'
 
 let audio_sfx_volume = 100
 let audio_msx_volume = 100
+let muted            = false
 
 function render(){
   return m('form',[
@@ -33,7 +34,19 @@ function render(){
         'Music: ',
         audio_msx_volume + '%'
       ])
+    ]),
+
+    m('.check_box.mute', [
+      m("input[type='checkbox']", {
+        checked: muted,
+        onclick: function(e) { 
+          muted = !muted;
+          game.sounds.mute_all(muted);
+        }
+      }),
+      m('.val', ['Mute all Audio'])
     ])
+
   ])
 }
 

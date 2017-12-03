@@ -161,7 +161,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1.cursor.map_controls();
   }
 
-  game_over =()=> {
+  game_over =(pi)=> {
     console.log('gameover')
     if(!this.inputs.replay){
       ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
@@ -170,6 +170,15 @@ export default class ModeVs extends CoreStage {
     this.timer.running = false
     this.playfield0.game_over()
     this.playfield1.game_over()
+
+    if (pi === 0) {
+      this.playfield0.character.current_animation = "lost"
+      this.playfield1.character.current_animation = "won"
+    }
+    else if (pi === 1) {
+      this.playfield0.character.current_animation = "won"
+      this.playfield1.character.current_animation = "lost"
+    }
   }
   danger_check =()=> {
     const d1 = this.playfield0.danger(1)

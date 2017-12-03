@@ -39,7 +39,7 @@ export default class Playfield {
   private wall       : ComponentPlayfieldWall
   private score_lbl  : ComponentScore
   private ai         : ComponentAi
-  private character  : ComponentCharacter
+  public  character  : ComponentCharacter
 
   public  should_push      : boolean
   public  should_countdown : boolean
@@ -120,7 +120,8 @@ export default class Playfield {
       snap_cursor,
       snap_stack,
       snap_countdown,
-      this.pushing
+      this.pushing,
+      this.character.snap
     ]
   }
   load =(snapshot)=> {
@@ -131,6 +132,7 @@ export default class Playfield {
     }
     this.countdown.load(snapshot[3])
     this.pushing = snapshot[4]
+    this.character.load(snapshot[5])
   }
   create = (stage,opts) => {
     if (stage === null) {
@@ -432,6 +434,7 @@ export default class Playfield {
     this.cursor.render()
     this.wall.render()
     this.render_stack()
+    this.character.render()
 
     let shake = 0
     if (this.shake >= 0 && this.counter > 0) {
@@ -452,7 +455,6 @@ export default class Playfield {
   update =()=> {
     this.countdown.update()
     this.cursor.update()
-    this.character.update()
     
     //this.score_lbl.update(this.chain, this.score)
     let danger = null
@@ -460,11 +462,10 @@ export default class Playfield {
       danger = this.danger(0)
       if (danger && this.push_counter <= 0) {
         this.stoptime--
-        this.character.sprite.play("losing");
+        this.character.current_animation = "losing"
         console.log('stoptime',this.stoptime)
         if (this.stoptime <= 0){
-          this.stage.game_over()
-          this.character.sprite.play("lost");
+          this.stage.game_over(this.pi)
         }
       } else {
         this.stoptime = STOPTIME
@@ -485,6 +486,8 @@ export default class Playfield {
     if (this.has_ai) { this.ai.update() }
     // combo n chain
     const cnc = this.chain_and_combo()
+    if (cnc[1] > 1)
+      this.character.current_animation = "charge"
 
     if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
       this.update_garbage_clearing()
