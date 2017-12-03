@@ -40,14 +40,14 @@ export default class ModePuzzle extends CoreStage {
     this.inputs       = new CoreInputs(undefined,undefined,undefined)
   }
 
-  init =(data)=> {
+  init(data) {
     this.level_index = data.chosen_index;
   }
 
   /** creates the playfield, menu_pause and timer objects
    *  with certain parameters
    */
-  create =()=> {
+  create() {
     this.bg = game.add.sprite(0, 0, "mode_puzzle_bg")
     this.bg.anchor.setTo(0.5, 0)
 
@@ -63,8 +63,8 @@ export default class ModePuzzle extends CoreStage {
     this.playfield.create(this, {
       countdown: false,
       push  : false,
-      x     : 88,
-      y     : 40,
+        x   : 320,
+        y   : 80,
       panels: this.panels
     });
 
@@ -78,20 +78,20 @@ export default class ModePuzzle extends CoreStage {
   }
   
   /** shuts down the playfield */
-  shutdown =()=> {
+  shutdown() {
     game.sounds.stage_music('none');
     this.playfield.shutdown();
   }
 
   /** changes the current level to the next one from the puzzle array - counters go up */
-  change_level =(lvl)=> {
+  change_level(lvl) {
     this.panels = lvl.panels;
     this.steps_left = lvl.steps;
     this.step_display.step_limit = lvl.steps;
   }
 
   /** stops all control - plays a sound and stops the timer */
-  pause =()=> {
+  pause() {
     game.sounds.stage_music('pause');
   
     this.state = "pause";
@@ -100,7 +100,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** regains control over playfield - plays a sound and timer runs again */
-  resume =()=> {
+  resume() {
     game.sounds.stage_music('resume');
   
     this.state = "running";
@@ -111,7 +111,7 @@ export default class ModePuzzle extends CoreStage {
   /** updates all important objects, especially the inputs
    *  based on the interal tick counter thats increasing
    */
-  update =()=> {
+  update() {
     if (this.playfield.stack_is_empty()) {
       if (this.puzzles.puzzle_levels.length === (this.level_index)) {
         game.state.start("menu");
@@ -139,7 +139,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** calls the render functions of the timer and playfield */
-  render =()=> {
+  render() {
     this.timer.render();
     this.step_display.render();
   
