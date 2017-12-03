@@ -131,7 +131,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  load =(data)=> {
+  load(data) {
     this.x       = data[0]
     this.y       = data[1]
     this.kind    = data[2]
@@ -146,7 +146,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  create =(playfield, x, y)=> {
+  create(playfield, x, y) {
     /************************************************
     * STATE MACHINE
     ************************************************/
@@ -202,22 +202,22 @@ export default class ComponentPanel {
     });
   }
 
-  swap_l_execute     =(panel)=> { if (panel.counter <= 0) { panel.change_state(SWAPPING_L) } }
-  swap_r_execute     =(panel)=> { if (panel.counter <= 0) { panel.change_state(SWAPPING_R) } }
-  land_execute       =(panel)=> { if (panel.counter <= 0) { panel.change_state(STATIC) } }
-  swapping_l_execute =(panel)=> { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
-  swapping_r_execute =(panel)=> { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
-  hang_execute       =(panel)=> { if (panel.counter <= 0) { panel.change_state(FALL) } }
+  swap_l_execute    (panel) { if (panel.counter <= 0) { panel.change_state(SWAPPING_L) } }
+  swap_r_execute    (panel) { if (panel.counter <= 0) { panel.change_state(SWAPPING_R) } }
+  land_execute      (panel) { if (panel.counter <= 0) { panel.change_state(STATIC) } }
+  swapping_l_execute(panel) { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
+  swapping_r_execute(panel) { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
+  hang_execute      (panel) { if (panel.counter <= 0) { panel.change_state(FALL) } }
 
-  swapping_r_enter =(panel)=> {
+  swapping_r_enter(panel) {
     panel.counter = TIME_SWAP
   }
 
-  hang_enter =(panel)=> {
+  hang_enter(panel) {
     panel.counter = 0
   }
 
-  swapping_l_enter =(panel)=> {
+  swapping_l_enter(panel) {
     const i1 = panel.kind
     const i2 = panel.right.kind
     panel.kind       = i2
@@ -225,7 +225,7 @@ export default class ComponentPanel {
     panel.counter = TIME_SWAP
   }
 
-  static_execute =(panel)=> {
+  static_execute(panel) {
     if ((panel.under.empty && !panel.empty) || panel.under.state === HANG) {
       panel.change_state(HANG);
     } else if (panel.danger && panel.counter === 0) {
@@ -238,11 +238,11 @@ export default class ComponentPanel {
     }
   }
 
-  land_enter =(panel)=> {
+  land_enter(panel) {
     panel.counter = FRAME_LAND.length
   }
 
-  fall_execute =(panel)=> {
+  fall_execute(panel) {
     if (panel.counter > 0) { return }
       if (panel.under.empty) {
         panel.under.kind    = panel.kind
@@ -268,12 +268,12 @@ export default class ComponentPanel {
         //this.counter = FRAME_LAND.length
   }
 
-  clear_enter =(panel)=> {
+  clear_enter(panel) {
     panel.chain += 1
     panel.playfield.clearing.push(panel)
     panel.group = panel.playfield.stage.tick
   }
-  clear_execute =(panel)=> {
+  clear_execute(panel) {
     if (panel.counter > 0) {
       const [xi,xlen] = panel.clear_index
       panel.clear_i    = xi
@@ -296,7 +296,7 @@ export default class ComponentPanel {
       panel.change_state(STATIC)
     }
   }
-  clear_exit =(panel)=> {
+  clear_exit(panel) {
     panel.kind    = null
     panel.counter = 0
     panel.chain   = 0
@@ -305,7 +305,7 @@ export default class ComponentPanel {
 
 
 
-  set_garbage =(group)=>{
+  set_garbage(group){
     this.state = GARBAGE
     this.panel_garbage.group = group
     this.panel_garbage.state = FALL
@@ -342,7 +342,7 @@ export default class ComponentPanel {
   }
 
   /** */
-  matched =(kind)=>{
+  matched(kind){
     return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||
            ((this.above.kind === kind) && (this.under.kind  === kind)) ||
            ((this.above.kind === kind) && (this.above2.kind === kind)) ||
@@ -364,7 +364,7 @@ export default class ComponentPanel {
     this.sprite.frame = (this.kind * 8) + parseInt(i)
   }
   /** */
-  set_kind =(i)=> {
+  set_kind(i) {
     switch (i) {
       case 'unique':
         this.kind = this.nocombo();
@@ -428,7 +428,7 @@ export default class ComponentPanel {
     Calculates and set the counter for the panel to pop
     @param {{number}} i
   */
-  popping =(i)=> {
+  popping(i) {
     this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL     
   }
 
@@ -522,7 +522,7 @@ export default class ComponentPanel {
   /**
    * exit old state, enter new state, reset state_timer
    */
-  change_state =(state)=> {
+  change_state(state) {
     this.state_timer = 0
     if (this.state_exit.has(this.state))
       this.state_exit.get(this.state)(this)

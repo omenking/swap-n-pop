@@ -11,7 +11,7 @@ export default class PuzzleSelectCursor {
   // need to figure out what this parent is suppose to be
   private parent : any
 
-  create =(parent, x, y)=> {
+  create(parent, x, y) {
     this.x = x;
     this.y = y;
     this.index  = 0;
@@ -24,17 +24,17 @@ export default class PuzzleSelectCursor {
     this.map_controls(1);
   }
 
-  map_controls =(pi)=> {
+  map_controls(pi) {
     return game.controls.map(pi, {
-      up   : this.up,
-      down : this.down,
-      a    : this.confirm,
-      b    : this.cancel,
-      start: this.confirm
+      up   : this.up.bind(this),
+      down : this.down.bind(this),
+      a    : this.confirm.bind(this),
+      b    : this.cancel.bind(this),
+      start: this.confirm.bind(this)
     });
   }
 
-  up =(tick)=> {
+  up(tick) {
     if (tick > 0) 
       return;
 
@@ -42,7 +42,7 @@ export default class PuzzleSelectCursor {
       --this.index;
   }
 
-  down =(tick)=> {
+  down(tick) {
     if (tick > 0) 
       return;
     
@@ -50,11 +50,11 @@ export default class PuzzleSelectCursor {
       ++this.index;
   }
 
-  confirm =(tick)=> {
+  confirm(tick) {
     game.state.start("mode_puzzle", true, false, { chosen_index: this.index });
   }
 
-  cancel =(tick)=> {
+  cancel(tick) {
     if (tick > 0)
       return; 
 

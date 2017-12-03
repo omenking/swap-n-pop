@@ -25,7 +25,7 @@ export default class ComponentPauseMenu {
    * create a cursor with no controls provided yet 
    * @param {mode_vs} stage reference to call both playfields 
    */
-  create =(stage)=> {
+  create(stage) {
     this.paused = false;
 
     this.stage = stage;

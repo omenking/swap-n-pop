@@ -30,7 +30,7 @@ export default class ComponentBauble {
   private combo_int0       : Phaser.Sprite
   private combo_small_int0 : Phaser.Sprite
 
-  create =(panel)=> {
+  create(panel) {
     this.panel = panel
     this.create_chain()
     this.create_combo()
@@ -92,7 +92,7 @@ export default class ComponentBauble {
     this.render_combo(x,y)
   }
 
-  render_chain =(x,y)=> {
+  render_chain(x,y) {
     const chain = this.panel.chain
     if (this.panel.state   === CLEAR &&
         this.panel.clear_i === 0     &&
@@ -167,7 +167,7 @@ export default class ComponentBauble {
     }
   }
 
-  render_combo =(x,y)=> {
+  render_combo(x,y) {
     const combo = this.panel.clear_len
     const chain = this.panel.chain
     if (this.panel.state   === CLEAR &&

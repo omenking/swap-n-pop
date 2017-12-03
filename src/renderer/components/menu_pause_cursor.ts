@@ -27,7 +27,7 @@ export default class ComponentMenuPauseCursor {
    * @param {integer} y pos
    * @param {Array} menu_items functions from menu
    */
-  create =(menu, x, y, menu_items)=> {
+  create(menu, x, y, menu_items) {
     this.menu = menu;
     this.x = x;
     this.y = y;
@@ -44,17 +44,17 @@ export default class ComponentMenuPauseCursor {
    * binds controls to methods of this cursor
    * @param {playerNumber} any_player_number 
    */
-  map_controls =(any_player_number)=> {
+  map_controls(any_player_number) {
     return game.controls.map(any_player_number, {
-      up   : this.up,
-      down : this.down,
-      a    : this.confirm,
-      start: this.confirm
+      up   : this.up.bind(this),
+      down : this.down.bind(this),
+      a    : this.confirm.bind(this),
+      start: this.confirm.bind(this)
     }
     );
   }
 
-  confirm =(tick)=> {
+  confirm(tick) {
     if (tick > 0) 
       return;
 
@@ -62,7 +62,7 @@ export default class ComponentMenuPauseCursor {
     return this.menu_items[this.index]();
   }
 
-  up =(tick)=> {
+  up(tick) {
     if (tick > 0) 
       return;
 
@@ -72,7 +72,7 @@ export default class ComponentMenuPauseCursor {
     }
   }
 
-  down =(tick)=> {
+  down(tick) {
     if (tick > 0) 
       return;
 
