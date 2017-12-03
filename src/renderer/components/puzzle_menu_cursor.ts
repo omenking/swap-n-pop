@@ -61,7 +61,7 @@ export default class PuzzleSelectCursor {
     game.state.start("menu");
   }
 
-  update =()=> {
+  update() {
     this.sprite.y = this.y + (this.index * UNIT);
   }
 }

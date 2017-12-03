@@ -34,7 +34,7 @@ export default class StepCounter {
   }
 
   /** update the sprites each frame */
-  render =()=> {
+  render() {
     this.steps = this.step_limit - this.playfield.swap_counter;
     
     if (this.steps >= 10) {

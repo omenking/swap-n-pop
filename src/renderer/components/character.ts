@@ -83,7 +83,7 @@ export default class ComponentCharacter {
    * in the End of the current_animation
    * Once this.stopped is set it wont get auto reset!
    */
-  play_animation =()=> {
+  play_animation() {
     let animation = this.animations.get(this.current_animation);
     // if no animation in map was found
     if (animation !== undefined) {
@@ -142,7 +142,7 @@ export default class ComponentCharacter {
   }
 
   /** update the position and render all animations */
-  render =()=> {
+  render() {
     this.sprite.x = this.x
     this.sprite.y = this.y
 

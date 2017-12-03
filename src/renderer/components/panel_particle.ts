@@ -86,7 +86,7 @@ export default class ComponentPanelParticle {
   }
 
   /** sets the pos of the particle, also sets the dir based on its dir  */
-  update =()=> {
+  update() {
     this.x = this.panel.playfield.layer_block.x + (this.panel.x * UNIT)
     this.y = this.panel.playfield.layer_block.y + (this.panel.y * UNIT)
 
@@ -124,7 +124,7 @@ export default class ComponentPanelParticle {
   }
 
   /** draws the sprite contents, animates the sprite when visible */
-  render =()=> {
+  render() {
     if (this.counter > 0) {
       const cur = (TIME_PARTICLE - this.counter) / TIME_PARTICLE
 

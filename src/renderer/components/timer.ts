@@ -55,7 +55,7 @@ export default class ComponentTimer {
    *  Each counter goes up determined by the time passed etc.
    *  everything is stoppable through this.running
    */
-  render =()=> {
+  render() {
     if (!this.running)
       return;
     const time = Math.floor(this.tick / 60);

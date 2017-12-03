@@ -312,7 +312,7 @@ export default class ComponentPanel {
   }
 
   /** resets this panel to a normal state - stops animation usefull for stack resets */ 
-  soft_reset =()=> {
+  soft_reset() {
     this.counter = 0;
     this.state = STATIC;
   }
@@ -336,7 +336,7 @@ export default class ComponentPanel {
   /** */
   get hidden() {      return (this.kind === null) }
 
-  log =()=> {
+  log() {
     const k = (this.kind === null) ? 'N' : this.kind
     return `${k}`
   }
@@ -381,7 +381,7 @@ export default class ComponentPanel {
    * reaches zero.
    *
    */
-  update =()=> {
+  update() {
     this.particles.forEach(particle => particle.update())
 
     if (this.state === GARBAGE) {
@@ -398,7 +398,7 @@ export default class ComponentPanel {
    * Determines whether a panel should be visible or not
    * at the time of render
    */
-  render_visible =()=> {
+  render_visible() {
     if (this.hidden){
       this.sprite.visible = false
     } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
@@ -410,7 +410,7 @@ export default class ComponentPanel {
   /**
    * Swaps the this panel with the panel to it's right.
    */
-  swap =()=> {
+  swap() {
     if (this.hidden && this.right.hidden) { return }
 
     this.counter        = 0
@@ -449,7 +449,7 @@ export default class ComponentPanel {
    * 
    * @returns {number} new kind to be set to!
   */
-  nocombo =()=> {
+  nocombo() {
     const arr = [0, 1, 2, 3, 4] 
     if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)} 
     let values = ss.shuffle(arr,this.playfield.stage.rng()) 
@@ -493,7 +493,7 @@ export default class ComponentPanel {
   * You can see this in `Playfield.chain_and_combo` where it will then
   * call `Panel.popping` to set the counter.
   */
-  clear =()=> {
+  clear() {
     this.change_state(CLEAR)
   }
   /**
@@ -501,7 +501,7 @@ export default class ComponentPanel {
    * Panels will be added to playfield.clearing to determine combo and chain
    *
    * */
-  chain_and_combo =()=> {
+  chain_and_combo() {
     if (!this.comboable) { return }
 
     if (this.left.comboable  && this.left.kind  === this.kind &&
@@ -563,7 +563,7 @@ export default class ComponentPanel {
    * * live     - the panel's normal state
    *
    */
-  animate =()=>{
+  animate(){
     if (this.newline) {
       this.frame = FRAME_NEWLINE
     } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
@@ -593,7 +593,7 @@ export default class ComponentPanel {
     }
   }
   /** */
-  render =()=>{
+  render(){
     this.particles.forEach(particle => particle.render())
 
     this.sprite.x = this.x * UNIT
@@ -604,5 +604,5 @@ export default class ComponentPanel {
     this.panel_garbage.render()
   }
   /** */
-  shutdown =()=>{}
+  shutdown(){}
 } // klass
