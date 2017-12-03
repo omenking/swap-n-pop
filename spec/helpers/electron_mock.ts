@@ -1,4 +1,4 @@
-mock('electron', {
+const electron_mock = {
   app: null,
   remote: { app: null},
   ipc: {
@@ -8,3 +8,5 @@ mock('electron', {
     on: sinon.stub()
   }
 })
+
+export default electron_mock
