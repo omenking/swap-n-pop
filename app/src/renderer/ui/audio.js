@@ -3,7 +3,8 @@ module.exports = function(Ui){
 
   audio_sfx_volume = 100
   audio_msx_volume = 100
-  function render(){
+  muted = false;
+  function render(game){
     return m('form',[
       m('.check_box.sfx',[
         m("input[type='range']",{
@@ -11,7 +12,8 @@ module.exports = function(Ui){
           max:"100",
           value: audio_sfx_volume,
           oninput: function(e){
-           audio_sfx_volume = e.target.value
+            audio_sfx_volume = e.target.value
+            game.sounds.set_sfx_volume(audio_sfx_volume / 100);
           }
         }),
         m('.val',[
@@ -25,13 +27,24 @@ module.exports = function(Ui){
           max:"100",
           value: audio_msx_volume,
           oninput: function(e){
-           audio_msx_volume = e.target.value
+            audio_msx_volume = e.target.value
+            game.sounds.set_msx_volume(audio_msx_volume / 100);
           }
         }),
         m('.val',[
           'Music: ',
           audio_msx_volume + '%'
         ])
+      ]),
+      m('.check_box.mute', [
+        m("input[type='checkbox']", {
+          checked: muted,
+          onclick: function(e) { 
+            muted = !muted;
+            game.sounds.mute_all(muted);
+          }
+        }),
+        m('.val', ['Mute all Audio'])
       ])
     ])
   }

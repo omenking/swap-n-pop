@@ -99,9 +99,7 @@ module.exports = function(game){
     /** */
     get snap() {
       let snap_particles = []
-      this.particles.forEach((particle, i) => {
-        snap_particles[i] = particle.snap
-      })
+      this.particles.forEach((particle, i) => snap_particles[i] = particle.snap);
 
       return [
         this.x,
@@ -126,9 +124,7 @@ module.exports = function(game){
       this.garbage = data[6]
       this.group   = data[7]
       
-      this.particles.forEach((particle, i) => {
-        particle = data[8][i]
-      })
+      this.particles.forEach((particle, i) => particle = data[8][i]);
     }
 
     /** */
@@ -376,7 +372,10 @@ module.exports = function(game){
      * reaches zero.
      *
      */
-    update(){ 
+
+    update(){
+      this.particles.forEach(particle => particle.update());
+
       if (this.state === GARBAGE) {
         this.panel_garbage.update()
       } else {
@@ -581,16 +580,14 @@ module.exports = function(game){
     }
     /** */
     render(){
+      this.particles.forEach(particle => particle.render());
+
       this.sprite.x = this.x * UNIT
       this.sprite.y = this.y * UNIT
       this.animate()
       this.render_visible()
       this.bauble_chain.render()
       this.panel_garbage.render()
-
-      this.particles.forEach((particle) => {
-        particle.render();
-      });
     }
     /** */
     shutdown(){}

@@ -51,7 +51,7 @@ module.exports = function(game) {
     load_all() {
       // Music --------
       game.load.audio('msx_stage'         , './assets/music/stage.mp3')
-      game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')
+      game.load.audio('msx_stage_critical', './assets/music/swap_critical.mp3')
       game.load.audio('msx_stage_results' , './assets/music/stage_results.mp3')
       // SFX ----------
       game.load.audio('sfx_confirm', './assets/sound_effects/pause.ogg')
@@ -70,8 +70,6 @@ module.exports = function(game) {
       game.load.audio('sfx_pop1', './assets/sound_effects/pop1.ogg');
       game.load.audio('sfx_pop2', './assets/sound_effects/pop2.ogg');
       game.load.audio('sfx_pop3', './assets/sound_effects/pop3.ogg');
-      //game.load.audio('sfx_pop4', './assets/sound_effects/pop4.mp3');
-      //game.load.audio('sfx_pop5', './assets/sound_effects/pop5.mp3');
       // Bg -----------
       game.load.image('bg_blue'  , './assets/images/bg_blue.png')
       game.load.image('bg_green' , './assets/images/bg_green.png')
@@ -121,7 +119,7 @@ module.exports = function(game) {
       game.load.spritesheet('bauble_num_small', './assets/images/bauble_num_small.png',px(5),px(9),10)
 
       game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
-      game.load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 60);
+      game.load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 84);
 
       game.load.start()
     }

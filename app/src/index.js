@@ -3,15 +3,15 @@ const APP = require('../app')('../')
 const {ipcRenderer: ipc} = require('electron')
 const ui = require(APP.path.ui('main'))
 
-ui()
-
 const {WIN_WIDTH, WIN_HEIGHT} = require(APP.path.core('data'))
 const game         = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
 const States       = require(APP.path.root('src','renderer','states'))(game)
 const CoreControls = require(APP.path.core('controls'))(game)
 const CoreSounds   = require(APP.path.core('sounds'))(game)
 const Server       = require(APP.path.main('server'))
- 
+
+ui(game)
+
 game.controls = new CoreControls()
 game.sounds   = new CoreSounds()
 game.server   = new Server()
