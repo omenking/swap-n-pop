@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es2015","es6"],
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "main/*"       : ["src/main/*"],
+      "components/*" : ["src/renderer/components/*"],
+      "core/*"       : ["src/renderer/core/*"],
+      "states/*"     : ["src/renderer/states/*"],
+      "ui/*"         : ["src/renderer/ui/*"],
+      "common/*"     : ["src/common/*"]
+    }
+  },
+  "files": [
+   "./node_modules/phaser-ce/typescript/phaser.comments.d.ts" 
+  ]
+}
