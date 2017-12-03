@@ -24,7 +24,7 @@ export default class ComponentPlayfieldCountdown {
     this.counter = snapshot[1]
   }
 
-  get snap =()=> {
+  get snap() {
     return [this.state, this.counter]
   }
 

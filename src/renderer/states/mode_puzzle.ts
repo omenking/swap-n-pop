@@ -39,14 +39,14 @@ export default class ModePuzzle extends CoreStage {
     this.inputs       = new CoreInputs()
   }
 
-  init(data) {
+  init =(data)=> {
     this.level_index = data.chosen_index;
   }
 
   /** creates the playfield, menu_pause and timer objects
    *  with certain parameters
    */
-  create() {
+  create =()=> {
     game.add.sprite(0, 0, "mode_puzzle_bg")
 
     this.tick   = -1
@@ -75,20 +75,20 @@ export default class ModePuzzle extends CoreStage {
   }
   
   /** shuts down the playfield */
-  shutdown() {
+  shutdown =()=> {
     game.sounds.stage_music('none');
     this.playfield.shutdown();
   }
 
   /** changes the current level to the next one from the puzzle array - counters go up */
-  change_level(lvl) {
+  change_level =(lvl)=> {
     this.panels = lvl.panels;
     this.steps_left = lvl.steps;
     this.step_display.step_limit = lvl.steps;
   }
 
   /** stops all control - plays a sound and stops the timer */
-  pause() {
+  pause =()=> {
     game.sounds.stage_music('pause');
   
     this.state = "pause";

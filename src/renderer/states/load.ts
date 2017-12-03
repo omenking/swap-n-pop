@@ -10,7 +10,7 @@ export default class StatesLoad {
   private files : Phaser.Text
   private file : Phaser.Text
 
-  create() {
+  create =()=> {
     const x = game.world.centerX
     const y = game.world.centerY
     const font_style1 = { font: '20px Verdana', fill: '#FFF', align: 'center' }
@@ -28,32 +28,32 @@ export default class StatesLoad {
     this.load_all()
   }
 
-  load_start() {
+  load_start =()=> {
 
   }
   
-  file_complete(progress,key,success,cur,total){
+  file_complete =(progress,key,success,cur,total)=> {
     this.files.setText(`Files ${cur} / ${total}`)
     this.file.setText(key)
   } 
 
-  load_complete() {
+  load_complete =()=> {
     game.controls.create()
     game.sounds.create()
     game.state.start('menu')
   }
 
-  update() {
+  update =()=> {
     this.loader.setText(`Loading ${game.load.progress}%`);
   }
 
-  render() {
+  render =()=> {
     //this.loader.visible = true
     //this.files.visible  = true
     //this.file.visible   = true
   }
 
-  load_all() {
+  load_all =()=> {
     // Music --------
     game.load.audio('msx_stage'         , './assets/music/stage.mp3')
     game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')

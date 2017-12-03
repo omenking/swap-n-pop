@@ -29,11 +29,11 @@ export default class ComponentPanelGarbage {
   private time_pop : number
   private time_cur : number
 
-  get state =()=>    {return this._state }
-  set state =(val)=> {       this._state = val }
+  get state()    {return this._state }
+  set state(val) {       this._state = val }
 
-  get group =()=>    {return this._group }
-  set group =(val)=> {       this._group = val }
+  get group()    {return this._group }
+  set group(val) {       this._group = val }
 
   create =(panel : ComponentPanel ,playfield : ComponentPlayfield)=> {
     this.panel     = panel
@@ -46,7 +46,7 @@ export default class ComponentPanelGarbage {
    Returns the index of the current panel clearing and amount of panels clearing
    @returns {array} - [index,length]
    */
-  get clear_index =()=>{
+  get clear_index(){
     if (this.state !== CLEAR) {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
@@ -65,11 +65,11 @@ export default class ComponentPanelGarbage {
         this.playfield.clearing_garbage.indexOf(this.group) !== -1 ){
       this.state         = CLEAR
       this.panel.counter = TIME_GARBAGE_CLEAR + (this.group_len * TIME_GARBAGE_POP)
-      this.panel.set('unique')
+      this.panel.set_kind('unique')
     }
   }
 
-  get group_len =()=>{
+  get group_len(){
     let len = 0
     for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&

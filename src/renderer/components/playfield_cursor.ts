@@ -77,11 +77,11 @@ export default class ComponentPlayfieldCursor {
    * This is the offset for the cursor so it appears
    * perfectly over the panel
    */
-  get =offset()=> {
+  get offset() {
     return (UNIT / 16) * 3
   }
 
-  get =snap()=> {
+  get snap() {
     return [
       this.x,
       this.y,
@@ -201,7 +201,7 @@ export default class ComponentPlayfieldCursor {
    * 
    * @param {integer} tick increasing counter
    */
-  swap =(tick=>) {
+  swap =(tick)=> {
     if (tick > 0 || 
         this.playfield.stage.state !== 'running' || 
         this.state !== 'active') 

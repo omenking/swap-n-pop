@@ -30,7 +30,7 @@ export default class ComponentBauble {
   private combo_int0       : Phaser.Sprite
   private combo_small_int0 : Phaser.Sprite
 
-  create =(panel)=< {
+  create =(panel)=> {
     this.panel = panel
     this.create_chain()
     this.create_combo()

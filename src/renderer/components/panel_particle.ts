@@ -62,7 +62,7 @@ export default class ComponentPanelParticle {
   }
 
   /** @returns an Array of the vars that can be rerolled to to recreate a state completely */
-  get snap =()=> {
+  get snap() {
     return [
       this.x,
       this.y,

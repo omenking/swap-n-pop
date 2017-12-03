@@ -15,7 +15,7 @@ export default class ComponentTimer {
   public running : boolean
 
   /** get snapshot of the timer, get only to not let this be modifyable */
-  get snap =()=> {
+  get snap() {
     return [
       this.d0.frame,
       this.d1.frame,

@@ -81,22 +81,22 @@ export default class Playfield {
     this.character     = new ComponentCharacter()
   }
 
-  get stoptime =()=>{ return this._stoptime }
-  set stoptime =(v)=>{ this._stoptime = v }
+  get stoptime() { return this._stoptime }
+  set stoptime(v) { this._stoptime = v }
 
-  get shake =()=>{ return this._shake }
-  set shake =(v)=>{ this._shake = v }
+  get shake() { return this._shake }
+  set shake(v) { this._shake = v }
 
-  get counter =()=>{ return this._counter }
-  set counter =(v)=>{ this._counter = v }
+  get counter() { return this._counter }
+  set counter(v) { this._counter = v }
 
-  get push_counter =()=>{ return this._push_counter }
-  set push_counter =(v)=>{ this._push_counter = v }
+  get push_counter() { return this._push_counter }
+  set push_counter(v) { this._push_counter = v }
 
-  get pushing =()=>{ return this._pushing }
-  set pushing =(v)=>{ this._pushing = v }
+  get pushing() { return this._pushing }
+  set pushing(v) { this._pushing = v }
 
-  get stack =()=>{
+  get stack(){
     return this._stack
   }
 
@@ -108,7 +108,7 @@ export default class Playfield {
     return this._stack[_f.xy2i(x,y)]
   }
 
-  get snap  =()=> {
+  get snap() {
     const snap_cursor = this.cursor.snap
     const snap_countdown = this.countdown.snap
     const snap_stack  = []
@@ -132,7 +132,7 @@ export default class Playfield {
     this.countdown.load(snapshot[3])
     this.pushing = snapshot[4]
   }
-  create =(stage,opts)=> {
+  create = (stage,opts) => {
     if (stage === null) {
       throw new Error("must pass stage")
     }
@@ -197,10 +197,10 @@ export default class Playfield {
     this.fill_panels(data)
   }
 
-  get stack_len =()=>{
+  get stack_len() {
     return this._stack.length
   }
-  get stack_size =()=>{
+  get stack_size() {
     return this.should_push ? this.stack_len-COLS : this.stack_len
   }
 
@@ -233,7 +233,7 @@ export default class Playfield {
     }
     // fill panels
     for (let i = PANELS; i < PANELS+COLS; i++){
-      this.stack_i(i).set('unique')
+      this.stack_i(i).set_kind('unique')
     }
   }
 
@@ -261,11 +261,11 @@ export default class Playfield {
    * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty  
    */
   fill_panels =(data)=> {
-    this.stack.forEach((panel, i) => { panel.set(data[i]); });
+    this.stack.forEach((panel, i) => { panel.set_kind(data[i]); });
 
     if (this.should_push)
       for (let i = PANELS; i < PANELS+COLS; i++)
-        this.stack_i(i).set('unique');
+        this.stack_i(i).set_kind('unique');
   }
 
   update_stack =()=> {

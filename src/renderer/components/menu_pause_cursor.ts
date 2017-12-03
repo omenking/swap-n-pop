@@ -77,7 +77,7 @@ export default class ComponentMenuPauseCursor {
       return;
 
     if (this.index !== (this.menu_items.length-1)) {
-      game.sounds.play()
+      game.sounds.select()
       return this.index++;
     }
   }

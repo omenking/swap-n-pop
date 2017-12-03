@@ -19,7 +19,7 @@ class ComponentPanelBlank{
   public panel_garbage     : any
   public chain             : number
 
-  constructor =()=>{
+  constructor(){
     this.kind              = null
     this.x                 = null
     this.y                 = null

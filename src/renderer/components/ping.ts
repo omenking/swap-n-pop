@@ -4,8 +4,8 @@ export default class ComponentPing {
   private _ping : number
   private lbl   : Phaser.Text
 
-  get ping =()=>{  return this._ping }
-  set ping =(v)=> { this._ping = v }
+  get ping (){  return this._ping }
+  set ping (v) { this._ping = v }
 
   create =()=> {
     this.ping = null
