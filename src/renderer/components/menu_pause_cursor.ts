@@ -82,7 +82,7 @@ export default class ComponentMenuPauseCursor {
     }
   }
   
-  update =()=> {
+  update() {
     return this.sprite.y = this.y + (this.index * px(12));
   }
 }

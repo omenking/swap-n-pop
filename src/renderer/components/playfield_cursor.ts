@@ -99,7 +99,7 @@ export default class ComponentPlayfieldCursor {
     this.counter         = data[4];
   }
 
-  entrance =()=> {
+  entrance() {
     this.sprite.visible = true;
     this.state = 'entering';
   }
@@ -107,7 +107,7 @@ export default class ComponentPlayfieldCursor {
   /**
    * defines the game controls and links the callsbacks to this cursors methods
    */
-  map_controls =()=> {
+  map_controls() {
     game.controls.map(this.playfield.pi, {
       up   : this.up,
       down : this.down,
@@ -254,7 +254,7 @@ export default class ComponentPlayfieldCursor {
   }
 
   /** updates the internal x & y pos, animation for flickers, setting controls once entered */
-  update =()=> {
+  update() {
     // should check in a deterministic way for preactive
     let x = (this.x * UNIT) - this.offset;
     let y = (ROWS_INV * UNIT) + (this.y * UNIT) - this.offset;
@@ -268,7 +268,7 @@ export default class ComponentPlayfieldCursor {
   }
 
   /** updates the actual sprite position, almost the same as update() */
-  render =()=> {
+  render() {
     let x = (this.x * UNIT) - this.offset
     let y = (this.y * UNIT) - this.offset
 
@@ -301,6 +301,6 @@ export default class ComponentPlayfieldCursor {
   }
 
   /** empty */
-  shutdown =()=> {
+  shutdown() {
   }
 }

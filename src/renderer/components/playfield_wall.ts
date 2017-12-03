@@ -23,13 +23,13 @@ export default class ComponentPlayfieldWall {
     this.counter   = 0
   }
 
-  update =()=> {
+  update() {
     if (this.counter < WALL_ROLLUP.length-1) {
       this.counter++
     }
   }
 
-  render =()=> {
+  render() {
     //frame animation offset from from the bottom of the wall
     this.sprite.y = px(this.playfield.y + 168 - WALL_ROLLUP[this.counter])
   }

@@ -7,7 +7,7 @@ export default class ComponentPing {
   get ping (){  return this._ping }
   set ping (v) { this._ping = v }
 
-  create =()=> {
+  create() {
     this.ping = null
     this.lbl = game.add.text(6, 4, '', {font: 'normal 10px Arial',fill: '#FFFFFF'})
 
@@ -21,7 +21,7 @@ export default class ComponentPing {
     }.bind(this),3000)
   }
 
-  render =()=> {
+  render() {
     if (this.ping === null) {return}
     this.lbl.setText(`${this.ping}ms`)
   }

@@ -72,7 +72,7 @@ export default class ComponentMenuCursor {
     return console.log('cancel');
   }
 
-  update =()=> {
+  update() {
     this.sprite.y = this.y+(this.index*UNIT);
     this.counter++;
     if (this.counter > MENUCURSORBLINK) {

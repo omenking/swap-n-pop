@@ -3,7 +3,7 @@ import game from 'core/game'
 export default class ComponentScore {
   private lbl : Phaser.Text
 
-  create =()=> {
+  create() {
     this.lbl = game.add.text(0, 10, '0', {
       fontSize: '16px',
       fill: 0x000000

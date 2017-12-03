@@ -35,7 +35,7 @@ class ComponentPanelBlank{
     this.chain             = null
   }
 
-  clear =()=>{
+  clear(){
   }
 }
 
