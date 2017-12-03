@@ -3,7 +3,7 @@ import * as fs         from 'fs'
 import * as path       from 'path'
 import * as DotProp    from 'dot-prop'
 import * as mkdir      from 'make-dir'
-import writeFileAtomic from 'write-file-atomic'
+import * as writeFileAtomic from 'write-file-atomic'
 
 const obj = () => Object.create(null)
 
