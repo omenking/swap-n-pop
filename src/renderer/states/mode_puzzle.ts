@@ -16,7 +16,7 @@ const { px }   = filters
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {
-  private playfield    : ComponentPlayfield
+  private playfield0    : ComponentPlayfield
   private menu_pause   : ComponentMenuPause
   private timer        : ComponentTimer
   private step_display : ComponentStepCounter
@@ -33,7 +33,7 @@ export default class ModePuzzle extends CoreStage {
   private bg           : Phaser.Sprite
   constructor() {
     super()
-    this.playfield    = new ComponentPlayfield(0)
+    this.playfield0    = new ComponentPlayfield(0)
     this.menu_pause   = new ComponentMenuPause()
     this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
@@ -49,7 +49,6 @@ export default class ModePuzzle extends CoreStage {
    */
   create() {
     this.bg = game.add.sprite(0, 0, "mode_puzzle_bg")
-    this.bg.anchor.setTo(0.5, 0)
 
     this.tick   = -1
     this.seed   = 'puzzle'
@@ -60,7 +59,7 @@ export default class ModePuzzle extends CoreStage {
     this.puzzles = new Puzzles()
     this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
 
-    this.playfield.create(this, {
+    this.playfield0.create(this, {
       countdown: false,
       push  : false,
         x   : 320,
@@ -68,19 +67,19 @@ export default class ModePuzzle extends CoreStage {
       panels: this.panels
     });
 
-    this.playfield.create_after()
-    this.playfield.cursor.mode = "puzzle"
-    this.playfield.character.sprite.visible = false
+    this.playfield0.create_after()
+    this.playfield0.cursor.mode = "puzzle"
+    this.playfield0.character.sprite.visible = false
 
     this.menu_pause.create(this);
     this.timer.create(180, 60);
-    this.step_display.create({ playfield: this.playfield, step_limit: this.steps_left, x: 575, y: 85 });
+    this.step_display.create({ playfield: this.playfield0, step_limit: this.steps_left, x: 575, y: 85 });
   }
   
-  /** shuts down the playfield */
+  /** shuts down the playfield0 */
   shutdown() {
     game.sounds.stage_music('none');
-    this.playfield.shutdown();
+    this.playfield0.shutdown();
   }
 
   /** changes the current level to the next one from the puzzle array - counters go up */
@@ -99,51 +98,51 @@ export default class ModePuzzle extends CoreStage {
     this.menu_pause.pause();
   }
 
-  /** regains control over playfield - plays a sound and timer runs again */
+  /** regains control over playfield0 - plays a sound and timer runs again */
   resume() {
     game.sounds.stage_music('resume');
   
     this.state = "running";
     this.timer.running = true;
-    this.playfield.cursor.map_controls()
+    this.playfield0.cursor.map_controls()
   }
 
   /** updates all important objects, especially the inputs
    *  based on the interal tick counter thats increasing
    */
   update() {
-    if (this.playfield.stack_is_empty()) {
+    if (this.playfield0.stack_is_empty()) {
       if (this.puzzles.puzzle_levels.length === (this.level_index)) {
         game.state.start("menu");
         return;
       }
 
       this.change_level(this.puzzles.puzzle_levels[this.level_index++]);      
-      this.playfield.cursor.cursor_swap_history = [];
-      this.playfield.reset_stack(this.panels, 0);  
+      this.playfield0.cursor.cursor_swap_history = [];
+      this.playfield0.reset_stack(this.panels, 0);  
     }
 
     // if over a limit overcrossed reset
-    if (this.playfield.swap_counter > this.steps_left) {
-      this.playfield.cursor.cursor_swap_history = [];
-      this.playfield.reset_stack(this.panels, 0);
+    if (this.playfield0.swap_counter > this.steps_left) {
+      this.playfield0.cursor.cursor_swap_history = [];
+      this.playfield0.reset_stack(this.panels, 0);
     }
 
     this.tick++;
 
     game.controls.update();
-    this.playfield.update();
+    this.playfield0.update();
     this.inputs.update(this.tick,undefined);
 
     this.menu_pause.update();
   }
 
-  /** calls the render functions of the timer and playfield */
+  /** calls the render functions of the timer and playfield0 */
   render() {
     this.timer.render();
     this.step_display.render();
   
-    if (this.playfield) 
-      this.playfield.render();
+    if (this.playfield0) 
+      this.playfield0.render();
   }
 }
