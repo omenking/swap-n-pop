@@ -1,4 +1,4 @@
-import electron from 'electron'
+import * as electron from 'electron'
 import Store    from 'common/store'
 import game     from 'core/game'
 
@@ -7,6 +7,13 @@ const store = new Store()
 const {ipcRenderer: ipc} = electron
 
 export default class CoreControls {
+  private callbacks : any
+  private pad : any
+  private _simdown : any
+  private _down : any
+  private keys : any
+  private pi : number
+
   constructor() {
   }
 
@@ -56,7 +63,7 @@ export default class CoreControls {
       pl1_start : false
     } //simulated down
     this._down = {}
-    this.keys  = []
+    this.keys  = {}
     this.rebind()
 
     ipc.on('controls-rebind', (event) => {

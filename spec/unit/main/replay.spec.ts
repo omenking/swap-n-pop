@@ -1,6 +1,6 @@
-import fs     from 'fs'
-import path   from 'path'
-import Replay from 'main/replay'
+import * as fs     from 'fs'
+import * as path   from 'path'
+import Replay from 'common/replay'
 
 const app = {
   getPath: sinon.stub()

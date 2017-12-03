@@ -1,4 +1,4 @@
-import _f   from 'core/filters'
+import _f from 'core/filters'
 
 describe('_f', function() {
   // excessive? yeah, but it was annoying me.

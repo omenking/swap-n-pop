@@ -1,5 +1,5 @@
-import fs         from 'fs'
-import seedrandom from 'seedrandom'
+import * as fs         from 'fs'
+import * as seedrandom from 'seedrandom'
 import Game       from 'helpers/game_mock'
 import _f         from 'core/filters'
 import Stage      from 'states/mode_vs'

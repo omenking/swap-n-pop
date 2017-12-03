@@ -9,6 +9,7 @@
     "url": "https://github.com/omenking/swap-n-pop"
   },
   "devDependencies": {
+    "@types/jest": "^21.1.8",
     "chai": "^4.1.1",
     "docdash": "^0.4.0",
     "electron": "^1.7.9",
@@ -19,6 +20,7 @@
     "mocha": "^3.5.0",
     "mock-require": "^2.0.2",
     "sinon": "^3.2.1",
+    "ts-jest": "^21.2.4",
     "webpack": "^3.8.1"
   },
   "resolutions": {
@@ -42,7 +44,7 @@
     }
   },
   "scripts": {
-    "test": "jest 'spec/unit/renderer/core/filters.spec.js'",
+    "test": "jest",
     "build": "webpack",
     "dev": "electron-webpack dev",
     "start": "webpack && electron static/main.js",

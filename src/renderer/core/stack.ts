@@ -1,7 +1,7 @@
 import game from 'core/game'
 import data from 'core/data'
 import _f   from 'core/filters'
-import ss   from 'shuffle-seed'
+import * as ss   from 'shuffle-seed'
 
 const {
   COLS, 
@@ -16,12 +16,17 @@ const {
  * no combos are done once finished
  */
 export default class Stack {
+  private rng       : any
+  public  panels    : Array<number>
+  private kinds     : Array<number>
+  private wellArray : Array<any>
+  private chipArray : Array<any>
    /** Panels Array that saves the numbers being generated  
    * @param {object} rng seed that the randomness is based on  
    */ 
   constructor(rng) { 
     this.rng = rng; 
-    this.panels = 0;
+    this.panels = [];
 
     // null block generation
     this.kinds = [0, 1, 2, 3, 4, 5]; 
@@ -84,7 +89,7 @@ export default class Stack {
     }
 
     // nullifyBlocksAboveNulls
-    for (var i = PANELS; i > 0; i--)
+    for (let i = PANELS; i > 0; i--)
       if (savedNumbers[i] === null) 		// important === ... == caused bugs
         savedNumbers[i - COLS] = null;
 
