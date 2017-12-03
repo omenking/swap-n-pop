@@ -15,7 +15,7 @@ export default class ComponentScore {
     this.lbl.lineSpacing  = -7;
   }
 
-  update =(chain,score)=> {
+  update(chain,score) {
     let text  = `${score}`;
     if (chain) { text += `\nchain: ${chain+1}`; }
     this.lbl.setText(text);

@@ -35,7 +35,7 @@ export default class ComponentPanelGarbage {
   get group()    {return this._group }
   set group(val) {       this._group = val }
 
-  create =(panel : ComponentPanel ,playfield : ComponentPlayfield)=> {
+  create(panel : ComponentPanel ,playfield : ComponentPlayfield) {
     this.panel     = panel
     this.playfield = playfield
     this.sprite = game.add.sprite(0,0, 'garbage',0)

@@ -17,7 +17,7 @@ export default class ComponentPlayfieldWall {
   private sprite    : Phaser.Sprite
   private counter   : number
 
-  create =(playfield,x,y)=> {
+  create(playfield,x,y) {
     this.playfield = playfield
     this.sprite    = game.add.sprite(x, y, `playfield_wall${this.playfield.pi}`)
     this.counter   = 0

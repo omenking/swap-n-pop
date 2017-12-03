@@ -19,7 +19,7 @@ export default class ComponentPlayfieldCountdown {
 
   private states = []
 
-  load =(snapshot)=> {
+  load(snapshot) {
     this.state   = snapshot[0]
     this.counter = snapshot[1]
   }
@@ -28,7 +28,7 @@ export default class ComponentPlayfieldCountdown {
     return [this.state, this.counter]
   }
 
-  create =(playfield)=> {
+  create(playfield) {
     this.playfield = playfield
 
     const x = this.playfield.x+px(16);

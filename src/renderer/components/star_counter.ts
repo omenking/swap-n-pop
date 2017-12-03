@@ -15,7 +15,7 @@ export default class StarCounter {
   private y       : number
   private counter : number
 
-  create =(stage,x,y)=> {
+  create(stage,x,y) {
     this.stage = stage
     this.group = game.add.group()
     this.group.x = x
