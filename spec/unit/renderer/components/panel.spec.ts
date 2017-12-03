@@ -1,4 +1,4 @@
-import fs        from 'fs'
+import * as fs        from 'fs'
 import Game      from 'helpers/game_mock'
 import data      from 'core/data'
 import _f        from 'core/filters'

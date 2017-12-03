@@ -1,3 +1,6 @@
+import game         from 'helpers/game_mock'
+import CoreControls from 'core/controls'
+
 mock('electron', {
   app: null,
   remote: { app: null},
@@ -9,7 +12,7 @@ mock('electron', {
   }
 }
 )
-class fake_electron_store {
+class store_mock {
   constructor(){
     this.has = this.has.bind(this)
     this.set = this.set.bind(this)
@@ -19,14 +22,12 @@ class fake_electron_store {
   set(){}
   get(){}
 }
-fake_electron_store.prototype.get = sinon.stub()
-fake_electron_store.prototype.get.withArgs('inputs').returns(
+store_mock.prototype.get = sinon.stub()
+store_mock.prototype.get.withArgs('inputs').returns(
   [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
 )
-mock('electron-store',fake_electron_store)
+mock('store',store_mock)
 
-const game = require(APP.path.spec('helpers','game_spec'))
-const CoreControls = require(APP.path.core('controls'))(game)
 
 describe('Controls', function() {
   describe('#serialize(pi)' ,function(){

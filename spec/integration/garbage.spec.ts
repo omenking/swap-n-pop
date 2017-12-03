@@ -1,13 +1,13 @@
 import fs    from 'fs'
 import chai  from 'chai'
 import sinon from 'sinon'
-import Game  from 'helpers/game_spec'
+import Game  from 'helpers/game_mock'
 import seedrandom from 'seedrandom'
-import _f         from 'renderer/core/filters'
-import Stage      from 'renderer/states/mode_vs'
-import Playfield  from 'renderer/components/playfield'
-import Stack      from 'renderer/core/stack'
-import data       from 'renderer/core/data'
+import _f         from 'core/filters'
+import Stage      from 'states/mode_vs'
+import Playfield  from 'components/playfield'
+import Stack      from 'core/stack'
+import data       from 'core/data'
 
 chai.should()
 

@@ -1,17 +1,19 @@
+import data        from 'core/data'
+import StackModule from 'core/stack'
+
 const {
   COLS, 
   ROWS, 
   PANELS
-} = require(APP.path.core('data'));
+} = data
 
-const StackModule = require(APP.path.core("stack"))(null);
 
 //const Phaser = require("../../../../node_modules/phaser-ce/build/phaser");
 const seed = "0";
 //const rnd = new Phaser.RandomDataGenerator([seed]);
 
-const Stack = new StackModule();
-const secondStack = new StackModule();
+const Stack = new StackModule()
+const secondStack = new StackModule()
 
 describe("Stack Class", () => {
 

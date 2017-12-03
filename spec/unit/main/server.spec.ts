@@ -1,5 +1,5 @@
-import fs   from 'fs'
-import Server from 'main/server'
+import * as fs   from 'fs'
+import Server from 'common/server'
 
 describe('Server' ,function(){
   describe('#create()' ,function(){

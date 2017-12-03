@@ -1,5 +1,5 @@
 const N = null
-export default {
+const data : any = {
   ROWS_INV: 12,
   ROWS_VIS: 11,
   ROWS: 12 + 11,
@@ -94,5 +94,5 @@ export default {
     10,10,10,11,11,
     11,11,11
   ]
-
 }
+export default data

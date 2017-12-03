@@ -5,7 +5,7 @@ import Server       from 'common/server' // should be moved to common
 
 const {WIN_WIDTH, WIN_HEIGHT} = data
 
-let game = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
+let game : any  = new Phaser.Game(WIN_WIDTH, WIN_HEIGHT, Phaser.AUTO, 'game')
 game.controls = new CoreControls()
 game.sounds   = new CoreSounds()
 game.server   = new Server()

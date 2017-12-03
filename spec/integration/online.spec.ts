@@ -1,12 +1,8 @@
 import fs    from 'fs'
-import chai  from 'chai'
-import sinon from 'sinon'
-import mock  from 'mock-require'
-import Game from 'helpers/game_spec'
-import Stage0 from 'renderer/states/mode_vs'
-import Stage1 from 'renderer/states/mode_vs'
+import Game from 'helpers/game_mock'
+import Stage0 from 'states/mode_vs'
+import Stage1 from 'states/mode_vs'
 
-chai.should()
 
 game0 = new Game()
 game1 = new Game()
