@@ -24,7 +24,7 @@ function prep_state(klass){
   }
 }
 
-game.state.add('boot'       , prep_state(StatesBoot))
+game.state.add('boot', new StatesBoot());
 game.state.add('load'       , prep_state(StatesLoad))
 game.state.add('menu'       , prep_state(StatesMenu))
 game.state.add('connect'    , prep_state(StatesConnect))
