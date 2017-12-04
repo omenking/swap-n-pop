@@ -15,7 +15,7 @@ export default class ComponentMenu {
     this.cursor = new ComponentMenuCursor()
   }
   
-  create =()=> {
+  create() {
     // create sprite, choose centerXY and anchor to the middle of the sprite - remembered when rescaling
     this.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'menu');
     this.sprite.anchor.setTo(0.5);
@@ -29,28 +29,28 @@ export default class ComponentMenu {
     ]);
   }
   
-  update =()=> {
+  update() {
     this.cursor.update()
   }
   
-  mode_1p_vs_2p_local =()=> {
+  mode_1p_vs_2p_local() {
     ipc.send('play-vs',{online: false, cpu: [false,false]})
   }
   
-  mode_1p_vs_2p_online =()=> {
+  mode_1p_vs_2p_online() {
     ipc.send('settings','network')
   }
   
-  mode_1p_vs_cpu =()=> {
+  mode_1p_vs_cpu() {
     ipc.send('play-vs',{online: false, cpu: [false,true]})
   }
 
   /** starts the mode_puzzle state */
-  mode_improve =()=> {
+  mode_improve() {
     game.state.start('puzzle_menu', true, false);
   }
   
-  mode_option =()=> {
+  mode_option() {
     ipc.send('settings','replay')
   }
 }

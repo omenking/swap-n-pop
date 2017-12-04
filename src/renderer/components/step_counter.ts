@@ -16,7 +16,7 @@ export default class StepCounter {
    * Add a Sprite group set the parent pos and create sprites on a relative position.
    * @param {object} mulitple vars defaulted - playfield reference is expected.  
    */
-  create =({ step_limit = 0, playfield, x = 200, y = 50})=> {
+  create({ step_limit = 0, playfield, x = 200, y = 50}) {
     this.group = game.add.group();
     this.group.x = x; 
     this.group.y = y;
@@ -34,7 +34,7 @@ export default class StepCounter {
   }
 
   /** update the sprites each frame */
-  render =()=> {
+  render() {
     this.steps = this.step_limit - this.playfield.swap_counter;
     
     if (this.steps >= 10) {
@@ -56,7 +56,7 @@ export default class StepCounter {
    * @param {integer} n which digit you want to get
    * @returns integer below 10
    */
-  getDigit =(number, n)=> {
+  getDigit(number, n) {
     return Math.floor((number / Math.pow(10, n - 1)) % 10);
   }
 }

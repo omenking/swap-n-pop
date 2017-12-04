@@ -1,6 +1,7 @@
 import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
+import controls             from 'core/controls'
 import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
 import data                 from 'core/data'
@@ -57,7 +58,11 @@ export default class ModeVs extends CoreStage {
     this.star_counter = new ComponentStarCounter()
   }
 
-  init =(data)=> {
+  get name(): string {
+    return 'mode_vs';
+  }
+
+  init(data) {
     this.rounds_won = [2,1]
     this.tick   = 0
     this.seed   = data.seed
@@ -91,13 +96,13 @@ export default class ModeVs extends CoreStage {
   get cpu (){  return this._cpu }
   set cpu (v){ this._cpu = v }
 
-  create_bg =()=> {
+  create_bg() {
     this.bg = game.add.sprite(0,0, 'playfield_vs_bg');
   }
-  create_frame =(offset)=> {
+  create_frame(offset) {
     this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
   }
-  create =()=> {
+  create() {
     ipc.send('log',`VS ${this.seed} ------------------------------`)
     this.danger = false
 
@@ -138,7 +143,7 @@ export default class ModeVs extends CoreStage {
   }
 
   /** turns on the menu, changes it state, turns of the timer from counting */
-  pause =()=> {
+  pause() {
     game.sounds.stage_music('pause');
 
     this.state = "pause";
@@ -147,7 +152,7 @@ export default class ModeVs extends CoreStage {
   }
 
   /** called by the menu and reassigns control to both playfields, timer runs again */
-  resume =()=> {
+  resume() {
     // only resumes the game if countdown's are over
     if (this.playfield0.countdown.state === null ||
         this.playfield1.countdown.state === null) {
@@ -161,7 +166,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1.cursor.map_controls();
   }
 
-  game_over =(pi)=> {
+  game_over(pi) {
     console.log('gameover')
     if(!this.inputs.replay){
       ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
@@ -180,7 +185,7 @@ export default class ModeVs extends CoreStage {
       this.playfield1.character.current_animation = "lost"
     }
   }
-  danger_check =()=> {
+  danger_check() {
     const d1 = this.playfield0.danger(1)
     const d2 = this.playfield1.danger(2)
 
@@ -196,7 +201,7 @@ export default class ModeVs extends CoreStage {
       this.danger = false
     }
   }
-  roll_to =(from,to)=> {
+  roll_to(from,to) {
     if (from > to) { // rollback
     } else { //rollforward
       this.snapshots.load(from)
@@ -210,7 +215,7 @@ export default class ModeVs extends CoreStage {
     }
     this.roll = {ready: false, from: null, to: null}
   }
-  update =()=> {
+  update() {
     this.roll_log_heading = []
     this.roll_log_data    = []
     this.log_stack(this.tick,'start')
@@ -233,7 +238,7 @@ export default class ModeVs extends CoreStage {
     this.star_counter.update()
   }
 
-  log_stack =(tick,format=null)=> {
+  log_stack(tick,format=null) {
     this.roll_log_heading.push({tick: tick, format: format})
     for (let i = 0; i < ROWS; i++){
       let line = ''
@@ -259,7 +264,7 @@ export default class ModeVs extends CoreStage {
     }
   }
 
-  log_roll =()=> {
+  log_roll() {
     let str    = ""
     let format = null
     let tick   = null
@@ -306,7 +311,7 @@ export default class ModeVs extends CoreStage {
     return str
   }
 
-  step =(tick)=> {
+  step(tick) {
     if (tick === false) {
       this.tick++
     }
@@ -323,15 +328,15 @@ export default class ModeVs extends CoreStage {
     this.danger_check()
     if (tick === false) {
       this.inputs.update(this.tick,true)
-      game.controls.update()
+      controls.update()
       this.snapshots.snap(this.tick)
     } else {
       this.inputs.update(tick,false)
-      game.controls.update(false,true)
+      controls.update(false,true)
       this.snapshots.snap(tick)
     }
   }
-  render =()=> {
+  render() {
     if(this.debug){
       console.log('debugger triggered')
       debugger
@@ -345,7 +350,7 @@ export default class ModeVs extends CoreStage {
     //this.debug_frame.render(this.tick)
     this.star_counter.render()
   }
-  shutdown =()=> {
+  shutdown() {
     console.log('shutdown mode_vs')
     game.sounds.stage_music('none')
     this.playfield0.shutdown()

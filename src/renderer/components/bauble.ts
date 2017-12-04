@@ -30,13 +30,13 @@ export default class ComponentBauble {
   private combo_int0       : Phaser.Sprite
   private combo_small_int0 : Phaser.Sprite
 
-  create =(panel)=> {
+  create(panel) {
     this.panel = panel
     this.create_chain()
     this.create_combo()
   }
 
-  create_chain =()=> {
+  create_chain() {
     this.chain = game.add.group()
     this.chain.visible = false
     this.chain_left   = game.make.sprite(px(0)   , px(0), 'bauble',0) // 3px wide
@@ -61,7 +61,7 @@ export default class ComponentBauble {
     this.chain.add(this.chain_small_int2)
   }
 
-  create_combo =()=> {
+  create_combo() {
     this.combo = game.add.group()
     this.combo.visible = false
     this.combo_left   = game.make.sprite(px(0)   , px(0), 'bauble',3) // 3px wide
@@ -79,10 +79,10 @@ export default class ComponentBauble {
   }
 
 
-  update =()=> {
+  update() {
   }
 
-  render =()=> {
+  render() {
     let x = this.panel.playfield.layer_block.x
     let y = this.panel.playfield.layer_block.y
     x    += (this.panel.x * UNIT)
@@ -92,7 +92,7 @@ export default class ComponentBauble {
     this.render_combo(x,y)
   }
 
-  render_chain =(x,y)=> {
+  render_chain(x,y) {
     const chain = this.panel.chain
     if (this.panel.state   === CLEAR &&
         this.panel.clear_i === 0     &&
@@ -167,7 +167,7 @@ export default class ComponentBauble {
     }
   }
 
-  render_combo =(x,y)=> {
+  render_combo(x,y) {
     const combo = this.panel.clear_len
     const chain = this.panel.chain
     if (this.panel.state   === CLEAR &&
@@ -218,5 +218,5 @@ export default class ComponentBauble {
     }
   }
 
-  shutdown =()=> {}
+  shutdown() {}
 } 

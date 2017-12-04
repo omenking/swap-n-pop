@@ -1,5 +1,7 @@
 import game from 'core/game'
 import data from 'core/data'
+import controls from 'core/controls'
+
 
 const {UNIT, MENUCURSORBLINK} = data
 
@@ -15,7 +17,7 @@ export default class ComponentMenuCursor {
   constructor() {
   }
 
-  create =(menu,x,y,menu_items)=> {
+  create(menu,x,y,menu_items) {
     this.menu = menu;
     this.x = x;
     this.y = y;
@@ -30,17 +32,17 @@ export default class ComponentMenuCursor {
     this.map_controls(1)
   }
 
-  map_controls =(pi)=> {
-    return game.controls.map(pi, {
-      up   : this.up,
-      down : this.down,
-      a    : this.confirm,
-      b    : this.cancel,
-      start: this.confirm
+  map_controls(pi) {
+    return controls.map(pi, {
+      up   : this.up.bind(this),
+      down : this.down.bind(this),
+      a    : this.confirm.bind(this),
+      b    : this.cancel.bind(this),
+      start: this.confirm.bind(this)
     });
   }
 
-  up =(tick)=> {
+  up(tick) {
     if (tick > 0) { return }
     if (this.index !== 0) {
       game.sounds.select()
@@ -50,7 +52,7 @@ export default class ComponentMenuCursor {
     }
   }
 
-  down =(tick)=> {
+  down(tick) {
     if (tick > 0) { return }
     if (this.index !== (this.menu_items.length-1)) {
       game.sounds.select()
@@ -60,19 +62,19 @@ export default class ComponentMenuCursor {
     }
   }
 
-  confirm =(tick)=> {
+  confirm(tick) {
     if (tick > 0) { return }
     game.sounds.confirm()
     console.log(this.menu_items,this.index)
     return this.menu_items[this.index]()
   }
 
-  cancel =(tick)=> {
+  cancel(tick) {
     if (tick > 0) { return }
     return console.log('cancel');
   }
 
-  update =()=> {
+  update() {
     this.sprite.y = this.y+(this.index*UNIT);
     this.counter++;
     if (this.counter > MENUCURSORBLINK) {

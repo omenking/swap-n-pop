@@ -15,7 +15,7 @@ export default class StarCounter {
   private y       : number
   private counter : number
 
-  create =(stage,x,y)=> {
+  create(stage,x,y) {
     this.stage = stage
     this.group = game.add.group()
     this.group.x = x
@@ -34,7 +34,7 @@ export default class StarCounter {
     this.counter = 0
   }
 
-  update =()=> {
+  update() {
     if (this.counter > FRAME_STAR.length){
       this.counter = 0
     } else {
@@ -42,7 +42,7 @@ export default class StarCounter {
     }
   }
 
-  render =()=> {
+  render() {
     if (this.stage.rounds_won[0] > 0) {
       this.sprites[0].frame = FRAME_STAR[this.counter]
     } else {

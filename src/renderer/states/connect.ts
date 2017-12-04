@@ -1,15 +1,20 @@
 import * as electron from 'electron'
 import game     from 'core/game'
 import Replay   from 'common/replay'
+import State from './base';
 
 const {ipcRenderer: ipc} = electron
 
-export default class StatesConnect {
+export default class ConnectState extends State {
   private _mode      : string
   private _host_port : string
   private _join_host : string
   private _join_port : number
   private bg         : Phaser.TileSprite
+
+  get name(): string {
+    return 'connect';
+  }
 
   init(data) {
     this.mode      = data.mode
@@ -28,12 +33,12 @@ export default class StatesConnect {
   set join_host(v){ this._join_host = v}
   set join_port(v){ this._join_port = v}
 
-  create =()=> {
+  create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
     game.server.create(this.host_port,'0.0.0.0',this.listening)
   }
 
-  listening =()=> {
+  listening() {
     if (this.mode === 'host') {
       game.server.connected(this.start)
       game.server.pos = 0
@@ -48,7 +53,7 @@ export default class StatesConnect {
     }
   }
 
-  start =()=> {
+  start() {
     ipc.send('play-vs',{
       seed  : game.server.seed,
       online: true,
@@ -56,7 +61,7 @@ export default class StatesConnect {
     })
   }
 
-  update =()=> {
+  update() {
     this.bg.tilePosition.y += 0.5
     this.bg.tilePosition.x -= 0.5
   }

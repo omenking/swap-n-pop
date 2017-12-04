@@ -3,7 +3,7 @@ import game from 'core/game'
 export default class ComponentScore {
   private lbl : Phaser.Text
 
-  create =()=> {
+  create() {
     this.lbl = game.add.text(0, 10, '0', {
       fontSize: '16px',
       fill: 0x000000
@@ -15,7 +15,7 @@ export default class ComponentScore {
     this.lbl.lineSpacing  = -7;
   }
 
-  update =(chain,score)=> {
+  update(chain,score) {
     let text  = `${score}`;
     if (chain) { text += `\nchain: ${chain+1}`; }
     this.lbl.setText(text);

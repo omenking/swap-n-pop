@@ -1,7 +1,7 @@
-import seedrandom from 'seedrandom'
-import _f         from 'core/filters'
-import Stack      from 'core/stack'
-import data       from 'core/data'
+import * as seedrandom from 'seedrandom'
+import _f             from 'core/filters'
+import Stack          from 'core/stack'
+import data           from 'core/data'
 
 const {
   COLS, ROWS, PANELS

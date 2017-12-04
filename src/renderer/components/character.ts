@@ -22,7 +22,7 @@ export default class ComponentCharacter {
    * @param {integer} y default 0
    * @param {integer} pi playfield number
    */
-  create =(sprite, x = 0, y = 0, pi)=> {
+  create(sprite, x = 0, y = 0, pi) {
     this.playfield_num = pi
     // sprite creation
     this.sprite = game.add.sprite(x, y, sprite, 0)
@@ -63,7 +63,7 @@ export default class ComponentCharacter {
    * @param {String} return_to_animation the animation.name to return to after finishing the animation
    * @param {boolean} stop_animation if the animation cycle should in general stop
    */
-  add_animation =(name, hframes, offset, return_to_animation = "", stop_animation = false)=> {
+  add_animation(name, hframes, offset, return_to_animation = "", stop_animation = false) {
     const animation = {
       frames           : [],
       stop_animation   : stop_animation,
@@ -83,7 +83,7 @@ export default class ComponentCharacter {
    * in the End of the current_animation
    * Once this.stopped is set it wont get auto reset!
    */
-  play_animation =()=> {
+  play_animation() {
     let animation = this.animations.get(this.current_animation);
     // if no animation in map was found
     if (animation !== undefined) {
@@ -133,7 +133,7 @@ export default class ComponentCharacter {
    * 
    * @param {Array} data information that was sent through this.snap
    */
-  load =(data)=> {
+  load(data) {
     this.tick_counter      = data[0]
     this.frame_counter     = data[1]
     this.stopped           = data[2]
@@ -142,7 +142,7 @@ export default class ComponentCharacter {
   }
 
   /** update the position and render all animations */
-  render =()=> {
+  render() {
     this.sprite.x = this.x
     this.sprite.y = this.y
 

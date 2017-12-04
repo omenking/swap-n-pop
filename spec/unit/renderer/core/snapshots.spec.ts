@@ -1,8 +1,5 @@
-import Game from 'helpers/game_mock'
 import CoreSnapshots from 'core/snapshots'
 import Playfield     from 'components/playfield'
-
-const game = new Game()
 
 describe('Snapshots', function() {
   describe('#cindex()', function(){

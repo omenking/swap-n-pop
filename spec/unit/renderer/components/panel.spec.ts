@@ -1,12 +1,10 @@
-import fs        from 'fs'
-import Game      from 'helpers/game_mock'
+import * as fs        from 'fs'
 import data      from 'core/data'
 import _f        from 'core/filters'
 import Stage     from 'states/mode_vs'
 import Playfield from 'components/playfield'
 import Panel     from 'components/panel'
 
-const game = new Game()
 const {STATIC,HANG,FALL,CLEAR,PANELS}  = data
 
 //shorthands

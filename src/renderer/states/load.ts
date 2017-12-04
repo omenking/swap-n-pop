@@ -1,16 +1,23 @@
-import game    from 'core/game'
-import filters from 'core/filters'
+import State    from 'states/base'
+import game     from 'core/game'
+import controls from 'core/controls'
+import filters  from 'core/filters'
 
 const {px} = filters
+
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly
    */
-export default class StatesLoad {
+export default class LoadState extends State {
   private loader : Phaser.Text
   private files : Phaser.Text
   private file : Phaser.Text
 
-  create =()=> {
+  get name(): string {
+    return 'load';
+  }
+
+  create() {
     const x = game.world.centerX
     const y = game.world.centerY
     const font_style1 = { font: '20px Verdana', fill: '#FFF', align: 'center' }
@@ -28,7 +35,7 @@ export default class StatesLoad {
     this.load_all()
   }
 
-  load_start =()=> {
+  load_start() {
 
   }
   
@@ -37,23 +44,23 @@ export default class StatesLoad {
     this.file.setText(key)
   } 
 
-  load_complete =()=> {
-    game.controls.create()
+  load_complete() {
+    controls.create()
     game.sounds.create()
     game.state.start('menu')
   }
 
-  update =()=> {
+  update() {
     this.loader.setText(`Loading ${game.load.progress}%`);
   }
 
-  render =()=> {
+  render() {
     //this.loader.visible = true
     //this.files.visible  = true
     //this.file.visible   = true
   }
 
-  load_all =()=> {
+  load_all() {
     // Music --------
     game.load.audio('msx_stage'         , './assets/music/stage.mp3')
     game.load.audio('msx_stage_critical', './assets/music/stage_critical.mp3')

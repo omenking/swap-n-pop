@@ -1,6 +1,14 @@
-import game from 'core/game'
+import controls           from 'core/controls'
+import ComponentPlayfield from 'components/playfield'
 
 export default class Snapshots {
+  private _stage : any
+  private _playfield0 : ComponentPlayfield
+  private _playfield1 : ComponentPlayfield
+  private timer : any
+  private index : number
+  private index_tick : number
+  private snapshot : Array<any>
   /** Saves variables which need to get snapped or loaded
    * @param {mode} stage chosen mode to play in
    * @param {playfield} p0 first one
@@ -42,7 +50,7 @@ export default class Snapshots {
     // all objects - subobjects to load with a snapshot
     this.playfield0.load(this.snapshot[this.index][0]);
     this.playfield1.load(this.snapshot[this.index][1]);
-    game.controls.load(  this.snapshot[this.index][2]);
+    controls.load(  this.snapshot[this.index][2]);
     this.stage.load(this.snapshot[this.index][3]);
     this.timer.load(this.snapshot[this.index][4]);
   }
@@ -69,7 +77,7 @@ export default class Snapshots {
     
     this.snapshot[this.index] = [this.playfield0.snap,
                                  this.playfield1.snap,
-                                 game.controls.snap,
+                                 controls.snap,
                                  this.stage.snap,
                                  this.timer.snap]
   }

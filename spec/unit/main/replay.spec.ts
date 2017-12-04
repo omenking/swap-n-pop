@@ -1,19 +1,11 @@
-import fs     from 'fs'
-import path   from 'path'
-import Replay from 'main/replay'
+import * as fs     from 'fs'
+import * as path   from 'path'
+import Replay from 'common/replay'
 
 const app = {
   getPath: sinon.stub()
 }
 app.getPath.returns('/tmp')
-
-const store = {
-  set: sinon.stub(),
-  get: sinon.stub()
-}
-store.set.withArgs('replay_dir').returns('/tmp/replays')
-store.get.withArgs('replay_dir').returns('/tmp/replays')
-
 
 describe('Replay' ,function(){
   describe('#save(name,inputs)' ,function(){

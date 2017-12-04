@@ -1,9 +1,8 @@
-export default class Stage {
-  private _state : string
+import State from '../states/base';
 
-  get state(){ return this._state }
-  set state(v){ this._state = v }
+export default abstract class Stage extends State {
+  state: string;
 
-  game_over =(pi)=> {
+  game_over(pi) {
   }
 }

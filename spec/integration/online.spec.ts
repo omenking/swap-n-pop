@@ -1,16 +1,9 @@
-import fs    from 'fs'
-import chai  from 'chai'
-import sinon from 'sinon'
-import mock  from 'mock-require'
-import Game from 'helpers/game_spec'
-import Stage0 from 'renderer/states/mode_vs'
-import Stage1 from 'renderer/states/mode_vs'
+import * as fs  from 'fs'
+import Stage0   from 'states/mode_vs'
+import Stage1   from 'states/mode_vs'
 
-chai.should()
-
-game0 = new Game()
-game1 = new Game()
-
+jest.setMock('common/electron', electron_mock)
+jest.setMock('common/store'   , store_mock)
 
 var _stage0 = null
 var _stage1 = null
@@ -43,8 +36,8 @@ describe('Online Simulation', function() {
       cpu   : [false,false],
       online: true
     }
-    stage0  = new Stage0(game0)
-    stage1  = new Stage1(game1)
+    stage0  = new Stage0(game)
+    stage1  = new Stage1(game)
     stage0.init(init)
     stage1.init(init)
     stage0.create()

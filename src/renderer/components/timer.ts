@@ -26,7 +26,7 @@ export default class ComponentTimer {
   /** set all Digit Counters to the snapshots Data
    * @param {Array} snapshot to get data from if packet loss
    */
-  load =(snapshot)=> {
+  load(snapshot) {
     this.d0.frame = snapshot[0];
     this.d0.frame = snapshot[1];
     this.d0.frame = snapshot[2];
@@ -36,7 +36,7 @@ export default class ComponentTimer {
    *  Each Time Digit gets added as a Sprite
    *  Internal tick counter and a bool to stop everything
    */
-  create =(x,y)=> {
+  create(x,y) {
     this.group = game.add.group();
     this.group.x = x;
     this.group.y = y;
@@ -55,7 +55,7 @@ export default class ComponentTimer {
    *  Each counter goes up determined by the time passed etc.
    *  everything is stoppable through this.running
    */
-  render =()=> {
+  render() {
     if (!this.running)
       return;
     const time = Math.floor(this.tick / 60);

@@ -1,13 +1,10 @@
-import fs         from 'fs'
-import seedrandom from 'seedrandom'
-import Game       from 'helpers/game_mock'
+import * as fs         from 'fs'
+import * as seedrandom from 'seedrandom'
 import _f         from 'core/filters'
 import Stage      from 'states/mode_vs'
 import Playfield  from 'components/playfield'
 import Stack      from 'core/stack'
 
-
-const game = new Game()
 const N = null
 
 describe('Playfield', function() {
