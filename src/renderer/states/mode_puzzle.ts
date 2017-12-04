@@ -1,5 +1,6 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
+import controls             from 'core/controls'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
 import Puzzles              from 'core/puzzles'
@@ -130,7 +131,7 @@ export default class ModePuzzle extends CoreStage {
 
     this.tick++;
 
-    game.controls.update();
+    controls.update();
     this.playfield0.update();
     this.inputs.update(this.tick,undefined);
 

@@ -1,4 +1,5 @@
 import game from 'core/game'
+import controls from 'core/controls'
 
 import PuzzleMenuCursor from 'components/puzzle_menu_cursor'
 import Puzzles    from 'core/puzzles'
@@ -27,13 +28,13 @@ export default class PuzzleSelect {
     this.sprite.y = game.height / 8 - this.sprite.height / 2;
 
     this.cursor.update()
-    game.controls.update();
+    controls.update();
     this.bg.tilePosition.y += 0.5;
     this.bg.tilePosition.x -= 0.5;
   }
 
   /** stops controller support */
   shutdown =()=> {
-    game.controls.disable();
+    controls.disable();
   }
 }

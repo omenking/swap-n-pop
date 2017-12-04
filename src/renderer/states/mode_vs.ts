@@ -1,6 +1,7 @@
 import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
+import controls             from 'core/controls'
 import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
 import data                 from 'core/data'
@@ -323,11 +324,11 @@ export default class ModeVs extends CoreStage {
     this.danger_check()
     if (tick === false) {
       this.inputs.update(this.tick,true)
-      game.controls.update()
+      controls.update()
       this.snapshots.snap(this.tick)
     } else {
       this.inputs.update(tick,false)
-      game.controls.update(false,true)
+      controls.update(false,true)
       this.snapshots.snap(tick)
     }
   }

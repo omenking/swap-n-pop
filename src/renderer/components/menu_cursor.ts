@@ -1,5 +1,7 @@
 import game from 'core/game'
 import data from 'core/data'
+import controls from 'core/controls'
+
 
 const {UNIT, MENUCURSORBLINK} = data
 
@@ -31,7 +33,7 @@ export default class ComponentMenuCursor {
   }
 
   map_controls(pi) {
-    return game.controls.map(pi, {
+    return controls.map(pi, {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       a    : this.confirm.bind(this),

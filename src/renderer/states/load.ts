@@ -1,5 +1,6 @@
-import game    from 'core/game'
-import filters from 'core/filters'
+import game     from 'core/game'
+import controls from 'core/controls'
+import filters  from 'core/filters'
 
 const {px} = filters
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
@@ -38,7 +39,7 @@ export default class StatesLoad {
   } 
 
   load_complete() {
-    game.controls.create()
+    controls.create()
     game.sounds.create()
     game.state.start('menu')
   }

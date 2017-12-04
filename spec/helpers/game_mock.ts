@@ -1,4 +1,3 @@
-const CoreControls = require('core/controls')
 const stub_group = sinon.stub()
 stub_group.returns({
   x: null,
@@ -87,11 +86,6 @@ export default class GameMock {
       on: sinon.stub(),
       send: sinon.stub()
     }
-
-    this.controls = new CoreControls()
-    this.controls.create()
-
-
   }//constructor
 } 
 

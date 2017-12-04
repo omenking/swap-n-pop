@@ -1,5 +1,6 @@
-import game from 'core/game'
-import data from 'core/data'
+import game     from 'core/game'
+import controls from 'core/controls'
+import data     from 'core/data'
 
 const { UNIT } = data
 
@@ -25,7 +26,7 @@ export default class PuzzleSelectCursor {
   }
 
   map_controls(pi) {
-    return game.controls.map(pi, {
+    return controls.map(pi, {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       a    : this.confirm.bind(this),

@@ -1,4 +1,5 @@
-import game     from 'core/game'
+import game      from 'core/game'
+import controls  from 'core/controls'
 import * as electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
@@ -98,13 +99,13 @@ export default class CoreInputs {
   }
 
   update_input =(pi,tick)=> {
-    const byte = game.controls.serialize(pi)
+    const byte = controls.serialize(pi)
     this.inputs[pi].push(byte)
   }
 
   replay_input =(pi,tick)=> {
     const byte = this.inputs[pi][tick]
-    game.controls.execute(pi,byte)
+    controls.execute(pi,byte)
   }
 
   update =(tick,send)=> {
