@@ -1,6 +1,14 @@
-import controls from 'core/controls'
+import controls           from 'core/controls'
+import ComponentPlayfield from 'components/playfield'
 
 export default class Snapshots {
+  private _stage : any
+  private _playfield0 : ComponentPlayfield
+  private _playfield1 : ComponentPlayfield
+  private timer : any
+  private index : number
+  private index_tick : number
+  private snapshot : Array<any>
   /** Saves variables which need to get snapped or loaded
    * @param {mode} stage chosen mode to play in
    * @param {playfield} p0 first one
