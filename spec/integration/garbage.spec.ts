@@ -1,15 +1,11 @@
-import fs    from 'fs'
-import chai  from 'chai'
-import sinon from 'sinon'
+import * as fs         from 'fs'
+import * as seedrandom from 'seedrandom'
 import Game  from 'helpers/game_mock'
-import seedrandom from 'seedrandom'
 import _f         from 'core/filters'
 import Stage      from 'states/mode_vs'
 import Playfield  from 'components/playfield'
 import Stack      from 'core/stack'
 import data       from 'core/data'
-
-chai.should()
 
 const game = new Game()
 

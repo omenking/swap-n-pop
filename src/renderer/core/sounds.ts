@@ -5,6 +5,18 @@ import game from 'core/game'
  * Sounds holds all sounds and has helper methods with different states
  */
 export default class CoreSounds {
+  private sfw_swap           : Phaser.Audio
+  private msx_stage_results  : Phaser.Audio
+  private msx_stage          : Phaser.Audio
+  private msx_stage_critical : Phaser.Audio
+  private state_music        : string
+  private sfx_land           : Array<Phaser.Audio>
+  private sfx_pop            : Array<Phaser.Audio>
+  private sfx_confirm        : Phaser.Audio
+  private sfx_select         : Phaser.Audio
+  private sfx_blip           : Phaser.Audio
+  private sfx_ding           : Phaser.Audio
+
   /** Defines all the sound files this class contains, volume vars and loopable sounds */
   create() {
     this.sfx_swap = game.add.audio('sfx_swap')
