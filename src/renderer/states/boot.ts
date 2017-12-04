@@ -1,3 +1,5 @@
+import State from './base';
+
 import game from 'core/game';
 
 declare var window: {
@@ -5,7 +7,11 @@ declare var window: {
   innerHeight: number;
 };
 
-export default class StatesBoot {
+export default class BootState extends State {
+  get name(): string {
+    return 'boot';
+  }
+
   create() {
     game.stage.backgroundColor = '#282828';
     this.pixelate();

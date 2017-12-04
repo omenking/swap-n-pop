@@ -1,15 +1,21 @@
+import State    from 'states/base'
 import game     from 'core/game'
 import controls from 'core/controls'
 import filters  from 'core/filters'
 
 const {px} = filters
+
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly
    */
-export default class StatesLoad {
+export default class LoadState extends State {
   private loader : Phaser.Text
   private files : Phaser.Text
   private file : Phaser.Text
+
+  get name(): string {
+    return 'load';
+  }
 
   create() {
     const x = game.world.centerX
