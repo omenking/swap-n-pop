@@ -1,6 +1,12 @@
+import playfield from 'components/playfield'
+import cursor    from 'components/cursor'
 import game from 'core/game'
 
 export default class ComponentAi {
+  private playfield : ComponentPlayfield
+  private cursor : ComponentPlayfieldCursor
+  private plan : boolean
+
   create(playfield, cursor) {
     this.playfield = playfield;
     this.cursor = cursor;

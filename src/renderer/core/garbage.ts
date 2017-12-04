@@ -6,6 +6,11 @@ const {
 } = data
 
 export default class ComponentGarbage {
+  private stage     : any
+  private pi        : number
+  private queue     : Array<any>
+  private alternate : Array<any>
+
   create(stage, pi){
     this.stage = stage
     this.pi    = pi
