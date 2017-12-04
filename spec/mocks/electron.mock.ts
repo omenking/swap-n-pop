@@ -11,4 +11,4 @@ const ElectronMock = {
   }
 }
 
-module.exports = ElectronMock
+export default ElectronMock

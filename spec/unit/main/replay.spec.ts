@@ -7,14 +7,6 @@ const app = {
 }
 app.getPath.returns('/tmp')
 
-const store = {
-  set: sinon.stub(),
-  get: sinon.stub()
-}
-store.set.withArgs('replay_dir').returns('/tmp/replays')
-store.get.withArgs('replay_dir').returns('/tmp/replays')
-
-
 describe('Replay' ,function(){
   describe('#save(name,inputs)' ,function(){
     var filename = null;

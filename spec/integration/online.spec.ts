@@ -1,14 +1,9 @@
 import * as fs  from 'fs'
-import Game     from 'helpers/game_mock'
 import Stage0   from 'states/mode_vs'
 import Stage1   from 'states/mode_vs'
 
 jest.setMock('common/electron', electron_mock)
 jest.setMock('common/store'   , store_mock)
-
-game0 = new Game()
-game1 = new Game()
-
 
 var _stage0 = null
 var _stage1 = null
@@ -41,8 +36,8 @@ describe('Online Simulation', function() {
       cpu   : [false,false],
       online: true
     }
-    stage0  = new Stage0(game0)
-    stage1  = new Stage1(game1)
+    stage0  = new Stage0(game)
+    stage1  = new Stage1(game)
     stage0.init(init)
     stage1.init(init)
     stage0.create()
