@@ -6,7 +6,7 @@ const store = new Store()
 
 const {ipcRenderer: ipc} = electron
 
-export default class CoreControls {
+class CoreControls {
   private callbacks : any
   private pad : any
   private _simdown : any
@@ -332,3 +332,5 @@ export default class CoreControls {
     if (this.check_down(sim,`pl${pi}_start`)){ this.trigger(`pl${pi}_start`) } else { this._down[`pl${pi}_start`] = 0 }
   }
 }
+const controls = new CoreControls()
+export default controls

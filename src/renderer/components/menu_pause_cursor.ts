@@ -1,6 +1,7 @@
-import game    from 'core/game'
-import data    from 'core/data'
-import filters from 'core/filters'
+import game     from 'core/game'
+import data     from 'core/data'
+import controls from 'core/controls'
+import filters  from 'core/filters'
 
 const {UNIT} = data
 const {px}   = filters
@@ -45,7 +46,7 @@ export default class ComponentMenuPauseCursor {
    * @param {playerNumber} any_player_number 
    */
   map_controls(any_player_number) {
-    return game.controls.map(any_player_number, {
+    return controls.map(any_player_number, {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       a    : this.confirm.bind(this),

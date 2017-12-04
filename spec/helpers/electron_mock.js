@@ -1,4 +1,6 @@
-const electron_mock = {
+const sinon = require('sinon')
+
+const ElectronMock = {
   app: null,
   remote: { app: null},
   ipc: {
@@ -7,6 +9,6 @@ const electron_mock = {
   ipcRenderer: {
     on: sinon.stub()
   }
-})
+}
 
-export default electron_mock
+module.exports = ElectronMock

@@ -1,8 +1,3 @@
-import store_mock    from 'helpers/store_mock'
-import electron_mock from 'helpers/electron_mock'
-mock('common/store', store_mock)
-mock('electron'    , electron_mock)
-
 const stub_group = sinon.stub()
 stub_group.returns({
   x: null,
@@ -91,12 +86,6 @@ export default class GameMock {
       on: sinon.stub(),
       send: sinon.stub()
     }
-
-    const CoreControls = require(APP.path.core('controls'))(this)
-    this.controls = new CoreControls()
-    this.controls.create()
-
-
   }//constructor
 } 
 

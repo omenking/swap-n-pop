@@ -1,11 +1,14 @@
-import fs    from 'fs'
-import Game from 'helpers/game_mock'
+import * as fs         from 'fs'
 import * as seedrandom from 'seedrandom'
-import _f         from 'core/filters'
-import Stage      from 'states/mode_vs'
-import Playfield  from 'components/playfield'
-import Stack      from 'core/stack'
-import data       from 'core/data'
+import Game            from 'helpers/game_mock'
+import _f              from 'core/filters'
+import Stage           from 'states/mode_vs'
+import Playfield       from 'components/playfield'
+import Stack           from 'core/stack'
+import data            from 'core/data'
+
+jest.setMock('common/electron', electron_mock)
+jest.setMock('common/store'   , store_mock)
 
 const game = new Game()
 

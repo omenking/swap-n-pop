@@ -1,5 +1,6 @@
-import game from 'core/game'
-import data from 'core/data'
+import game     from 'core/game'
+import controls from 'core/controls'
+import data     from 'core/data'
 import ComponentPlayfield from 'components/playfield'
 
 const {
@@ -108,7 +109,7 @@ export default class ComponentPlayfieldCursor {
    * defines the game controls and links the callsbacks to this cursors methods
    */
   map_controls() {
-    game.controls.map(this.playfield.pi, {
+    controls.map(this.playfield.pi, {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       left : this.left.bind(this),

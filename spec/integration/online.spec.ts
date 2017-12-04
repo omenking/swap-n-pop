@@ -1,8 +1,10 @@
-import fs    from 'fs'
-import Game from 'helpers/game_mock'
-import Stage0 from 'states/mode_vs'
-import Stage1 from 'states/mode_vs'
+import * as fs  from 'fs'
+import Game     from 'helpers/game_mock'
+import Stage0   from 'states/mode_vs'
+import Stage1   from 'states/mode_vs'
 
+jest.setMock('common/electron', electron_mock)
+jest.setMock('common/store'   , store_mock)
 
 game0 = new Game()
 game1 = new Game()

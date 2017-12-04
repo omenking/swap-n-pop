@@ -6,6 +6,8 @@ import Stage      from 'states/mode_vs'
 import Playfield  from 'components/playfield'
 import Stack      from 'core/stack'
 
+jest.setMock('common/electron', electron_mock)
+jest.setMock('common/store'   , store_mock)
 
 const game = new Game()
 const N = null

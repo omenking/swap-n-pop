@@ -1,4 +1,5 @@
 import game          from 'core/game'
+import controls      from 'core/controls'
 import ComponentMenu from 'components/menu'
 import State from './base';
 
@@ -28,7 +29,7 @@ export default class MenuState extends State {
    *  tilepos is changed to act as a parralax
    */
   update() {
-    game.controls.update();
+    controls.update();
     this.menu.update();
     this.bg.tilePosition.y += 0.5;
     this.bg.tilePosition.x -= 0.5;
@@ -36,6 +37,6 @@ export default class MenuState extends State {
 
   /** stops controller support */
   shutdown() {
-    game.controls.disable()
+    controls.disable()
   }
 }

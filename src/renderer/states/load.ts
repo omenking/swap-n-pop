@@ -1,6 +1,7 @@
-import State from './base';
-import game    from 'core/game'
-import filters from 'core/filters'
+import State    from 'states/base'
+import game     from 'core/game'
+import controls from 'core/controls'
+import filters  from 'core/filters'
 
 const {px} = filters
 
@@ -44,7 +45,7 @@ export default class LoadState extends State {
   } 
 
   load_complete() {
-    game.controls.create()
+    controls.create()
     game.sounds.create()
     game.state.start('menu')
   }
