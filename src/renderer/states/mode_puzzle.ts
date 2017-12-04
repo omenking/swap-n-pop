@@ -1,9 +1,9 @@
-import seedrandom           from 'seedrandom'
+import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
 import Puzzles              from 'core/puzzles'
-import ComponentPlayfield   from 'components/playfield'
+import Playfield            from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
 import ComponentStepCounter from 'components/step_counter'
@@ -16,7 +16,7 @@ const { px }   = filters
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {
-  private playfield    : ComponentPlayfield
+  private playfield    : Playfield
   private menu_pause   : ComponentMenuPause
   private timer        : ComponentTimer
   private step_display : ComponentStepCounter
@@ -33,7 +33,7 @@ export default class ModePuzzle extends CoreStage {
   private bg           : Phaser.Sprite
   constructor() {
     super()
-    this.playfield    = new ComponentPlayfield(0)
+    this.playfield    = new Playfield(0)
     this.menu_pause   = new ComponentMenuPause()
     this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
@@ -67,6 +67,7 @@ export default class ModePuzzle extends CoreStage {
       y     : 40,
       panels: this.panels
     });
+    console.log(this.playfield);
 
     this.playfield.create_after()
     this.playfield.cursor.mode = "puzzle"
@@ -100,7 +101,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** regains control over playfield - plays a sound and timer runs again */
-  resume() {
+  resume = () => {
     game.sounds.stage_music('resume');
   
     this.state = "running";
@@ -111,7 +112,7 @@ export default class ModePuzzle extends CoreStage {
   /** updates all important objects, especially the inputs
    *  based on the interal tick counter thats increasing
    */
-  update() {
+  update = () => {
     if (this.playfield.stack_is_empty()) {
       if (this.puzzles.puzzle_levels.length === (this.level_index)) {
         game.state.start("menu");
@@ -139,7 +140,7 @@ export default class ModePuzzle extends CoreStage {
   }
 
   /** calls the render functions of the timer and playfield */
-  render() {
+  render = () => {
     this.timer.render();
     this.step_display.render();
   
