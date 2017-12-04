@@ -36,7 +36,7 @@ const stub_audio = sinon.stub()
 stub_audio.returns({
 })
 
-export default class GameMock {
+class GameMock {
   constructor(){
     this.add = {
       group:  stub_group,
@@ -87,5 +87,7 @@ export default class GameMock {
       send: sinon.stub()
     }
   }//constructor
-} 
+}
 
+const game = new GameMock()
+export default game

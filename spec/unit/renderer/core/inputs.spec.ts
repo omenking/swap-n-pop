@@ -1,7 +1,4 @@
-import Game       from 'helpers/game_mock'
 import CoreInputs from 'core/inputs'
-
-const game = new Game()
 
 describe('Inputs', function() {
   describe('#pack()', function(){
