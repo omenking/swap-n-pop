@@ -288,7 +288,7 @@ export default class ComponentPanel {
           particle.counter = TIME_PARTICLE
         });
 
-        panel.clear_i < 6 ? game.sounds.pop(panel.clear_i) : game.sounds.pop(3);
+        panel.clear_i < 4 ? game.sounds.pop(panel.clear_i) : game.sounds.pop(3);
       }
     } else {
       if (panel.above && !panel.above.hidden && panel.above.state === STATIC)
