@@ -2,9 +2,7 @@ import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreControls         from 'core/controls'
-import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
-import data                 from 'core/data'
 import CoreSnapshots        from 'core/snapshots'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
@@ -14,13 +12,10 @@ import ComponentDebugFrame  from 'components/debug_frame'
 import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
+import { COLS, ROWS } from 'core/data';
+import { px } from 'core/filters';
 
 const {ipcRenderer: ipc} = electron
-const { px } = filters
-const {
-  ROWS,
-  COLS
-} = data
 
 export default class ModeVs extends CoreStage {
   public playfield0       : ComponentPlayfield
@@ -73,7 +68,7 @@ export default class ModeVs extends CoreStage {
 
     // had to do this to inject controls into for `integration/online.spec.ts`
     this.controls = data.controls || CoreControls
-    
+
     this.inputs = new CoreInputs(data.inputs,data.online,this)
     this.snapshots = new CoreSnapshots()
     this.roll = {
@@ -88,9 +83,9 @@ export default class ModeVs extends CoreStage {
   }
 
   load =(snapshot)=> {
-    let state = this.rng.state() 
-    this.rng = seedrandom(this.seed, {state: snapshot[0]}) 
-    this.state = snapshot[1] 
+    let state = this.rng.state()
+    this.rng = seedrandom(this.seed, {state: snapshot[0]})
+    this.state = snapshot[1]
   }
 
 
@@ -161,11 +156,11 @@ export default class ModeVs extends CoreStage {
     if (this.playfield0.countdown.state === null ||
         this.playfield1.countdown.state === null) {
       game.sounds.stage_music('resume');
-      
+
       this.state = "running";
       this.timer.running = true;
     }
-    
+
     this.playfield0.cursor.map_controls();
     this.playfield1.cursor.map_controls();
   }

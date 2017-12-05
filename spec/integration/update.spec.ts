@@ -1,12 +1,10 @@
 import * as fs         from 'fs'
 import * as seedrandom from 'seedrandom'
-import _f              from 'core/filters'
 import Stage           from 'states/mode_vs'
 import Playfield       from 'components/playfield'
 import Stack           from 'core/stack'
-import data            from 'core/data'
 
-const {
+import {
   PANELS,
   SWAP_L,
   SWAP_R,
@@ -17,7 +15,7 @@ const {
   FALL,
   LAND,
   CLEAR
-} = data
+} from 'core/data';
 
 //shorthands
 const T = true
@@ -48,7 +46,7 @@ describe('panel_actions', function() {
     _playfield = playfield
   })
 
-  //todo - swapping should allow for a panel 
+  //todo - swapping should allow for a panel
   it('#swap', function(){
     // 1 0 N
     // 1 4 N

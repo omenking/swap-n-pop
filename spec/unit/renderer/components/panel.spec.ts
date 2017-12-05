@@ -1,11 +1,8 @@
 import * as fs        from 'fs'
-import data      from 'core/data'
-import _f        from 'core/filters'
 import Stage     from 'states/mode_vs'
 import Playfield from 'components/playfield'
 import Panel     from 'components/panel'
-
-const {STATIC,HANG,FALL,CLEAR,PANELS}  = data
+import { STATIC, HANG, FALL, CLEAR, PANELS} from 'core/data';
 
 //shorthands
 const T = true

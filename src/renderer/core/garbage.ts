@@ -1,9 +1,5 @@
 import game from 'core/game'
-import data from 'core/data'
-
-const {
-  GARBAGE
-} = data
+import { GARBAGE } from 'core/data';
 
 export default class ComponentGarbage {
   private stage     : any

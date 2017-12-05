@@ -1,10 +1,6 @@
 import game     from 'core/game'
-import data     from 'core/data'
 import controls from 'core/controls'
-import filters  from 'core/filters'
-
-const {UNIT} = data
-const {px}   = filters
+import { px } from 'core/filters';
 
 /** Cursor to handle menu_pause movement and method calls
  *  could maybe be optimized by just calling the menu_pause methods here
@@ -22,8 +18,8 @@ export default class ComponentMenuPauseCursor {
 
   /**
    * sets the sprite position relative to the sprite of the menu
-   * 
-   * @param {menu_pause} menu reference 
+   *
+   * @param {menu_pause} menu reference
    * @param {integer} x pos
    * @param {integer} y pos
    * @param {Array} menu_items functions from menu
@@ -32,7 +28,7 @@ export default class ComponentMenuPauseCursor {
     this.menu = menu;
     this.x = x;
     this.y = y;
-   
+
     // array with methods and its accessor index
     this.menu_items = menu_items;
     this.index  = 0;
@@ -43,7 +39,7 @@ export default class ComponentMenuPauseCursor {
 
   /**
    * binds controls to methods of this cursor
-   * @param {playerNumber} any_player_number 
+   * @param {playerNumber} any_player_number
    */
   map_controls(any_player_number) {
     return controls.map(any_player_number, {
@@ -56,7 +52,7 @@ export default class ComponentMenuPauseCursor {
   }
 
   confirm(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
 
     game.sounds.confirm();
@@ -64,7 +60,7 @@ export default class ComponentMenuPauseCursor {
   }
 
   up(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
 
     if (this.index !== 0) {
@@ -74,7 +70,7 @@ export default class ComponentMenuPauseCursor {
   }
 
   down(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
 
     if (this.index !== (this.menu_items.length-1)) {
@@ -82,7 +78,7 @@ export default class ComponentMenuPauseCursor {
       return this.index++;
     }
   }
-  
+
   update() {
     return this.sprite.y = this.y + (this.index * px(12));
   }

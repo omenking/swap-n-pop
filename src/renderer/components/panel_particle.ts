@@ -1,11 +1,7 @@
 import game from 'core/game'
-import data from 'core/data'
 import ComponentPanel from 'components/panel'
+import { TIME_PARTICLE, UNIT } from 'core/data';
 
-const {
-  UNIT,
-  TIME_PARTICLE
-} = data
 const normalType = [
   {x:  1, y:  1},
   {x: -1, y:  1},
@@ -47,7 +43,7 @@ export default class ComponentPanelParticle {
     this.type = type;
     this.panel = panel;
 
-    // which type and angle set 
+    // which type and angle set
     this.angle = angle;
 
     // orientation
@@ -95,15 +91,15 @@ export default class ComponentPanelParticle {
       const cur = TIME_PARTICLE - this.counter
 
       switch (this.type) {
-        case "normal": 
+        case "normal":
           this.x += this.xdir * cur
           this.y += this.ydir * cur
           break;
-      
-        case "rotate": 
+
+        case "rotate":
           this.x += Math.cos(this.angle) * cur * 2
           this.y += Math.sin(this.angle) * cur * 2
-          
+
           this.angle += 0.1;
 
           break;

@@ -1,8 +1,6 @@
 import game     from 'core/game'
 import controls from 'core/controls'
-import data     from 'core/data'
-
-const { UNIT } = data
+import { UNIT } from 'core/data';
 
 export default class PuzzleSelectCursor {
   private x     : number
@@ -20,7 +18,7 @@ export default class PuzzleSelectCursor {
     this.sprite = game.make.sprite(this.x, this.y + (this.index * UNIT), 'menu_cursor');
     this.parent = parent;
     this.parent.sprite.addChild(this.sprite);
-    
+
     this.map_controls(0);
     this.map_controls(1);
   }
@@ -36,7 +34,7 @@ export default class PuzzleSelectCursor {
   }
 
   up(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
 
     if (this.index > 0)
@@ -44,9 +42,9 @@ export default class PuzzleSelectCursor {
   }
 
   down(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
-    
+
     if (this.index < this.parent.puzzles.puzzle_levels.length - 1)
       ++this.index;
   }
@@ -57,7 +55,7 @@ export default class PuzzleSelectCursor {
 
   cancel(tick) {
     if (tick > 0)
-      return; 
+      return;
 
     game.state.start("menu");
   }

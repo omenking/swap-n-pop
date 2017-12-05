@@ -1,9 +1,7 @@
 import State    from 'states/base'
 import game     from 'core/game'
 import controls from 'core/controls'
-import filters  from 'core/filters'
-
-const {px} = filters
+import { px } from 'core/filters';
 
   /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
    *  Uses signals to detect once everything has been loaded correctly
@@ -28,7 +26,7 @@ export default class LoadState extends State {
     this.loader.visible = false
     this.files.visible  = false
     this.file.visible   = false
-    
+
     game.load.onLoadStart.add(this.load_start   , this)
     game.load.onFileComplete.add(this.file_complete, this)
     game.load.onLoadComplete.add(this.load_complete, this)
@@ -38,11 +36,11 @@ export default class LoadState extends State {
   load_start() {
 
   }
-  
+
   file_complete =(progress,key,success,cur,total)=> {
     this.files.setText(`Files ${cur} / ${total}`)
     this.file.setText(key)
-  } 
+  }
 
   load_complete() {
     controls.create()

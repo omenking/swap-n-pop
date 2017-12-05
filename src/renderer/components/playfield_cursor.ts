@@ -1,17 +1,15 @@
 import game     from 'core/game'
 import controls from 'core/controls'
-import data     from 'core/data'
 import ComponentPlayfield from 'components/playfield'
 
-const {
+import {
   COLS,
   ROWS_INV,
   ROWS_VIS,
   ROWS,
   UNIT,
-  STARTPOS_PANELCURSOR_SPEED,
-  PANELCURSOR_CHECK_SPEED
-} = data
+  STARTPOS_PANELCURSOR_SPEED
+} from 'core/data';
 
 export default class ComponentPlayfieldCursor {
   public cursor_swap_history : Array<any>
@@ -31,7 +29,7 @@ export default class ComponentPlayfieldCursor {
   /**
    * Initialises the Cursor's position in x & y, counter, and its sprite
    * Also adds this sprite to a layer above the blocks
-   * @param {object} playfield 
+   * @param {object} playfield
    * @param {string} mode B button changes methods depending on the stage
    */
   create(playfield, modetype = "vs") {
@@ -128,7 +126,7 @@ export default class ComponentPlayfieldCursor {
    * @returns bool
    */
   pressed_then_held(tick) {
-    if (tick == 0) 
+    if (tick == 0)
       this.ignore = false;
 
     if (tick > 15)
@@ -144,9 +142,9 @@ export default class ComponentPlayfieldCursor {
    * @returns true if actually moved
    */
   up(tick) {
-    if (this.pressed_then_held(tick)) 
+    if (this.pressed_then_held(tick))
       if (this.y > ROWS_VIS) {
-        this.y--; 
+        this.y--;
         game.sounds.select();
       }
   }
@@ -160,7 +158,7 @@ export default class ComponentPlayfieldCursor {
   down(tick) {
     if (this.pressed_then_held(tick))
       if (this.y < (ROWS - 1)) {
-        this.y++; 
+        this.y++;
         game.sounds.select();
       }
   }
@@ -172,9 +170,9 @@ export default class ComponentPlayfieldCursor {
    * @returns true if actually moved
    */
   left(tick) {
-    if (this.pressed_then_held(tick)) 
-      if (this.x > 0) { 
-          this.x--; 
+    if (this.pressed_then_held(tick))
+      if (this.x > 0) {
+          this.x--;
           game.sounds.select();
       }
   }
@@ -186,9 +184,9 @@ export default class ComponentPlayfieldCursor {
    * @returns true if actually moved
    */
   right(tick) {
-    if (this.pressed_then_held(tick)) 
-      if (this.x < (COLS - 2)) { 
-        this.x++; 
+    if (this.pressed_then_held(tick))
+      if (this.x < (COLS - 2)) {
+        this.x++;
         game.sounds.select();
       }
   }
@@ -197,18 +195,18 @@ export default class ComponentPlayfieldCursor {
    * Calls the attached Playfield's swap method from where the Player hovers over
    * Only triggered when the key is pressed once, the playfields state is running and
    * the cursor's state is active
-   * 
+   *
    * puzzle mode - saves the panel positions of all blocks after each swap
-   * 
+   *
    * @param {integer} tick increasing counter
    */
   swap(tick) {
-    if (tick > 0 || 
-        this.playfield.stage.state !== 'running' || 
-        this.state !== 'active') 
-      return; 
+    if (tick > 0 ||
+        this.playfield.stage.state !== 'running' ||
+        this.state !== 'active')
+      return;
 
-    if (this.playfield.swap(this.x, this.y)) 
+    if (this.playfield.swap(this.x, this.y))
       if (this.mode === "puzzle") {
         let kinds = [];
         this.playfield.stack.forEach((panel, i) => {
@@ -218,16 +216,16 @@ export default class ComponentPlayfieldCursor {
       }
   }
 
-  /** 
+  /**
    * undoes the latest swap - up to the beginning before swapping started
    * @param {integer} tick acts as a timer - allows only keypresses
    */
   undo_swap(tick) {
-    if (tick > 0) 
+    if (tick > 0)
       return;
 
     // reset stack, decrease counter by one!
-    if (this.cursor_swap_history.length !== 0) 
+    if (this.cursor_swap_history.length !== 0)
       this.playfield.reset_stack(this.cursor_swap_history.pop(), --this.playfield.swap_counter);
   }
 
@@ -236,8 +234,8 @@ export default class ComponentPlayfieldCursor {
    * @param {integer} tick acts as a timer - allows only keypresses
    */
   pause(tick) {
-    if (tick > 0) 
-      return; 
+    if (tick > 0)
+      return;
 
     this.playfield.stage.pause();
   }
@@ -262,8 +260,8 @@ export default class ComponentPlayfieldCursor {
 
     if (this.state === 'entering' || this.state === 'preactive') {
       this.counter_flicker++;
-      
-      if (this.counter_flicker > 1) 
+
+      if (this.counter_flicker > 1)
         this.counter_flicker = 0;
     }
   }
@@ -283,11 +281,11 @@ export default class ComponentPlayfieldCursor {
       case 'entering':
         // increases by STARTPOS_PANELCURSOR_SPEED until y is reached, then sets it to y
         this.sprite.y = this.sprite.y < y ? this.sprite.y + STARTPOS_PANELCURSOR_SPEED : y;
-        
+
         // once sprite.y has reached its goal position move x the same way
         if (this.sprite.y === y)
           this.sprite.x = this.sprite.x > x ? this.sprite.x - STARTPOS_PANELCURSOR_SPEED : x;
-      
+
         if (this.sprite.x === x && this.sprite.y === y) {
           this.map_controls();
           this.state = "preactive";
