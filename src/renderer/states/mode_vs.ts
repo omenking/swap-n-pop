@@ -1,7 +1,7 @@
 import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
-import controls             from 'core/controls'
+import CoreControls         from 'core/controls'
 import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
 import data                 from 'core/data'
@@ -45,6 +45,7 @@ export default class ModeVs extends CoreStage {
   private _online         : any
   private _cpu            : Array<any>
   private frame           : Phaser.Sprite
+  private controls        : any
 
   constructor() {
     super()
@@ -69,6 +70,9 @@ export default class ModeVs extends CoreStage {
     this.cpu    = data.cpu
     this.online = data.online
     this.rng    = seedrandom(this.seed, {state: true})
+
+    // had to do this to inject controls into for `integration/online.spec.ts`
+    this.controls = data.controls || CoreControls
     
     this.inputs = new CoreInputs(data.inputs,data.online,this)
     this.snapshots = new CoreSnapshots()
@@ -110,7 +114,7 @@ export default class ModeVs extends CoreStage {
     this.create_bg()
 
     const stack = new Stack(this.rng);
-    stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
+    stack.create(6,2,"average","many");
 
     if (this.online && game.server.pos === 1) {
       this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
@@ -328,11 +332,11 @@ export default class ModeVs extends CoreStage {
     this.danger_check()
     if (tick === false) {
       this.inputs.update(this.tick,true)
-      controls.update()
+      this.controls.update()
       this.snapshots.snap(this.tick)
     } else {
       this.inputs.update(tick,false)
-      controls.update(false,true)
+      this.controls.update(false,true)
       this.snapshots.snap(tick)
     }
   }

@@ -1,9 +1,11 @@
-import * as fs  from 'fs'
-import Stage0   from 'states/mode_vs'
-import Stage1   from 'states/mode_vs'
+import * as fs      from 'fs'
+import Stage        from 'states/mode_vs'
+import CoreControls from 'core/controls'
 
-jest.setMock('common/electron', electron_mock)
-jest.setMock('common/store'   , store_mock)
+// forgive me for I have sinned.
+const klass = CoreControls.instance_class
+const controls0 = new klass()
+const controls1 = new klass()
 
 var _stage0 = null
 var _stage1 = null
@@ -22,22 +24,31 @@ function curs(p,x,y){
 
 function down(n,key){
   if (n === 0) {
-    game0.controls.keys[`pl0_${key}`].isDown = true
+    controls0.keys[`pl0_${key}`].isDown = true
   } else if (n === 1){
-    game1.controls.keys[`pl0_${key}`].isDown = true
+    controls1.keys[`pl0_${key}`].isDown = true
   }
 }
 
 describe('Online Simulation', function() {
   var stage0, stage1
   beforeEach(function(){
-    const init = {
-      seed  : 'puzzle',
-      cpu   : [false,false],
-      online: true
+    controls0 = new CoreControls()
+    controls1 = new CoreControls()
+    const init0 = {
+      seed     : 'puzzle',
+      cpu      : [false,false],
+      online   : true,
+      controls : controls0
     }
-    stage0  = new Stage0(game)
-    stage1  = new Stage1(game)
+    const init1 = {
+      seed     : 'puzzle',
+      cpu      : [false,false],
+      online   : true,
+      controls : controls1
+    }
+    stage0  = new Stage()
+    stage1  = new Stage()
     stage0.init(init)
     stage1.init(init)
     stage0.create()
@@ -50,8 +61,8 @@ describe('Online Simulation', function() {
   //it('#data', function(){
     ////0-1#######################################################
     //chec_cursors(2,6, 2,6, 2,6, 2,6)
-    //game0.controls.execute(0,0x01) // player 1 move up
-    //game1.controls.execute(0,0x08) // player 1 move right
+    //controls0.execute(0,0x01) // player 1 move up
+    //controls1.execute(0,0x08) // player 1 move right
     //update(
       //{ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x01]},
       //{ack0: 0, ack1: 0, frame_count: 2, frames: [0x00,0x08]}
@@ -65,7 +76,7 @@ describe('Online Simulation', function() {
     //stage1.inputs.inputs[0].should.eql([0x00,0x08])
     //stage1.inputs.inputs[1].should.eql([0x00])
     ////1-2#######################################################
-    //game0.controls.execute(0,0x00) // none
+    //controls0.execute(0,0x00) // none
     //let pack0_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
     //let pack1_2 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x08,0x08]}
     //update(pack0_2,pack1_2) // 2
@@ -79,7 +90,7 @@ describe('Online Simulation', function() {
     //stage1.inputs.inputs[0].should.eql([0x00,0x08,0x08])
     //stage1.inputs.inputs[1].should.eql([0x00,0x00])
     ////2-3#######################################################
-    //game1.controls.execute(0,0x00) // none
+    //controls1.execute(0,0x00) // none
     //let pack0_3 = {ack0: 0, ack1: 0, frame_count: 3, frames: [0x00,0x01,0x00]}
     //let pack1_3 = {ack0: 0, ack1: 0, frame_count: 4, frames: [0x00,0x08,0x08,0x00]}
     //update(pack0_3,pack1_3) // 3

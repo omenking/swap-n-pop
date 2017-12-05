@@ -1,11 +1,14 @@
 import * as fs         from 'fs'
 import * as seedrandom from 'seedrandom'
-import _f         from 'core/filters'
-import Stage      from 'states/mode_vs'
-import Playfield  from 'components/playfield'
-import Stack      from 'core/stack'
+import _f              from 'core/filters'
+import Stage           from 'states/mode_vs'
+import Playfield       from 'components/playfield'
+import Stack           from 'core/stack'
+import controls        from 'core/controls'
 
 const N = null
+
+controls.create()
 
 describe('Playfield', function() {
   describe('#class_name' ,function(){
@@ -32,9 +35,12 @@ describe('Playfield', function() {
   describe('#create()' ,function(){
     it('should work', function(){
       const stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
       const stack     = new Stack(stage.rng)
-      stack.create()
+      stack.create(5,1,'average','average')
       const playfield = new Playfield(0)
       playfield.create_stack = sinon.stub()
       playfield.create(stage,{push: true, x: 0, y: 0, panels: stack.panels})
@@ -47,14 +53,17 @@ describe('Playfield', function() {
     let playfield = null
     beforeEach(function(){
       stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
       stack = new Stack(stage.rng)
-      stack.create()
+      stack.create(5,1,'average','average')
       playfield = new Playfield(0)
     })
     it('should create stack of 72 with push', function(){
       playfield.create(stage,{push: true, x: 0, y: 0, panels: stack.panels})
-      playfield.stack_len.should.eql(72)
+      playfield.stack_len.should.eql(144)
     })
     it('should create stack of 66 without push', function(){
       playfield.create(stage,{x: 0, y: 0, panels: stack.panels})
@@ -74,7 +83,10 @@ describe('Playfield', function() {
     let playfield = null
     beforeEach(function(){
       stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
       playfield = new Playfield(0)
     })
     it('should fill panels', function(){
@@ -111,7 +123,10 @@ describe('Playfield', function() {
     let playfield = null
     beforeEach(function(){
       stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
       playfield = new Playfield(0)
       playfield.create(stage,{push: true, x: 0, y: 0, panels: [1,2,3,4,null,1]})
     })
@@ -139,7 +154,10 @@ describe('Playfield', function() {
       ]
     beforeEach(function(){
       stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
       playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
 
@@ -166,7 +184,10 @@ describe('Playfield', function() {
           3,N,N,N,N,N
         ]
       let stage = new Stage()
-      stage.init({seed: 'test'})
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
 
       let playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})

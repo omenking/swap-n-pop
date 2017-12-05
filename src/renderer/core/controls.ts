@@ -14,6 +14,8 @@ class CoreControls {
   private keys : any
   private pi : number
 
+  public instance_class : any
+
   constructor() {
   }
 
@@ -333,4 +335,5 @@ class CoreControls {
   }
 }
 const controls = new CoreControls()
+controls.instance_class = CoreControls
 export default controls
