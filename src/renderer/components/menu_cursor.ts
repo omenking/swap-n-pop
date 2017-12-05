@@ -1,9 +1,6 @@
 import game from 'core/game'
-import data from 'core/data'
 import controls from 'core/controls'
-
-
-const {UNIT, MENUCURSORBLINK} = data
+import { MENUCURSORBLINK, UNIT } from 'core/data';
 
 export default class ComponentMenuCursor {
   private menu       : any

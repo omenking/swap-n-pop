@@ -1,18 +1,12 @@
 import game from 'core/game'
-import data from 'core/data'
 import _f   from 'core/filters'
 import * as ss   from 'shuffle-seed'
+import { COLS, PANELS, ROWS } from 'core/data';
 
-const {
-  COLS, 
-  ROWS, 
-  PANELS
-  } = data
-
-/** 
- * Creates a randomized 1d Array with numbers 
+/**
+ * Creates a randomized 1d Array with numbers
  * that can be assigned to a Stack to form all Sprites
- * The Algorithm creates the Numbers carefully so 
+ * The Algorithm creates the Numbers carefully so
  * no combos are done once finished
  */
 export default class Stack {
@@ -21,15 +15,15 @@ export default class Stack {
   private kinds     : Array<number>
   private wellArray : Array<any>
   private chipArray : Array<any>
-   /** Panels Array that saves the numbers being generated  
-   * @param {object} rng seed that the randomness is based on  
-   */ 
-  constructor(rng) { 
-    this.rng = rng; 
+   /** Panels Array that saves the numbers being generated
+   * @param {object} rng seed that the randomness is based on
+   */
+  constructor(rng) {
+    this.rng = rng;
     this.panels = [];
 
     // null block generation
-    this.kinds = [0, 1, 2, 3, 4, 5]; 
+    this.kinds = [0, 1, 2, 3, 4, 5];
     this.wellArray = [];
     this.chipArray = [];
   }
@@ -37,21 +31,21 @@ export default class Stack {
   /**
    * from top to bottom creation of all playfields stack sprites
    * numbers are being generated - regenerated if recent numbers are the same
-   * @param {object} object of parameters, so you now what youre changing to what 
+   * @param {object} object of parameters, so you now what youre changing to what
    */
   create(range : number = 5, ground : number = 1, wells : string = "average", chips : string = "average") {
     this.panels = new Array(PANELS).fill(null);
 
     this.wellArray = this.setArrayToSize({ noun: wells, lowest: 10, average: 20, highest: 40 });
     this.chipArray = this.setArrayToSize({ noun: chips, lowest: 2, average: 4, highest: 8 });
-    
+
     // fill with nulls so empty space will result in unvisible blocks
     let savedNumbers = new Array(PANELS).fill(null);
     let lastNumber = -1;
-    
+
     // generate numbers from top range to bottom
     for (var i = (PANELS - range * COLS); i < PANELS; i++) {
-      let currentNumber = ss.shuffle(this.kinds, this.rng())[0]; 
+      let currentNumber = ss.shuffle(this.kinds, this.rng())[0];
 
       // x and y pos to move in the array and detect things
       let indexes = _f.i2xy(i);
@@ -62,17 +56,17 @@ export default class Stack {
       // random chance that currentnumber is simply null
       if (this.wellArray.length != 1) 							// only if wellArray size has been set
         if (i < (PANELS - ground * COLS))						// only generate nulls above ground
-          if (ss.shuffle(this.wellArray, this.rng())[0] == 1)  	
+          if (ss.shuffle(this.wellArray, this.rng())[0] == 1)
             currentNumber = null;
 
       // random chance to have null blocks through chips sets created
-      if (this.chipArray.length != 1) 
+      if (this.chipArray.length != 1)
         if (i < PANELS - ((range - 1) * COLS))		// chips are only the top layer
-          if (ss.shuffle(this.chipArray, this.rng())[0] == 1) 
+          if (ss.shuffle(this.chipArray, this.rng())[0] == 1)
             currentNumber = null;
 
       // if x = 0 we dont need to detect the left neighbor color so we set last to something different
-      if (indexes[0] == 0) 
+      if (indexes[0] == 0)
         lastNumber == -1;
 
       // generate new number until currentNumber is unique
@@ -80,7 +74,7 @@ export default class Stack {
       while (currentNumber != null &&
              currentNumber == topNumber ||
              currentNumber == lastNumber) {
-        currentNumber = ss.shuffle(this.kinds, this.rng())[0]; 
+        currentNumber = ss.shuffle(this.kinds, this.rng())[0];
       }
 
       // set last number and send current to array
@@ -97,13 +91,13 @@ export default class Stack {
   }
 
   /**
-   * sets an Array to a size acording to prechosen sizes 
+   * sets an Array to a size acording to prechosen sizes
    * @param {object} noun and supposed to be array sizes, the larger the less chances
-   * @returns {Array} 
+   * @returns {Array}
    */
   setArrayToSize({ noun, lowest, average, highest }) {
     let size = 0;
-    
+
     switch (noun) {
       case "none": 										break;
       case "many": 		size = lowest; 	break;

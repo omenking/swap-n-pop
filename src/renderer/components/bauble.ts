@@ -1,13 +1,8 @@
 import game    from 'core/game'
-import data    from 'core/data'
 import filters from 'core/filters'
 import ComponentPanel  from 'components/panel'
+import { UNIT, CLEAR, BAUBLE_FLOAT } from 'core/data';
 
-const {
-  UNIT,
-  CLEAR,
-  BAUBLE_FLOAT
-} = data
 const {px} = filters
 
 export default class ComponentBauble {
@@ -219,4 +214,4 @@ export default class ComponentBauble {
   }
 
   shutdown() {}
-} 
+}

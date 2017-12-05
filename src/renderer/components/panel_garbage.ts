@@ -1,10 +1,9 @@
 import game               from 'core/game'
 import _f                 from 'core/filters'
-import data               from 'core/data'
 import ComponentPanel     from 'components/panel'
 import ComponentPlayfield from 'components/playfield'
 
-const {
+import {
   COLS,
   UNIT,
   FALL,
@@ -15,7 +14,7 @@ const {
   TIME_GARBAGE_POP,
   GARBAGE,
   GARBAGE_SHAKE
-} = data
+} from 'core/data';
 
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
@@ -117,7 +116,7 @@ export default class ComponentPanelGarbage {
         }
       break;
       case CLEAR:
-        if (this.panel.counter > 0) { 
+        if (this.panel.counter > 0) {
           this.panel.counter--
           const [i,len] = this.clear_index
           this.time_max = TIME_GARBAGE_CLEAR + (len   * TIME_GARBAGE_POP)
@@ -132,7 +131,7 @@ export default class ComponentPanelGarbage {
     }
   }
 
-  /** 
+  /**
    * This looks at the current row for panels that belong
    * to this garbage panel group and then check below each one to
    * see if all of them are empty underneath so it should fall.

@@ -1,6 +1,4 @@
-import data from 'core/data'
-
-const {COLS,ROWS} = data
+import { COLS, ROWS } from 'core/data';
 
 export default {
   /* upscale base pixels to the correct size */

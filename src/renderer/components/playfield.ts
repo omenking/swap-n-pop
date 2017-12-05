@@ -1,5 +1,4 @@
 import game        from 'core/game'
-import data        from 'core/data'
 import _f          from 'core/filters'
 import CoreGarbage from 'core/garbage'
 import CoreStage   from 'core/stage'
@@ -12,7 +11,7 @@ import ComponentPanel              from 'components/panel'
 import ComponentCharacter          from 'components/character'
 import ComponentAi                 from 'components/ai'
 
-const {
+import {
   ROWS_INV,
   ROWS,
   COLS,
@@ -21,7 +20,7 @@ const {
   TIME_PUSH,
   STOPTIME,
   GARBAGE_SHAKE
-} = data
+} from 'core/data';
 
 export default class Playfield {
   get [Symbol.toStringTag](){ return 'Playfield' }
@@ -54,7 +53,7 @@ export default class Playfield {
 
   public  clearing          : Array<ComponentPanel>
   /* array of panels grouped by number based on tick */
-  public  clearing_garbage  : Array<number> 
+  public  clearing_garbage  : Array<number>
   private score             : number
   private has_ai            : boolean
   private land              : boolean
@@ -67,7 +66,7 @@ export default class Playfield {
   private _push_counter  : number
 
   constructor(pi){
-    if (pi !== 0 && pi !== 1){ 
+    if (pi !== 0 && pi !== 1){
       throw new Error("player_number present and must be 0 or 1")
     }
 
@@ -255,12 +254,12 @@ export default class Playfield {
       this.stack_i(i).create(this, x, y)
     }
   }
-  
+
   /**
    * Sets the Stack Panels to data given by the parameter.
    * Also if a push call was made it also sets the bottom row to unique - not comboable
-   * 
-   * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty  
+   *
+   * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty
    */
   fill_panels(data) {
     this.stack.forEach((panel, i) => { panel.set_kind(data[i]); });
@@ -277,9 +276,9 @@ export default class Playfield {
   }
 
   /**
-   * Resets this playfields stack to the new given data 
+   * Resets this playfields stack to the new given data
    * Resets the swap_counter - puzzle mode
-   * 
+   *
    * @param {Array} new_Panels the panels the stack should reset to
    * @param {integer} new_counter_size size that the swap_counter should be set to
    */
@@ -289,7 +288,7 @@ export default class Playfield {
     this.fill_panels(new_Panels)
   }
 
-  /** 
+  /**
    * checks if the stack has only empty panels
    * @returns true when the whole stack consists of empty block
    */
@@ -316,12 +315,12 @@ export default class Playfield {
     for (let panel of this.clearing){ panel.chain = chain }
     return [combo, chain]
   }
-  
+
   /**
    * Calls the swap Method through the given parameters on the internal stack.
    * Only able to swap if both Panels are swappable.
    * A swap_counter goes up that counts all swaps (no swaps done when both panels are empty).
-   * 
+   *
    * @param {integer} x xpos to be accessed in the stack - 2D Array whise
    * @param {integer} y ypos to be accessed in the stack - 2D Array whise
    */
@@ -335,10 +334,10 @@ export default class Playfield {
       if (!panelLeft.empty && !panelRight.empty ) {
         this.swap_counter++;
         return true;
-      }    
+      }
     }
   }
-  
+
   danger(within) {
     const offset = COLS*(within+ROWS_INV);
     const cols   = [];
@@ -371,7 +370,7 @@ export default class Playfield {
 
     if (this.push_counter <= 0 && !danger) {
       this.pushing        = false
-      this.push_counter   = TIME_PUSH       
+      this.push_counter   = TIME_PUSH
       this.score         += this.push()
     }
   }
@@ -455,7 +454,7 @@ export default class Playfield {
   update() {
     this.countdown.update()
     this.cursor.update()
-    
+
     //this.score_lbl.update(this.chain, this.score)
     let danger = null
     if (this.stage.state === 'running'){

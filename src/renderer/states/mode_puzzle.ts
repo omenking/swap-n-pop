@@ -8,10 +8,8 @@ import ComponentPlayfield   from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
 import ComponentStepCounter from 'components/step_counter'
-import data                 from 'core/data'
 import filters              from 'core/filters'
 
-const { UNIT } = data
 const { px }   = filters
 
 
@@ -80,7 +78,7 @@ export default class ModePuzzle extends CoreStage {
     this.timer.create(180, 60);
     this.step_display.create({ playfield: this.playfield0, step_limit: this.steps_left, x: 575, y: 85 });
   }
-  
+
   /** shuts down the playfield0 */
   shutdown() {
     game.sounds.stage_music('none');
@@ -97,7 +95,7 @@ export default class ModePuzzle extends CoreStage {
   /** stops all control - plays a sound and stops the timer */
   pause() {
     game.sounds.stage_music('pause');
-  
+
     this.state = "pause";
     this.timer.running = false;
     this.menu_pause.pause();
@@ -106,7 +104,7 @@ export default class ModePuzzle extends CoreStage {
   /** regains control over playfield0 - plays a sound and timer runs again */
   resume() {
     game.sounds.stage_music('resume');
-  
+
     this.state = "running";
     this.timer.running = true;
     this.playfield0.cursor.map_controls()
@@ -122,9 +120,9 @@ export default class ModePuzzle extends CoreStage {
         return;
       }
 
-      this.change_level(this.puzzles.puzzle_levels[this.level_index++]);      
+      this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
       this.playfield0.cursor.cursor_swap_history = [];
-      this.playfield0.reset_stack(this.panels, 0);  
+      this.playfield0.reset_stack(this.panels, 0);
     }
 
     // if over a limit overcrossed reset
@@ -146,8 +144,8 @@ export default class ModePuzzle extends CoreStage {
   render() {
     this.timer.render();
     this.step_display.render();
-  
-    if (this.playfield0) 
+
+    if (this.playfield0)
       this.playfield0.render();
   }
 }

@@ -1,5 +1,4 @@
 import game from 'core/game'
-import data from 'core/data'
 import _f   from 'core/filters'
 import blank                  from 'components/panel_blank'
 import ComponentBaubleChain   from 'components/bauble'
@@ -7,7 +6,7 @@ import ComponentPanelGarbage  from 'components/panel_garbage'
 import ComponentPanelParticle from 'components/panel_particle'
 import ComponentPlayfield     from 'components/playfield'
 import * as ss from 'shuffle-seed'
-const {
+import {
   UNIT,
   SWAP_L,
   SWAP_R,
@@ -29,16 +28,14 @@ const {
   FRAME_DANGER,
   FRAME_DEAD,
   FRAME_NEWLINE,
-  ANIM_SWAP_LEFT,
-  ANIM_SWAP_RIGHT,
   TIME_SWAP,
   TIME_CLEAR,
   TIME_POP,
   TIME_FALL,
   TIME_PARTICLE
-} = data
+} from 'core/data';
 
-/** 
+/**
  *
  */
 export default class ComponentPanel {
@@ -80,7 +77,7 @@ export default class ComponentPanel {
    */
   get counter()    {return this._counter }
   set counter(val) {       this._counter = val }
-  
+
   get state()    {return this._state }
   set state(val) {       this._state = val }
 
@@ -107,7 +104,7 @@ export default class ComponentPanel {
 
     // each panel has 5 particles - in create these are set to follow a circular path!
     this.particles = [];
-    for (let i = 0; i < 5; i++) 
+    for (let i = 0; i < 5; i++)
       this.particles[i] = new ComponentPanelParticle();
   }
 
@@ -189,8 +186,8 @@ export default class ComponentPanel {
 
     this.panel_garbage.create(this,this.playfield)
     this.bauble_chain.create(this)
-  
-    // circular path is getting set, 
+
+    // circular path is getting set,
     // angle needs to be defined so the particles know where to start properly
     // if type: "normal" you should only define 4 ComponentParticles, not more not less,
     // if type: "rotate" the amount of particles doesnt matter
@@ -311,7 +308,7 @@ export default class ComponentPanel {
     this.panel_garbage.state = FALL
   }
 
-  /** resets this panel to a normal state - stops animation usefull for stack resets */ 
+  /** resets this panel to a normal state - stops animation usefull for stack resets */
   soft_reset() {
     this.counter = 0;
     this.state = STATIC;
@@ -322,7 +319,7 @@ export default class ComponentPanel {
     return  this.above.state !== HANG &&
             (this.state === STATIC ||
             // LAND will swap but will play must at play least 1 frame.
-            (this.state === LAND && this.counter < FRAME_LAND.length)  
+            (this.state === LAND && this.counter < FRAME_LAND.length)
     )
   }
   /** */
@@ -359,7 +356,7 @@ export default class ComponentPanel {
    * Each panel kind eg. green, red, blue takes up one row in the spritespeet.
    *
    */
-  set frame(i : any) { 
+  set frame(i : any) {
     // should not have to parseInt, something is passing in string
     this.sprite.frame = (this.kind * 8) + parseInt(i)
   }
@@ -375,7 +372,7 @@ export default class ComponentPanel {
     }
   }
 
-  /** 
+  /**
    * `update(i)` handles the states and its transition to other states.
    * A panel's state will usually change when the panel's `counter`
    * reaches zero.
@@ -429,7 +426,7 @@ export default class ComponentPanel {
     @param {{number}} i
   */
   popping(i) {
-    this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL     
+    this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
   }
 
   /**
@@ -442,23 +439,23 @@ export default class ComponentPanel {
    *  // 1 3 1
    *  // 4 4 *
    * ```
-   * Then we expect `nocombo()` to 
+   * Then we expect `nocombo()` to
    * * return either `0,2,3`
    * * and it should not return `4` because that would result in a match
    * * and it should not return `1` because above it there is a `1` above
-   * 
+   *
    * @returns {number} new kind to be set to!
   */
   nocombo() {
-    const arr = [0, 1, 2, 3, 4] 
-    if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)} 
-    let values = ss.shuffle(arr,this.playfield.stage.rng()) 
-    return this.kind = values.find((i)=> { 
-      return this.matched(i) === false 
-    }) 
+    const arr = [0, 1, 2, 3, 4]
+    if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
+    let values = ss.shuffle(arr,this.playfield.stage.rng())
+    return this.kind = values.find((i)=> {
+      return this.matched(i) === false
+    })
   }
-  
-  /** 
+
+  /**
   * `danger()` will check if the this panel's column
   *  contains any active panel's a few panels from the top.
   *  and if it does it should return true, because this column
@@ -467,7 +464,7 @@ export default class ComponentPanel {
   get danger() {
     return !this.playfield.stack_xy(this.x,1+ROWS_INV).hidden
   }
-  /** 
+  /**
   * `dead()` will check if the this panel's column contains
   * an active panel in the first row. If this is the case
   * then the this panel should be considered dead.
@@ -475,7 +472,7 @@ export default class ComponentPanel {
   get dead() {
     return !this.playfield.stack_xy(this.x,0+ROWS_INV).hidden
   }
-  /** 
+  /**
   * `newline()` checks if this panel is a newline.
   *  A panel is considered a newline when its the last
   *  row in the stack and the playfield should push panels,
@@ -485,7 +482,7 @@ export default class ComponentPanel {
   get newline() {
     return this.playfield.should_push && this.y === ROWS
   }
-  /** 
+  /**
   * `clear()` will change a panel's state to clear.
   * it will also on the same tick push this panel to
   * an array called `clearing`. This clearing array is used
@@ -532,7 +529,7 @@ export default class ComponentPanel {
   }
 
   /**
-   * 
+   *
    Returns the index of the current panel clearing and amount of panels clearing
    @returns {array} - [index,length]
    */
@@ -558,7 +555,7 @@ export default class ComponentPanel {
    * * dead     - when a panel shows a dead face
    * * danger   - when a panel is in danger it bounces
    * * clear    - when a panel is clearing it flashes and then vanishes
-   * * land     - when a panel lands 
+   * * land     - when a panel lands
    * * swapping - when two panels swap
    * * live     - the panel's normal state
    *

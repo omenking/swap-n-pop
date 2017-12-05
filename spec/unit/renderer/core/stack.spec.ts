@@ -1,11 +1,7 @@
 import * as seedrandom from 'seedrandom'
 import _f             from 'core/filters'
 import Stack          from 'core/stack'
-import data           from 'core/data'
-
-const {
-  COLS, ROWS, PANELS
-} = data
+import { COLS, PANELS, ROWS } from 'core/data';
 
 // sRJouZq3sh0yHl2w <-- This seed need to get to ensure its random
 

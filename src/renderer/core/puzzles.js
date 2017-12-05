@@ -1,14 +1,12 @@
-import data from 'core/data'
+import { PANELS } from 'core/data';
 
 export default function levels() {
-  const _ = 0;   // empty panel  
+  const _ = 0;   // empty panel
   const b = 1;      // blue
   const g = 2;      // green
   const p = 3;      // purple
   const r = 4;      // red
   const y = 5;      // yellow
-
-  const { PANELS } = data
 
   /**
    * private method to help with array creation
@@ -114,7 +112,7 @@ export default function levels() {
       ]),
       steps: 3
     },
-  
+
     // stage 2 - 01
     {
       panels: fill([
