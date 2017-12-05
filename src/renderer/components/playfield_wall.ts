@@ -1,9 +1,7 @@
 import game    from 'core/game'
-import filters from 'core/filters'
 import ComponentPlayfield from 'components/playfield'
 import { WALL_ROLLUP } from 'core/data';
-
-const {px} = filters
+import { px } from 'core/filters';
 
 export default class ComponentPlayfieldWall {
   private playfield : ComponentPlayfield

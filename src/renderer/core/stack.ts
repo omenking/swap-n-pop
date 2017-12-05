@@ -1,7 +1,7 @@
 import game from 'core/game'
-import _f   from 'core/filters'
 import * as ss   from 'shuffle-seed'
 import { COLS, PANELS, ROWS } from 'core/data';
+import { i2xy, xy2i } from 'core/filters';
 
 /**
  * Creates a randomized 1d Array with numbers
@@ -48,10 +48,10 @@ export default class Stack {
       let currentNumber = ss.shuffle(this.kinds, this.rng())[0];
 
       // x and y pos to move in the array and detect things
-      let indexes = _f.i2xy(i);
+      let indexes = i2xy(i);
 
       // save the top number, if top number is set the number below it should never be the same
-      let topNumber = savedNumbers[_f.xy2i(indexes[0], indexes[1] - 1)];
+      let topNumber = savedNumbers[xy2i(indexes[0], indexes[1] - 1)];
 
       // random chance that currentnumber is simply null
       if (this.wellArray.length != 1) 							// only if wellArray size has been set
@@ -122,7 +122,7 @@ export default class Stack {
       let str = "";
 
       for (var j = 0; j < COLS; j++)
-        str += arrayToLog[_f.xy2i(j, i)] + "  ";
+        str += arrayToLog[xy2i(j, i)] + "  ";
 
       console.log(str);
     }

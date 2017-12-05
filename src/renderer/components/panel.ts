@@ -1,11 +1,11 @@
 import game from 'core/game'
-import _f   from 'core/filters'
 import blank                  from 'components/panel_blank'
 import ComponentBaubleChain   from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
 import ComponentPanelParticle from 'components/panel_particle'
 import ComponentPlayfield     from 'components/playfield'
 import * as ss from 'shuffle-seed'
+import { out_of_bounds } from 'core/filters';
 import {
   UNIT,
   SWAP_L,
@@ -87,15 +87,15 @@ export default class ComponentPanel {
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get  left() { return _f.out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
-  get right() { return _f.out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
-  get under() { return _f.out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
-  get above() { return _f.out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
+  get  left() { return out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
+  get right() { return out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
+  get under() { return out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
+  get above() { return out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
 
-  get  left2() { return _f.out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
-  get right2() { return _f.out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
-  get under2() { return _f.out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
-  get above2() { return _f.out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
+  get  left2() { return out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
+  get right2() { return out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
+  get under2() { return out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
+  get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
 
   /** */
   constructor() {

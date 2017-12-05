@@ -8,10 +8,6 @@ import ComponentPlayfield   from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
 import ComponentStepCounter from 'components/step_counter'
-import filters              from 'core/filters'
-
-const { px }   = filters
-
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {

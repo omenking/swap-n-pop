@@ -1,7 +1,7 @@
 import * as seedrandom from 'seedrandom'
-import _f             from 'core/filters'
 import Stack          from 'core/stack'
 import { COLS, PANELS, ROWS } from 'core/data';
+import { stack_log, xy2i } from 'core/filters';
 
 // sRJouZq3sh0yHl2w <-- This seed need to get to ensure its random
 
@@ -24,8 +24,8 @@ describe('Stack', function() {
       //stack.step(layout,41)
       //stack.step(layout,42)
 
-      _f.stack_log(stack.panels)
-      stack.panels[_f.xy2i(0,10)].should.eql(1)
+      stack_log(stack.panels)
+      stack.panels[xy2i(0,10)].should.eql(1)
     })
   })
   describe('#mached', function(){

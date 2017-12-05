@@ -1,9 +1,7 @@
 import game    from 'core/game'
-import filters from 'core/filters'
 import ComponentPanel  from 'components/panel'
 import { UNIT, CLEAR, BAUBLE_FLOAT } from 'core/data';
-
-const {px} = filters
+import { px } from 'core/filters';
 
 export default class ComponentBauble {
   get [Symbol.toStringTag](){ return 'Bauble' }

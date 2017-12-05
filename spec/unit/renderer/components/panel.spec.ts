@@ -1,5 +1,4 @@
 import * as fs        from 'fs'
-import _f        from 'core/filters'
 import Stage     from 'states/mode_vs'
 import Playfield from 'components/playfield'
 import Panel     from 'components/panel'

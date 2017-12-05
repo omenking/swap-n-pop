@@ -2,7 +2,6 @@ import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreControls         from 'core/controls'
-import filters              from 'core/filters'
 import CoreInputs           from 'core/inputs'
 import CoreSnapshots        from 'core/snapshots'
 import CoreStage            from 'core/stage'
@@ -14,9 +13,9 @@ import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
 import { COLS, ROWS } from 'core/data';
+import { px } from 'core/filters';
 
 const {ipcRenderer: ipc} = electron
-const { px } = filters
 
 export default class ModeVs extends CoreStage {
   public playfield0       : ComponentPlayfield

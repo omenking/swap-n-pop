@@ -1,8 +1,6 @@
 import game     from 'core/game'
 import controls from 'core/controls'
-import filters  from 'core/filters'
-
-const {px}   = filters
+import { px } from 'core/filters';
 
 /** Cursor to handle menu_pause movement and method calls
  *  could maybe be optimized by just calling the menu_pause methods here

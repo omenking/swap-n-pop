@@ -1,5 +1,4 @@
 import game        from 'core/game'
-import _f          from 'core/filters'
 import CoreGarbage from 'core/garbage'
 import CoreStage   from 'core/stage'
 
@@ -10,6 +9,8 @@ import ComponentScore              from 'components/score'
 import ComponentPanel              from 'components/panel'
 import ComponentCharacter          from 'components/character'
 import ComponentAi                 from 'components/ai'
+
+import { i2xy, xy2i } from 'core/filters';
 
 import {
   ROWS_INV,
@@ -103,8 +104,8 @@ export default class Playfield {
     return this._stack[i]
   }
 
-  stack_xy(x, y){
-    return this._stack[_f.xy2i(x,y)]
+  stack_xy(x: number, y: number) {
+    return this._stack[xy2i(x,y)]
   }
 
   get snap() {
@@ -210,7 +211,7 @@ export default class Playfield {
     // move all panels up the stack
     const stack = new Array(this.stack_len)
     for (i = COLS; i < this.stack_len; i++) {
-      let [x,y] = Array.from(_f.i2xy(i-COLS))
+      let [x,y] = Array.from(i2xy(i-COLS))
       stack[i-COLS] = this._stack[i]
       stack[i-COLS].x = x
       stack[i-COLS].y = y
@@ -228,7 +229,7 @@ export default class Playfield {
 
     // create panels
     for (let i = PANELS; i < PANELS+COLS; i++){
-      const [x,y] = Array.from(_f.i2xy(i))
+      const [x,y] = Array.from(i2xy(i))
       this._stack[i] = new ComponentPanel()
       this.stack_i(i).create(this, x, y)
     }
@@ -249,7 +250,7 @@ export default class Playfield {
     this._stack = new Array().fill(null)
 
     for (let i = 0; i < size; i++){
-      const [x,y] = Array.from(_f.i2xy(i))
+      const [x,y] = Array.from(i2xy(i))
       this._stack[i] = new ComponentPanel()
       this.stack_i(i).create(this, x, y)
     }

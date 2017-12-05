@@ -1,5 +1,4 @@
 import game               from 'core/game'
-import _f                 from 'core/filters'
 import ComponentPanel     from 'components/panel'
 import ComponentPlayfield from 'components/playfield'
 
