@@ -39,7 +39,7 @@ export default class Stack {
    * numbers are being generated - regenerated if recent numbers are the same
    * @param {object} object of parameters, so you now what youre changing to what 
    */
-  create({ range = 5, ground = 1, wells = "average", chips = "average" }) {
+  create(range : number = 5, ground : number = 1, wells : string = "average", chips : string = "average") {
     this.panels = new Array(PANELS).fill(null);
 
     this.wellArray = this.setArrayToSize({ noun: wells, lowest: 10, average: 20, highest: 40 });
