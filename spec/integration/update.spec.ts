@@ -24,18 +24,25 @@ const N = null
 
 var _playfield = null
 function load(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).load(i) }
+  for (let i of arr){
+    _playfield.stack_xy(i[0], i[1]).load(i)
+  }
 }
 
 function chec(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).snap.should.eql(i)}
+  for (let i of arr){
+    _playfield.stack_xy(i[0], i[1]).snap.should.eql(i)
+  }
 }
 
 describe('panel_actions', function() {
   var playfield
   beforeEach(function(){
     let stage = new Stage()
-    stage.init({seed: 'test'})
+    stage.init({
+      seed: 'test',
+      cpu: [false,null]
+    })
     stage.state = 'running'
     playfield = new Playfield(0)
     playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
@@ -55,7 +62,7 @@ describe('panel_actions', function() {
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
     //################################################################
-    playfield.stack(1, 8).swap()
+    playfield.stack_xy(1, 8).swap()
     chec([0,8 ,1,STATIC,0,F], [1,8 ,0,SWAP_L,0,F], [2,8 ,N,SWAP_R,0,F],
          [0,9 ,1,STATIC,0,F], [1,9 ,4,STATIC,0,F], [2,9 ,N,STATIC,0,F],
          [0,10,2,STATIC,0,F], [1,10,3,STATIC,0,F], [2,10,N,STATIC,0,F])
@@ -251,7 +258,7 @@ describe('panel_actions', function() {
          [0,8 ,0,STATIC,0,F], [1,8  ,4,CLEAR,90,F], [2,8 ,0,STATIC,0,F],
          [0,9 ,3,STATIC,0,F], [1,9  ,4,CLEAR,90,F], [2,9 ,2,STATIC,0,F],
          [0,10,1,STATIC,0,F], [1,10 ,2,STATIC,0,F], [2,10,3,STATIC,0,F])
-    for(i = 0; i < 90; i++){ playfield.update() }
+    for(let i = 0; i < 90; i++){ playfield.update() }
     load([0,6 ,3,STATIC,0,F], [1,6  ,2,HANG,0,T], [2,6 ,3,STATIC,0,F],
          [0,7 ,1,STATIC,0,F], [1,7  ,N,STATIC,0,F], [2,7 ,1,STATIC,0,F],
          [0,8 ,0,STATIC,0,F], [1,8  ,N,STATIC,0,F], [2,8 ,0,STATIC,0,F],

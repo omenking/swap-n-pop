@@ -137,9 +137,11 @@ export default class ComponentPanel {
     this.chain   = data[5]
     this.garbage = data[6]
     this.group   = data[7]
-    this.particles.forEach((particle, i) => {
-      particle = data[8][i]
-    })
+    if (data[8]){
+      this.particles.forEach((particle, i) => {
+        particle = data[8][i]
+      })
+    }
   }
 
   /** */
