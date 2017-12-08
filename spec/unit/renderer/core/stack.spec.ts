@@ -5,7 +5,7 @@ const seed = "0";
 //const rnd = new Phaser.RandomDataGenerator([seed]);
 
 describe("Stack Class", () => {
-  beforeAll(function(done) {
+  beforeAll(function() {
     let stack = new Stack()
     let stack2 = new Stack()
   }
@@ -27,7 +27,7 @@ describe("Stack Class", () => {
   });
 
   describe("setArrayToSize, the lower the size -> the higher a chance for a num out of the size to be true: 1/10 has a higher chance than 1/20", () => {
-    beforeAll(function(done) {
+    beforeAll(function() {
       let stack = new Stack()
     }
     const lowest = 10;
@@ -35,23 +35,23 @@ describe("Stack Class", () => {
     const highest = 30;
 
     it("array size should be none -> only 1 element large, other sizes dont matter", () => {
-      let testArray = stack.setArrayToSize({noun: "none", lowest: lowest, average: average, highest: highest});
-      testArray.length.should.equal(1);
+      let arr = stack.setArrayToSize({noun: "none", lowest: lowest, average: average, highest: highest});
+      arr.length.should.equal(1);
     });
 
     it("array size should be small -> chance is many to get a 1 out of -> array length should equal to lowest size", () => {
-      let testArray = stack.setArrayToSize({noun: "many", lowest: lowest, average: average, highest: highest});
-      testArray.length.should.equal(lowest);
+      let arr = stack.setArrayToSize({noun: "many", lowest: lowest, average: average, highest: highest});
+      arr.length.should.equal(lowest);
     });
 
     it("array size should be average -> chance is average -> array length should equal to average size", () => {
-      let testArray = stack.setArrayToSize({noun: "average", lowest: lowest, average: average, highest: highest});
-      testArray.length.should.equal(average);
+      let arr = stack.setArrayToSize({noun: "average", lowest: lowest, average: average, highest: highest});
+      arr.length.should.equal(average);
     });
 
     it("array size should be large -> chance is low to get a 1 out of since the many elements -> array length should equal biggest size", () => {
-      let testArray = stack.setArrayToSize({noun: "few", lowest: lowest, average: average, highest: highest});
-      testArray.length.should.equal(highest);
+      let arr = stack.setArrayToSize({noun: "few", lowest: lowest, average: average, highest: highest});
+      arr.length.should.equal(highest);
     });
   });
 });

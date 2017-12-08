@@ -31,7 +31,15 @@ function load(...arr){
 
 function chec(...arr){
   for (let i of arr){
-    _playfield.stack_xy(i[0], i[1]).snap.should.eql(i)
+    let data = _playfield.stack_xy(i[0], i[1]).snap
+    // adding pos so when an error is raised its easy
+    // to determine which panel
+    let pos  = `${i[0]},${i[1]}`
+    expect([pos,data[2]]).eql([pos,i[2]]) //kind
+    expect([pos,data[3]]).eql([pos,i[3]]) //state
+    expect([pos,data[4]]).eql([pos,i[4]]) //counter
+    expect([pos,data[5]]).eql([pos,i[5]]) //chain
+    expect([pos,data[6]]).eql([pos,i[6]]) //group
   }
 }
 
