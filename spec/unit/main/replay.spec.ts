@@ -10,7 +10,7 @@ app.getPath.returns('/tmp')
 describe('Replay' ,function(){
   describe('#save(name,inputs)' ,function(){
     var filename = null;
-    before(function(done) {
+    beforeAll(function(done) {
       const inputs = [
         [0x00,0x00,0x20,0x20],
         [0x01,0x00,0x10,0x00]
@@ -51,7 +51,7 @@ describe('Replay' ,function(){
         done()
       })
     })
-    after(function() {
+    afterAll(function() {
       fs.unlink(filename,function(){})
     });
   })
@@ -63,7 +63,7 @@ describe('Replay' ,function(){
       [0x00,0x00,0x20,0x20],
       [0x01,0x00,0x10,0x00]
     ]
-    before(function(done) {
+    beforeAll(function(done) {
       Replay.save(name,'seed',inputs,function(err,data){filename = data;done()})
     })
 
@@ -75,7 +75,7 @@ describe('Replay' ,function(){
         done()
       })
     })
-    after(function() {
+    afterAll(function() {
       fs.unlink(filename,function(){})
     });
   })
