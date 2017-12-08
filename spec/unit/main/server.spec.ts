@@ -15,10 +15,10 @@ describe('Server' ,function(){
       const server = new Server()
       console.log(Buffer.from([0x00]))
       server.create(40101,'127.0.0.1')
-      server.signal('connecting','h').should.eql(Buffer.from([0x00,0x68]))
-      server.signal('connected').should.eql(Buffer.from([0x01]))
-      server.signal('ping',1).should.eql(Buffer.from([0x02,0x01]))
-      server.signal('pong',1).should.eql(Buffer.from([0x03,0x01]))
+      expect(server.signal('connecting','h')).eql(Buffer.from([0x00,0x68]))
+      expect(server.signal('connected')).eql(Buffer.from([0x01]))
+      expect(server.signal('ping',1)).eql(Buffer.from([0x02,0x01]))
+      expect(server.signal('pong',1)).eql(Buffer.from([0x03,0x01]))
       //server.signal('framedata',null).should.eql(Buffer.from([0x04,0x00]))
       server.close()
     }) // it
@@ -98,7 +98,6 @@ describe('Server' ,function(){
         client.create(40001,'127.0.0.1',function(){
           server.connected(function(err,data){
             client.on('pong',function(){
-              console.log('pp',client.ping_time)
               done()
               server.close()
               client.close()
@@ -110,21 +109,6 @@ describe('Server' ,function(){
 
         })
       })
-    }) // it
-  }) // describe
-
-  describe('#test()' ,function(){
-    it('should',function(){
-      const num  = 768290
-      const size = Math.ceil(num.toString(2).length / 8)
-      const arr  = new Array(size+1).fill(null)
-      arr[0] = 0x02
-      console.log('arr',arr)
-      const buf  = Buffer.from(arr)
-      buf.writeUIntBE(num,1,size)
-      console.log('b',buf)
-      console.log('b2',buf.readUIntBE(1,size))
-      //console.log('buf',buf)
     }) // it
   }) // describe
 
@@ -147,12 +131,12 @@ describe('Server' ,function(){
         0xb9,
         0x22
       ])
-      server.buf_framedata(0x04,{
+      expect(server.buf_framedata(0x04,{
         frame_count: 3,
         frames: [0x20,0x10,0x00],
         ack0: 10102,
         ack1: 768290
-      }).should.eql(buf)
+      })).eql(buf)
     }) // it
   }) // describe
 
@@ -198,7 +182,7 @@ describe('Server' ,function(){
         0x32,
         0x33
       ])
-      server.buf_str(0x00,'hello123').should.eql(buf)
+      expect(server.buf_str(0x00,'hello123')).eql(buf)
     }) // it
   }) // describe
 
