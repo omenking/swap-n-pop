@@ -1,10 +1,9 @@
-import * as electron from 'electron'
 import Store    from 'common/store'
 import game     from 'core/game'
+import {ipcRenderer: ipc} from 'electron'
 
 const store = new Store()
 
-const {ipcRenderer: ipc} = electron
 
 class CoreControls {
   private callbacks : any
