@@ -24,12 +24,12 @@ describe('Server' ,function(){
     }) // it
 
     it('should error', function(){
-      (function(){
+      expect(function(){
         const server = new Server()
         server.create(40101,'127.0.0.1')
         server.close()
         server.signal('test')
-      }).should.throw("no idea what you want to send")
+      }).throw("no idea what you want to send")
     })
   }) // describe
 
@@ -43,12 +43,12 @@ describe('Server' ,function(){
     }) // it
 
     it('should error', function(){
-      (function(){
+      expect(function(){
         const server = new Server()
         server.create(40101,'127.0.0.1')
         server.close()
         server.msg('test')
-      }).should.throw("no idea what you go")
+      }).throw("no idea what you go")
     })
   }) // describe
 
