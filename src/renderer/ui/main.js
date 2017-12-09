@@ -32,20 +32,20 @@ function nav(){
     m('.clear')
   ])
 }
-function content(){
+function content(game){
   if      (Ui.mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
   else if (Ui.mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
-  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio()   )}
+  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio(game))}
   else if (Ui.mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
 }
 
-function render(){
+function render(game){
   const app = {view: function(){
     if (Ui.mode !== false) {
       return m('.wrap1',
         m('.wrap2',[
           nav(),
-          content()
+          content(game)
         ])
       )
     }
