@@ -9,3 +9,4 @@ app/src/TODO
 
 /static/renderer.js
 /static/main.js
+.vscode/tasks.json
