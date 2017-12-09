@@ -1,6 +1,14 @@
 import controls           from 'core/controls'
 import ComponentPlayfield from 'components/playfield'
 
+/**
+ * Snapshots will save up to 120 frames/ticks worth of objects
+ * states that we can reload at any given time.
+ *
+ * When the snapshot array fills up, it starts overriding at
+ * back at the beginging of the array so we have logic to handle
+ * that dealing with the looping reading and writing array
+ */
 export default class Snapshots {
   private _stage : any
   private _playfield0 : ComponentPlayfield
@@ -9,76 +17,62 @@ export default class Snapshots {
   private index : number
   private index_tick : number
   private snapshot : Array<any>
-  /** Saves variables which need to get snapped or loaded
+  /** Saves stage which need to get snapped or loaded
    * @param {mode} stage chosen mode to play in
-   * @param {playfield} p0 first one
-   * @param {playfield} p1 second one
-   * @param {Timer} timer timer of the mode
-   */ 
-  create(stage, p0, p1, timer){
+   */
+  create(stage){
     // to snap / load
-    this.stage      = stage;
-    this.playfield0 = p0;
-    this.playfield1 = p1;
-    this.timer      = timer;
-
+    this.stage = stage
     // counter for each Frame
-    this.index      = -1;
-    this.index_tick = 0;
-    
+    this.index      = -1
+    this.index_tick = 0
     // snapshot size limit 120 saved Frames
-    this.snapshot   = new Array(120).fill(null);
+    this.snapshot   = new Array(120).fill(null)
   }
   
   get stage(){ return this._stage }
   set stage(v){ this._stage = v}
-
-  get playfield0(){ return this._playfield0 }
-  set playfield0(v){ this._playfield0 = v}
-
-  get playfield1(){ return this._playfield1 }
-  set playfield1(v){ this._playfield1 = v}
 
   /** indexes get updated through methods 
    *  each saved variable gets loaded with a snapshot provided through the new index
    * @param {integer} tick possibly from networking 
    */
   load(tick){
-    this.index      = this.cindex(tick);
-    this.index_tick = this.cindex_tick(tick);
+    this.index      = this.capture_index(tick)
+    this.index_tick = this.capture_index_tick(tick)
+    this.stage.load(this.snapshot[this.index])
 
-    // all objects - subobjects to load with a snapshot
-    this.playfield0.load(this.snapshot[this.index][0]);
-    this.playfield1.load(this.snapshot[this.index][1]);
-    controls.load(  this.snapshot[this.index][2]);
-    this.stage.load(this.snapshot[this.index][3]);
-    this.timer.load(this.snapshot[this.index][4]);
   }
 
-  cindex(tick){
+  /*
+   * pass in a a previous tick and return the snapshot
+   * index stored on that tick.
+   *
+   * @param {integer} tick
+   * @return integer
+   */
+  capture_index(tick){
     const offset = tick - this.index_tick
     if (offset >= 0){return offset}
-    else            {return 120+offset}
+    else            {return this.snapshot.length+offset}
   }
 
-  cindex_tick(tick){
+  /*
+   * @param {integer} tick
+   * @return integer
+   */
+  capture_index_tick(tick){
     const offset = tick - this.index_tick
     if (offset >= 0){return this.index_tick}
-    else            {return this.index_tick-120}
+    else            {return this.index_tick-this.snapshot.length}
   }
 
   snap(tick){
-    if (this.index >= 119){
+    if (this.index >= this.snapshot.length-1){
       this.index      = -1;
       this.index_tick = tick;
     }
-
     this.index++;
-    
-    this.snapshot[this.index] = [this.playfield0.snap,
-                                 this.playfield1.snap,
-                                 controls.snap,
-                                 this.stage.snap,
-                                 this.timer.snap]
+    this.snapshot[this.index] = this.stage.snap
   }
-} 
+}

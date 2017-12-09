@@ -79,13 +79,26 @@ export default class ModeVs extends CoreStage {
   }
 
   get snap() {
-    return [this.rng.state(), this.state];
+    return [
+      this.rng.state(),
+      this.state,
+      this.playfield0.snap,
+      this.playfield1.snap,
+      this.timer.snap,
+      this.controls.snap
+    ];
   }
 
   load =(snapshot)=> {
     let state = this.rng.state()
     this.rng = seedrandom(this.seed, {state: snapshot[0]})
     this.state = snapshot[1]
+    // all objects - subobjects to load with a snapshot
+    this.playfield0.load(snapshot[2])
+    this.playfield1.load(snapshot[3])
+    this.controls.load(snapshot[4])
+    this.timer.load(snapshot[5])
+
   }
 
 
@@ -124,12 +137,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1.create_after()
     this.timer.create(offset+px(128),px(168));
 
-    this.snapshots.create(
-      this,
-      this.playfield0,
-      this.playfield1,
-      this.timer
-    )
+    this.snapshots.create(this)
     this.snapshots.snap(0)
 
     if (this.online){
