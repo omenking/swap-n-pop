@@ -5,7 +5,7 @@ let audio_sfx_volume = 100
 let audio_msx_volume = 100
 let muted            = false
 
-function render(){
+function render(game){ 
   return m('form',[
     m('.check_box.sfx',[
       m("input[type='range']",{
@@ -13,7 +13,8 @@ function render(){
         max:"100",
         value: audio_sfx_volume,
         oninput: function(e){
-         audio_sfx_volume = e.target.value
+          audio_sfx_volume = e.target.value
+          game.sounds.set_sfx_volume(audio_sfx_volume * 0.01)
         }
       }),
       m('.val',[
@@ -27,7 +28,8 @@ function render(){
         max:"100",
         value: audio_msx_volume,
         oninput: function(e){
-         audio_msx_volume = e.target.value
+          audio_msx_volume = e.target.value
+          game.sounds.set_msx_volume(audio_msx_volume * 0.01)
         }
       }),
       m('.val',[
