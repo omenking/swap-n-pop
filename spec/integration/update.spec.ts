@@ -239,7 +239,7 @@ describe('panel_actions', function() {
     chec([0,19,N,STATIC,0,F], [1,19,N,STATIC,0,F], [2,19,N,STATIC,0,F],
          [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
          [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
-         [0,22,2,CLEAR ,90,T],[1,22,2,CLEAR ,90,1],[2,22,2,CLEAR,90,F])
+         [0,22,2,CLEAR ,90,1],[1,22,2,CLEAR ,90,1],[2,22,2,CLEAR,90,1])
     playfield.chain.should.eql(1)
   })
 
