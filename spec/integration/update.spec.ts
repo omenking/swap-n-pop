@@ -171,9 +171,9 @@ describe('panel_actions', function() {
     //################################################################
     playfield.update()
     chec([0,19,N,STATIC,0,F], [1,19,2,STATIC,0,F], [2,19,N,STATIC,0,F],
-         [0,20,2,STATIC,0,F], [1,20,1,CLEAR,90,F], [2,20,2,STATIC,0,F],
-         [0,21,3,STATIC,0,F], [1,21,1,CLEAR,90,F], [2,21,3,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,1,CLEAR,90,F], [2,22,2,STATIC,0,F])
+         [0,20,2,STATIC,0,F], [1,20,1,CLEAR,90,1], [2,20,2,STATIC,0,F],
+         [0,21,3,STATIC,0,F], [1,21,1,CLEAR,90,1], [2,21,3,STATIC,0,F],
+         [0,22,2,STATIC,0,F], [1,22,1,CLEAR,90,1], [2,22,2,STATIC,0,F])
     for(let i = 0; i < 90; i++){ playfield.update() }
     chec([0,19,N,STATIC,0,F], [1,19,2,HANG  ,0,1], [2,19,N,STATIC,0,F],
          [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
@@ -190,9 +190,9 @@ describe('panel_actions', function() {
          [0,22,2,STATIC,0,F], [1,22,3,STATIC,0,F])
     //################################################################
     playfield.update()
-    chec([0,20,2,CLEAR,117,F], [1,20,3,CLEAR,117,F],
-         [0,21,2,CLEAR,117,F], [1,21,3,CLEAR,117,F],
-         [0,22,2,CLEAR,117,F], [1,22,3,CLEAR,117,F])
+    chec([0,20,2,CLEAR,117,1], [1,20,3,CLEAR,117,1],
+         [0,21,2,CLEAR,117,1], [1,21,3,CLEAR,117,1],
+         [0,22,2,CLEAR,117,1], [1,22,3,CLEAR,117,1])
     for(let i = 0; i < 117; i++){ playfield.update() }
     chec([0,20,N,STATIC,0,F], [1,20,N,STATIC,0,F],
          [0,21,N,STATIC,0,F], [1,21,N,STATIC,0,F],
