@@ -521,6 +521,8 @@ export default class ComponentPanel {
    * exit old state, enter new state, reset state_timer
    */
   change_state(state) {
+    if (this.state === state) { return; }
+    
     this.state_timer = 0
     if (this.state_exit.has(this.state))
       this.state_exit.get(this.state)(this)
