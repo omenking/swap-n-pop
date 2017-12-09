@@ -58,7 +58,7 @@ export default class ModeVs extends CoreStage {
     return 'mode_vs';
   }
 
-  init(data) {
+  public init(data) {
     this.rounds_won = [2,1]
     this.tick   = 0
     this.seed   = data.seed

@@ -33,8 +33,6 @@ function down(n,key){
 describe('Online Simulation', function() {
   var stage0, stage1
   beforeEach(function(){
-    controls0 = new CoreControls()
-    controls1 = new CoreControls()
     const init0 = {
       seed     : 'puzzle',
       cpu      : [false,false],
