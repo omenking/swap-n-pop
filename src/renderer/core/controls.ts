@@ -1,6 +1,8 @@
 import Store    from 'common/store'
 import game     from 'core/game'
-import {ipcRenderer: ipc} from 'electron'
+import * as electron from 'electron'
+
+const {ipcRenderer: ipc} = electron
 
 const store = new Store()
 
