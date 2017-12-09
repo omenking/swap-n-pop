@@ -9,7 +9,6 @@ branches:
     - master
 
 install:
-  - cd app
   - npm install
 
 test_script:
