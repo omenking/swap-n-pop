@@ -1,13 +1,16 @@
-import m          from 'mithril'
+import * as m          from 'mithril'
 import Ui         from 'ui/mode'
 import UiInput    from 'ui/input'
 import UiNetwork  from 'ui/network'
 import UiAudio    from 'ui/audio'
 import UiReplay   from 'ui/replay'
-import electron   from 'electron'
+import * as electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
 
+declare var window: {
+  document: any
+}
 
 function class_tab(new_mode){
   if (Ui.mode === new_mode){
@@ -32,32 +35,32 @@ function nav(){
     m('.clear')
   ])
 }
-function content(game){
+function content(){
   if      (Ui.mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
   else if (Ui.mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
-  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio(game))}
+  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio())}
   else if (Ui.mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
 }
 
-function render(game){
+function render(){
   const app = {view: function(){
     if (Ui.mode !== false) {
       return m('.wrap1',
         m('.wrap2',[
           nav(),
-          content(game)
+          content()
         ])
       )
     }
   }}
 
-  const el = document.getElementById('ui')
+  const el = window.document.getElementById('ui')
   m.mount(el, app)
 }
 
 ipc.on('reload',function(event,data){
   Ui.mode = data.mode
-  document.getElementById('game').classList.add('hide')
+  window.document.getElementById('game').classList.add('hide')
   m.redraw()
 })
 

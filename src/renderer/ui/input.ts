@@ -1,8 +1,8 @@
 import Ui from 'ui/mode'
-import m from 'mithril'
-import electron from 'electron'
+import * as m from 'mithril'
+import * as electron from 'electron'
 import Store   from 'common/store'
-import keycode from 'keycode'
+import * as keycode from 'keycode'
 
 const store = new Store()
 
@@ -10,6 +10,10 @@ const {ipcRenderer: ipc} = electron
 let setting = null
 let inputs  = store.get('inputs')
 
+declare var window: {
+  document: any,
+  navigator: any,
+}
 
 function setkey(key){
   return(function(){
@@ -83,13 +87,13 @@ function storekey(v){
   m.redraw()
 }
 
-document.onclick = function (e) {
+window.document.onclick = function (e) {
   if (setting != null && e.target.className != 'input setting') {
     setting = null
   }
 }
 
-document.onkeydown = function (e) {
+window.document.onkeydown = function (e) {
   if (e.keyCode === 70) { //f (for fullscreen)
     ipc.send('fullscreen')
   } else if (e.keyCode === 27) { //esc
@@ -108,7 +112,7 @@ document.onkeydown = function (e) {
 
 function poll_gamepad(){
   if (setting === null){ return }
-  const gg = navigator.getGamepads()
+  const gg = window.navigator.getGamepads()
   if (gg[0] === null &&
       gg[1] === null &&
       gg[2] === null &&

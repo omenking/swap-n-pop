@@ -1,11 +1,11 @@
-import m        from 'mithril'
+import * as m   from 'mithril'
 import Ui       from 'ui/mode'
 import Store    from 'common/store'
-import electron from 'electron'
+import * as electron from 'electron'
 
 const store = new Store()
 
-const {ipcRenderer: ipc} = electron
+import {ipcRenderer as ipc} from 'electron'
 
 let inputs  = store.get('network.host_port')
 let host_port = {value: store.get('network.host_port'), setValue: function(v) {host_port.value = v}}

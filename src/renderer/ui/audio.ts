@@ -1,11 +1,12 @@
+import game from 'core/game'
 import Ui from 'ui/mode'
-import m  from 'mithril'
+import * as m  from 'mithril'
 
-let audio_sfx_volume = 100
-let audio_msx_volume = 100
-let muted            = false
+let audio_sfx_volume : number = 100
+let audio_msx_volume : number = 100
+let muted : boolean = false
 
-function render(game){ 
+export default function render() { 
   return m('form',[
     m('.check_box.sfx',[
       m("input[type='range']",{
@@ -48,8 +49,6 @@ function render(game){
       }),
       m('.val', ['Mute all Audio'])
     ])
-
   ])
 }
 
-export default render
