@@ -301,6 +301,6 @@ describe('panel_actions', function() {
          [0,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F])
     playfield.update()
-    chec([0,1 ,0,HANG,0,F])
+    chec([0,12 ,0,HANG,0,F])
   })
 }) //klass
