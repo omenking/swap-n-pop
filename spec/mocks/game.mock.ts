@@ -55,6 +55,7 @@ class GameMock {
       desiredFps: 60
     }
     this.sounds = {
+      pop: sinon.stub(),
       swap: sinon.stub(),
       blip: sinon.stub(),
       ding: sinon.stub(),

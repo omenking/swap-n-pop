@@ -1,10 +1,9 @@
 import game    from 'core/game'
-import filters from 'core/filters'
+import { px } from 'core/filters';
 
-/** Counts up the actively played Game Time and displays 
+/** Counts up the actively played Game Time and displays
  *  the Time through Sprite Digits
  */
-const {px} = filters
 
 export default class ComponentTimer {
   private d0      : Phaser.Sprite

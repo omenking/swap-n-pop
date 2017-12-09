@@ -1,11 +1,8 @@
 import * as fs        from 'fs'
-import data      from 'core/data'
-import _f        from 'core/filters'
 import Stage     from 'states/mode_vs'
 import Playfield from 'components/playfield'
 import Panel     from 'components/panel'
-
-const {STATIC,HANG,FALL,CLEAR,PANELS}  = data
+import { STATIC, HANG, FALL, CLEAR, PANELS ROWS} from 'core/data';
 
 //shorthands
 const T = true
@@ -14,7 +11,9 @@ const N = null
 
 var _playfield = null
 function load(...arr){
-  for (i of arr){ _playfield.stack(i[0], i[1]).load(i) }
+  for (let i of arr){
+    _playfield.stack_xy(i[0], i[1]).load(i)
+  }
 }
 
 describe('Panel', function() {
@@ -31,10 +30,10 @@ describe('Panel', function() {
                     null,0,0,null,0] // chain,counter,counter_popping.animation_state,animation_counter
       const panel = new Panel()
       panel.load(data)
-      panel.x.should.eql(10)
-      panel.y.should.eql(0)
-      panel.i.should.eql(1)
-      panel.state.should.eql(STATIC)
+      expect(panel.x).eql(10)
+      expect(panel.y).eql(0)
+      expect(panel.kind).eql(1)
+      expect(panel.state).eql(STATIC)
     })
   })
 
@@ -60,8 +59,11 @@ describe('Panel', function() {
   describe('#clear_index' ,function(){
     it('should work', function(){
       let stage = new Stage()
-      stage.init({seed: 'test'})
-      playfield = new Playfield(0)
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
+      const playfield = new Playfield(0)
       playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
       playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
       playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
@@ -69,39 +71,10 @@ describe('Panel', function() {
       playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
       _playfield = playfield
 
-      load([0, 8 ,0,CLEAR,60,F],
-           [0, 9 ,1,CLEAR,60,F],
-           [0,10 ,1,CLEAR,60,F])
-      playfield.stack(0,10).clear_index.should.eql([2,3])
-    })
-  })
-
-  describe('#check_neighbours()' ,function(){
-    it('should detect veritcal match', function(){
-      let stage     = null
-      let stack     = null
-      let playfield = null
-      let panels   = [
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        N, N, N, N, N, N,
-        1, N, N, N, N, N,
-        1, N, N, N, N, N,
-        1, N, N, N, N, N
-      ]
-      stage = new Stage()
-      stage.init({seed: 'test'})
-      playfield = new Playfield(0)
-      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-      playfield.clearing = []
-      playfield.stack(0,9).check_neighbours(
-        playfield.stack(0,9).above,
-        playfield.stack(0,9).under, 0, false).should.eql([3,false])
+      load([0,ROWS+ 8 ,0,CLEAR,60,F],
+           [0,ROWS+ 9 ,1,CLEAR,60,F],
+           [0,ROWS+10 ,1,CLEAR,60,F])
+      expect(playfield.stack_xy(0,ROWS+10)).eql([2,3])
     })
   })
 
@@ -119,16 +92,32 @@ describe('Panel', function() {
         N, N, N, N, N, N,
         N, N, N, N, N, N,
         N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, 5, N, N, N, N,
+        N, 4, N, N, N, N,
+        N, 3, N, N, N, N,
+        N, 2, N, N, N, N,
         N, 1, N, N, N, N,
         1, 1, 1, N, N, N,
         N, 1, N, N, N, N
       ]
       stage = new Stage()
-      stage.init({seed: 'test'})
-      playfield = new Playfield(0)
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
+      const playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
       playfield.clearing = []
-      playfield.stack(1,9).chain_and_combo().should.eql([3,false])
+      expect(playfield.stack_xy(1,ROWS-9).chain_and_combo()).eql([3,false])
     })
   })
 
@@ -138,6 +127,19 @@ describe('Panel', function() {
       let stack     = null
       let playfield = null
       let panels   = [
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+        N, N, N, N, N, N,
+
         N, N, N, N, N, N,
         1, N, N, N, N, N,
         1, N, N, N, N, N,
@@ -151,10 +153,13 @@ describe('Panel', function() {
         1, N, N, N, N, N
       ]
       stage = new Stage()
-      stage.init({seed: 'test'})
-      playfield = new Playfield(0)
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
+      const playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-      playfield.stack(0,9).dead.should.eql(false)
+      playfield.stack_xy(0,ROWS-9).dead.should.eql(false)
     })
 
     it('should be dead', function(){
@@ -175,10 +180,13 @@ describe('Panel', function() {
         1, N, N, N, N, N
       ]
       stage = new Stage()
-      stage.init({seed: 'test'})
-      playfield = new Playfield(0)
+      stage.init({
+        seed: 'test',
+        cpu: [false,null]
+      })
+      const playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-      playfield.stack(0,9).dead.should.eql(true)
+      playfield.stack_xy(0,ROWS-9).dead.should.eql(true)
     })
   })
 

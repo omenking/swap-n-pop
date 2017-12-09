@@ -1,9 +1,8 @@
-import CoreControls from 'core/controls'
+import controls from 'core/controls'
 
 describe('Controls', function() {
   describe('#serialize(pi)' ,function(){
     it('should get correct byte', function(){
-      const controls = new CoreControls()
       const fun = sinon.stub()
       fun.withArgs('pl0_up'   ).returns(true)
       fun.withArgs('pl0_down' ).returns(false)
@@ -18,7 +17,6 @@ describe('Controls', function() {
       controls.serialize(0).should.eql(0x01)
     })
     it('should get correct byte', function(){
-      const controls = new CoreControls()
       const fun = sinon.stub()
       fun.withArgs('pl0_up'   ).returns(true)
       fun.withArgs('pl0_down' ).returns(false)

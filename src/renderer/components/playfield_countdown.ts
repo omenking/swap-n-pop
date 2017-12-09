@@ -1,8 +1,6 @@
 import game    from 'core/game'
-import filters from 'core/filters'
 import ComponentPlayfield from 'components/playfield'
-
-const {px} = filters
+import { px } from 'core/filters';
 
 // states
 const MOVING = Symbol('moving')

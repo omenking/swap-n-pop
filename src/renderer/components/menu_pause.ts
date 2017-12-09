@@ -1,9 +1,7 @@
 import game    from 'core/game'
-import filters from 'core/filters'
 import ComponentMenuPauseCursor from 'components/menu_pause_cursor'
 import ModeVs from 'states/mode_vs'
-
-const {px} = filters
+import { px } from 'core/filters';
 
 /** A ComponentPauseMenu handles the pausing of a stage
  *  new controls are provided to move in the menu and use various options
@@ -22,8 +20,8 @@ export default class ComponentPauseMenu {
   /**
    * pausing turned of normally
    * add a sprite to this object but turn it off for now
-   * create a cursor with no controls provided yet 
-   * @param {mode_vs} stage reference to call both playfields 
+   * create a cursor with no controls provided yet
+   * @param {mode_vs} stage reference to call both playfields
    */
   create(stage) {
     this.paused = false;
@@ -32,7 +30,7 @@ export default class ComponentPauseMenu {
 
     // for now playfield.x changed to a value
     this.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'menu_pause');
-    this.sprite.anchor.setTo(0.5);   
+    this.sprite.anchor.setTo(0.5);
     this.sprite.visible = false;
 
     // create a controller with this menu given as a reference, push 2 methods of the menu
@@ -56,8 +54,8 @@ export default class ComponentPauseMenu {
     this.stage.resume();
   }
 
-  /** unpauses update method of the menu, 
-   * make this object visible and 
+  /** unpauses update method of the menu,
+   * make this object visible and
    * reassigns controls to both playfields registered players */
   pause() {
     this.paused = true;
@@ -77,8 +75,8 @@ export default class ComponentPauseMenu {
 
   /** once unpaused the menu will update its cursor */
   update() {
-    if (!this.paused) 
-      return; 
+    if (!this.paused)
+      return;
 
     // check for any Input and if any pressed - continue or cancel may be called here
     this.cursor.update();

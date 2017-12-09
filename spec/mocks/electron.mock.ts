@@ -1,14 +1,10 @@
 const sinon = require('sinon')
 
-const ElectronMock = {
-  app: null,
-  remote: { app: null},
-  ipc: {
-    on: sinon.stub()
-  },
-  ipcRenderer: {
-    on: sinon.stub()
-  }
+export const app =null
+export const remote = { app: null}
+export const ipc = {
+  on: sinon.stub()
 }
-
-export default ElectronMock
+export const ipcRenderer = {
+  on: sinon.stub()
+}

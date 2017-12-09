@@ -40,8 +40,8 @@ export default class Server {
     this.port    = port
     this.host    = host
     this.server = dgram.createSocket('udp4')
-    this.server.on('error'    , this.error)
-    this.server.on('message'  , this.message)
+    this.server.on('error'    , this.error.bind(this))
+    this.server.on('message'  , this.message.bind(this))
     this.server.on('listening', this.listening(callback))
     this.server.bind(this.port,this.host)
     this.on('ping',function(data){

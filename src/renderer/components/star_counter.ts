@@ -1,11 +1,6 @@
 import game    from 'core/game'
-import data    from 'core/data'
-import filters from 'core/filters'
-
-const {px} = filters
-const {
-  FRAME_STAR
-} = data
+import { FRAME_STAR } from 'core/data';
+import { px } from 'core/filters';
 
 export default class StarCounter {
   private stage   : any

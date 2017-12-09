@@ -1,10 +1,8 @@
 import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
-import controls             from 'core/controls'
-import filters              from 'core/filters'
+import CoreControls         from 'core/controls'
 import CoreInputs           from 'core/inputs'
-import data                 from 'core/data'
 import CoreSnapshots        from 'core/snapshots'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
@@ -14,13 +12,10 @@ import ComponentDebugFrame  from 'components/debug_frame'
 import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
+import { COLS, ROWS } from 'core/data';
+import { px } from 'core/filters';
 
 const {ipcRenderer: ipc} = electron
-const { px } = filters
-const {
-  ROWS,
-  COLS
-} = data
 
 export default class ModeVs extends CoreStage {
   public playfield0       : ComponentPlayfield
@@ -45,6 +40,7 @@ export default class ModeVs extends CoreStage {
   private _online         : any
   private _cpu            : Array<any>
   private frame           : Phaser.Sprite
+  private controls        : any
 
   constructor() {
     super()
@@ -62,14 +58,17 @@ export default class ModeVs extends CoreStage {
     return 'mode_vs';
   }
 
-  init(data) {
+  public init(data) {
     this.rounds_won = [2,1]
     this.tick   = 0
     this.seed   = data.seed
     this.cpu    = data.cpu
     this.online = data.online
     this.rng    = seedrandom(this.seed, {state: true})
-    
+
+    // had to do this to inject controls into for `integration/online.spec.ts`
+    this.controls = data.controls || CoreControls
+
     this.inputs = new CoreInputs(data.inputs,data.online,this)
     this.snapshots = new CoreSnapshots()
     this.roll = {
@@ -80,13 +79,26 @@ export default class ModeVs extends CoreStage {
   }
 
   get snap() {
-    return [this.rng.state(), this.state];
+    return [
+      this.rng.state(),
+      this.state,
+      this.playfield0.snap,
+      this.playfield1.snap,
+      this.timer.snap,
+      this.controls.snap
+    ];
   }
 
   load =(snapshot)=> {
-    let state = this.rng.state() 
-    this.rng = seedrandom(this.seed, {state: snapshot[0]}) 
-    this.state = snapshot[1] 
+    let state = this.rng.state()
+    this.rng = seedrandom(this.seed, {state: snapshot[0]})
+    this.state = snapshot[1]
+    // all objects - subobjects to load with a snapshot
+    this.playfield0.load(snapshot[2])
+    this.playfield1.load(snapshot[3])
+    this.controls.load(snapshot[4])
+    this.timer.load(snapshot[5])
+
   }
 
 
@@ -110,7 +122,7 @@ export default class ModeVs extends CoreStage {
     this.create_bg()
 
     const stack = new Stack(this.rng);
-    stack.create({ range: 6, ground: 2, wells: "average", chips: "many" });
+    stack.create(6,2,"average","many");
 
     if (this.online && game.server.pos === 1) {
       this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
@@ -125,12 +137,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1.create_after()
     this.timer.create(offset+px(128),px(168));
 
-    this.snapshots.create(
-      this,
-      this.playfield0,
-      this.playfield1,
-      this.timer
-    )
+    this.snapshots.create(this)
     this.snapshots.snap(0)
 
     if (this.online){
@@ -157,11 +164,11 @@ export default class ModeVs extends CoreStage {
     if (this.playfield0.countdown.state === null ||
         this.playfield1.countdown.state === null) {
       game.sounds.stage_music('resume');
-      
+
       this.state = "running";
       this.timer.running = true;
     }
-    
+
     this.playfield0.cursor.map_controls();
     this.playfield1.cursor.map_controls();
   }
@@ -328,11 +335,11 @@ export default class ModeVs extends CoreStage {
     this.danger_check()
     if (tick === false) {
       this.inputs.update(this.tick,true)
-      controls.update()
+      this.controls.update()
       this.snapshots.snap(this.tick)
     } else {
       this.inputs.update(tick,false)
-      controls.update(false,true)
+      this.controls.update(false,true)
       this.snapshots.snap(tick)
     }
   }
