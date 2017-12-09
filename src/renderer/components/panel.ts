@@ -268,7 +268,6 @@ export default class ComponentPanel {
   }
 
   clear_enter(panel) {
-    panel.chain += 1
     panel.playfield.clearing.push(panel)
     panel.group = panel.playfield.stage.tick
   }

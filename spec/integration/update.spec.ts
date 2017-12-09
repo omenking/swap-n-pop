@@ -33,14 +33,14 @@ function load(...arr){
 function chec(...arr){
   for (let i of arr){
     let data = _playfield.stack_xy(i[0], i[1]).snap
-    // adding pos so when an error is raised its easy
-    // to determine which panel
+    // its a bit hard to debug, so I added type and post
+    // so when tests fail they are more readble
+    // eg   AssertionError: expected [ 'chain', '1,20', 1 ] to deeply equal [ 'chain', '1,20', 0 ]
     let pos  = `${i[0]},${i[1]}`
-    expect([pos,data[2]]).eql([pos,i[2]]) //kind
-    expect([pos,data[3]]).eql([pos,i[3]]) //state
-    expect([pos,data[4]]).eql([pos,i[4]]) //counter
-    expect([pos,data[5]]).eql([pos,i[5]]) //chain
-    expect([pos,data[6]]).eql([pos,i[6]]) //group
+    expect(['kind'   , pos, data[2]]).eql(['kind'   , pos, i[2]]) //kind
+    expect(['state'  , pos, data[3]]).eql(['state'  , pos, i[3]]) //state
+    expect(['counter', pos, data[4]]).eql(['counter', pos, i[4]]) //counter
+    expect(['chain'  , pos, data[5]]).eql(['chain'  , pos, i[5]]) //chain
   }
 }
 
@@ -174,7 +174,7 @@ describe('panel_actions', function() {
          [0,20,2,STATIC,0,F], [1,20,1,CLEAR,90,F], [2,20,2,STATIC,0,F],
          [0,21,3,STATIC,0,F], [1,21,1,CLEAR,90,F], [2,21,3,STATIC,0,F],
          [0,22,2,STATIC,0,F], [1,22,1,CLEAR,90,F], [2,22,2,STATIC,0,F])
-    for(i = 0; i < 90; i++){ playfield.update() }
+    for(let i = 0; i < 90; i++){ playfield.update() }
     chec([0,19,N,STATIC,0,F], [1,19,2,HANG  ,0,1], [2,19,N,STATIC,0,F],
          [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
          [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
@@ -193,7 +193,7 @@ describe('panel_actions', function() {
     chec([0,20,2,CLEAR,117,F], [1,20,3,CLEAR,117,F],
          [0,21,2,CLEAR,117,F], [1,21,3,CLEAR,117,F],
          [0,22,2,CLEAR,117,F], [1,22,3,CLEAR,117,F])
-    for(i = 0; i < 117; i++){ playfield.update() }
+    for(let i = 0; i < 117; i++){ playfield.update() }
     chec([0,20,N,STATIC,0,F], [1,20,N,STATIC,0,F],
          [0,21,N,STATIC,0,F], [1,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F], [1,22,N,STATIC,0,F])
@@ -236,10 +236,10 @@ describe('panel_actions', function() {
          [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
          [0,22,2,STATIC,0,F], [1,22,2,LAND  ,10,1],[2,22,2,STATIC,0,F])
     playfield.update()
-    //chec([0,19,N,STATIC,0,F], [1,19,N,STATIC,0,F], [2,19,N,STATIC,0,F],
-         //[0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
-         //[0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
-         //[0,22,2,CLEAR ,90,T],[1,22,2,CLEAR ,90,T],[2,22,2,CLEAR,90,F])
+    chec([0,19,N,STATIC,0,F], [1,19,N,STATIC,0,F], [2,19,N,STATIC,0,F],
+         [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
+         [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
+         [0,22,2,CLEAR ,90,T],[1,22,2,CLEAR ,90,1],[2,22,2,CLEAR,90,F])
     playfield.chain.should.eql(1)
   })
 
