@@ -125,7 +125,7 @@ export default class CoreSounds {
   }
 
   pop(index) {
-    this.sfx_pop[index].play()
+    this.sfx_pop[Math.min(index,this.sfx_pop.length-1)].play()
   }
 
   /**
