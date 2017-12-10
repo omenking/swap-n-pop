@@ -62,9 +62,9 @@ export default class ComponentGarbage {
     // send out character animation before the 20frames delay
     if (combo > 3) {
       if (this.pi === 0)
-        this.stage.playfield0.character.sprite.current_animation = "attack"
+        this.stage.playfield0.character.current_animation = "attack"
       else if (this.pi === 1)
-        this.stage.playfield1.character.sprite.current_animation = "attack"
+        this.stage.playfield1.character.current_animation = "attack"
     }
   }
 
@@ -85,7 +85,7 @@ export default class ComponentGarbage {
 
       // if garbage sent after delay - play attacked on the playfield chosen
       if (v.combo > 3)
-        playfield.character.sprite.current_animation = "attacked"
+        playfield.character.current_animation = "attacked"
 
       let o
       if (v.combo === 4) {
