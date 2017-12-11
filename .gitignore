@@ -5,7 +5,6 @@ node_modules
 /**/replays/*
 /dist
 .yarn-error.log
-app/src/TODO
-
-/static/renderer.js
-/static/main.js
+app/TODO
+/app/renderer.js
+/app/main.js
