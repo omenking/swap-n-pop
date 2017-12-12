@@ -35,8 +35,8 @@ export default class ComponentPauseMenu {
 
     // create a controller with this menu given as a reference, push 2 methods of the menu
     return this.cursor.create(this, -70, -16, [
-      this.continue,
-      this.cancel
+      this.continue.bind(this),
+      this.cancel.bind(this)
     ]);
   }
 

@@ -26,6 +26,7 @@ export default class ModePuzzle extends CoreStage {
   private level_index  : number
   private steps_left   : number
   private bg           : Phaser.Sprite
+
   constructor() {
     super()
     this.playfield0    = new ComponentPlayfield(0)
@@ -48,6 +49,7 @@ export default class ModePuzzle extends CoreStage {
    */
   create() {
     this.bg = game.add.sprite(0, 0, "mode_puzzle_bg")
+    this.bg.anchor.setTo(0.5, 0);
 
     this.tick   = -1
     this.seed   = 'puzzle'
@@ -138,6 +140,7 @@ export default class ModePuzzle extends CoreStage {
 
   /** calls the render functions of the timer and playfield0 */
   render() {
+    this.bg.x = game.world.centerX;
     this.timer.render();
     this.step_display.render();
 

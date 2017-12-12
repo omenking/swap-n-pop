@@ -8,3 +8,4 @@ node_modules
 app/TODO
 /app/renderer.js
 /app/main.js
+.vscode/tasks.json

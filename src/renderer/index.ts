@@ -20,7 +20,7 @@ const stateClasses = [
   PuzzleMenuState
 ];
 
-ui()
+ui()  
 
 // Create instance of each known state class and register them to the game
 // instance.

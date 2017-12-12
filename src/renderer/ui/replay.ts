@@ -1,9 +1,9 @@
-import m        from 'mithril';
+import * as m   from 'mithril'
 import Ui       from 'ui/mode'
 import Store    from 'common/store'
-import electron from 'electron'
+import * as electron from 'electron'
 
-const {ipcRenderer: ipc} = electron
+import {ipcRenderer as ipc} from 'electron'
 const store = new Store()
 
 let replay_files = []
@@ -24,9 +24,6 @@ function click_reveal_replay_dir(){
 function click_change_replay_dir(){
   ipc.send('replay-dir-change')
 }
-function click_change_replay_dir(){
-  ipc.send('replay-dir-change')
-}
 function click_reset_replay_dir(){
   ipc.send('replay-dir-reset')
 }
@@ -38,7 +35,7 @@ function click_replay_play(file){
 }
 function click_replay_remove(file){
   return function(){
-    i = replay_files.indexOf(file)
+    let i = replay_files.indexOf(file)
     replay_files.splice(i, 1)
     ipc.send('replay-delete',file)
   }
