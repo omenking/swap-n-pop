@@ -3,7 +3,7 @@ const config_main = {
   target: 'electron-main',
   entry: path.resolve(__dirname, 'src/main/index.ts'),
   output: {
-    path    : path.resolve(__dirname, 'static'),
+    path    : path.resolve(__dirname, 'app'),
     filename: 'main.js'
   },
   node: {
@@ -27,7 +27,7 @@ const config_renderer = {
   target: 'electron-renderer',
   entry: path.resolve(__dirname, 'src/renderer/index.ts'),
   output: {
-    path    : path.resolve(__dirname, 'static'),
+    path    : path.resolve(__dirname, 'app'),
     filename: 'renderer.js'
   },
   node: {

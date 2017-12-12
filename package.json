@@ -3,7 +3,7 @@
   "productName": "swap-n-pop",
   "license": "MIT",
   "description": "Puzzle Game",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "author": "Andrew Brown",
   "repository": {
     "url": "https://github.com/omenking/swap-n-pop"
@@ -14,7 +14,6 @@
     "docdash": "^0.4.0",
     "electron": "^1.7.9",
     "electron-builder": "^19.46.9",
-    "electron-webpack": "^1.11.0",
     "jest": "^21.2.1",
     "jsdoc": "^3.5.5",
     "mocha": "^3.5.0",
@@ -28,27 +27,29 @@
   },
   "build": {
     "appId": "com.swap-n-pop.app",
+    "artifactName": "snp_v${version}.${ext}",
+    "compression" : "store",
     "mac": {
+      "identity": null,
       "category": "public.app-category.games",
       "publish": [
         "github"
       ],
-      "icon": "./app/src/assets/icons/mac/icon.icns"
+      "icon": "./app/icons/mac/icon.icns"
     },
     "win": {
       "target": "nsis",
       "publish": [
         "github"
       ],
-      "icon": "./app/src/assets/icons/win/icon.ico"
+      "icon": "./app/icons/win/icon.ico"
     }
   },
   "scripts": {
     "test": "jest",
-    "build": "webpack",
-    "dev": "electron-webpack dev",
-    "start": "webpack && electron static/main.js",
-    "dist": "yarn build && electron-builder --dir"
+    "start": "webpack && electron app/main.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "postinstall": "electron-builder install-app-deps",
   "dependencies": {
