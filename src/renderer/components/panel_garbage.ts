@@ -38,7 +38,7 @@ export default class ComponentPanelGarbage {
     this.state_timer = 0
     if (this.state_exit.has(this.state))
       this.state_exit.get(this.state)()
-    this.state = state
+    this._state = state
     if (this.state_enter.has(this.state))
       this.state_enter.get(this.state)()
   }
