@@ -153,21 +153,21 @@ export default class ComponentPanel {
     this.state_execute = new Map()
     this.state_exit    = new Map()
 
-    this.state_execute.set(SWAP_L    , this.swap_l_execute)
-    this.state_execute.set(SWAP_R    , this.swap_r_execute)
-    this.state_enter.set(  SWAPPING_L, this.swapping_l_enter)
-    this.state_execute.set(SWAPPING_L, this.swapping_l_execute)
-    this.state_enter.set(  SWAPPING_R, this.swapping_r_enter)
-    this.state_execute.set(SWAPPING_R, this.swapping_r_execute)
-    this.state_execute.set(STATIC    , this.static_execute)
-    this.state_enter.set(  HANG      , this.hang_enter)
-    this.state_execute.set(HANG      , this.hang_execute)
-    this.state_execute.set(FALL      , this.fall_execute)
-    this.state_enter.set(  CLEAR     , this.clear_enter)
-    this.state_execute.set(CLEAR     , this.clear_execute)
-    this.state_exit.set(   CLEAR     , this.clear_exit)
-    this.state_enter.set(  LAND      , this.land_enter)
-    this.state_execute.set(LAND      , this.land_execute)
+    this.state_execute.set(SWAP_L    , this.swap_l_execute.bind(this))
+    this.state_execute.set(SWAP_R    , this.swap_r_execute.bind(this))
+    this.state_enter.set(  SWAPPING_L, this.swapping_l_enter.bind(this))
+    this.state_execute.set(SWAPPING_L, this.swapping_l_execute.bind(this))
+    this.state_enter.set(  SWAPPING_R, this.swapping_r_enter.bind(this))
+    this.state_execute.set(SWAPPING_R, this.swapping_r_execute.bind(this))
+    this.state_execute.set(STATIC    , this.static_execute.bind(this))
+    this.state_enter.set(  HANG      , this.hang_enter.bind(this))
+    this.state_execute.set(HANG      , this.hang_execute.bind(this))
+    this.state_execute.set(FALL      , this.fall_execute.bind(this))
+    this.state_enter.set(  CLEAR     , this.clear_enter.bind(this))
+    this.state_execute.set(CLEAR     , this.clear_execute.bind(this))
+    this.state_exit.set(   CLEAR     , this.clear_exit.bind(this))
+    this.state_enter.set(  LAND      , this.land_enter.bind(this))
+    this.state_execute.set(LAND      , this.land_execute.bind(this))
 
     this.playfield = playfield
     this.counter   = 0
@@ -201,60 +201,60 @@ export default class ComponentPanel {
     });
   }
 
-  swap_l_execute    (panel) { if (panel.counter <= 0) { panel.change_state(SWAPPING_L) } }
-  swap_r_execute    (panel) { if (panel.counter <= 0) { panel.change_state(SWAPPING_R) } }
-  land_execute      (panel) { if (panel.counter <= 0) { panel.change_state(STATIC) } }
-  swapping_l_execute(panel) { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
-  swapping_r_execute(panel) { if (panel.counter <= 0) { panel.state = STATIC /*TODO: use FSM here*/ } }
-  hang_execute      (panel) { if (panel.counter <= 0) { panel.change_state(FALL) } }
+  swap_l_execute    () { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
+  swap_r_execute    () { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
+  land_execute      () { if (this.counter <= 0) { this.change_state(STATIC) } }
+  swapping_l_execute() { if (this.counter <= 0) { this.state = STATIC /*TODO: use FSM here*/ } }
+  swapping_r_execute() { if (this.counter <= 0) { this.state = STATIC /*TODO: use FSM here*/ } }
+  hang_execute      () { if (this.counter <= 0) { this.change_state(FALL) } }
 
-  swapping_r_enter(panel) {
-    panel.counter = TIME_SWAP
+  swapping_r_enter() {
+    this.counter = TIME_SWAP
   }
 
-  hang_enter(panel) {
-    panel.counter = 0
+  hang_enter() {
+    this.counter = 0
   }
 
-  swapping_l_enter(panel) {
-    const i1 = panel.kind
-    const i2 = panel.right.kind
-    panel.kind       = i2
-    panel.right.kind = i1
-    panel.counter = TIME_SWAP
+  swapping_l_enter() {
+    const i1 = this.kind
+    const i2 = this.right.kind
+    this.kind       = i2
+    this.right.kind = i1
+    this.counter = TIME_SWAP
   }
 
-  static_execute(panel) {
-    if ((panel.under.empty && !panel.empty) || panel.under.state === HANG) {
-      panel.change_state(HANG);
-    } else if (panel.danger && panel.counter === 0) {
+  static_execute() {
+    if ((this.under.empty && !this.empty) || this.under.state === HANG) {
+      this.change_state(HANG);
+    } else if (this.danger && this.counter === 0) {
       // we add 1 otherwise we will miss out on one frame
       // since counter can never really hit zero and render
-      panel.chain = 0
-      panel.counter = FRAME_DANGER.length+1
+      this.chain = 0
+      this.counter = FRAME_DANGER.length+1
     } else {
-      panel.chain = 0
+      this.chain = 0
     }
   }
 
-  land_enter(panel) {
-    panel.counter = FRAME_LAND.length
+  land_enter() {
+    this.counter = FRAME_LAND.length
   }
 
-  fall_execute(panel) {
-    if (panel.counter > 0) { return }
-      if (panel.under.empty) {
-        panel.under.kind    = panel.kind
-        panel.under.state   = panel.state
-        panel.under.counter = panel.counter
-        panel.under.chain   = panel.chain
+  fall_execute() {
+    if (this.counter > 0) { return }
+      if (this.under.empty) {
+        this.under.kind    = this.kind
+        this.under.state   = this.state
+        this.under.counter = this.counter
+        this.under.chain   = this.chain
 
-        panel.kind    = null
-        panel.state   = STATIC
-        panel.counter = 0
-        panel.chain   = 0
+        this.kind    = null
+        this.state   = STATIC
+        this.counter = 0
+        this.chain   = 0
       } else {
-        panel.change_state(LAND);
+        this.change_state(LAND);
       }
       //} else if (this.under.state === CLEAR) {
         //this.state = STATIC
@@ -267,39 +267,39 @@ export default class ComponentPanel {
         //this.counter = FRAME_LAND.length
   }
 
-  clear_enter(panel) {
-    panel.chain += 1
-    panel.playfield.clearing.push(panel)
-    panel.group = panel.playfield.stage.tick
+  clear_enter() {
+    this.chain += 1
+    this.playfield.clearing.push(this)
+    this.group = this.playfield.stage.tick
   }
-  clear_execute(panel) {
-    if (panel.counter > 0) {
-      const [xi,xlen] = panel.clear_index
-      panel.clear_i    = xi
-      panel.clear_len  = xlen
+  clear_execute() {
+    if (this.counter > 0) {
+      const [xi,xlen] = this.clear_index
+      this.clear_i    = xi
+      this.clear_len  = xlen
 
-      const time_max = TIME_CLEAR + (TIME_POP*panel.clear_len) + TIME_FALL
-      panel.time_pop = TIME_CLEAR + (TIME_POP*panel.clear_i)
-      panel.time_cur = time_max - panel.counter
+      const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
+      this.time_pop = TIME_CLEAR + (TIME_POP*this.clear_i)
+      this.time_cur = time_max - this.counter
 
-      if (panel.time_cur === panel.time_pop) {
-        panel.particles.forEach((particle) => {
+      if (this.time_cur === this.time_pop) {
+        this.particles.forEach((particle) => {
           particle.counter = TIME_PARTICLE
         });
 
-        game.sounds.pop(panel.clear_i)
+        game.sounds.pop(this.clear_i)
       }
     } else {
-      if (panel.above && !panel.above.hidden && panel.above.state === STATIC)
-        panel.above.chain += 1
-      panel.change_state(STATIC)
+      if (this.above && !this.above.hidden && this.above.state === STATIC)
+        this.above.chain += 1
+      this.change_state(STATIC)
     }
   }
-  clear_exit(panel) {
-    panel.kind    = null
-    panel.counter = 0
-    panel.chain   = 0
-    panel.group   = null
+  clear_exit() {
+    this.kind    = null
+    this.counter = 0
+    this.chain   = 0
+    this.group   = null
   }
 
 
@@ -388,7 +388,7 @@ export default class ComponentPanel {
     } else {
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
-      this.state_execute.get(this.state)(this)
+      this.state_execute.get(this.state)()
     }
     ++this.state_timer
   }
@@ -523,13 +523,12 @@ export default class ComponentPanel {
    */
   change_state(state) {
     if (this.state === state) { return; }
-    
     this.state_timer = 0
     if (this.state_exit.has(this.state))
-      this.state_exit.get(this.state)(this)
+      this.state_exit.get(this.state)()
     this.state = state
     if (this.state_enter.has(this.state))
-      this.state_enter.get(this.state)(this)
+      this.state_enter.get(this.state)()
   }
 
   /**
