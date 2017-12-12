@@ -14,7 +14,7 @@ class ComponentPanelBlank{
   public support           : boolean
   public hidden            : boolean
   public empty             : boolean
-  public panel_garbage     : any
+  public garbage           : any
   public chain             : number
 
   constructor(){
@@ -29,7 +29,7 @@ class ComponentPanelBlank{
     this.support           = true
     this.empty             = false
     this.hidden            = true
-    this.panel_garbage     = null
+    this.garbage           = null
     this.chain             = null
   }
 

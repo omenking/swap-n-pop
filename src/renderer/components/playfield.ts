@@ -420,7 +420,7 @@ export default class Playfield {
   update_garbage_clearing(){
     if (this.clearing_garbage.length > 0){
       for (let panel of this.stack){
-        panel.panel_garbage.popping()
+        panel.garbage.popping()
       }
     }
     this.clearing_garbage = []

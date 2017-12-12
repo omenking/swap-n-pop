@@ -40,6 +40,18 @@ export default class ComponentPanelGarbage {
     this.sprite.visible = false
   }
 
+  get snap(){
+    return [
+      this.group,
+      this.state
+    ]
+  }
+
+  load(data) {
+    this.group = data[0]
+    this.state = data[1]
+  }
+
   /**
    Returns the index of the current panel clearing and amount of panels clearing
    @returns {array} - [index,length]
@@ -51,8 +63,8 @@ export default class ComponentPanelGarbage {
     let panels = []
     for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&
-          p.panel_garbage.group === this.group) {
-        panels.push(p.panel_garbage)
+          p.garbage.group === this.group) {
+        panels.push(p.garbage)
       }
     }
     return [panels.indexOf(this),panels.length]
@@ -71,7 +83,7 @@ export default class ComponentPanelGarbage {
     let len = 0
     for (let p of this.playfield.stack){
       if (p.state               === GARBAGE &&
-          p.panel_garbage.group === this.group) {
+          p.garbage.group === this.group) {
         len++
       }
     }
@@ -98,8 +110,8 @@ export default class ComponentPanelGarbage {
       case FALL:
         if (this.fall_check()) {
           this.panel.under.state               = GARBAGE
-          this.panel.under.panel_garbage.group = this.group
-          this.panel.under.panel_garbage.state = this.state
+          this.panel.under.garbage.group = this.group
+          this.panel.under.garbage.state = this.state
 
           this.group = null
           this.state = null
@@ -141,7 +153,7 @@ export default class ComponentPanelGarbage {
     for (let x = 0; x < COLS; x++){
       let panel = this.playfield.stack_xy(x,this.panel.y)
       if (panel.state               === GARBAGE &&
-          panel.panel_garbage.group === this.group) {
+          panel.garbage.group === this.group) {
         if (panel.under.empty === false || panel.under.state === HANG) { fall = false}
       }
     }
@@ -162,10 +174,10 @@ export default class ComponentPanelGarbage {
     if (this.state === CLEAR){
       this.sprite.frame = 13
     } else {
-      if (this.panel.left.state  === GARBAGE && this.panel.left.panel_garbage.group  === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.right.state === GARBAGE && this.panel.right.panel_garbage.group === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.above.state === GARBAGE && this.panel.above.panel_garbage.group === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.under.state === GARBAGE && this.panel.under.panel_garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.left.state  === GARBAGE && this.panel.left.garbage.group  === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.right.state === GARBAGE && this.panel.right.garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.above.state === GARBAGE && this.panel.above.garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.under.state === GARBAGE && this.panel.under.garbage.group === this.group){ str += '1' } else { str += '0' }
 
       if      (str === '0000'){ this.sprite.frame = 0}
 

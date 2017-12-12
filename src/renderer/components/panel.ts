@@ -46,18 +46,17 @@ export default class ComponentPanel {
   private _state        : Symbol
   private _chain        : number
   private bauble_chain  : ComponentBaubleChain
-  public panel_garbage  : ComponentPanelGarbage
+  public garbage        : ComponentPanelGarbage
   public playfield      : ComponentPlayfield
   public x              : number
   public y              : number
   private sprite        : Phaser.Sprite
-  private group         : Phaser.Group
+  private group         : number
   public time_cur       : number
   private time_pop      : number
   private particles     : Array<ComponentPanelParticle>
   public clear_i        : number
   public clear_len      : number
-  private garbage       : any
   private _state_timer   : number
   private state_enter   : any
   private state_execute : any
@@ -100,7 +99,7 @@ export default class ComponentPanel {
   /** */
   constructor() {
     this.bauble_chain  = new ComponentBaubleChain()
-    this.panel_garbage = new ComponentPanelGarbage()
+    this.garbage       = new ComponentPanelGarbage()
 
     // each panel has 5 particles - in create these are set to follow a circular path!
     this.particles = [];
@@ -122,6 +121,7 @@ export default class ComponentPanel {
       this.state,
       this.counter,
       this.chain,
+      this.garbage.snap,
       this.group,
       snap_particles
     ]
@@ -135,7 +135,7 @@ export default class ComponentPanel {
     this.state   = data[3]
     this.counter = data[4]
     this.chain   = data[5]
-    this.garbage = data[6]
+    this.garbage.load(data[6])
     this.group   = data[7]
     if (data[8]){
       this.particles.forEach((particle, i) => {
@@ -186,7 +186,7 @@ export default class ComponentPanel {
     // move this in the render that would be ideal.
     this.sprite.visible = false
 
-    this.panel_garbage.create(this,this.playfield)
+    this.garbage.create(this,this.playfield)
     this.bauble_chain.create(this)
 
     // circular path is getting set,
@@ -306,8 +306,8 @@ export default class ComponentPanel {
 
   set_garbage(group){
     this.state = GARBAGE
-    this.panel_garbage.group = group
-    this.panel_garbage.state = FALL
+    this.garbage.group = group
+    this.garbage.state = FALL
   }
 
   /** resets this panel to a normal state - stops animation usefull for stack resets */
@@ -384,7 +384,7 @@ export default class ComponentPanel {
     this.particles.forEach(particle => particle.update())
 
     if (this.state === GARBAGE) {
-      this.panel_garbage.update()
+      this.garbage.update()
     } else {
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
@@ -602,7 +602,7 @@ export default class ComponentPanel {
     this.animate()
     this.render_visible()
     this.bauble_chain.render()
-    this.panel_garbage.render()
+    this.garbage.render()
   }
   /** */
   shutdown(){}
