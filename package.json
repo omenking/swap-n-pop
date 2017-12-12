@@ -28,7 +28,6 @@
   "build": {
     "appId": "com.swap-n-pop.app",
     "artifactName": "snp_v${version}.${ext}",
-    "compression" : "store",
     "mac": {
       "identity": null,
       "category": "public.app-category.games",
