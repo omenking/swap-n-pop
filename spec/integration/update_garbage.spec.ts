@@ -106,13 +106,61 @@ describe('garbage_actions', function() {
     load([0,19,1,STATIC  ,0,F,NN],
          [0,20,1,STATIC  ,0,F,NN],
          [0,21,1,STATIC  ,0,F,NN],
-         [0,22,N,GARBAGE ,0,F,[STATIC,5])
+         [0,22,N,GARBAGE ,0,F,[STATIC,5]])
     //################################################################
     playfield.update()
     playfield.update()
     chec([0,19,1,CLEAR ,89,1,NN],
          [0,20,1,CLEAR ,89,1,NN],
          [0,21,1,CLEAR ,89,1,NN],
-         [0,22,R,GARBAGE ,42,F,[CLEAR,5])
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5]])
+  })
+  it('#clear_from_left', function(){
+    // C
+    // C
+    // C G
+    load([0,20,1,STATIC  ,0,F,NN],
+         [0,21,1,STATIC  ,0,F,NN],
+         [0,22,1,STATIC  ,0,F,NN],[1,22,N,GARBAGE ,0,F,[STATIC,5]])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    chec([0,20,1,CLEAR ,89,1,NN],
+         [0,21,1,CLEAR ,89,1,NN],
+         [0,22,1,CLEAR ,89,1,NN],[1,22,R,GARBAGE ,42,F,[CLEAR,5]])
+  })
+  it('#clear_from_right', function(){
+    //   C
+    //   C
+    // G C
+    load(                                  [1,20,1,STATIC  ,0,F,NN],
+                                           [1,21,1,STATIC  ,0,F,NN],
+         [0,22,N,GARBAGE ,0,F,[STATIC,5]], [1,22,1,STATIC  ,0,F,NN])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    chec(                                  [1,20,1,CLEAR ,89,1,NN],
+                                           [1,21,1,CLEAR ,89,1,NN],
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5]], [1,22,1,CLEAR ,89,1,NN])
+  })
+  it('#clear_from_all_directions', function(){
+    //   G
+    //   C
+    //   C
+    // G C G
+    // * G *
+    load(                                  [1,18,N,GARBAGE ,0,F,[STATIC,4]],
+                                           [1,19,1,STATIC  ,0,F,NN],
+                                           [1,20,1,STATIC  ,0,F,NN],
+         [0,21,N,GARBAGE ,0,F,[STATIC,1]], [1,21,1,STATIC  ,0,F,NN]        , [2,21,N,GARBAGE ,0,F,[STATIC,3]],
+         [0,22,1,STATIC  ,0,F,NN]        , [1,22,N,GARBAGE ,0,F,[STATIC,2]], [2,22,1,STATIC  ,0,F,NN])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    chec(                                  [1,18,R,GARBAGE ,42,F,[CLEAR,4]],
+                                           [1,19,1,CLEAR   ,89,1,NN],
+                                           [1,20,1,CLEAR   ,89,1,NN],
+         [0,21,R,GARBAGE ,42,F,[CLEAR,1]], [1,21,1,CLEAR   ,89,1,NN]       , [2,21,R,GARBAGE ,42,F,[CLEAR,3]],
+         [0,22,1,STATIC  ,0,F,NN]        , [1,22,R,GARBAGE ,42,F,[CLEAR,2]], [2,22,1,STATIC  ,0,F,NN])
   })
 }) //klass

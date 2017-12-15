@@ -177,7 +177,6 @@ export default class ComponentPanelGarbage {
   mark_group_to_clear(){
     const i = this.playfield.clearing_garbage.indexOf(this.group)
     if (i === -1){
-      console.log('mark_to_clear',this.group)
       this.playfield.clearing_garbage.push(this.group)
     }
   }
