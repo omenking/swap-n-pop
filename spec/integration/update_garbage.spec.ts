@@ -79,7 +79,8 @@ describe('garbage_actions', function() {
    * And combo garbage is touching a clearning panel
    * Then the garbage combo should turn into panels
    */
-  it('#garbage_to_panel', function(){
+
+  it('#clear_from_under', function(){
     // G
     // C
     // C
@@ -97,4 +98,21 @@ describe('garbage_actions', function() {
          [0,22,1,CLEAR ,89,1,NN])
   })
 
+  it('#clear_from_above', function(){
+    // C
+    // C
+    // C
+    // G
+    load([0,19,1,STATIC  ,0,F,NN],
+         [0,20,1,STATIC  ,0,F,NN],
+         [0,21,1,STATIC  ,0,F,NN],
+         [0,22,N,GARBAGE ,0,F,[STATIC,5])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    chec([0,19,1,CLEAR ,89,1,NN],
+         [0,20,1,CLEAR ,89,1,NN],
+         [0,21,1,CLEAR ,89,1,NN],
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5])
+  })
 }) //klass

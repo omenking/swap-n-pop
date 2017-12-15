@@ -337,7 +337,7 @@ export default class ComponentPanel {
   /** */
   get empty() {      return  this.state === STATIC && this.hidden }
   /** */
-  get hidden() {      return (this.kind === null) }
+  get hidden() {      return (this.kind === null && this.state !== GARBAGE) }
 
   log() {
     const k = (this.kind === null) ? 'N' : this.kind
