@@ -77,8 +77,12 @@ export default class ComponentPanel {
   get counter()    {return this._counter }
   set counter(val) {       this._counter = val }
 
-  get state()    {return this._state }
-  set state(val) {       this._state = val }
+  get state()    {
+    return this._state 
+  }
+  set state(val) {
+    this._state = val 
+  }
 
   get state_timer() { return this._state_timer }
   set state_timer(val) { this._state_timer = val }

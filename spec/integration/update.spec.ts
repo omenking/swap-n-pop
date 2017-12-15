@@ -19,9 +19,10 @@ import {
 } from 'core/data';
 
 //shorthands
-const T = true
-const F = 0
-const N = null
+const T  = true
+const F  = 0
+const N  = null
+const NN = [null,null]
 
 var _playfield = null
 function load(...arr){
@@ -37,10 +38,10 @@ function chec(...arr){
     // so when tests fail they are more readble
     // eg   AssertionError: expected [ 'chain', '1,20', 1 ] to deeply equal [ 'chain', '1,20', 0 ]
     let pos  = `${i[0]},${i[1]}`
-    expect(['kind'   , pos, data[2]]).eql(['kind'   , pos, i[2]]) //kind
-    expect(['state'  , pos, data[3]]).eql(['state'  , pos, i[3]]) //state
-    expect(['counter', pos, data[4]]).eql(['counter', pos, i[4]]) //counter
-    expect(['chain'  , pos, data[5]]).eql(['chain'  , pos, i[5]]) //chain
+    expect(data[2]).eql(i[2], `${pos}: kind`) //kind
+    expect(data[3]).eql(i[3], `${pos}: state`) //state
+    expect(data[4]).eql(i[4], `${pos}: counter`) //counter
+    expect(data[5]).eql(i[5], `${pos}: chain`) //chain
   }
 }
 

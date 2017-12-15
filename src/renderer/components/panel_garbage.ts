@@ -126,22 +126,14 @@ export default class ComponentPanelGarbage {
   static_execute() {
     if (this.fall_check()) {
       this.state = FALL
-    } else if  (
-      this.panel.under.state === CLEAR ||
-      this.panel.above.state === CLEAR ||
-      this.panel.left.state  === CLEAR ||
-      this.panel.right.state === CLEAR
-    ){
-      const i = this.playfield.clearing_garbage.indexOf(this.group)
-      if (i === -1){
-        this.playfield.clearing_garbage.push(this.group)
-      }
+    } else if (this.any_touching_panel_is_clearing()){
+      this.mark_group_to_clear()
     }
   }
 
   fall_execute() {
     if (this.fall_check()) {
-      this.panel.under.state               = GARBAGE
+      this.panel.under.state = GARBAGE
       this.panel.under.garbage.group = this.group
       this.panel.under.garbage.state = this.state
 
@@ -178,6 +170,24 @@ export default class ComponentPanelGarbage {
     ++this.state_timer
   }
 
+  /*
+   * Get the current panel_garbage's group id and if the group
+   * has been yet to be queued for clearing, add it
+   */
+  mark_group_to_clear(){
+    const i = this.playfield.clearing_garbage.indexOf(this.group)
+    if (i === -1){
+      console.log('mark_to_clear',this.group)
+      this.playfield.clearing_garbage.push(this.group)
+    }
+  }
+
+  any_touching_panel_is_clearing(){
+    return this.panel.under.state === CLEAR ||
+           this.panel.above.state === CLEAR ||
+           this.panel.left.state  === CLEAR ||
+           this.panel.right.state === CLEAR
+  }
   /**
    * This looks at the current row for panels that belong
    * to this garbage panel group and then check below each one to
