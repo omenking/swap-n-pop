@@ -130,6 +130,7 @@ export default class LoadState extends State {
 
     game.load.spritesheet('panel_particles', './assets/images/pop_frames.png', px(16), px(16), 8);
     game.load.spritesheet('zephyr', './assets/images/zephyr_all.png', 48, 48, 84);
+    game.load.image('black_pixel', './assets/images/black_pixel.png')
 
     game.load.start()
   }
