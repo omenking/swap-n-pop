@@ -35,9 +35,9 @@ export default class ComponentPanelGarbage {
   private panel     : ComponentPanel
   private playfield : ComponentPlayfield
   private sprite    : Phaser.Sprite
-  private time_max : number
-  private time_pop : number
-  private time_cur : number
+  public time_max : number
+  public time_pop : number
+  public time_cur : number
 
   // #167 all of this needs to be refactored ---
   private state_enter   : any
@@ -127,8 +127,8 @@ export default class ComponentPanelGarbage {
     if (this.panel.state    === GARBAGE &&
         this.playfield.clearing_garbage.indexOf(this.group) !== -1){
       this.group_clearing = this.tick
-      this.state         = CLEAR
-      this.panel.counter = TIME_GARBAGE_CLEAR + (this.group_len * TIME_GARBAGE_POP)
+      this.state          = CLEAR
+      this.panel.counter  = TIME_GARBAGE_CLEAR + (this.group_len * TIME_GARBAGE_POP)
       this.panel.set_kind('unique')
     }
   }
@@ -184,8 +184,8 @@ export default class ComponentPanelGarbage {
     if (this.panel.counter > 0) {
       this.panel.counter--
       const [i,len] = this.clear_index
-      this.time_max = TIME_GARBAGE_CLEAR + (len   * TIME_GARBAGE_POP)
-      this.time_pop = TIME_GARBAGE_CLEAR + (len-i * TIME_GARBAGE_POP)
+      this.time_max = TIME_GARBAGE_CLEAR + (len     * TIME_GARBAGE_POP)
+      this.time_pop = TIME_GARBAGE_CLEAR + ((len-i) * TIME_GARBAGE_POP)
       this.time_cur = this.time_max - this.panel.counter
     } else {
       this.state = STATIC
@@ -202,6 +202,7 @@ export default class ComponentPanelGarbage {
   add_to_clearing_garbarge(group : number){
     const i = this.playfield.clearing_garbage.indexOf(group)
     if (i === -1)
+      this.group_clearing = this.tick
       this.playfield.clearing_garbage.push(group)
   }
 
@@ -217,7 +218,7 @@ export default class ComponentPanelGarbage {
    * or its garbage group_clear matches this tick
    */
   touching_clearing_panel(panel) : boolean {
-    return panel.state === CLEAR || panel.group_clearing === this.tick
+    return panel.state === CLEAR || panel.garbage.group_clearing === this.tick
   }
   /**
    * This looks at the current row for panels that belong

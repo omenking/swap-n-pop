@@ -66,5 +66,4 @@ describe('PanelGarbage', function() {
       expect(pl.stack_xy(3,22).garbage.clear_index).to.eql([3,4])
     })
   })
-
 }) //klass

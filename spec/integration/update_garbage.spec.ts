@@ -151,17 +151,38 @@ describe('garbage_actions', function() {
   })
 
   it('should clear all combo garbage thats touching and interconnected', function(){
-    // G2 G2 G2
-    // G1 G1 G1
+    // G2
+    // G1
     // 1  1  1
-    load([0,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]], [1,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]], [2,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],
-         [0,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]], [1,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]], [2,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],
-         [0,22,1,STATIC  ,0,F,NN]        , [1,22,1,STATIC  ,0,F,NN]        , [2,22,1,STATIC  ,0,F,NN])
+    load([0,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],
+         [0,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],
+         [0,22,1,STATIC  ,0,F,NN], [1,22,1,STATIC  ,0,F,NN], [2,22,1,STATIC  ,0,F,NN])
     //################################################################
     playfield.update()
     playfield.update()
-    chec([0,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]], [1,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]], [2,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]],
-         [0,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]], [1,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]], [2,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]],
-         [0,22,1,CLEAR,89,1,NN]                 , [1,22,1,CLEAR  ,89,1,NN]               , [2,22,1,CLEAR  ,89,1,NN])
+    chec([0,20,R,GARBAGE ,54,F,[CLEAR,2,COMBO]],
+         [0,21,R,GARBAGE ,54,F,[CLEAR,1,COMBO]],
+         [0,22,1,CLEAR,89,1,NN], [1,22,1,CLEAR  ,89,1,NN], [2,22,1,CLEAR  ,89,1,NN])
+  })
+
+  it('time_max,time_cur,time_pop',function(){
+    // G2{5} G2{4} G2{3}
+    //       G1{2} G1{1} G1{0}
+    // 1     1     1
+    load([0,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],[1,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],[2,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],
+                                                                                       [2,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],[3,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],[4,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],
+         [0,22,1,STATIC  ,0,F,NN]              ,[1,22,1,STATIC  ,0,F,NN]              ,[2,22,1,STATIC  ,0,F,NN])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    playfield.update()
+    expect(playfield.stack_xy(4,21).garbage.clear_index).to.eql([5,6])
+
+    expect(playfield.stack_xy(4,21).garbage.time_pop).to.eql(42)  // G1{0}
+    expect(playfield.stack_xy(3,21).garbage.time_pop).to.eql(54)  // G1{1}
+    expect(playfield.stack_xy(2,21).garbage.time_pop).to.eql(66)  // G1{2}
+    expect(playfield.stack_xy(2,20).garbage.time_pop).to.eql(78)  // G1{3}
+    expect(playfield.stack_xy(1,20).garbage.time_pop).to.eql(90)  // G1{4}
+    expect(playfield.stack_xy(0,20).garbage.time_pop).to.eql(102) // G1{5}
   })
 }) //klass
