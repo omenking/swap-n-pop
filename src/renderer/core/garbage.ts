@@ -20,7 +20,7 @@ export default class CoreGarbage {
     this.alternate = [
       {index: 0, frame: [0,1,2,3,4,5]}, // 1 garbage wide
       {index: 0, frame: [0,4,2]},       // 2 garbage wide
-      {index: 0, frame: [0,3,1,2]},     // 3 garbage wide
+      {index: 0, frame: [0,3]},         // 3 garbage wide
       {index: 0, frame: [0,2]},         // 4 garbage wide
       {index: 0, frame: [0,1]},         // 5 garbage wide
       {index: 0, frame: [0]}            // 6 garbage wide
@@ -28,6 +28,9 @@ export default class CoreGarbage {
 
   }
 
+  /*
+   * alternates garbage panels based on the size of garbage
+   */
   alt(size) {
     const x   = this.alternate[size-1].frame[this.alternate[size-1].index]
     const len = this.alternate[size-1].frame.length
@@ -72,73 +75,77 @@ export default class CoreGarbage {
     }
   }
 
-  shift() {
-    let playfield = null
-    if (this.pi === 0) { playfield = this.stage.playfield1 }
-    else               { playfield = this.stage.playfield0 }
-    if (
-      playfield.stack_i(0).empty &&
-      playfield.stack_i(1).empty &&
-      playfield.stack_i(2).empty &&
-      playfield.stack_i(3).empty &&
-      playfield.stack_i(4).empty &&
-      playfield.stack_i(5).empty
-    ) {
-      this.left  = !this.left
-      const v = this.queue.shift()
+  /*
+   * ensure there is one visible row to ensure there is
+   * room to drop garbage
+   */
+ empty_row(playfield){
+    return playfield.stack_i(0).empty &&
+           playfield.stack_i(1).empty &&
+           playfield.stack_i(2).empty &&
+           playfield.stack_i(3).empty &&
+           playfield.stack_i(4).empty &&
+           playfield.stack_i(5).empty
+  }
 
-      // if garbage sent after delay - play attacked on the playfield chosen
-      if (v.combo > 3)
-        playfield.character.current_animation = "attacked"
+  get playfield(){
+    if (this.pi === 0) { return this.stage.playfield1 }
+    else               { return this.stage.playfield0 }
+  }
 
-      let o
-      if (v.combo === 4) {
-        o = this.alt(3) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-      } else if (v.combo === 5){
-        o = this.alt(4) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
-      } else if (v.combo === 6){
-        o = this.alt(5) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
-      } else if (v.combo === 7){
-        o = this.alt(6) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
-      } else if (v.combo === 8){
-        o = this.alt(7) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
+  /*
+   *
+   * @param height - the height of the garbage, max being 12
+   * @param width  - the length of the garbage, max being 6
+   * @param kind   - COMBO or CHAIN
+   * @param size   - The original size of the CHAIN or COMBO
+   */
+  generate(playfield,height : number ,width : number ,kind : Symbol ,size : number){
+    let o = 0
+    if (kind === COMBO)
+      o = this.alt(width) //offset
 
-        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
-      } else if (v.combo === 9){
-      } else if (v.combo === 10){
-      } else if (v.combo === 11){
-      } else if (v.combo === 12){
-      } else if (v.combo === 13){
+    for(let w = 0; w < width; w++){
+      for(let h = 0; h < height; h++){
+        playfield.stack_xy(w+o,h).set_garbage(this.stage.tick,kind)
+
       }
+    }
+  }
+
+  shift() {
+    const pl = this.playfield
+    if (!this.empty_row(pl)) { return }
+    this.left = !this.left
+    const v   = this.queue.shift()
+
+    // if garbage sent after delay - play attacked on the playfield chosen
+    if (v.combo > 3)
+      pl.character.current_animation = "attacked"
+
+    if (v.chain >= 2) {
+      const height =  Math.min(v.chain-1,12)
+      this.generate(pl,1,height,CHAIN,v.chain) // CHAINx6
+    }
+
+    if (v.combo >= 4 && v.combo <= 7) {
+      this.generate(pl,1,v.combo-1,COMBO,v.combo) // 1xCOMBO
+    } else if (v.combo === 8){
+      this.generate(pl,1,3,COMBO,7)
+      this.generate(pl,1,4,COMBO,7)
+    } else if (v.combo === 9){
+      this.generate(pl,1,4,COMBO,9)
+      this.generate(pl,1,5,COMBO,9)
+    } else if (v.combo === 10){
+      this.generate(pl,1,5,COMBO,10)
+      this.generate(pl,1,5,COMBO,10)
+    } else if (v.combo === 11){
+      this.generate(pl,1,6,COMBO,11)
+      this.generate(pl,1,6,COMBO,11)
+    } else if (v.combo >= 12){
+      this.generate(pl,1,6,COMBO,11)
+      this.generate(pl,1,6,COMBO,11)
+      this.generate(pl,1,6,COMBO,11)
     }
   }
 }
