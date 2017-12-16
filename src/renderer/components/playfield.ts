@@ -1,6 +1,6 @@
-import game        from 'core/game'
-import CoreGarbage from 'core/garbage'
-import CoreStage   from 'core/stage'
+import game                     from 'core/game'
+import CoreGarbage              from 'core/garbage'
+import CoreStage                from 'core/stage'
 
 import ComponentPlayfieldCountdown from 'components/playfield_countdown'
 import ComponentPlayfieldCursor    from 'components/playfield_cursor'
@@ -170,6 +170,7 @@ export default class Playfield {
 
     if (this.stage.cpu[1] !== null){
       this.garbage.create(this.stage,this.pi)
+      this.clearing_garbage = []
     }
 
     //this.score_lbl.create()
@@ -423,7 +424,6 @@ export default class Playfield {
         panel.garbage.popping()
       }
     }
-    this.clearing_garbage = []
   }
   render_stack() {
     for (let panel of this.stack){

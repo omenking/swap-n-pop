@@ -3,6 +3,7 @@ module.exports = {
   verbose: true,
   setupTestFrameworkScriptFile: path.resolve(__dirname,'spec','setup.js'),
   moduleNameMapper: {
+    "^helper"           : "<rootDir>/spec/helper.ts",
     "^core/game$"       : "<rootDir>/spec/mocks/game.mock.ts",
     "^electron$"        : "<rootDir>/spec/mocks/electron.mock.ts",
     "^common/store$"    : "<rootDir>/spec/mocks/store.mock.ts",

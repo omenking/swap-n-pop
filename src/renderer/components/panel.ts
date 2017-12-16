@@ -77,8 +77,12 @@ export default class ComponentPanel {
   get counter()    {return this._counter }
   set counter(val) {       this._counter = val }
 
-  get state()    {return this._state }
-  set state(val) {       this._state = val }
+  get state()    {
+    return this._state 
+  }
+  set state(val) {
+    this._state = val 
+  }
 
   get state_timer() { return this._state_timer }
   set state_timer(val) { this._state_timer = val }
@@ -304,10 +308,11 @@ export default class ComponentPanel {
 
 
 
-  set_garbage(group){
+  set_garbage(group: number, kind: symbol){
     this.state = GARBAGE
     this.garbage.group = group
     this.garbage.state = FALL
+    this.garbage.kind  = kind
   }
 
   /** resets this panel to a normal state - stops animation usefull for stack resets */
@@ -333,7 +338,7 @@ export default class ComponentPanel {
   /** */
   get empty() {      return  this.state === STATIC && this.hidden }
   /** */
-  get hidden() {      return (this.kind === null) }
+  get hidden() {      return (this.kind === null && this.state !== GARBAGE) }
 
   log() {
     const k = (this.kind === null) ? 'N' : this.kind

@@ -46,6 +46,7 @@
   },
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
     "start": "webpack && electron app/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
