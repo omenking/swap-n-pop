@@ -308,10 +308,11 @@ export default class ComponentPanel {
 
 
 
-  set_garbage(group){
+  set_garbage(group: number, kind: symbol){
     this.state = GARBAGE
     this.garbage.group = group
     this.garbage.state = FALL
+    this.garbage.kind  = kind
   }
 
   /** resets this panel to a normal state - stops animation usefull for stack resets */

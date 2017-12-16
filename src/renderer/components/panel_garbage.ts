@@ -12,14 +12,26 @@ import {
   TIME_GARBAGE_CLEAR,
   TIME_GARBAGE_POP,
   GARBAGE,
-  GARBAGE_SHAKE
+  GARBAGE_SHAKE,
+  COMBO,
+  CHAIN
 } from 'core/data';
 
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
-  private _state    : Symbol
-  private _group    : number
+  private _state          : Symbol
+  /*
+   * group is used to group garbage panels to make
+   * one piece of garbage
+   */
+  private _group          : number
+  /*
+   * group_clearing is used to group garbage panels
+   * from different groups into one big group for clearing
+   */
+  private _group_clearing : number
+  private _kind : Symbol
   private panel     : ComponentPanel
   private playfield : ComponentPlayfield
   private sprite    : Phaser.Sprite
@@ -47,8 +59,12 @@ export default class ComponentPanelGarbage {
   // #167 -----------------------------------------
 
 
+  get kind()    {return this._kind }
+  set kind(val) {       this._kind = val }
   get group()    {return this._group }
   set group(val) {       this._group = val }
+  get group_clearing()    {return this._group_clearing }
+  set group_clearing(val) {       this._group_clearing = val }
 
   create(panel : ComponentPanel ,playfield : ComponentPlayfield) {
     this.panel     = panel
@@ -71,7 +87,8 @@ export default class ComponentPanelGarbage {
   get snap(){
     return [
       this.state,
-      this.group
+      this.group,
+      this.kind
     ]
   }
 
@@ -79,9 +96,13 @@ export default class ComponentPanelGarbage {
     if (data !== undefined) {
       this.state = data[0]
       this.group = data[1]
+      this.kind  = data[2]
+      this.group_clearing = data[3]
     } else {
       this.state = null
       this.group = null
+      this.kind  = null
+      this.group_clearing = null
     }
   }
 
@@ -91,43 +112,51 @@ export default class ComponentPanelGarbage {
    */
   get clear_index(){
     if (this.state !== CLEAR) {
-      throw(new Error('clear_index called on none CLEAR panel'))
+      throw(new Error(`clear_index expected CLEAR but got ${this.state}`))
     }
     let panels = []
     for (let p of this.playfield.stack){
-      if (p.state               === GARBAGE &&
-          p.garbage.group === this.group) {
+      if (p.state === GARBAGE && p.garbage.group_clearing === this.group_clearing){
         panels.push(p.garbage)
       }
     }
     return [panels.indexOf(this),panels.length]
   }
 
-  popping(){
-    if (this.panel.state === GARBAGE &&
-        this.playfield.clearing_garbage.indexOf(this.group) !== -1 ){
+  public popping(){
+    if (this.panel.state    === GARBAGE &&
+        this.playfield.clearing_garbage.indexOf(this.group) !== -1){
+      this.group_clearing = this.tick
       this.state         = CLEAR
       this.panel.counter = TIME_GARBAGE_CLEAR + (this.group_len * TIME_GARBAGE_POP)
       this.panel.set_kind('unique')
     }
   }
 
+  /*
+   * count all panels with garbage that should be clearing
+   *
+   */
   get group_len(){
     let len = 0
     for (let p of this.playfield.stack){
-      if (p.state               === GARBAGE &&
-          p.garbage.group === this.group) {
+      if (this.playfield.clearing_garbage.indexOf(p.garbage.group) !== -1) {
         len++
       }
     }
     return len
   }
 
+  private get tick(){
+    return this.playfield.stage.tick
+  }
+
   static_execute() {
     if (this.fall_check()) {
       this.state = FALL
     } else if (this.any_touching_panel_is_clearing()){
-      this.mark_group_to_clear()
+      this.group_clearing = this.tick
+      this.add_to_clearing_garbarge(this.group)
     }
   }
 
@@ -170,22 +199,25 @@ export default class ComponentPanelGarbage {
     ++this.state_timer
   }
 
-  /*
-   * Get the current panel_garbage's group id and if the group
-   * has been yet to be queued for clearing, add it
-   */
-  mark_group_to_clear(){
-    const i = this.playfield.clearing_garbage.indexOf(this.group)
-    if (i === -1){
-      this.playfield.clearing_garbage.push(this.group)
-    }
+  add_to_clearing_garbarge(group : number){
+    const i = this.playfield.clearing_garbage.indexOf(group)
+    if (i === -1)
+      this.playfield.clearing_garbage.push(group)
   }
 
-  any_touching_panel_is_clearing(){
-    return this.panel.under.state === CLEAR ||
-           this.panel.above.state === CLEAR ||
-           this.panel.left.state  === CLEAR ||
-           this.panel.right.state === CLEAR
+  any_touching_panel_is_clearing() : boolean {
+    return this.touching_clearing_panel(this.panel.under) ||
+           this.touching_clearing_panel(this.panel.above) ||
+           this.touching_clearing_panel(this.panel.left ) ||
+           this.touching_clearing_panel(this.panel.right)
+  }
+
+  /*
+   * A panel is consider clearing if its set to clear
+   * or its garbage group_clear matches this tick
+   */
+  touching_clearing_panel(panel) : boolean {
+    return panel.state === CLEAR || panel.group_clearing === this.tick
   }
   /**
    * This looks at the current row for panels that belong
@@ -197,7 +229,7 @@ export default class ComponentPanelGarbage {
     let fall = true
     for (let x = 0; x < COLS; x++){
       let panel = this.playfield.stack_xy(x,this.panel.y)
-      if (panel.state               === GARBAGE &&
+      if (panel.state === GARBAGE &&
           panel.garbage.group === this.group) {
         if (panel.under.empty === false || panel.under.state === HANG) { fall = false}
       }

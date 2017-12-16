@@ -1,8 +1,4 @@
-import * as fs         from 'fs'
-import * as seedrandom from 'seedrandom'
-import Stage           from 'states/mode_vs'
-import Playfield       from 'components/playfield'
-import Stack           from 'core/stack'
+import {playfield_helper} from 'helper'
 
 import {
   PANELS,
@@ -16,7 +12,9 @@ import {
   LAND,
   CLEAR,
   GARBAGE,
-  ROWS
+  ROWS,
+  COMBO,
+  CHAIN
 } from 'core/data';
 
 //shorthands
@@ -24,18 +22,18 @@ const R = Symbol('random_panel')
 const T  = true
 const F  = 0
 const N  = null
-const NN = [null,null]
+const NN = [null,null,null,null]
 
-var _playfield = null
+let playfield = null
 function load(...arr){
   for (let i of arr){
-    _playfield.stack_xy(i[0], i[1]).load(i)
+    playfield.stack_xy(i[0], i[1]).load(i)
   }
 }
 
 function chec(...arr){
   for (let i of arr){
-    let data = _playfield.stack_xy(i[0], i[1]).snap
+    let data = playfield.stack_xy(i[0], i[1]).snap
     // its a bit hard to debug, so I added type and post
     // so when tests fail they are more readble
     // eg   AssertionError: expected [ 'chain', '1,20', 1 ] to deeply equal [ 'chain', '1,20', 0 ]
@@ -50,25 +48,13 @@ function chec(...arr){
     expect(data[5]   ).eql(i[5]   ,`${pos}: chain`  ) //chain
     expect(data[6][0]).eql(i[6][0],`${pos}: garbage state`) //garbage state
     expect(data[6][1]).eql(i[6][1],`${pos}: garbage group`) //garbage group
+    expect(data[6][2]).eql(i[6][2],`${pos}: garbage kind`) //garbage kind
   }
 }
 
 describe('garbage_actions', function() {
-  var playfield
   beforeEach(function(){
-    let stage = new Stage()
-    stage.init({
-      seed: 'test',
-      cpu: [false,false]
-    })
-    stage.state = 'running'
-    playfield = new Playfield(0)
-    playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
-    playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
-    playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
-    playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
-    playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
-    _playfield = playfield
+    playfield = playfield_helper()
   })
 
   // CLEAR stage is happening after garbage, has to happen before.
@@ -80,25 +66,25 @@ describe('garbage_actions', function() {
    * Then the garbage combo should turn into panels
    */
 
-  it('#clear_from_under', function(){
-    // G
+  it('should clear garbage touching from above', function(){
+    // G G
     // C
     // C
     // C
-    load([0,19,N,GARBAGE,0,F,[STATIC,5]],
-         [0,20,1,STATIC ,0,F,NN]        ,
-         [0,21,1,STATIC ,0,F,NN]        ,
+    load([0,19,N,GARBAGE,0,F,[STATIC,5,COMBO]], [1,19,N,GARBAGE,0,F,[STATIC,5,COMBO]],
+         [0,20,1,STATIC ,0,F,NN],
+         [0,21,1,STATIC ,0,F,NN],
          [0,22,1,STATIC ,0,F,NN])
     //################################################################
     playfield.update()
     playfield.update()
-    chec([0,19,R,GARBAGE,42,F,[CLEAR,5]],
+    chec([0,19,R,GARBAGE,54,F,[CLEAR,5,COMBO]], [1,19,R,GARBAGE,54,F,[CLEAR,5,COMBO]],
          [0,20,1,CLEAR ,89,1,NN],
          [0,21,1,CLEAR ,89,1,NN],
          [0,22,1,CLEAR ,89,1,NN])
   })
 
-  it('#clear_from_above', function(){
+  it('should clear garbage touching from below', function(){
     // C
     // C
     // C
@@ -106,61 +92,76 @@ describe('garbage_actions', function() {
     load([0,19,1,STATIC  ,0,F,NN],
          [0,20,1,STATIC  ,0,F,NN],
          [0,21,1,STATIC  ,0,F,NN],
-         [0,22,N,GARBAGE ,0,F,[STATIC,5]])
+         [0,22,N,GARBAGE ,0,F,[STATIC,5,COMBO]])
     //################################################################
     playfield.update()
     playfield.update()
     chec([0,19,1,CLEAR ,89,1,NN],
          [0,20,1,CLEAR ,89,1,NN],
          [0,21,1,CLEAR ,89,1,NN],
-         [0,22,R,GARBAGE ,42,F,[CLEAR,5]])
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]])
   })
-  it('#clear_from_left', function(){
+  it('should clear garbage touching from the right', function(){
     // C
     // C
     // C G
     load([0,20,1,STATIC  ,0,F,NN],
          [0,21,1,STATIC  ,0,F,NN],
-         [0,22,1,STATIC  ,0,F,NN],[1,22,N,GARBAGE ,0,F,[STATIC,5]])
+         [0,22,1,STATIC  ,0,F,NN],[1,22,N,GARBAGE ,0,F,[STATIC,5,COMBO]])
     //################################################################
     playfield.update()
     playfield.update()
     chec([0,20,1,CLEAR ,89,1,NN],
          [0,21,1,CLEAR ,89,1,NN],
-         [0,22,1,CLEAR ,89,1,NN],[1,22,R,GARBAGE ,42,F,[CLEAR,5]])
+         [0,22,1,CLEAR ,89,1,NN],[1,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]])
   })
-  it('#clear_from_right', function(){
+  it('should clear garbage touching from the left', function(){
     //   C
     //   C
     // G C
-    load(                                  [1,20,1,STATIC  ,0,F,NN],
-                                           [1,21,1,STATIC  ,0,F,NN],
-         [0,22,N,GARBAGE ,0,F,[STATIC,5]], [1,22,1,STATIC  ,0,F,NN])
+    load(                                        [1,20,1,STATIC  ,0,F,NN],
+                                                 [1,21,1,STATIC  ,0,F,NN],
+         [0,22,N,GARBAGE ,0,F,[STATIC,5,COMBO]], [1,22,1,STATIC  ,0,F,NN])
     //################################################################
     playfield.update()
     playfield.update()
-    chec(                                  [1,20,1,CLEAR ,89,1,NN],
-                                           [1,21,1,CLEAR ,89,1,NN],
-         [0,22,R,GARBAGE ,42,F,[CLEAR,5]], [1,22,1,CLEAR ,89,1,NN])
+    chec(                                        [1,20,1,CLEAR ,89,1,NN],
+                                                 [1,21,1,CLEAR ,89,1,NN],
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]], [1,22,1,CLEAR ,89,1,NN])
   })
-  it('#clear_from_all_directions', function(){
+  it('should clear garbage touching in all directions', function(){
     //   G
     //   C
     //   C
     // G C G
     // * G *
-    load(                                  [1,18,N,GARBAGE ,0,F,[STATIC,4]],
-                                           [1,19,1,STATIC  ,0,F,NN],
-                                           [1,20,1,STATIC  ,0,F,NN],
-         [0,21,N,GARBAGE ,0,F,[STATIC,1]], [1,21,1,STATIC  ,0,F,NN]        , [2,21,N,GARBAGE ,0,F,[STATIC,3]],
-         [0,22,1,STATIC  ,0,F,NN]        , [1,22,N,GARBAGE ,0,F,[STATIC,2]], [2,22,1,STATIC  ,0,F,NN])
+    load(                                        [1,18,N,GARBAGE ,0,F,[STATIC,4,COMBO]],
+                                                 [1,19,1,STATIC  ,0,F,NN],
+                                                 [1,20,1,STATIC  ,0,F,NN],
+         [0,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]], [1,21,1,STATIC  ,0,F,NN],               [2,21,N,GARBAGE ,0,F,[STATIC,3,COMBO]],
+         [0,22,1,STATIC  ,0,F,NN]              , [1,22,N,GARBAGE ,0,F,[STATIC,2,COMBO]], [2,22,1,STATIC  ,0,F,NN])
     //################################################################
     playfield.update()
     playfield.update()
-    chec(                                  [1,18,R,GARBAGE ,42,F,[CLEAR,4]],
-                                           [1,19,1,CLEAR   ,89,1,NN],
-                                           [1,20,1,CLEAR   ,89,1,NN],
-         [0,21,R,GARBAGE ,42,F,[CLEAR,1]], [1,21,1,CLEAR   ,89,1,NN]       , [2,21,R,GARBAGE ,42,F,[CLEAR,3]],
-         [0,22,1,STATIC  ,0,F,NN]        , [1,22,R,GARBAGE ,42,F,[CLEAR,2]], [2,22,1,STATIC  ,0,F,NN])
+    chec(                                        [1,18,R,GARBAGE ,78,F,[CLEAR,4,COMBO]],
+                                                 [1,19,1,CLEAR   ,89,1,NN],
+                                                 [1,20,1,CLEAR   ,89,1,NN],
+         [0,21,R,GARBAGE ,78,F,[CLEAR,1,COMBO]], [1,21,1,CLEAR   ,89,1,NN]             , [2,21,R,GARBAGE ,78,F,[CLEAR,3,COMBO]],
+         [0,22,1,STATIC  ,0,F,NN]              , [1,22,R,GARBAGE ,78,F,[CLEAR,2,COMBO]], [2,22,1,STATIC  ,0,F,NN])
+  })
+
+  it('should clear all combo garbage thats touching and interconnected', function(){
+    // G2 G2 G2
+    // G1 G1 G1
+    // 1  1  1
+    load([0,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]], [1,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]], [2,20,N,GARBAGE ,0,F,[STATIC,2,COMBO]],
+         [0,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]], [1,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]], [2,21,N,GARBAGE ,0,F,[STATIC,1,COMBO]],
+         [0,22,1,STATIC  ,0,F,NN]        , [1,22,1,STATIC  ,0,F,NN]        , [2,22,1,STATIC  ,0,F,NN])
+    //################################################################
+    playfield.update()
+    playfield.update()
+    chec([0,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]], [1,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]], [2,20,R,GARBAGE ,102,F,[CLEAR,2,COMBO]],
+         [0,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]], [1,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]], [2,21,R,GARBAGE ,102,F,[CLEAR,1,COMBO]],
+         [0,22,1,CLEAR,89,1,NN]                 , [1,22,1,CLEAR  ,89,1,NN]               , [2,22,1,CLEAR  ,89,1,NN])
   })
 }) //klass

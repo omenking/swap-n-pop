@@ -29,7 +29,7 @@ class ComponentPanelBlank{
     this.support           = true
     this.empty             = false
     this.hidden            = true
-    this.garbage           = null
+    this.garbage           = { 'group': -1, 'state': null, 'kind': null }
     this.chain             = null
   }
 

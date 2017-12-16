@@ -1,12 +1,16 @@
 import game from 'core/game'
-import { GARBAGE } from 'core/data';
+import { 
+  GARBAGE,
+  CHAIN,
+  COMBO
+} from 'core/data';
 
-export default class ComponentGarbage {
+export default class CoreGarbage {
   private stage     : any
   private pi        : number
   private queue     : Array<any>
   private alternate : Array<any>
-  private left : boolean
+  private left      : boolean
 
   create(stage, pi){
     this.stage = stage
@@ -90,45 +94,45 @@ export default class ComponentGarbage {
       let o
       if (v.combo === 4) {
         o = this.alt(3) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
       } else if (v.combo === 5){
         o = this.alt(4) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
       } else if (v.combo === 6){
         o = this.alt(5) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
       } else if (v.combo === 7){
         o = this.alt(6) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
       } else if (v.combo === 8){
         o = this.alt(7) //offset
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
 
-        playfield.stack_i(o+0).set_garbage(this.stage.tick)
-        playfield.stack_i(o+1).set_garbage(this.stage.tick)
-        playfield.stack_i(o+2).set_garbage(this.stage.tick)
-        playfield.stack_i(o+3).set_garbage(this.stage.tick)
-        playfield.stack_i(o+4).set_garbage(this.stage.tick)
-        playfield.stack_i(o+5).set_garbage(this.stage.tick)
+        playfield.stack_i(o+0).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+1).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+2).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+3).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+4).set_garbage(this.stage.tick,COMBO)
+        playfield.stack_i(o+5).set_garbage(this.stage.tick,COMBO)
       } else if (v.combo === 9){
       } else if (v.combo === 10){
       } else if (v.combo === 11){

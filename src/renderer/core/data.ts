@@ -22,6 +22,10 @@ export const CLEAR = Symbol('clear');
 export const POPPING = Symbol('popping');
 export const GARBAGE = Symbol('garbage');
 
+// Garbage Kinds
+export const COMBO = Symbol('combo');
+export const CHAIN = Symbol('chain');
+
 // Animation Frame
 export const FRAME_LAND = [4, 4, 4, 2, 2, 2, 3, 3, 3, 0];
 export const FRAME_CLEAR = [5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
