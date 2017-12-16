@@ -60,35 +60,31 @@ export default class CoreGarbage {
 
   push(combo,chain) {
     const delay = 20
-    this.queue.push({
-      counter: delay,
-      combo  : combo,
-      chain  : chain
-    })
-
+    if (chain >= 2) { this.queue.push({kind: CHAIN, size: chain, counter: delay}) }
+    if (combo >= 4) { this.queue.push({kind: COMBO, size: combo, counter: delay}) }
     // send out character animation before the 20frames delay
-    if (combo > 3) {
-      if (this.pi === 0)
-        this.stage.playfield0.character.current_animation = "attack"
-      else if (this.pi === 1)
-        this.stage.playfield1.character.current_animation = "attack"
-    }
+    this.my_playfield.character.current_animation = "attack"
   }
 
   /*
    * ensure there is one visible row to ensure there is
    * room to drop garbage
    */
- empty_row(playfield){
-    return playfield.stack_i(0).empty &&
-           playfield.stack_i(1).empty &&
-           playfield.stack_i(2).empty &&
-           playfield.stack_i(3).empty &&
-           playfield.stack_i(4).empty &&
-           playfield.stack_i(5).empty
-  }
+   empty_row(playfield){
+      return playfield.stack_i(0).empty &&
+             playfield.stack_i(1).empty &&
+             playfield.stack_i(2).empty &&
+             playfield.stack_i(3).empty &&
+             playfield.stack_i(4).empty &&
+             playfield.stack_i(5).empty
+    }
 
-  get playfield(){
+
+  get my_playfield(){
+    if (this.pi === 0) { return this.stage.playfield0 }
+    else               { return this.stage.playfield1 }
+  }
+  get other_playfield(){
     if (this.pi === 0) { return this.stage.playfield1 }
     else               { return this.stage.playfield0 }
   }
@@ -113,38 +109,46 @@ export default class CoreGarbage {
   }
 
   shift() {
-    const pl = this.playfield
+    const pl = this.other_playfield
     if (!this.empty_row(pl)) { return }
     this.left = !this.left
-    const v   = this.queue.shift()
+    const v = this.queue.shift()
 
     // if garbage sent after delay - play attacked on the playfield chosen
-    if (v.combo > 3)
-      pl.character.current_animation = "attacked"
+    if (v.kind === COMBO){
+      if (v.size >= 4)
+        pl.character.current_animation = "attacked"
 
-    if (v.chain >= 2) {
-      const height =  Math.min(v.chain-1,12)
-      this.generate(pl,1,height,CHAIN,v.chain) // CHAINx6
-    }
+      if (v.size >= 4 && v.size <= 7) {
+        this.generate(pl,1,v.size-1,COMBO,v.size) // 1xCOMBO
+      } else if (v.size === 8){
+        this.generate(pl,1,3,COMBO,v.size)
+        this.generate(pl,1,4,COMBO,v.size)
+      } else if (v.size === 9){
+        this.generate(pl,1,4,COMBO,v.size)
+        this.generate(pl,1,5,COMBO,v.size)
+      } else if (v.size === 10){
+        this.generate(pl,1,5,COMBO,v.size)
+        this.generate(pl,1,5,COMBO,v.size)
+      } else if (v.size === 11){
+        this.generate(pl,1,6,COMBO,v.size)
+        this.generate(pl,1,6,COMBO,v.size)
+      } else if (v.size >= 12){
+        this.generate(pl,1,6,COMBO,v.size)
+        this.generate(pl,1,6,COMBO,v.size)
+        this.generate(pl,1,6,COMBO,v.size)
+      }
 
-    if (v.combo >= 4 && v.combo <= 7) {
-      this.generate(pl,1,v.combo-1,COMBO,v.combo) // 1xCOMBO
-    } else if (v.combo === 8){
-      this.generate(pl,1,3,COMBO,7)
-      this.generate(pl,1,4,COMBO,7)
-    } else if (v.combo === 9){
-      this.generate(pl,1,4,COMBO,9)
-      this.generate(pl,1,5,COMBO,9)
-    } else if (v.combo === 10){
-      this.generate(pl,1,5,COMBO,10)
-      this.generate(pl,1,5,COMBO,10)
-    } else if (v.combo === 11){
-      this.generate(pl,1,6,COMBO,11)
-      this.generate(pl,1,6,COMBO,11)
-    } else if (v.combo >= 12){
-      this.generate(pl,1,6,COMBO,11)
-      this.generate(pl,1,6,COMBO,11)
-      this.generate(pl,1,6,COMBO,11)
+    } else if (v.kind === CHAIN){
+      if (v.size >= 2)
+        pl.character.current_animation = "attacked"
+
+      if (v.size >= 2) {
+        const height =  Math.min(v.size-1,12)
+        this.generate(pl,height,6,CHAIN,v.size) // CHAINx6
+      }
     }
-  }
+  } // shift
+
+
 }
