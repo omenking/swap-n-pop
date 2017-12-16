@@ -108,7 +108,6 @@ export default class CoreGarbage {
     for(let w = 0; w < width; w++){
       for(let h = 0; h < height; h++){
         playfield.stack_xy(w+o,h).set_garbage(this.stage.tick,kind)
-
       }
     }
   }
