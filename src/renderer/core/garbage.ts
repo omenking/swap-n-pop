@@ -145,7 +145,7 @@ export default class CoreGarbage {
 
       if (v.size >= 2) {
         const height =  Math.min(v.size-1,12)
-        this.generate(pl,1,height,CHAIN,v.size) // CHAINx6
+        this.generate(pl,height,6,CHAIN,v.size) // CHAINx6
       }
     }
   } // shift
