@@ -1,4 +1,7 @@
+import Store from 'common/store'
 import game from 'core/game'
+
+const store = new Store()
 
 /**
  * Sounds class thats attached to the game itself,
@@ -50,6 +53,13 @@ export default class CoreSounds {
 
     this.sfx_blip  = game.add.audio('sfx_countdown_blip')
     this.sfx_ding  = game.add.audio('sfx_countdown_ding')
+  
+    let audio_settings = store.get("audio");
+    if (audio_settings !== undefined) {
+      this.set_sfx_volume(audio_settings[0]);
+      this.set_msx_volume(audio_settings[1]);
+      this.mute_all(audio_settings[2]);
+    }
   } 
 
   /**
