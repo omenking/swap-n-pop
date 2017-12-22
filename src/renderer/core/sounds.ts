@@ -64,9 +64,11 @@ export default class CoreSounds {
 
   /**
    * Sets all current sfx files to the volume amount passed in
-   * @param {integer} decimal_volume from 0.0 to 1.0
+   * @param {integer} volume from 0 to 100
    */
-  set_sfx_volume(decimal_volume) {
+  set_sfx_volume(volume) {
+    let decimal_volume = volume * 0.01
+
     this.sfx_land.forEach(sfx => sfx.volume = decimal_volume)
     this.sfx_pop.forEach(sfx => sfx.volume = decimal_volume)
     this.sfx_confirm.volume = decimal_volume
@@ -77,9 +79,11 @@ export default class CoreSounds {
 
   /**
    * Sets all current msx files to the volume amount passed in
-   * @param {integer} decimal_volume from 0.0 to 1.0
+   * @param {integer} volume from 0 to 100
    */
-  set_msx_volume(decimal_volume) {
+  set_msx_volume(volume) {
+    let decimal_volume = volume * 0.01
+
     this.msx_stage_results.volume  = decimal_volume
     this.msx_stage.volume          = decimal_volume
     this.msx_stage_critical.volume = decimal_volume
