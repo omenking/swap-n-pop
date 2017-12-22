@@ -1,3 +1,4 @@
+import game from 'core/game'
 /**
  * Common base class for all states.
  */
@@ -10,7 +11,7 @@ export default abstract class State {
 
   init(data: any) {}
   create() {}
+  shutdown() {}
   update() {}
   render() {}
-  shutdown() {}
 }
