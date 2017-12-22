@@ -1,6 +1,7 @@
 import { ipcRenderer as ipc } from 'electron';
-import ui               from 'ui/main'
-import game             from 'core/game'
+import ui   from 'ui/main'
+import game from 'core/game'
+import fade from 'core/fade'
 
 import BootState from './states/boot';
 import ConnectState from './states/connect';
@@ -33,10 +34,12 @@ stateClasses.forEach(stateClass => {
 game.state.start('boot')
 
 ipc.on('play-vs', (event, {seed,online,cpu}) => {
-  game.state.start('mode_vs',true,false, {
-    seed:   seed,
-    online: online,
-    cpu:    cpu
+  fade.out(function(){
+    game.state.start('mode_vs',true,false, {
+      seed:   seed,
+      online: online,
+      cpu:    cpu
+    })
   })
 })
 

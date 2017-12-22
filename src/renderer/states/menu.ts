@@ -1,5 +1,6 @@
 import game          from 'core/game'
 import controls      from 'core/controls'
+import fade          from 'core/fade'
 import ComponentMenu from 'components/menu'
 import State from './base';
 
@@ -11,7 +12,7 @@ export default class MenuState extends State {
   private bg : Phaser.TileSprite
 
   constructor() {
-    super();
+    super()
     this.menu   = new ComponentMenu();
   }
 
@@ -23,6 +24,7 @@ export default class MenuState extends State {
   create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green');
     this.menu.create();
+    fade.in()
   }
 
   /** controls & and menu are updated to move around,

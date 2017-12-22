@@ -1,4 +1,5 @@
 import game    from 'core/game'
+import fade    from 'core/fade'
 import ComponentMenuPauseCursor from 'components/menu_pause_cursor'
 import ModeVs from 'states/mode_vs'
 import { px } from 'core/filters';
@@ -42,7 +43,10 @@ export default class ComponentPauseMenu {
 
   /** leave the game */
   cancel() {
-    game.state.start('menu');
+    fade.out(function(){
+      game.state.start('menu');
+    })
+
   }
 
   /** called through cursor, unpauses the menu and turns of the sprite again

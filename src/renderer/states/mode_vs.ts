@@ -12,6 +12,7 @@ import ComponentDebugFrame  from 'components/debug_frame'
 import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
+import fade                 from 'core/fade'
 import { COLS, ROWS } from 'core/data';
 import { px } from 'core/filters';
 
@@ -147,6 +148,7 @@ export default class ModeVs extends CoreStage {
 
     this.menu_pause.create(this)
     this.star_counter.create(this,px(91),px(91))
+    fade.in()
   }
 
   /** turns on the menu, changes it state, turns of the timer from counting */
@@ -358,6 +360,7 @@ export default class ModeVs extends CoreStage {
     this.star_counter.render()
   }
   shutdown() {
+    fade.out(function(){})
     console.log('shutdown mode_vs')
     game.sounds.stage_music('none')
     this.playfield0.shutdown()
