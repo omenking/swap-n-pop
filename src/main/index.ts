@@ -39,7 +39,10 @@ if (!store.has('inputs')){
   null, //p0_b
   null, //p0_l
   null, //p0_r
-  null  //p0_start
+  null, //p0_start
+
+  null, //sim_toggle
+  null  //sim_forward
   ])
 }
 const template : any = [

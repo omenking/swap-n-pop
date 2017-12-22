@@ -46,7 +46,8 @@ export default class ComponentMenuPauseCursor {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       a    : this.confirm.bind(this),
-      start: this.confirm.bind(this)
+      start: this.confirm.bind(this),
+      right: this.right.bind(this)
     }
     );
   }
@@ -57,6 +58,11 @@ export default class ComponentMenuPauseCursor {
 
     game.sounds.confirm();
     return this.menu_items[this.index]();
+  }
+
+  right(tick){
+    if (tick > 0)
+      return;
   }
 
   up(tick) {

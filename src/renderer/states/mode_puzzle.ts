@@ -9,6 +9,13 @@ import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
 import ComponentStepCounter from 'components/step_counter'
 
+import {
+  STARTING,
+  RUNNING,
+  PAUSE,
+  GAMEOVER
+} from 'core/data';
+
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {
   private playfield0    : ComponentPlayfield
@@ -94,7 +101,7 @@ export default class ModePuzzle extends CoreStage {
   pause() {
     game.sounds.stage_music('pause');
 
-    this.state = "pause";
+    this.state = PAUSE;
     this.timer.running = false;
     this.menu_pause.pause();
   }
@@ -103,7 +110,7 @@ export default class ModePuzzle extends CoreStage {
   resume() {
     game.sounds.stage_music('resume');
 
-    this.state = "running";
+    this.state = RUNNING
     this.timer.running = true;
     this.playfield0.cursor.map_controls()
   }

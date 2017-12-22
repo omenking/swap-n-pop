@@ -93,6 +93,7 @@ form {
   text-shadow: 1px 1px #000000;
 }
 .p0 table { margin-right: 16px; }
+.p1 table { margin-right: 16px; }
 .text_field        { margin-bottom: 16px; }
 .text_field .lbl,
 .text_field label { 
