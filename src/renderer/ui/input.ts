@@ -73,6 +73,13 @@ function render(){
      textfield(16,'R'),
      textfield(17,'Start')
     ])),
+
+    m('.simulate',
+     m('.title','Simulation'),
+     m('table',[
+     textfield(18,'Stop/Play'),
+     textfield(19,'Step Forward')
+    ])),
    m('.clear')
  ])
 }

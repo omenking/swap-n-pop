@@ -6,6 +6,7 @@ import CoreInputs           from 'core/inputs'
 import CoreSnapshots        from 'core/snapshots'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
+import CountdownState       from 'core/countdown_state'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
 import ComponentDebugFrame  from 'components/debug_frame'
@@ -13,8 +14,17 @@ import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
 import fade                 from 'core/fade'
-import { COLS, ROWS } from 'core/data';
-import { px } from 'core/filters';
+import { px } from 'core/filters'
+import {
+  COLS,
+  ROWS,
+  STARTING,
+  RUNNING,
+  PAUSE,
+  GAMEOVER,
+  DONE
+} from 'core/data'
+
 
 const {ipcRenderer: ipc} = electron
 
@@ -42,6 +52,7 @@ export default class ModeVs extends CoreStage {
   private _cpu            : Array<any>
   private frame           : Phaser.Sprite
   private controls        : any
+  private _countdown      : CountdownState
 
   constructor() {
     super()
@@ -53,6 +64,7 @@ export default class ModeVs extends CoreStage {
 
     this.menu_pause   = new ComponentMenuPause()
     this.star_counter = new ComponentStarCounter()
+    this.countdown    = new CountdownState()
   }
 
   get name(): string {
@@ -109,6 +121,9 @@ export default class ModeVs extends CoreStage {
   get cpu (){  return this._cpu }
   set cpu (v){ this._cpu = v }
 
+  get countdown (){  return this._countdown }
+  set countdown (v) { this._countdown = v }
+
   create_bg() {
     this.bg = game.add.sprite(0,0, 'playfield_vs_bg');
   }
@@ -116,10 +131,11 @@ export default class ModeVs extends CoreStage {
     this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
   }
   create() {
+    this.state = STARTING
     ipc.send('log',`VS ${this.seed} ------------------------------`)
     this.danger = false
 
-    const offset = px(55);
+    const offset = px(55)
     this.create_bg()
 
     const stack = new Stack(this.rng);
@@ -134,6 +150,7 @@ export default class ModeVs extends CoreStage {
     }
 
     this.create_frame(offset)
+    this.countdown.create(true,this.playfield_cursor_entrance.bind(this))
     this.playfield0.create_after()
     this.playfield1.create_after()
     this.timer.create(offset+px(128),px(168));
@@ -151,11 +168,16 @@ export default class ModeVs extends CoreStage {
     fade.in()
   }
 
+  playfield_cursor_entrance(){
+    this.playfield0.cursor.entrance()
+    this.playfield1.cursor.entrance()
+  }
+
   /** turns on the menu, changes it state, turns of the timer from counting */
   pause() {
     game.sounds.stage_music('pause');
 
-    this.state = "pause";
+    this.state = PAUSE;
     this.timer.running = false;
     this.menu_pause.pause();
   }
@@ -167,7 +189,7 @@ export default class ModeVs extends CoreStage {
         this.playfield1.countdown.state === null) {
       game.sounds.stage_music('resume');
 
-      this.state = "running";
+      this.state = RUNNING;
       this.timer.running = true;
     }
 
@@ -224,7 +246,7 @@ export default class ModeVs extends CoreStage {
     }
     this.roll = {ready: false, from: null, to: null}
   }
-  update() {
+  log_stack_setup(){
     this.roll_log_heading = []
     this.roll_log_data    = []
     this.log_stack(this.tick,'start')
@@ -235,16 +257,38 @@ export default class ModeVs extends CoreStage {
       )
       this.roll_to(this.roll.from,this.roll.to)
     }
+  }
+  update() {
+    this.log_stack_setup()
     this.step(false)
     this.log_stack(this.tick,'end')
-
-    //ipc.send(
-      //'log',
-      //`ST ${this.tick}: ${this.log_roll()}`
-    //)
-
+    switch (this.state){
+      case STARTING:
+        this.start_execute()
+        break;
+      case RUNNING:
+        break;
+      case PAUSE:
+        break;
+      case GAMEOVER:
+        break;
+    }
     this.menu_pause.update()
     this.star_counter.update()
+  }
+
+  start_execute(){
+    this.countdown.update()
+    if (this.countdown.state === DONE){ 
+      if (this.timer)
+        this.timer.running = true
+      this.state = RUNNING
+      game.sounds.ding()
+      if (this.cpu[1] === true || this.online === false){
+        this.playfield0.cursor.map_controls()
+      }
+      game.sounds.stage_music('active')
+    }
   }
 
   log_stack(tick,format=null) {
@@ -320,8 +364,14 @@ export default class ModeVs extends CoreStage {
     return str
   }
 
+  /*
+   * @param {number|false|force} tick
+   *  * number - used for playing a previous frame
+   *  * false  - play the current frame
+   *  * force  - force to play the next frame
+   */
   step(tick) {
-    if (tick === false) {
+    if (tick === false || tick === 'force') {
       this.tick++
     }
     // we need to swap the playfield update order for

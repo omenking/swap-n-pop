@@ -39,7 +39,9 @@ class CoreControls {
       pl1_b     : function(){},
       pl1_l     : function(){},
       pl1_r     : function(){},
-      pl1_start : function(){}
+      pl1_start : function(){},
+      sim_toggle  : function(){},
+      sim_forward : function(){}
     }
 
     game.input.gamepad.start()
@@ -63,7 +65,9 @@ class CoreControls {
       pl1_b     : false,
       pl1_l     : false,
       pl1_r     : false,
-      pl1_start : false
+      pl1_start : false,
+      sim_toggle  : false,
+      sim_forward : false
     } //simulated down
     this._down = {}
     this.keys  = {}
@@ -120,6 +124,8 @@ class CoreControls {
     this.keys.pl1_r     = this.add_input(inputs[16])
     this.keys.pl1_start = this.add_input(inputs[17])
     //global binding
+    this.keys.sim_toggle  = this.add_input(inputs[18])
+    this.keys.sim_forward = this.add_input(inputs[19])
 
     // AB - This should work but refuses to do so.
     //const key = game.input.keyboard.addKey(Phaser.Keyboard.ESC)

@@ -20,7 +20,11 @@ import {
   UNIT,
   TIME_PUSH,
   STOPTIME,
-  GARBAGE_SHAKE
+  GARBAGE_SHAKE,
+  STARTING,
+  RUNNING,
+  PAUSE,
+  GAMEOVER
 } from 'core/data';
 
 export default class Playfield {
@@ -42,7 +46,6 @@ export default class Playfield {
   public  character  : ComponentCharacter
 
   public  should_push      : boolean
-  public  should_countdown : boolean
   private height : number
   private width : number
   public x : number
@@ -148,8 +151,7 @@ export default class Playfield {
 
 
     this.stage            = stage
-    this.should_push      = opts.push      || false
-    this.should_countdown = opts.countdown || false
+    this.should_push      = opts.push || false
 
     this.height = (ROWS+1) * UNIT
     this.width  = COLS     * UNIT
@@ -241,7 +243,7 @@ export default class Playfield {
   }
 
   game_over() {
-    this.stage.state = 'gameover'
+    this.stage.state = GAMEOVER
     this.push_counter = 0
   }
 
@@ -431,6 +433,7 @@ export default class Playfield {
     }
   }
   render() {
+    this.countdown.render()
     this.cursor.render()
     this.wall.render()
     this.render_stack()
@@ -452,52 +455,57 @@ export default class Playfield {
       this.layer_cursor.y = y + shake
     }
   }
-  update() {
-    this.countdown.update()
-    this.cursor.update()
 
-    //this.score_lbl.update(this.chain, this.score)
-    let danger = null
-    if (this.stage.state === 'running'){
-      danger = this.danger(0)
-      if (danger && this.push_counter <= 0) {
-        this.stoptime--
-        this.character.current_animation = "losing"
-        console.log('stoptime',this.stoptime)
-        if (this.stoptime <= 0){
-          this.stage.game_over(this.pi)
-        }
-      } else {
-        this.stoptime = STOPTIME
+  update_stoptime(){
+    if (this.stage.state !== RUNNING){ return }
+    if (this.danger(0) && this.push_counter <= 0) {
+      this.stoptime--
+      this.character.current_animation = "losing"
+      console.log('stoptime',this.stoptime)
+      if (this.stoptime <= 0){
+        this.stage.game_over(this.pi)
       }
+    } else {
+      this.stoptime = STOPTIME
     }
+  }
+  update() {
+    switch (this.stage.state){
+      case STARTING:
+        this.cursor.update()
+        break;
+      case RUNNING:
+        this.cursor.update()
+        this.update_stoptime()
 
-    if (this.stage.state === 'gameover') {
-      this.wall.update()
-    }
-    if (this.stage.state !== 'running') { return; }
+        if (this.counter > 0) { this.counter-- }
+        this.update_push(this.danger(0))
+        this.clearing         = []
+        this.clearing_garbage = []
 
-    if (this.counter > 0) { this.counter-- }
-    this.update_push(danger)
-    this.clearing         = []
-    this.clearing_garbage = []
+        this.update_stack()
+        if (this.has_ai) { this.ai.update() }
+        // combo n chain
+        const cnc = this.chain_and_combo()
+        if (cnc[1] > 1)
+          this.character.current_animation = "charge"
 
-    this.update_stack()
-    if (this.has_ai) { this.ai.update() }
-    // combo n chain
-    const cnc = this.chain_and_combo()
-    if (cnc[1] > 1)
-      this.character.current_animation = "charge"
+        if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
+          this.update_garbage_clearing()
+          this.garbage.update(cnc[0],cnc[1])
+        }
+        this.update_score(cnc[0],cnc[1])
 
-    if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
-      this.update_garbage_clearing()
-      this.garbage.update(cnc[0],cnc[1])
-    }
-    this.update_score(cnc[0],cnc[1])
-
-    if (this.land === true) {
-      game.sounds.land()
-      this.land = false
+        if (this.land === true) {
+          game.sounds.land()
+          this.land = false
+        }
+        break;
+      case PAUSE:
+        break;
+      case GAMEOVER:
+        this.wall.update()
+        break;
     }
   }
 

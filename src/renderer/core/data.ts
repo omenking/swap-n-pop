@@ -21,6 +21,18 @@ export const SWAPPING_R = Symbol('swaping_r');
 export const CLEAR = Symbol('clear');
 export const POPPING = Symbol('popping');
 export const GARBAGE = Symbol('garbage');
+// STAGE States
+export const STARTING = Symbol('starting');
+export const RUNNING  = Symbol('running');
+export const PAUSE    = Symbol('pause');
+export const GAMEOVER = Symbol('gameover');
+
+// COUNTDOWN States
+export const MOVING = Symbol('moving')
+export const COUNT3 = Symbol('3')
+export const COUNT2 = Symbol('2')
+export const COUNT1 = Symbol('1')
+export const DONE   = Symbol('done')
 
 // Garbage Kinds
 export const COMBO = Symbol('combo');

@@ -8,8 +8,13 @@ import {
   ROWS_VIS,
   ROWS,
   UNIT,
-  STARTPOS_PANELCURSOR_SPEED
+  STARTPOS_PANELCURSOR_SPEED,
+  RUNNING,
+  STARTING,
+  MOVING
 } from 'core/data';
+
+
 
 export default class ComponentPlayfieldCursor {
   public cursor_swap_history : Array<any>
@@ -48,7 +53,7 @@ export default class ComponentPlayfieldCursor {
 
     let x,y, visible
 
-    if(this.playfield.should_countdown){
+    if(this.playfield.stage.countdown.state === MOVING){
       x = ((COLS-2)*UNIT) - this.offset
       y = 0               - this.offset
       visible = false
@@ -201,9 +206,7 @@ export default class ComponentPlayfieldCursor {
    * @param {integer} tick increasing counter
    */
   swap(tick) {
-    if (tick > 0 ||
-        this.playfield.stage.state !== 'running' ||
-        this.state !== 'active')
+    if (tick > 0 || this.playfield.stage.state !== RUNNING)
       return;
 
     if (this.playfield.swap(this.x, this.y))
@@ -258,25 +261,30 @@ export default class ComponentPlayfieldCursor {
     let x = (this.x * UNIT) - this.offset;
     let y = (ROWS_INV * UNIT) + (this.y * UNIT) - this.offset;
 
-    if (this.state === 'entering' || this.state === 'preactive') {
+    if (['entering','preactive'].includes(this.state)) {
       this.counter_flicker++;
-
       if (this.counter_flicker > 1)
         this.counter_flicker = 0;
     }
   }
 
+  get stage(){
+    return this.playfield.stage
+  }
+
+  render_visible(){
+    if (this.stage.state === STARTING) {
+      this.sprite.visible = this.counter_flicker === 1
+    } else {
+      this.sprite.visible = true
+    }
+  }
   /** updates the actual sprite position, almost the same as update() */
   render() {
     let x = (this.x * UNIT) - this.offset
     let y = (this.y * UNIT) - this.offset
 
-    if ((this.state === 'entering') ||
-        (this.state === 'preactive')) {
-      if (this.counter_flicker === 1) {
-        this.sprite.visible = !this.sprite.visible
-      }
-    }
+    this.render_visible()
     switch (this.state) {
       case 'entering':
         // increases by STARTPOS_PANELCURSOR_SPEED until y is reached, then sets it to y
@@ -292,7 +300,12 @@ export default class ComponentPlayfieldCursor {
         }
 
         break;
-      case 'preactive': case 'active':
+      case 'preactive':
+        this.sprite.x = x;
+        this.sprite.y = y;
+        break;
+      case 'active':
+        this.sprite.visible = true
         this.sprite.x = x;
         this.sprite.y = y;
         break;
