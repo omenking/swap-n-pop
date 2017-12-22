@@ -76,6 +76,7 @@ export const WIN_HEIGHT = 224 * 2;
 export const MENUCURSORBLINK = 12;
 
 export const STARTPOS_PANELCURSOR_SPEED = 6;
+export const PLAYFIELD_CURSOR_SPEED = 10;
 
 export const GARBAGE_SHAKE = [
   [
