@@ -5,12 +5,12 @@ import Ui     from 'ui/mode'
 import Store  from 'common/store'
 
 const store = new Store()
-let audio_settings = store.get("audio")
 
 let audio_sfx_volume: number = 100
 let audio_msx_volume: number = 100
 let muted: boolean = false
 
+let audio_settings = store.get("audio")
 if (audio_settings !== undefined) {
   audio_sfx_volume = audio_settings[0]
   audio_msx_volume = audio_settings[1]
@@ -36,7 +36,7 @@ export default function render() {
 
         oninput: function(e){
           audio_sfx_volume = e.target.value
-          game.sounds.set_sfx_volume(audio_sfx_volume * 0.01)
+          game.sounds.set_sfx_volume(audio_sfx_volume)
         }
       }),
       m('.val',[
@@ -61,7 +61,7 @@ export default function render() {
 
         oninput: function(e){
           audio_msx_volume = e.target.value
-          game.sounds.set_msx_volume(audio_msx_volume * 0.01)
+          game.sounds.set_msx_volume(audio_msx_volume)
         },
       }),
       m('.val',[
