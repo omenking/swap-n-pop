@@ -11,10 +11,9 @@ import {
   STARTPOS_PANELCURSOR_SPEED,
   RUNNING,
   STARTING,
-  MOVING
+  MOVING,
+  PLAYFIELD_CURSOR_SPEED
 } from 'core/data';
-
-
 
 export default class ComponentPlayfieldCursor {
   public cursor_swap_history : Array<any>
@@ -132,7 +131,7 @@ export default class ComponentPlayfieldCursor {
     if (tick == 0)
       this.ignore = false;
 
-    if (tick > 15)
+    if (tick > PLAYFIELD_CURSOR_SPEED)
       this.ignore = true;
 
     return this.ignore || tick == 0;
