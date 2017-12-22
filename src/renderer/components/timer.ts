@@ -50,13 +50,16 @@ export default class ComponentTimer {
     this.running = false;
   }
 
+  update(){
+    if (!this.running)
+      return;
+    this.tick++;
+  }
   /** Sets the Sprite Frames of each Digit to a Counter,
    *  Each counter goes up determined by the time passed etc.
    *  everything is stoppable through this.running
    */
   render() {
-    if (!this.running)
-      return;
     const time = Math.floor(this.tick / 60);
     if (time > 0){
       const minutes = Math.floor(time / 60);
@@ -75,8 +78,6 @@ export default class ComponentTimer {
         this.d2.frame = parseInt(`${seconds}`.charAt(1));
       }
     }
-
-    this.tick++;
   }
 
 }

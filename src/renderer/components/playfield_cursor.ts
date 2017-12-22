@@ -65,8 +65,6 @@ export default class ComponentPlayfieldCursor {
       this.map_controls()
     }
     this.sprite = game.make.sprite(x, y, 'playfield_cursor', 0);
-    this.sprite.animations.add('idle', [0,1]);
-    this.sprite.animations.play('idle', Math.round(game.time.desiredFps / 10), true);
     this.sprite.visible = visible;
 
     this.playfield.layer_cursor.add(this.sprite);
@@ -272,6 +270,10 @@ export default class ComponentPlayfieldCursor {
     return this.playfield.stage
   }
 
+  get frame(){
+    return Math.floor(this.playfield.stage.tick / 12) % 2
+  }
+
   render_visible(){
     if (this.stage.state === STARTING) {
       this.sprite.visible = this.counter_flicker === 1
@@ -305,11 +307,11 @@ export default class ComponentPlayfieldCursor {
         this.sprite.y = y;
         break;
       case 'active':
-        this.sprite.visible = true
         this.sprite.x = x;
         this.sprite.y = y;
         break;
     }
+    this.sprite.frame = this.frame
   }
 
   /** empty */

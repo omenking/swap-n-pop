@@ -123,13 +123,9 @@ class CoreControls {
     this.keys.pl1_l     = this.add_input(inputs[15])
     this.keys.pl1_r     = this.add_input(inputs[16])
     this.keys.pl1_start = this.add_input(inputs[17])
-    //global binding
+    //global bindings
     this.keys.sim_toggle  = this.add_input(inputs[18])
     this.keys.sim_forward = this.add_input(inputs[19])
-
-    // AB - This should work but refuses to do so.
-    //const key = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
-    //key.onDown.add(this.toggle_menu,this)
   }
   toggle_menu(){
     console.log('toggle menu')
@@ -169,6 +165,16 @@ class CoreControls {
   map_key(pi,key,opts){
     const fun = opts[key] ? opts[key] : function() {};
     this.callbacks[`pl${pi}_${key}`] = fun
+  }
+
+  map_global(opts){
+    const keys = "sim_toggle sim_forward".split(' ');
+    let fun = null
+    for (let key of keys) {
+      fun = opts[key] ? opts[key] : function() {};
+      this.callbacks[key] = fun
+    }
+
   }
   serialize(pi){
     var byte = 0x00
@@ -284,6 +290,9 @@ class CoreControls {
       ,this._simdown.pl1_start
     ]]
   }
+  /*
+   * @param boolean sim - whether we are simulating or not
+   */
   check_down(sim,key){
     const input = this.keys[key]
     if(sim) {
@@ -315,6 +324,12 @@ class CoreControls {
       }
     }
   }
+  /*
+   * This update loop can get paused if the
+   * simulation is being pasued. Thats why wer have
+   * update_global so they are not affect if the update
+   * loop on the stage is being stopped
+   */
   update(sim0=false,sim1=false){
     this.update_pl(sim0,0)
     this.update_pl(sim1,1)
@@ -339,6 +354,15 @@ class CoreControls {
     if (this.check_down(sim,`pl${pi}_l`))    { this.trigger(`pl${pi}_l`)     } else { this._down[`pl${pi}_l`]     = 0 }
     if (this.check_down(sim,`pl${pi}_r`))    { this.trigger(`pl${pi}_r`)     } else { this._down[`pl${pi}_r`]     = 0 }
     if (this.check_down(sim,`pl${pi}_start`)){ this.trigger(`pl${pi}_start`) } else { this._down[`pl${pi}_start`] = 0 }
+  }
+  /*
+   * These are keys that don't depend on the game loop and can happen
+   * at anytime. Think sound / fullscreen / simulation controls
+   *
+   */
+  update_global(){
+    if (this.check_down(false,'sim_toggle' )){ this.trigger('sim_toggle')  } else { this._down.sim_toggle  = 0 }
+    if (this.check_down(false,'sim_forward')){ this.trigger('sim_forward') } else { this._down.sim_forward = 0 }
   }
 }
 const controls = new CoreControls()

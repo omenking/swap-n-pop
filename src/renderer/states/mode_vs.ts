@@ -26,6 +26,11 @@ import {
 } from 'core/data'
 
 
+declare var window: {
+  stage: any;
+};
+
+
 const {ipcRenderer: ipc} = electron
 
 export default class ModeVs extends CoreStage {
@@ -53,6 +58,7 @@ export default class ModeVs extends CoreStage {
   private frame           : Phaser.Sprite
   private controls        : any
   private _countdown      : CountdownState
+  private step_mode       : boolean
 
   constructor() {
     super()
@@ -72,6 +78,7 @@ export default class ModeVs extends CoreStage {
   }
 
   public init(data) {
+    this.step_mode = false
     this.rounds_won = [2,1]
     this.tick   = 0
     this.seed   = data.seed
@@ -112,6 +119,27 @@ export default class ModeVs extends CoreStage {
     this.controls.load(snapshot[4])
     this.timer.load(snapshot[5])
 
+  }
+
+  /*
+   * step forward only once, but if you're holding
+   * long engough step forward as normal
+   *
+   */
+  sim_forward(tick){
+    if (tick > 0 && tick < 30)
+      return;
+    this.step(false)
+  }
+
+  sim_toggle(tick){
+    if (tick > 0)
+      return;
+    this.step_mode = !this.step_mode
+    if (this.step_mode)
+      window.stage = this
+    else
+      window.stage = null
   }
 
 
@@ -166,6 +194,10 @@ export default class ModeVs extends CoreStage {
     this.menu_pause.create(this)
     this.star_counter.create(this,px(91),px(91))
     fade.in()
+    this.controls.map_global({
+      sim_forward: this.sim_forward.bind(this),
+      sim_toggle: this.sim_toggle.bind(this)
+    })
   }
 
   playfield_cursor_entrance(){
@@ -259,22 +291,12 @@ export default class ModeVs extends CoreStage {
     }
   }
   update() {
-    this.log_stack_setup()
-    this.step(false)
-    this.log_stack(this.tick,'end')
-    switch (this.state){
-      case STARTING:
-        this.start_execute()
-        break;
-      case RUNNING:
-        break;
-      case PAUSE:
-        break;
-      case GAMEOVER:
-        break;
+    if (this.step_mode === false){
+      //this.log_stack_setup()
+      this.step(false)
+      //this.log_stack(this.tick,'end')
     }
-    this.menu_pause.update()
-    this.star_counter.update()
+    this.controls.update_global()
   }
 
   start_execute(){
@@ -364,14 +386,8 @@ export default class ModeVs extends CoreStage {
     return str
   }
 
-  /*
-   * @param {number|false|force} tick
-   *  * number - used for playing a previous frame
-   *  * false  - play the current frame
-   *  * force  - force to play the next frame
-   */
   step(tick) {
-    if (tick === false || tick === 'force') {
+    if (tick === false) {
       this.tick++
     }
     // we need to swap the playfield update order for
@@ -394,6 +410,21 @@ export default class ModeVs extends CoreStage {
       this.controls.update(false,true)
       this.snapshots.snap(tick)
     }
+
+    switch (this.state){
+      case STARTING:
+        this.start_execute()
+        break;
+      case RUNNING:
+        break;
+      case PAUSE:
+        break;
+      case GAMEOVER:
+        break;
+    }
+    this.timer.update()
+    this.menu_pause.update()
+    this.star_counter.update()
   }
   render() {
     if(this.debug){
