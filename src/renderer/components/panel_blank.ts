@@ -39,6 +39,9 @@ class ComponentPanelBlank{
 
   clear(){
   }
+
+  change_state(state: any){
+  }
 }
 
 const blank = new ComponentPanelBlank()
