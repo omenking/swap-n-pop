@@ -11,11 +11,13 @@ class ComponentPanelBlank{
   public animation_state   : string
   public animation_counter : number
   public comboable         : boolean
-  public support           : boolean
-  public hidden            : boolean
+  public stable            : boolean
+  public static_stable       : boolean
+  public hidden_during_clear : boolean
   public empty             : boolean
   public garbage           : any
   public chain             : number
+  public swappable         : boolean
 
   constructor(){
     this.kind              = null
@@ -26,9 +28,11 @@ class ComponentPanelBlank{
     this.animation_state   = null
     this.animation_counter = 0
     this.comboable         = false
-    this.support           = true
     this.empty             = false
-    this.hidden            = true
+    this.swappable          = false
+    this.stable            = false
+    this.static_stable        = false
+    this.hidden_during_clear   = true
     this.garbage           = { 'group': -1, 'state': null, 'kind': null }
     this.chain             = null
   }

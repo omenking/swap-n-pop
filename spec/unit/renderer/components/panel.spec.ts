@@ -117,7 +117,11 @@ describe('Panel', function() {
       const playfield = new Playfield(0)
       playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
       playfield.clearing = []
-      expect(playfield.stack_xy(1,ROWS-9).chain_and_combo()).eql([3,false])
+      expect(playfield.stack_xy(0,ROWS-1).state).eql(CLEAR)
+      expect(playfield.stack_xy(1,ROWS).state).eql(CLEAR)
+      expect(playfield.stack_xy(1,ROWS-1).state).eql(CLEAR)
+      expect(playfield.stack_xy(1,ROWS-2).state).eql(CLEAR)
+      expect(playfield.stack_xy(2,ROWS-1).state).eql(CLEAR)
     })
   })
 

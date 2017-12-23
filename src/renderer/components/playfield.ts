@@ -33,8 +33,8 @@ export default class Playfield {
   public  pi                : number  // player number, used to detect input
   private rows              : number
   private cols              : number
-  private combo             : number
-  private chain             : number
+  public combo : number
+  public chain : number
 
   public  stage      : any //CoreStage
   private garbage    : CoreGarbage
@@ -166,6 +166,7 @@ export default class Playfield {
     this.create_stack(opts.panels)
 
     this.score        = 0
+    this.combo        = 0
     this.chain        = 0
     this.push_counter = TIME_PUSH
     this.stoptime     = STOPTIME
@@ -346,9 +347,7 @@ export default class Playfield {
     const offset = COLS*(within+ROWS_INV);
     const cols   = [];
     for (let i = 0; i < COLS; i++){
-      if (this.stack_i(offset+i)         &&
-         (this.stack_i(offset+i).kind >= 0) &&
-         (this.stack_i(offset+i).kind !== null)) {
+      if (this.stack_i(offset+i).stable){
         cols.push(i)
       }
     }
@@ -487,6 +486,8 @@ export default class Playfield {
         if (this.has_ai) { this.ai.update() }
         // combo n chain
         const cnc = this.chain_and_combo()
+        this.combo = cnc[0]
+        this.chain = cnc[1]
         if (cnc[1] > 1)
           this.character.current_animation = "charge"
 

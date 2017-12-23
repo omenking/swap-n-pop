@@ -230,7 +230,7 @@ export default class ComponentPanel {
 
   static_execute() {
     if ((this.under.empty && !this.empty) || this.under.state === HANG) {
-      this.change_state(HANG);
+      this.change_state(HANG)
     } else if (this.danger && this.counter === 0) {
       // we add 1 otherwise we will miss out on one frame
       // since counter can never really hit zero and render
@@ -247,28 +247,19 @@ export default class ComponentPanel {
 
   fall_execute() {
     if (this.counter > 0) { return }
-      if (this.under.empty) {
-        this.under.kind    = this.kind
-        this.under.state   = this.state
-        this.under.counter = this.counter
-        this.under.chain   = this.chain
+    if (this.under.empty) {
+      this.under.kind    = this.kind
+      this.under.state   = this.state
+      this.under.counter = this.counter
+      this.under.chain   = this.chain
 
-        this.kind    = null
-        this.state   = STATIC
-        this.counter = 0
-        this.chain   = 0
-      } else {
-        this.change_state(LAND);
-      }
-      //} else if (this.under.state === CLEAR) {
-        //this.state = STATIC
-      //} else {
-        //this.state   = this.under.state
-        //this.counter = this.under.counter
-        //this.chain   = this.under.chain
-      //}
-        //this.state   = LAND
-        //this.counter = FRAME_LAND.length
+      this.kind    = null
+      this.state   = STATIC
+      this.counter = 0
+      this.chain   = 0
+    } else {
+      this.change_state(LAND);
+    }
   }
 
   clear_enter() {
@@ -294,7 +285,7 @@ export default class ComponentPanel {
         game.sounds.pop(this.clear_i)
       }
     } else {
-      if (this.above && !this.above.hidden && this.above.state === STATIC)
+      if (this.above.static_stable)
         this.above.chain += 1
       this.change_state(STATIC)
     }
@@ -321,24 +312,76 @@ export default class ComponentPanel {
     this.state = STATIC;
   }
 
-  /** */
+  /*
+   * In order for this panel to be swappable it must:
+   *   * not have a panel hanging over above
+   *   * this panel needs to be static with a kind, or...
+   *   * during a land as long as 1 frame of land has been played out
+   *   * if its empty you can swap
+   * */
   get swappable() {
-    return  this.above.state !== HANG &&
-            (this.state === STATIC ||
-            // LAND will swap but will play must at play least 1 frame.
-            (this.state === LAND && this.counter < FRAME_LAND.length)
-    )
+    // if above is not stable, you can't swap
+    if (this.above.state === HANG ) { return false }
+    if (this.state === STATIC && this.kind !== null) { return true }
+    if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
+    if (this.empty) { return true }
+    return false
   }
-  /** */
-  get support() {  return this.state !== FALL && !this.hidden }
-  /** */
-  get clearable() {  return this.swappable && this.under.support && !this.hidden }
-  /** */
-  get comboable() {  return this.clearable || (this.state === CLEAR && this.playfield.clearing.indexOf(this)) && this.state_timer === 0 }
-  /** */
-  get empty() {      return  this.state === STATIC && this.hidden }
-  /** */
-  get hidden() {      return (this.kind === null && this.state !== GARBAGE) }
+  /**
+   * In order for this panel to be valid for use in a combo it must:
+   *   1. have support underneath (not falling, static visible panel, or static garbage)
+   *   2. be swappable or...
+   *   3. already have been marked for being cleared on first frame
+   *
+   * */
+  get comboable() {
+    // 1. check for support
+    if (this.under.state === FALL) {return false}
+    if (this.under.empty) { return false }
+    if (this.under.state === GARBAGE && this.under.garbage.state !== STATIC) { return false }
+    // 2. be comboable
+    if (this.state === STATIC && this.kind !== null) { return true }
+    if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
+    // 3 already have been marked for being cleared on first frame
+    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.state_timer === 0) { return false }
+    return false
+  }
+
+  /** 
+   *  A panel is only considered static stable if it is STATIC and has a kind assigned
+   * */
+  get static_stable() { return  this.state === STATIC && this.kind !== null }
+
+  /** 
+   *  A panel is only considered empty if it is STATIC
+   *  and has no kind assigned
+   * */
+  get empty() { 
+    return  this.state === STATIC && this.kind === null 
+  }
+  /**
+   * A panel can be hidden but not empty this only happens in the case
+   * when panels are clearing and are temporarily invisible
+   * */
+  get hidden_during_clear() { return this.state === CLEAR && this.time_cur >= this.time_pop  }
+
+  /*
+   * In order to determine danger is true we need a panel that is considered
+   * stable. A stable panel is one that is not falling, landing or clearing, hanging
+   * So a static panel is
+   *   * swapping with a kind
+   *   * static with a kind
+   *   * garbage thats static
+   */
+  get stable(){
+    if (this.state === STATIC     && this.kind !== null) { return true }
+    if (this.state === SWAP_R     && this.kind !== null) { return true }
+    if (this.state === SWAPPING_R && this.kind !== null) { return true }
+    if (this.state === SWAPPING_L && this.kind !== null) { return true }
+    if (this.state === GARBAGE    && this.garbage.state === STATIC) { return true }
+    return false
+  }
+
 
   log() {
     const k = (this.kind === null) ? 'N' : this.kind
@@ -403,19 +446,13 @@ export default class ComponentPanel {
    * at the time of render
    */
   render_visible() {
-    if (this.hidden){
-      this.sprite.visible = false
-    } else if (this.state === CLEAR && this.time_cur >= this.time_pop) {
-      this.sprite.visible = false
-    } else {
-      this.sprite.visible = true
-    }
+    this.sprite.visible =  !(this.empty || this.hidden_during_clear)
   }
   /**
    * Swaps the this panel with the panel to it's right.
    */
   swap() {
-    if (this.hidden && this.right.hidden) { return }
+    if (this.empty && this.right.empty) { return }
 
     this.counter        = 0
     this.right.counter  = 0
@@ -423,8 +460,8 @@ export default class ComponentPanel {
     this.chain       = 0
     this.right.chain = 0
 
-    this.state       = SWAP_L
-    this.right.state = SWAP_R
+    this.change_state(SWAP_L)
+    this.right.change_state(SWAP_R)
 
     game.sounds.swap()
   }
@@ -469,7 +506,7 @@ export default class ComponentPanel {
   *  in the stack is in danger.
   */
   get danger() {
-    return !this.playfield.stack_xy(this.x,1+ROWS_INV).hidden
+    return this.playfield.stack_xy(this.x,1+ROWS_INV).stable
   }
   /**
   * `dead()` will check if the this panel's column contains
@@ -477,7 +514,7 @@ export default class ComponentPanel {
   * then the this panel should be considered dead.
   */
   get dead() {
-    return !this.playfield.stack_xy(this.x,0+ROWS_INV).hidden
+    return this.playfield.stack_xy(this.x,0+ROWS_INV).stable
   }
   /**
   * `newline()` checks if this panel is a newline.
