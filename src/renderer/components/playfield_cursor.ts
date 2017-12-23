@@ -246,8 +246,7 @@ export default class ComponentPlayfieldCursor {
    * @param {integer} tick increasing counter
    */
   push(tick) {
-    if (this.playfield.stage.state !== 'running' ||
-        this.state !== 'active')
+    if (this.playfield.stage.state !== RUNNING)
       return;
     this.playfield.pushing = true;
   }
