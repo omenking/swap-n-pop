@@ -229,7 +229,7 @@ export default class ComponentPanel {
   }
 
   static_execute() {
-    if ((this.under.empty && !this.empty) || this.under.state === HANG) {
+    if (!this.empty && (this.under.empty || this.under.state === HANG)) {
       this.change_state(HANG)
     } else if (this.danger && this.counter === 0) {
       // we add 1 otherwise we will miss out on one frame
@@ -343,7 +343,7 @@ export default class ComponentPanel {
     if (this.state === STATIC && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
     // 3 already have been marked for being cleared on first frame
-    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.state_timer === 0) { return false }
+    if (this.state === CLEAR && this.playfield.clearing.indexOf(this)) { return false }
     return false
   }
 
@@ -353,11 +353,18 @@ export default class ComponentPanel {
   get static_stable() { return  this.state === STATIC && this.kind !== null }
 
   /** 
-   *  A panel is only considered empty if it is STATIC
+   *  A panel is only considered empty if it is STATIC, SWAP_
    *  and has no kind assigned
    * */
-  get empty() { 
+  get empty() {
     return  this.state === STATIC && this.kind === null 
+  }
+
+  get empty_when_swapping() {
+    return (this.state === SWAP_R     ||
+            this.state === SWAP_L     ||
+            this.state === SWAPPING_L ||
+            this.state === SWAPPING_R) && this.kind === null
   }
   /**
    * A panel can be hidden but not empty this only happens in the case
@@ -446,7 +453,7 @@ export default class ComponentPanel {
    * at the time of render
    */
   render_visible() {
-    this.sprite.visible =  !(this.empty || this.hidden_during_clear)
+    this.sprite.visible =  !(this.empty || this.hidden_during_clear || this.empty_when_swapping)
   }
   /**
    * Swaps the this panel with the panel to it's right.
