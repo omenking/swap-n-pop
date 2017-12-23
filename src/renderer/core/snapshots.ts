@@ -80,7 +80,7 @@ export default class Snapshots {
    * the start of the array, and set the base index_tick
    * for the first frame to mark that its frame 119
    */
-  private loop(){
+  private loop(tick : number){
     if (this.index >= this.snapshot.length-1){
       this.index      = -1;
       this.index_tick = tick;
