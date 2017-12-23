@@ -78,7 +78,8 @@ function render(){
      m('.title','Simulation'),
      m('table',[
      textfield(18,'Stop/Play'),
-     textfield(19,'Step Forward')
+     textfield(19,'Step Forward'),
+     textfield(20,'Step Backward')
     ])),
    m('.clear')
  ])

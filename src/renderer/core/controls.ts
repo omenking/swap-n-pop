@@ -41,7 +41,8 @@ class CoreControls {
       pl1_r     : function(){},
       pl1_start : function(){},
       sim_toggle  : function(){},
-      sim_forward : function(){}
+      sim_forward : function(){},
+      sim_backward : function(){}
     }
 
     game.input.gamepad.start()
@@ -67,7 +68,8 @@ class CoreControls {
       pl1_r     : false,
       pl1_start : false,
       sim_toggle  : false,
-      sim_forward : false
+      sim_forward : false,
+      sim_backward : false
     } //simulated down
     this._down = {}
     this.keys  = {}
@@ -126,6 +128,7 @@ class CoreControls {
     //global bindings
     this.keys.sim_toggle  = this.add_input(inputs[18])
     this.keys.sim_forward = this.add_input(inputs[19])
+    this.keys.sim_backward = this.add_input(inputs[20])
   }
   toggle_menu(){
     console.log('toggle menu')
@@ -168,7 +171,7 @@ class CoreControls {
   }
 
   map_global(opts){
-    const keys = "sim_toggle sim_forward".split(' ');
+    const keys = "sim_toggle sim_forward sim_backward".split(' ');
     let fun = null
     for (let key of keys) {
       fun = opts[key] ? opts[key] : function() {};
@@ -363,6 +366,7 @@ class CoreControls {
   update_global(){
     if (this.check_down(false,'sim_toggle' )){ this.trigger('sim_toggle')  } else { this._down.sim_toggle  = 0 }
     if (this.check_down(false,'sim_forward')){ this.trigger('sim_forward') } else { this._down.sim_forward = 0 }
+    if (this.check_down(false,'sim_backward')){ this.trigger('sim_backward') } else { this._down.sim_backward = 0 }
   }
 }
 const controls = new CoreControls()
