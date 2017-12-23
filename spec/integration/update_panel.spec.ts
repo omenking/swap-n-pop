@@ -3,6 +3,7 @@ import * as seedrandom from 'seedrandom'
 import Stage           from 'states/mode_vs'
 import Playfield       from 'components/playfield'
 import Stack           from 'core/stack'
+import {playfield_helper} from 'helper'
 
 import {
   PANELS,
@@ -19,48 +20,39 @@ import {
 } from 'core/data';
 
 //shorthands
+const R = Symbol('random_panel')
 const T  = true
 const F  = 0
 const N  = null
-const NN = [null,null]
+const NN = [null,null,null,null]
+let playfield = null
 
-var _playfield = null
 function load(...arr){
   for (let i of arr){
-    _playfield.stack_xy(i[0], i[1]).load(i)
+    playfield.stack_xy(i[0], i[1]).load(i)
   }
 }
 
 function chec(...arr){
   for (let i of arr){
-    let data = _playfield.stack_xy(i[0], i[1]).snap
+    let data = playfield.stack_xy(i[0], i[1]).snap
     // its a bit hard to debug, so I added type and post
     // so when tests fail they are more readble
     // eg   AssertionError: expected [ 'chain', '1,20', 1 ] to deeply equal [ 'chain', '1,20', 0 ]
     let pos  = `${i[0]},${i[1]}`
-    expect(data[2]).eql(i[2], `${pos}: kind`) //kind
-    expect(data[3]).eql(i[3], `${pos}: state`) //state
-    expect(data[4]).eql(i[4], `${pos}: counter`) //counter
-    expect(data[5]).eql(i[5], `${pos}: chain`) //chain
+    if (i[2] === R)
+      expect(data[2]).to.be.a('number',`${pos}: kind`) //kind
+    else
+      expect(data[2]).eql(i[2]   ,`${pos}: kind`) //kind
+    expect(data[3]   ).eql(i[3]   ,`${pos}: state`  ) //state
+    expect(data[4]   ).eql(i[4]   ,`${pos}: counter`) //counter
+    expect(data[5]   ).eql(i[5]   ,`${pos}: chain`  ) //chain
   }
 }
 
 describe('panel_actions', function() {
-  var playfield
   beforeEach(function(){
-    let stage = new Stage()
-    stage.init({
-      seed: 'test',
-      cpu: [false,null]
-    })
-    stage.state = 'running'
-    playfield = new Playfield(0)
-    playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
-    playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
-    playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
-    playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
-    playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
-    _playfield = playfield
+    playfield = playfield_helper({cpu: [false,null]})
   })
 
   //todo - swapping should allow for a panel
@@ -161,25 +153,25 @@ describe('panel_actions', function() {
   })
 
   it('#combo_3x', function(){
-    // N 2 N
-    // 2 1 2
-    // 3 1 3
-    // 2 1 2
-    load([0,19,N,STATIC,0,F], [1,19,2,STATIC,0,F], [2,19,N,STATIC,0,F],
-         [0,20,2,STATIC,0,F], [1,20,1,STATIC,0,F], [2,20,2,STATIC,0,F],
-         [0,21,3,STATIC,0,F], [1,21,1,STATIC,0,F], [2,21,3,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,1,STATIC,0,F], [2,22,2,STATIC,0,F])
+    // 2
+    // 1
+    // 1
+    // 1
+    load([0,19,2,STATIC,0,F],
+         [0,20,1,STATIC,0,F],
+         [0,21,1,STATIC,0,F],
+         [0,22,1,STATIC,0,F])
     //################################################################
     playfield.update()
-    chec([0,19,N,STATIC,0,F], [1,19,2,STATIC,0,F], [2,19,N,STATIC,0,F],
-         [0,20,2,STATIC,0,F], [1,20,1,CLEAR,90,1], [2,20,2,STATIC,0,F],
-         [0,21,3,STATIC,0,F], [1,21,1,CLEAR,90,1], [2,21,3,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,1,CLEAR,90,1], [2,22,2,STATIC,0,F])
+    chec([0,19,2,STATIC,0,F],
+         [0,20,1,CLEAR,90,1],
+         [0,21,1,CLEAR,90,1],
+         [0,22,1,CLEAR,90,1])
     for(let i = 0; i < 90; i++){ playfield.update() }
-    chec([0,19,N,STATIC,0,F], [1,19,2,HANG  ,0,1], [2,19,N,STATIC,0,F],
-         [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
-         [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,N,STATIC,0,F], [2,22,2,STATIC,0,F])
+    chec([0,19,2,HANG  ,0,1],
+         [0,20,N,STATIC,0,F],
+         [0,21,N,STATIC,0,F],
+         [0,22,N,STATIC,0,F])
   })
 
   it('#combo_6x', function(){
@@ -240,8 +232,8 @@ describe('panel_actions', function() {
     chec([0,19,N,STATIC,0,F], [1,19,N,STATIC,0,F], [2,19,N,STATIC,0,F],
          [0,20,2,STATIC,0,F], [1,20,N,STATIC,0,F], [2,20,2,STATIC,0,F],
          [0,21,3,STATIC,0,F], [1,21,N,STATIC,0,F], [2,21,3,STATIC,0,F],
-         [0,22,2,CLEAR ,90,1],[1,22,2,CLEAR ,90,1],[2,22,2,CLEAR,90,1])
-    playfield.chain.should.eql(1)
+         [0,22,2,CLEAR ,90,2],[1,22,2,CLEAR ,90,2],[2,22,2,CLEAR,90,2])
+    playfield.chain.should.eql(2)
   })
 
   it('#chain_swap', function(){

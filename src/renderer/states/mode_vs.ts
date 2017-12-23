@@ -346,7 +346,7 @@ export default class ModeVs extends CoreStage {
 
     str   += "\n"
     for (let i = 0; i < this.roll_log_heading.length; i++){
-      tick   = `${this.roll_log_heading[i].tick}                     `
+      tick   = `${this.roll_log_heading[i].tick}`
       tick   = tick.substr(0,22)
       format = this.roll_log_heading[i].format
       str += tick
@@ -441,8 +441,6 @@ export default class ModeVs extends CoreStage {
     this.star_counter.render()
   }
   shutdown() {
-    fade.out(function(){})
-    console.log('shutdown mode_vs')
     game.sounds.stage_music('none')
     this.playfield0.shutdown()
     this.playfield1.shutdown()

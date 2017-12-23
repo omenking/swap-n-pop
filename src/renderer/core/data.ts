@@ -19,7 +19,6 @@ export const SWAP_R = Symbol('swap_r');
 export const SWAPPING_L = Symbol('swaping_l');
 export const SWAPPING_R = Symbol('swaping_r');
 export const CLEAR = Symbol('clear');
-export const POPPING = Symbol('popping');
 export const GARBAGE = Symbol('garbage');
 // STAGE States
 export const STARTING = Symbol('starting');
