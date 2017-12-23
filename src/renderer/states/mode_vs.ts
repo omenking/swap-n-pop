@@ -105,11 +105,15 @@ export default class ModeVs extends CoreStage {
       this.playfield0.snap,
       this.playfield1.snap,
       this.timer.snap,
-      this.controls.snap
+      this.controls.snap,
+      this.tick
     ];
   }
 
-  load =(snapshot)=> {
+  /*
+   * load is reserved for staes so needed another name
+   */
+  load_snaphot(snapshot) {
     let state = this.rng.state()
     this.rng = seedrandom(this.seed, {state: snapshot[0]})
     this.state = snapshot[1]
@@ -118,7 +122,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1.load(snapshot[3])
     this.controls.load(snapshot[4])
     this.timer.load(snapshot[5])
-
+    this.tick = snapshot[6]
   }
 
   /*
@@ -130,6 +134,13 @@ export default class ModeVs extends CoreStage {
     if (tick > 0 && tick < 30)
       return;
     this.step(false)
+  }
+
+  sim_backward(tick){
+    if (tick > 0 && tick < 30)
+      return;
+    this.snapshots.load(this.tick-1)
+    this.render()
   }
 
   sim_toggle(tick){
@@ -196,6 +207,7 @@ export default class ModeVs extends CoreStage {
     fade.in()
     this.controls.map_global({
       sim_forward: this.sim_forward.bind(this),
+      sim_backward: this.sim_backward.bind(this),
       sim_toggle: this.sim_toggle.bind(this)
     })
   }
@@ -387,9 +399,7 @@ export default class ModeVs extends CoreStage {
   }
 
   step(tick) {
-    if (tick === false) {
-      this.tick++
-    }
+    this.tick++
     // we need to swap the playfield update order for
     // one of the players otherwise in multipalyer it will
     // generate the panels on the wrong side.

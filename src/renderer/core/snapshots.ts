@@ -37,10 +37,10 @@ export default class Snapshots {
    *  each saved variable gets loaded with a snapshot provided through the new index
    * @param {integer} tick possibly from networking 
    */
-  load(tick){
+  load(tick : number){
     this.index      = this.capture_index(tick)
     this.index_tick = this.capture_index_tick(tick)
-    this.stage.load(this.snapshot[this.index])
+    this.stage.load_snaphot(this.snapshot[this.index])
 
   }
 
@@ -51,7 +51,7 @@ export default class Snapshots {
    * @param {integer} tick
    * @return integer
    */
-  capture_index(tick){
+  capture_index(tick : number){
     const offset = tick - this.index_tick
     if (offset >= 0){return offset}
     else            {return this.snapshot.length+offset}
@@ -61,18 +61,29 @@ export default class Snapshots {
    * @param {integer} tick
    * @return integer
    */
-  capture_index_tick(tick){
+  capture_index_tick(tick : number){
     const offset = tick - this.index_tick
     if (offset >= 0){return this.index_tick}
     else            {return this.index_tick-this.snapshot.length}
   }
 
-  snap(tick){
+  snap(tick : number){
+    this.loop(tick)
+    this.index++
+    this.snapshot[this.index] = this.stage.snap
+  }
+
+  /*
+   * loops the index of the snapshot array
+   * eg. if our snapshot size is 120 and our 
+   * index reaches 119 then reset the index to
+   * the start of the array, and set the base index_tick
+   * for the first frame to mark that its frame 119
+   */
+  private loop(){
     if (this.index >= this.snapshot.length-1){
       this.index      = -1;
       this.index_tick = tick;
     }
-    this.index++;
-    this.snapshot[this.index] = this.stage.snap
   }
 }
