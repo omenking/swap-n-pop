@@ -185,7 +185,8 @@ ipc.on('replay-load', (event,name) => {
   })
 })
 
-ipc.on('asset-dir-reveal', e => shell.openItem(ExternalAssets.dir()))
+ipc.on('asset-dir-reveal',  e => shell.openItem(ExternalAssets.dir()))
+ipc.on('asset-dir-reset',   e => win.webContents.send('asset-dir', ExternalAssets.dir('reset')))
 
 ipc.on('asset-dir-change', e => {
   dialog.showOpenDialog(win, {
@@ -195,6 +196,7 @@ ipc.on('asset-dir-change', e => {
       win.webContents.send('asset-dir', ExternalAssets.dir('change', data[0]))
   })
 })
+
 
 ipc.on('play-vs', (event,{seed,online,cpu}) => {
   console.log('seed_____:0',seed)
