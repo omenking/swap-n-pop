@@ -28,7 +28,6 @@ import {
 
 declare var window: any
 
-
 const {ipcRenderer: ipc} = electron
 
 export default class ModeVs extends CoreStage {
@@ -133,6 +132,7 @@ export default class ModeVs extends CoreStage {
     if (tick > 0 && tick < 30)
       return;
     this.step(false)
+    this.devtools_load()
   }
 
   sim_backward(tick){
@@ -140,6 +140,7 @@ export default class ModeVs extends CoreStage {
       return;
     this.snapshots.load(this.tick-1)
     this.render()
+    this.devtools_load()
   }
 
   sim_toggle(tick){
@@ -148,20 +149,24 @@ export default class ModeVs extends CoreStage {
     this.step_mode = !this.step_mode
     if (this.step_mode) {
       window.stage = this
-      if (window.devtools_send) {
-        window.devtools_send({
-          action: 'load',
-          stage: this.toString(),
-          tick : this.tick,
-          len  : this.snapshots.len,
-          snapshot : window.devtools_process_data(this.snapshots.snapshot_at(this.tick))
-        })
-      }
+      this.devtools_load()
     } else {
       window.stage = null
       if (window.devtools_send) {
         window.devtools_send({action: 'clear'})
       }
+    }
+  }
+
+  devtools_load(){
+    if (window.devtools_send) {
+      window.devtools_send({
+        action: 'load',
+        stage: this.toString(),
+        tick : this.tick,
+        len  : this.snapshots.len,
+        snapshot : window.devtools_process_data(this.snapshots.snapshot_at(this.tick))
+      })
     }
   }
 
