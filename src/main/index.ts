@@ -126,6 +126,7 @@ function create_window () {
 }
 
 function ready(){
+  BrowserWindow.addDevToolsExtension(path.join(__dirname,'devtools'))
   Menu.setApplicationMenu(menu)
   create_window()
 }

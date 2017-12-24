@@ -1,3 +1,5 @@
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 const path = require('path');
 const config_main = {
   target: 'electron-main',
@@ -50,7 +52,59 @@ const config_renderer = {
   }
 };
 
+const config_devtools = {
+  target: 'web',
+  entry: {
+    'background.js' : path.resolve(__dirname, 'src/devtools/background.ts'),
+    'panel.js'      : path.resolve(__dirname, 'src/devtools/devtools_panel.ts'),
+    'panel.css'     : path.resolve(__dirname, 'src/devtools/devtools_panel.sass'),
+    'content.js'    : path.resolve(__dirname, 'src/devtools/content.ts')
+  },
+  output: {
+    path    : path.resolve(__dirname, 'app', 'devtools'),
+    filename: '[name]'
+  },
+  node: {
+    __dirname: false
+  },
+  resolve: {
+    extensions: ['.js', '.json', '.ts'],
+    alias: {
+      core : path.resolve(__dirname, 'src/renderer/core/'),
+    }
+  },
+  module: {
+    rules: [
+      { test: /\.ts$/, loader: 'ts-loader' },
+      {
+        test: /\.sass$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: "css-loader" },
+            {
+              loader: 'sass-loader',
+              options: { indentedSyntax: true }
+            }
+          ]
+        })
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
+      }
+    ]
+  },
+  plugins: [
+    new ExtractTextPlugin("panel.css"),
+  ]
+};
+
 module.exports = [
   config_main,
-  config_renderer
+  config_renderer,
+  config_devtools
 ];

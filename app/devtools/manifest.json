@@ -1,0 +1,13 @@
+{
+    "name": "Swap'N'Pop DevTools",
+    "version": "0.1",
+    "description": "An easy way to debug the game",
+    "devtools_page": "index.html",
+    "background": {
+      "scripts": [
+        "background.js"
+      ]
+    },
+    "permissions": ["tabs"],
+    "manifest_version": 2
+}

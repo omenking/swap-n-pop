@@ -1,0 +1,154 @@
+*
+  box-sizing: border-box
+  font-family: arial
+
+body, html
+  width: 100%
+  height: 100%
+  padding: 0px
+  margin: 0px
+
+.clear
+  clear: both
+
+.toast
+  text-align: center
+  padding-top: 80px
+  span
+    background: rgb(220,220,220)
+    color: rgb(70,70,70)
+    font-size: 18px
+    display: inline-block
+    border-radius: 999px
+    padding: 16px 32px
+
+.content_wrap
+  height: 100%
+  .primer
+    padding-left: 140px
+  &.mode_vs
+    padding-left: 340px
+    .stack
+      padding: 16px
+      float: left
+    table
+      border-collapse: collapse
+    td
+      font-size: 11px
+      padding: 4px
+      border: solid 1px rgb(200,200,200)
+      vertical-align: top
+      &.inv
+        background: rgb(230,230,230)
+      &.vis
+        background: rgb(200,200,200)
+    .stack_actions
+      font-size: 12px
+      padding: 6px
+      border-bottom: solid 1px rgb(200,200,200)
+      .lbl
+        font-weight: 600
+        padding-right: 8px
+        &.playfields
+          padding-right: 12px;
+      .checkbox
+        display: inline-block
+        padding-right: 8px
+        input
+          margin: 0;
+          margin-right: 4px;
+          outline: none
+
+.column
+  position: fixed
+  z-index: 2
+  top: 0
+  height: 100%
+  border-right: solid 1px rgb(163,163,163)
+  background: rgb(255,255,255)
+  &.snapshots
+    width: 140px
+    left: 0
+  &.components
+    width: 200px
+    left: 140px
+  .item
+    font-size: 12px
+    padding: 2px 5px
+    position: relative
+    &:nth-child(even)
+      background: rgb(245,245,245)
+    &:hover
+      text-decoration: underline
+      background: rgb(235,242,252)
+    &.current
+      .marker
+        position: absolute
+        right: 0
+        top: 4px
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 10px 5px 0;
+        border-color: transparent rgb(120,120,120) transparent transparent;
+    &.active
+      color: rgb(255,255,255)
+      background: rgb(56,121,217)
+      &.current
+        .marker
+          border-color: transparent rgb(0,0,0) transparent transparent;
+  .heading
+    position: absolute
+    height: 28px
+    width: 100%
+    z-index: 2
+    top: 0
+    left: 0
+    background: rgb(243,243,243)
+    border-bottom: solid 1px rgb(204,204,204)
+    font-size: 12px
+    padding-left: 6px
+    padding-right: 6px
+    color: rgb(90,90,90)
+    .title
+      font-weight: 600
+      padding-top: 6px
+      padding-bottom: 6px
+
+  .column_content
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+    padding-top: 28px
+  .items
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+    overflow: auto
+
+.tabs
+  .tab
+    float: left;
+    display: inline-block
+    padding: 4px 5px
+    border: solid 1px rgb(243,243,243)
+    border-bottom: none
+    cursor: pointer
+    &:hover
+      background: rgb(229,229,229)
+      border: solid 1px rgb(229,229,229)
+      border-bottom: none
+    &.active
+      background: rgb(255,255,255)
+      border: solid 1px rgb(204,204,204)
+      border-bottom: none
+      &:hover
+        background: rgb(229,229,229)
+        border: solid 1px rgb(204,204,204)
+        border-bottom: none
+

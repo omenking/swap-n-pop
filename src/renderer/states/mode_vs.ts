@@ -26,14 +26,14 @@ import {
 } from 'core/data'
 
 
-declare var window: {
-  stage: any;
-};
+declare var window: any
 
 
 const {ipcRenderer: ipc} = electron
 
 export default class ModeVs extends CoreStage {
+  get [Symbol.toStringTag](){ return 'ModeVs' }
+
   public playfield0       : ComponentPlayfield
   public playfield1       : ComponentPlayfield
   private ping            : ComponentPing
@@ -100,7 +100,6 @@ export default class ModeVs extends CoreStage {
 
   get snap() {
     return [
-      this.rng.state(),
       this.state,
       this.playfield0.snap,
       this.playfield1.snap,
@@ -113,16 +112,16 @@ export default class ModeVs extends CoreStage {
   /*
    * load is reserved for staes so needed another name
    */
-  load_snaphot(snapshot) {
+  load_snaphot(rng_state,snapshot) {
     let state = this.rng.state()
-    this.rng = seedrandom(this.seed, {state: snapshot[0]})
-    this.state = snapshot[1]
+    this.rng = seedrandom(this.seed, {state: rng_state})
+    this.state = snapshot[0]
     // all objects - subobjects to load with a snapshot
-    this.playfield0.load(snapshot[2])
-    this.playfield1.load(snapshot[3])
-    this.controls.load(snapshot[4])
-    this.timer.load(snapshot[5])
-    this.tick = snapshot[6]
+    this.playfield0.load(snapshot[1])
+    this.playfield1.load(snapshot[2])
+    this.controls.load(snapshot[3])
+    this.timer.load(snapshot[4])
+    this.tick = snapshot[5]
   }
 
   /*
@@ -147,10 +146,23 @@ export default class ModeVs extends CoreStage {
     if (tick > 0)
       return;
     this.step_mode = !this.step_mode
-    if (this.step_mode)
+    if (this.step_mode) {
       window.stage = this
-    else
+      if (window.devtools_send) {
+        window.devtools_send({
+          action: 'load',
+          stage: this.toString(),
+          tick : this.tick,
+          len  : this.snapshots.len,
+          snapshot : window.devtools_process_data(this.snapshots.snapshot_at(this.tick))
+        })
+      }
+    } else {
       window.stage = null
+      if (window.devtools_send) {
+        window.devtools_send({action: 'clear'})
+      }
+    }
   }
 
 
@@ -210,6 +222,7 @@ export default class ModeVs extends CoreStage {
       sim_backward: this.sim_backward.bind(this),
       sim_toggle: this.sim_toggle.bind(this)
     })
+    // expose for debugger
   }
 
   playfield_cursor_entrance(){

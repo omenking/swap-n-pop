@@ -16,7 +16,15 @@ export default class Snapshots {
   private timer : any
   private index : number
   private index_tick : number
-  private snapshot : Array<any>
+  private snapshot   : Array<any>
+  /*
+   * In order to pass data to the devtools I had to seperate
+   * out the rng_state because having the rng_state in snapshot while:
+   *    chrome.devtools.inspectedWindow.eval("devtools_poll()"
+   * resulted in this error 
+   *     [72274:1223/132511.976264:ERROR:CONSOLE(7649)] "Extension server error: Inspector protocol error: Object couldn't be returned by value", source: chrome-devtools://devtools/bundled/inspector.js (7649)
+   */
+  private snapshot_rng : Array<any>
   /** Saves stage which need to get snapped or loaded
    * @param {mode} stage chosen mode to play in
    */
@@ -27,7 +35,8 @@ export default class Snapshots {
     this.index      = -1
     this.index_tick = 0
     // snapshot size limit 120 saved Frames
-    this.snapshot   = new Array(120).fill(null)
+    this.snapshot     = new Array(120).fill(null)
+    this.snapshot_rng = new Array(120).fill(null)
   }
   
   get stage(){ return this._stage }
@@ -40,8 +49,10 @@ export default class Snapshots {
   load(tick : number){
     this.index      = this.capture_index(tick)
     this.index_tick = this.capture_index_tick(tick)
-    this.stage.load_snaphot(this.snapshot[this.index])
-
+    this.stage.load_snaphot(
+      this.snapshot_rng[this.index],
+      this.snapshot[this.index]
+    )
   }
 
   /*
@@ -71,6 +82,7 @@ export default class Snapshots {
     this.loop(tick)
     this.index++
     this.snapshot[this.index] = this.stage.snap
+    this.snapshot_rng[this.index] = this.stage.rng.state()
   }
 
   /*
@@ -85,5 +97,13 @@ export default class Snapshots {
       this.index      = -1;
       this.index_tick = tick;
     }
+  }
+
+  public snapshot_at(tick : number){
+    return this.snapshot[this.capture_index(tick)]
+  }
+
+  get len(){
+    return this.snapshot.length
   }
 }
