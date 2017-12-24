@@ -23,7 +23,7 @@ export default class ComponentPanelGarbage {
   private _state          : Symbol
   /*
    * group is used to group garbage panels to make
-   * one piece of garbage
+   * one piece of garbag
    */
   private _group          : number
   /*
@@ -85,18 +85,20 @@ export default class ComponentPanelGarbage {
   }
 
   get snap(){
+    let state = this.state ? this.state.toString() : null
+    let kind  = this.kind  ? this.kind.toString()  : null
     return [
-      this.state,
+      state,
       this.group,
-      this.kind
+      kind
     ]
   }
 
   load(data) {
     if (data !== undefined) {
-      this.state = data[0]
+      this.state = Symbol(data[0])
       this.group = data[1]
-      this.kind  = data[2]
+      this.kind  = Symbol(data[2])
       this.group_clearing = data[3]
     } else {
       this.state = null

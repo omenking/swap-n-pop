@@ -1,8 +1,8 @@
-import Ui from 'ui/mode'
-import * as m from 'mithril'
+import Ui            from 'ui/mode'
+import * as m        from 'mithril'
 import * as electron from 'electron'
-import Store   from 'common/store'
-import * as keycode from 'keycode'
+import Store         from 'common/store'
+import * as keycode  from 'keycode'
 
 const store = new Store()
 
