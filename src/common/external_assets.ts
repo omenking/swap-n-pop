@@ -34,4 +34,17 @@ export default class ExternalAssets {
 
     return dir;
   }
+
+  public static list(callback) {
+    let dir = path.join(store.get('asset-dir'), '*.png')
+    
+    glob(dir, {}, (err, files) => {
+      let filenames = []
+
+      for (let file of files)
+        filenames.push(path.basename(file, '.png'))
+      
+      callback(err,filenames)
+    })
+  }
 }
