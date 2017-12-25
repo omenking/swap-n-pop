@@ -85,20 +85,18 @@ export default class ComponentPanelGarbage {
   }
 
   get snap(){
-    let state = this.state ? this.state.toString() : null
-    let kind  = this.kind  ? this.kind.toString()  : null
     return [
-      state,
+      this.state,
       this.group,
-      kind
+      this.kind
     ]
   }
 
   load(data) {
     if (data !== undefined) {
-      this.state = Symbol(data[0])
+      this.state = data[0]
       this.group = data[1]
-      this.kind  = Symbol(data[2])
+      this.kind  = data[2]
       this.group_clearing = data[3]
     } else {
       this.state = null
