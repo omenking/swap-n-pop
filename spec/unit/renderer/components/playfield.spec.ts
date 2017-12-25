@@ -1,14 +1,25 @@
-import {playfield_helper} from 'helper'
 import * as fs         from 'fs'
 import * as seedrandom from 'seedrandom'
 import Stage           from 'states/mode_vs'
 import Playfield       from 'components/playfield'
 import Stack           from 'core/stack'
 import controls        from 'core/controls'
-
-const N = null
+import {
+  ROWS_INV,
+  STATIC,
+  GARBAGE,
+  COMBO
+} from 'core/data'
+import {
+  playfield_load,
+  playfield_check_garbage,
+  playfield_helper,
+  R, T, F, N, NN
+} from 'helper'
 
 let playfield = null
+function load(...arr){ playfield_load(playfield,...arr)  }
+function chec(...arr){ playfield_check_garbage(playfield,...arr) }
 
 controls.create()
 
@@ -166,11 +177,23 @@ describe('Playfield', function() {
     })
   })
 
-  //describe('#danger()' ,function(){
-    //it('should be in danger when garbage on top most visible panel'){
-      //const playfield = playfield_helper({cpu: [false,null]})
-    //}
-  //})
+  describe.only('#danger()' ,function(){
+    beforeEach(function(){
+      playfield = playfield_helper({cpu: [false,null]})
+    })
+    it('should be in danger if panels',function(){
+      load([1,ROWS_INV,1,STATIC,0,F,NN])
+      expect(playfield.danger(0)).eql([1])
+    })
+    it('should be in danger if garbage',function(){
+      load([1,ROWS_INV,1,GARBAGE,0,F,[STATIC,5,COMBO]])
+      expect(playfield.danger(0)).eql([1])
+    })
+    it('should not be in danger if nothing',function(){
+      load([1,ROWS_INV+1,1,STATIC,0,F,NN])
+      expect(playfield.danger(0)).eql(false)
+    })
+  })
 
   describe('#push()' ,function(){
     it('should shift panels up in stack', function(){
