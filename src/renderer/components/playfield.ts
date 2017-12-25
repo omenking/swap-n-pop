@@ -24,7 +24,8 @@ import {
   STARTING,
   RUNNING,
   PAUSE,
-  GAMEOVER
+  GAMEOVER,
+  CLEAR
 } from 'core/data';
 
 export default class Playfield {
@@ -150,8 +151,8 @@ export default class Playfield {
     }
 
 
-    this.stage            = stage
-    this.should_push      = opts.push || false
+    this.stage       = stage
+    this.should_push = opts.push || false
 
     this.height = (ROWS+1) * UNIT
     this.width  = COLS     * UNIT
@@ -186,6 +187,17 @@ export default class Playfield {
       game.world.centerY - 100,
       this.pi
     );
+  }
+
+  get clear(){
+    let clear = false
+    for (let p of this.stack){
+      if (p.state === CLEAR) {
+        clear = true
+        break
+      }
+    }
+    return clear
   }
 
   create_after() {
@@ -363,6 +375,7 @@ export default class Playfield {
    */
   update_push(danger) {
     if (!this.should_push) {return}
+    if (this.clear) {return}
     if (this.pushing) {
       this.push_counter -= 100
     } else {
