@@ -248,8 +248,7 @@ export default class ModeVs extends CoreStage {
   /** called by the menu and reassigns control to both playfields, timer runs again */
   resume() {
     // only resumes the game if countdown's are over
-    if (this.playfield0.countdown.state === null ||
-        this.playfield1.countdown.state === null) {
+    if (this.countdown.state === DONE){
       game.sounds.stage_music('resume');
 
       this.state = RUNNING;
