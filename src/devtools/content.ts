@@ -23,28 +23,31 @@ function process_array(dup,data){
  * to strings
  * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
  */
-function process_data(data){
+function process_data(stage,tick){
+  const data = stage.snapshots.snapshot_at(tick)
   return process_array([],data)
 }
 function preview(tick){
   if (window.stage === null || window.stage === undefined){ return }
   port.postMessage({
-    action   : 'preview',
-    stage    : window.stage.toString(),
-    tick     : window.stage.tick,
-    len      : window.stage.snapshots.len,
-    snapshot : process_data(window.stage.snapshots.snapshot_at(tick))
+    action        : 'preview',
+    stage         : window.stage.toString(),
+    tick          : window.stage.tick,
+    len           : window.stage.snapshots.len,
+    snapshot      : process_data(window.stage,tick),
+    snapshot_prev : process_data(window.stage,tick-1)
   })
 }
 
 function reload(){
   if (window.stage === null || window.stage === undefined){ return }
   port.postMessage({
-    action   : 'reload',
-    stage    : window.stage.toString(),
-    tick     : window.stage.tick,
-    len      : window.stage.snapshots.len,
-    snapshot : process_data(window.stage.snapshots.snapshot_at(window.stage.tick))
+    action        : 'reload',
+    stage         : window.stage.toString(),
+    tick          : window.stage.tick,
+    len           : window.stage.snapshots.len,
+    snapshot      : process_data(window.stage,window.stage.tick),
+    snapshot_prev : process_data(window.stage,window.stage.tick-1)
   })
 }
 function on_message(message, sender, send_response){

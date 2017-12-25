@@ -39,7 +39,8 @@ const snapshots = {
   tick  : 0,
   len   : 0
 }
-let snapshot : any
+let snapshot      : any
+let snapshot_prev : any
 let selected_tick = null
 let state = COMPONENTS
 const stack_actions_state = {
@@ -211,19 +212,41 @@ function stack_row(y : number){
   ])
 }
 
-function stack_panel_data(i: number, data){
+function stack_panel_prop_class(val,val_prev){
+  if (val !== val_prev){
+    return 'changed'
+  }
+  return ''
+}
+function stack_panel_data(i: number, data, data_prev){
   return [
-    m('.index'  ,{title: 'Index'  },i),
-    m('.kind'   ,{title: 'Kind'   },data[2] ? data[2] : 'null'),
-    m('.state'  ,{title: 'State'  },data[3]),
-    m('.counter',{title: 'Counter'},data[4]),
-    m('.chain'  ,{title: 'Chain'  },data[5])
+    m('.prop.index'  ,{title: 'Index'  },i),
+    m('.prop.kind'   ,{title: 'Kind'   , className: stack_panel_prop_class(data[2],data_prev[2])},data[2] ? data[2] : 'null'),
+    m('.prop.state'  ,{title: 'State'  , className: stack_panel_prop_class(data[3],data_prev[3])},data[3]),
+    m('.prop.counter',{title: 'Counter', className: stack_panel_prop_class(data[4],data_prev[4])},data[4]),
+    m('.prop.chain'  ,{title: 'Chain'  , className: stack_panel_prop_class(data[5],data_prev[5])},data[5])
   ]
 }
 
+function stack_panel_class(data,data_prev){
+  if (
+      data[2] !== data_prev[2] ||
+      data[3] !== data_prev[3] ||
+      data[4] !== data_prev[4] ||
+      data[5] !== data_prev[5]
+     ){
+    return 'changed'
+  }
+  return ''
+}
+
 function stack_panel(x: number, y: number){
-  const i = xy2i(x,y)
-  return m('td',stack_panel_data(i,snapshot[1][2][i]))
+  const i         = xy2i(x,y)
+  const data      = snapshot[1][2][i]
+  const data_prev = snapshot_prev[1][2][i]
+  return m('td', { className: stack_panel_class(data,data_prev)},
+    stack_panel_data(i,data,data_prev)
+  )
 }
 
 function stack(pl : number){
@@ -294,24 +317,28 @@ function on_message(message, sender, send_response){
     snapshots.tick     = 0
     snapshots.len      = 0
     snapshot           = null
+    snapshot_prev      = null
     selected_tick      = 0
   } else if (message.action === 'reload') {
     snapshots.stage    = message.stage
     snapshots.tick     = message.tick
     snapshots.len      = message.len
     snapshot           = message.snapshot
+    snapshot_prev      = message.snapshot_prev
     selected_tick      = message.tick
   } else if (message.action === 'load') {
     snapshots.stage    = message.stage
     snapshots.tick     = message.tick
     snapshots.len      = message.len
     snapshot           = message.snapshot
+    snapshot_prev      = message.snapshot_prev
     selected_tick      = message.tick
   } else if (message.action === 'preview') {
     snapshots.stage    = message.stage
     snapshots.tick     = message.tick
     snapshots.len      = message.len
     snapshot           = message.snapshot
+    snapshot_prev      = message.snapshot_prev
   }
   m.redraw()
 }

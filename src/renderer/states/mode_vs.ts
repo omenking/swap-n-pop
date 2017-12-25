@@ -165,7 +165,8 @@ export default class ModeVs extends CoreStage {
         stage: this.toString(),
         tick : this.tick,
         len  : this.snapshots.len,
-        snapshot : window.devtools_process_data(this.snapshots.snapshot_at(this.tick))
+        snapshot      : window.devtools_process_data(this,this.tick),
+        snapshot_prev : window.devtools_process_data(this,this.tick-1)
       })
     }
   }
