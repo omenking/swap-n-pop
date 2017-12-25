@@ -171,6 +171,7 @@ export default class Playfield {
     this.push_counter = TIME_PUSH
     this.stoptime     = STOPTIME
 
+    this.clearing = []
     if (this.stage.cpu[1] !== null){
       this.garbage.create(this.stage,this.pi)
       this.clearing_garbage = []
