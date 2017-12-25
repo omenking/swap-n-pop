@@ -197,6 +197,11 @@ ipc.on('asset-dir-change', e => {
   })
 })
 
+ipc.on('asset-list', e => {
+  ExternalAssets.list((err, files) => {
+    win.webContents.send('asset-list', files)
+  })
+})
 
 ipc.on('play-vs', (event,{seed,online,cpu}) => {
   console.log('seed_____:0',seed)
