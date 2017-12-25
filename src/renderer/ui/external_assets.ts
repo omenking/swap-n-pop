@@ -6,7 +6,9 @@ import ExternalAssets from "common/external_assets"
 
 const store = new Store()
 let asset_dir = store.get('asset-dir')
+ipc.send('asset-list')
 
+// change asset dir to a new one
 ipc.on('asset-dir', (e, new_dir) => {
   asset_dir = new_dir
   m.redraw()
