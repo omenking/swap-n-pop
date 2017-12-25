@@ -362,6 +362,11 @@ export default class ComponentPanel {
     return  this.state === STATIC && this.kind === null 
   }
 
+  get hidden_during_garbage_static(){
+    return this.state === GARBAGE &&
+           this.garbage.state === STATIC
+  }
+
   get empty_when_swapping() {
     return (this.state === SWAP_R     ||
             this.state === SWAP_L     ||
@@ -455,7 +460,12 @@ export default class ComponentPanel {
    * at the time of render
    */
   render_visible() {
-    this.sprite.visible =  !(this.empty || this.hidden_during_clear || this.empty_when_swapping)
+    this.sprite.visible =  !(
+      this.empty               ||
+      this.hidden_during_clear ||
+      this.empty_when_swapping ||
+      this.hidden_during_garbage_static
+    )
   }
   /**
    * Swaps the this panel with the panel to it's right.
