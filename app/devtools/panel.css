@@ -27,7 +27,7 @@ body, html {
   .content_wrap .primer {
     padding-left: 140px; }
   .content_wrap.mode_vs {
-    padding-left: 340px; }
+    padding-left: 290px; }
     .content_wrap.mode_vs .stack {
       padding: 16px;
       float: left; }
@@ -75,7 +75,7 @@ body, html {
     width: 140px;
     left: 0; }
   .column.components {
-    width: 200px;
+    width: 150px;
     left: 140px; }
   .column .item {
     font-size: 12px;
