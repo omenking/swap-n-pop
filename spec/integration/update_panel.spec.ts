@@ -174,6 +174,54 @@ describe('panel_actions', function() {
          [0,22,N,STATIC,0,F])
   })
 
+  it('#combo_4x', function(){
+    // 1
+    // 1
+    // 1
+    // 1
+    load([0,19,1,STATIC,0,F],
+         [0,20,1,STATIC,0,F],
+         [0,21,1,STATIC,0,F],
+         [0,22,1,STATIC,0,F])
+    //################################################################
+    playfield.update()
+    chec([0,19,1,CLEAR,99,1],
+         [0,20,1,CLEAR,99,1],
+         [0,21,1,CLEAR,99,1],
+         [0,22,1,CLEAR,99,1])
+    for(let i = 0; i < 99; i++){ playfield.update() }
+    chec([0,19,N,STATIC,0,F],
+         [0,20,N,STATIC,0,F],
+         [0,21,N,STATIC,0,F],
+         [0,22,N,STATIC,0,F])
+  })
+
+  it('#combo_5x', function(){
+    // 1
+    // 1
+    // 1
+    // 1
+    // 1
+    load([0,18,1,STATIC,0,F],
+         [0,19,1,STATIC,0,F],
+         [0,20,1,STATIC,0,F],
+         [0,21,1,STATIC,0,F],
+         [0,22,1,STATIC,0,F])
+    //################################################################
+    playfield.update()
+    chec([0,18,1,CLEAR,108,1],
+         [0,19,1,CLEAR,108,1],
+         [0,20,1,CLEAR,108,1],
+         [0,21,1,CLEAR,108,1],
+         [0,22,1,CLEAR,108,1])
+    for(let i = 0; i < 108; i++){ playfield.update() }
+    chec([0,18,N,STATIC,0,F],
+         [0,19,N,STATIC,0,F],
+         [0,20,N,STATIC,0,F],
+         [0,21,N,STATIC,0,F],
+         [0,22,N,STATIC,0,F])
+  })
+
   it('#combo_6x', function(){
     // 2 3
     // 2 3

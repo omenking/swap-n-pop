@@ -42,6 +42,10 @@ class ComponentPanelBlank{
 
   change_state(state: any){
   }
+
+  comboable_with(kind){
+    return false
+  }
 }
 
 const blank = new ComponentPanelBlank()

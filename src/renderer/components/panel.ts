@@ -127,7 +127,8 @@ export default class ComponentPanel {
       this.chain,
       this.garbage.snap,
       this.group,
-      snap_particles
+      snap_particles,
+      this.state_timer
     ]
   }
 
@@ -146,6 +147,7 @@ export default class ComponentPanel {
         particle = data[8][i]
       })
     }
+    this.state_timer = data[9]
   }
 
   /** */
@@ -343,7 +345,7 @@ export default class ComponentPanel {
     if (this.state === STATIC && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
     // 3 already have been marked for being cleared on first frame
-    if (this.state === CLEAR && this.playfield.clearing.indexOf(this)) { return false }
+    if (this.state === CLEAR && this.playfield.clearing.indexOf(this)) { return true }
     return false
   }
 
@@ -552,19 +554,23 @@ export default class ComponentPanel {
   chain_and_combo() {
     if (!this.comboable) { return }
 
-    if (this.left.comboable  && this.left.kind  === this.kind &&
-        this.right.comboable && this.right.kind === this.kind) {
+    if (this.left.comboable_with( this.kind) &&
+        this.right.comboable_with(this.kind)) {
       this.left.clear()
       this.clear()
       this.right.clear()
     }
 
-    if (this.above.comboable  && this.above.kind  === this.kind &&
-        this.under.comboable  && this.under.kind  === this.kind) {
+    if (this.above.comboable_with( this.kind) &&
+        this.under.comboable_with( this.kind)) {
       this.above.clear()
       this.clear()
       this.under.clear()
     }
+  }
+
+  comboable_with(kind){
+    return this.comboable && this.kind === kind
   }
 
   /**
