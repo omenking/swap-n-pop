@@ -3,7 +3,12 @@ import * as seedrandom from 'seedrandom'
 import Stage           from 'states/mode_vs'
 import Playfield       from 'components/playfield'
 import Stack           from 'core/stack'
-import {playfield_helper} from 'helper'
+import {
+  playfield_load,
+  playfield_check,
+  playfield_helper,
+  R, T, F, N, NN
+} from 'helper'
 
 import {
   PANELS,
@@ -27,28 +32,8 @@ const N  = null
 const NN = [null,null,null,null]
 let playfield = null
 
-function load(...arr){
-  for (let i of arr){
-    playfield.stack_xy(i[0], i[1]).load(i)
-  }
-}
-
-function chec(...arr){
-  for (let i of arr){
-    let data = playfield.stack_xy(i[0], i[1]).snap
-    // its a bit hard to debug, so I added type and post
-    // so when tests fail they are more readble
-    // eg   AssertionError: expected [ 'chain', '1,20', 1 ] to deeply equal [ 'chain', '1,20', 0 ]
-    let pos  = `${i[0]},${i[1]}`
-    if (i[2] === R)
-      expect(data[2]).to.be.a('number',`${pos}: kind`) //kind
-    else
-      expect(data[2]).eql(i[2]   ,`${pos}: kind`) //kind
-    expect(data[3]   ).eql(i[3]   ,`${pos}: state`  ) //state
-    expect(data[4]   ).eql(i[4]   ,`${pos}: counter`) //counter
-    expect(data[5]   ).eql(i[5]   ,`${pos}: chain`  ) //chain
-  }
-}
+function load(...arr){ playfield_load(playfield,...arr)  }
+function chec(...arr){ playfield_check(playfield,...arr) }
 
 describe('panel_actions', function() {
   beforeEach(function(){
