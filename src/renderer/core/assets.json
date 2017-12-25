@@ -44,43 +44,43 @@
     },
 
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_drop0",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_drop1",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_drop2",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_drop3",
       "options": {}
     },
 
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_pop0",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_pop1",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_pop2",
       "options": {}
     },
     {
-      "type":       "sound_effects",
+      "type": "sound_effects",
       "name": "sfx_pop3",
       "options": {}
     },
@@ -107,7 +107,7 @@
       "options": {
         "x": 16,
         "y": 16,
-        "frames": 36
+        "frames": 18
       }
     },
     {
@@ -116,7 +116,7 @@
       "options": {
         "x": 16,
         "y": 24,
-        "frames": 36
+        "frames": 18
       }
     },
 
