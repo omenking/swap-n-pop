@@ -1,3 +1,4 @@
+import {playfield_helper} from 'helper'
 import * as fs         from 'fs'
 import * as seedrandom from 'seedrandom'
 import Stage           from 'states/mode_vs'
@@ -6,6 +7,8 @@ import Stack           from 'core/stack'
 import controls        from 'core/controls'
 
 const N = null
+
+let playfield = null
 
 controls.create()
 
@@ -60,36 +63,37 @@ describe('Playfield', function() {
       stack.create(5,1,'average','average')
       playfield = new Playfield(0)
     })
-    it('should create stack of 72 with push', function(){
+    it('should create stack of 144 with push', function(){
       playfield.create(stage,{push: true, x: 0, y: 0, panels: stack.panels})
       playfield.stack_len.should.eql(144)
     })
-    it('should create stack of 66 without push', function(){
+    it('should create stack of 138 without push', function(){
       playfield.create(stage,{x: 0, y: 0, panels: stack.panels})
-      playfield.stack_len.should.eql(66)
+      playfield.stack_len.should.eql(138)
     })
     it('should create stack full of panels', function(){
       playfield.create(stage,{x: 0, y: 0, panels: stack.panels})
-      for(let panel of playfield.stack()){
+      for(let panel of playfield.stack){
         panel.should.all.be.a('Panel')
       }
     })
   })
 
   describe('#fill_panels()' ,function(){
-    let stage     = null
-    let stack     = null
-    let playfield = null
-    beforeEach(function(){
-      stage = new Stage()
-      stage.init({
-        seed: 'test',
-        cpu: [false,null]
-      })
-      playfield = new Playfield(0)
-    })
-    it('should fill panels', function(){
-      playfield.create(stage,{push: true, x: 0, y: 0, panels: [
+    playfield = playfield_helper({cpu: [false,null],panels: [
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+
         N,N,N,N,N,N,
         N,N,N,N,N,N,
         N,N,N,N,N,N,
@@ -101,19 +105,13 @@ describe('Playfield', function() {
         N,N,N,N,N,N,
         N,N,N,N,N,N,
         1,2,3,4,N,1
-      ]})
-
-      //for(let panel of playfield.stack){
-        //let i = playfield.stack.indexOf(panel)
-        //console.log(i,panel.serialize())
-      //}
-
-      playfield.stack(0,10).kind.should.eql(1)
-      playfield.stack(1,10).kind.should.eql(2)
-      playfield.stack(2,10).kind.should.eql(3)
-      playfield.stack(3,10).kind.should.eql(4)
-      playfield.stack(5,10).kind.should.eql(1)
-    })
+    ]})
+    expect(playfield.stack_xy(0,22).kind).eql(1)
+    expect(playfield.stack_xy(1,22).kind).eql(2)
+    expect(playfield.stack_xy(2,22).kind).eql(3)
+    expect(playfield.stack_xy(3,22).kind).eql(4)
+    expect(playfield.stack_xy(4,22).kind).eql(null)
+    expect(playfield.stack_xy(5,22).kind).eql(1)
   })
 
   describe('#update_stack()' ,function(){
@@ -135,10 +133,21 @@ describe('Playfield', function() {
   })
 
   describe('#chain_and_combo()' ,function(){
-    let stage     = null
-    let stack     = null
-    let playfield = null
-    let panels = [
+    beforeEach(function(){
+      playfield = playfield_helper({cpu: [false,null], panels: [
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+        N,N,N,N,N,N,
+
         N,N,N,N,N,N,
         N,N,N,N,N,N,
         N,N,N,N,N,N,
@@ -150,26 +159,22 @@ describe('Playfield', function() {
         1,N,N,N,N,N,
         1,N,N,N,N,N,
         1,N,N,N,N,N
-      ]
-    beforeEach(function(){
-      stage = new Stage()
-      stage.init({
-        seed: 'test',
-        cpu: [false,null]
-      })
-      playfield = new Playfield(0)
-      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-
+      ]})
     })
     it('should find one chain_and_combo', function(){
-
-      playfield.chain_and_combo().should.eql([3,false])
+      playfield.chain_and_combo().should.eql([3,1])
     })
   })
+
+  //describe('#danger()' ,function(){
+    //it('should be in danger when garbage on top most visible panel'){
+      //const playfield = playfield_helper({cpu: [false,null]})
+    //}
+  //})
 
   describe('#push()' ,function(){
     it('should shift panels up in stack', function(){
-      let panels = [
+      playfield = playfield_helper({cpu: [false,null],panels:[
           N,N,N,N,N,N,
           N,N,N,N,N,N,
           N,N,N,N,N,N,
@@ -178,66 +183,35 @@ describe('Playfield', function() {
           N,N,N,N,N,N,
           N,N,N,N,N,N,
           N,N,N,N,N,N,
-          1,N,N,N,N,N,
-          2,N,N,N,N,N,
-          3,N,N,N,N,N
-        ]
-      let stage = new Stage()
-      stage.init({
-        seed: 'test',
-        cpu: [false,null]
-      })
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
 
-      let playfield = new Playfield(0)
-      playfield.create(stage,{push: false, x: 0, y: 0, panels: panels})
-
-      playfield.stack(0,8).kind.should.eql(1)
-      playfield.stack(0,9).kind.should.eql(2)
-
-      playfield.stack(0,8).y.should.eql(8)
-      playfield.stack(0,9).y.should.eql(9)
-
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          N,N,N,N,N,N,
+          1,N,N,N,N,N, //20
+          2,N,N,N,N,N, //21
+          3,N,N,N,N,N  //22
+      ]})
+      expect(playfield.stack_xy(0,20).kind).eql(1)
+      expect(playfield.stack_xy(0,21).kind).eql(2)
+      expect(playfield.stack_xy(0,20).y).eql(20)
+      expect(playfield.stack_xy(0,21).y).eql(21)
       playfield.push()
-      playfield.stack(0,8).kind.should.eql(2)
-      playfield.stack(0,9).kind.should.eql(3)
-
-      playfield.stack(0,8).y.should.eql(8)
-      playfield.stack(0,9).y.should.eql(9)
+      expect(playfield.stack_xy(0,20).kind).eql(2)
+      expect(playfield.stack_xy(0,21).kind).eql(3)
+      expect(playfield.stack_xy(0,20).y).eql(20)
+      expect(playfield.stack_xy(0,21).y).eql(21)
     })
   })
 
-  describe('#snap()' ,function(){
-    let panels = [
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        N,N,N,N,N,N,
-        1,N,N,N,N,N,
-        2,N,N,N,N,N,
-        3,N,N,N,N,N
-      ]
-    let stage = new Stage()
-    stage.init({seed: 'test', cpu: [false,null] })
-
-    const playfield = new Playfield(0)
-    const snapshot  = new Array(3)
-    playfield.create(stage,{countdown: false, push: true, x: 0, y: 0, panels: panels})
-    playfield.create_after()
-    snapshot[0] = playfield.snap
-    playfield.update()
-    snapshot[1] = playfield.snap
-    playfield.update()
-    snapshot[2] = playfield.snap
-    playfield.update()
-    snapshot[0][1].should.eql(1000)
-    snapshot[1][1].should.eql(999)
-    snapshot[2][1].should.eql(998)
-  })
-
-  describe('#load()' ,function(){
-  })
+  describe.skip('#snap()' ,function(){})
+  describe.skip('#load()' ,function(){})
 }) //klass

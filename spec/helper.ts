@@ -12,19 +12,28 @@ export const N  = null
 export const NN = [null,null,null,null]
 
 export function playfield_helper(opts={}){
-  const cpu = opts.cpu ? opts.cpu : [false,false]
+  const cpu       = opts.cpu       ? opts.cpu       : [false,false]
+  const countdown = opts.countdown ? opts.countdown : false
+  const push      = opts.countdown ? opts.push      : false
+  const panels    = opts.panels    ? opts.panels    : new Array(PANELS).fill(null)
   const stage = new Stage()
   stage.init({
     seed: 'test',
     cpu: cpu
   })
   stage.state = RUNNING
-  const playfield     = new Playfield(0)
+  const playfield      = new Playfield(0)
   playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
   playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
   playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
   playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
-  playfield.create(stage,{push: false, x: 0, y: 0, panels: new Array(PANELS).fill(null)})
+  playfield.create(stage,{
+    countdown : countdown,
+    push      : push,
+    x         : 0,
+    y         : 0,
+    panels    : panels
+  })
   return playfield
 }
 
