@@ -38,6 +38,11 @@ body, html {
       padding: 4px;
       border: solid 1px #c8c8c8;
       vertical-align: top; }
+      .content_wrap.mode_vs td.changed {
+        background: #c8c8ff; }
+      .content_wrap.mode_vs td .prop.changed {
+        color: #0000c8;
+        font-weight: 600; }
       .content_wrap.mode_vs td.inv {
         background: #e6e6e6; }
       .content_wrap.mode_vs td.vis {
