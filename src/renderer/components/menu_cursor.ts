@@ -62,13 +62,11 @@ export default class ComponentMenuCursor {
   confirm(tick) {
     if (tick > 0) { return }
     game.sounds.confirm()
-    console.log(this.menu_items,this.index)
     return this.menu_items[this.index]()
   }
 
   cancel(tick) {
     if (tick > 0) { return }
-    return console.log('cancel');
   }
 
   update() {
