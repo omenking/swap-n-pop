@@ -1,49 +1,34 @@
 import { ipcRenderer as ipc } from "electron";
 
-import State    from 'states/base'
 import game     from 'core/game'
+import State    from 'states/base'
 import controls from 'core/controls'
-import { px } from 'core/filters';
+import Store    from 'common/store'
 
+const store = new Store()
+
+// load any external assets and store them in an scoped array
 let external_assets = []
-ipc.on('asset-list', (e, files) => {
-  external_assets = files
-  console.log(files);
-})
+ipc.on('asset-list', (e, files) => external_assets = files)
 
 /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
  *  Uses signals to detect once everything has been loaded correctly
  */
 export default class LoadState extends State {
   private all_assets : Array<{}>
+  private external_asset_dir : string
 
-  get name(): string {
-    return 'load';
-  }
+  get name(): string { return 'load'; }
 
+  /** preload a json file where all assets preconfigs */
   preload() {
     game.load.json('assets', '../src/renderer/core/assets.json');
   }
 
   create() {
+    this.external_asset_dir = store.get('asset-dir')
     this.all_assets = game.cache.getJSON('assets').assets
-    
-    this.all_assets.forEach(e => {
-      let name : string = e["name"];
-
-      switch (e["type"]) {
-        case "music": game.load.audio(name, `./assets/music/${name}.mp3`); break;
-
-        case "sound_effects": game.load.audio(name, `./assets/sound_effects/${name}.ogg`); break;
-
-        case "image": game.load.image(name, `./assets/images/${name}.png`); break;
-
-        case "spritesheet": 
-          let props = e["options"];
-          game.load.spritesheet(name, `./assets/images/${name}.png`, props.x, props.y, props.frames);
-          break;
-      }
-    })
+    this.load_assets();
 
     game.load.onLoadComplete.add(() => { 
       controls.create()
@@ -52,5 +37,55 @@ export default class LoadState extends State {
     }, this)
 
     game.load.start();
+  }
+  
+  /** Loads all assets in the assets folder
+   *  if any assets with the same name, data type etc exist in the 
+   *  external assets folder -> external asset is loaded instead of the
+   *  actual asset.
+   *  
+   *  This allows other to replace any assets with their own if 
+   *  they behave under the restrictions defined in assets.json  
+   */
+  load_assets() {
+    this.all_assets.forEach(e => {
+      let type : string = e["type"];
+      let name : string = e["name"];
+      let load_external = external_assets.find(a => a === name)
+      let path : string = this.asset_path(type, name, load_external)
+
+      switch (type) {
+        case "music": game.load.audio(name, path); break;
+        case "sound_effects": game.load.audio(name, path); break;
+        case "image": game.load.image(name, path); break;
+        case "spritesheet": 
+          let props = e["options"];
+          game.load.spritesheet(name, path, props.x, props.y, props.frames);
+          break;
+      }
+    })
+  }
+
+  /**
+   * @param type either music, sound_effects, image, spritesheet
+   * @param name name of the asset
+   * @param external if the path should be external or not
+   * @returns the path based on type
+   */ 
+  asset_path(type : string, name : string, external) {
+    if (!external) 
+      switch (type) {
+        case "music": return `./assets/music/${name}.mp3`
+        case "sound_effects": return `./assets/sound_effects/${name}.ogg`
+        case "image": return `./assets/images/${name}.png`
+        case "spritesheet": return `./assets/images/${name}.png`
+      }
+    else 
+      switch (type) {
+        case "music": return this.external_asset_dir + `/${name}.mp3`
+        case "sound_effects": return this.external_asset_dir + `/${name}.ogg`
+        case "image": return this.external_asset_dir + `/${name}.png`
+        case "spritesheet": return this.external_asset_dir + `/${name}.png`
+      }
   }
 }
