@@ -187,10 +187,24 @@ export default class ComponentPanelGarbage {
       this.time_max = TIME_GARBAGE_CLEAR + (len     * TIME_GARBAGE_POP)
       this.time_pop = TIME_GARBAGE_CLEAR + ((len-i) * TIME_GARBAGE_POP)
       this.time_cur = this.time_max - this.panel.counter
+      this.set_particles_clear(i)
     } else {
       this.state = STATIC
       this.group = null
       this.panel.state = STATIC
+    }
+  }
+
+  /*
+   * these are your standard popping particles
+   */
+  set_particles_clear(i){
+    if (this.time_cur === this.time_pop) {
+      this.panel.particles[0].set_counter()
+      this.panel.particles[1].set_counter()
+      this.panel.particles[2].set_counter()
+      this.panel.particles[3].set_counter()
+      game.sounds.pop(i)
     }
   }
 
