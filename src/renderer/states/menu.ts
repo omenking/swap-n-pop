@@ -1,8 +1,9 @@
 import game          from 'core/game'
 import controls      from 'core/controls'
 import fade          from 'core/fade'
+import {px}          from 'core/filters'
 import ComponentMenu from 'components/menu'
-import State from './base';
+import State         from './base'
 
 /**
  * Higher Order Menu that keeps the menu updated - Adds Background
@@ -10,6 +11,7 @@ import State from './base';
 export default class MenuState extends State {
   private menu : ComponentMenu
   private bg : Phaser.TileSprite
+  private logo : Phaser.Sprite
 
   constructor() {
     super()
@@ -22,8 +24,10 @@ export default class MenuState extends State {
 
   /** loads the gamebackground, creates the menu object */
   create() {
-    this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green');
-    this.menu.create();
+    this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
+    this.logo = game.add.sprite(px(40),0,'logo')
+    this.logo.y = game.world.centerY - this.logo.centerY
+    this.menu.create()
     fade.in()
   }
 
