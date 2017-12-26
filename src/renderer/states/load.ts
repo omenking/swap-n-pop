@@ -4,6 +4,7 @@ import game     from 'core/game'
 import State    from 'states/base'
 import controls from 'core/controls'
 import Store    from 'common/store'
+//import * as assets   from 'core/assets'
 
 const store = new Store()
 
@@ -22,7 +23,7 @@ export default class LoadState extends State {
 
   /** preload a json file where all assets preconfigs */
   preload() {
-    game.load.json('assets', '../src/renderer/core/assets.json');
+    game.load.json('assets', './assets.json');
   }
 
   create() {
