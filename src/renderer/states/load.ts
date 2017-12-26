@@ -123,6 +123,9 @@ export default class LoadState extends State {
 
     game.load.spritesheet('star_counter', './assets/images/star_counter.png',px(16),px(16),12)
 
+    game.load.spritesheet('particle_clear'  , './assets/images/particle_clear.png'  ,px(8),px(8),32)
+    game.load.spritesheet('particle_garbage', './assets/images/particle_garbage.png',px(16),px(16),4)
+
     game.load.spritesheet('bauble'          , './assets/images/bauble.png',px(3),px(16),6)
     game.load.image(      'bauble_times'    , './assets/images/bauble_times.png')
     game.load.spritesheet('bauble_num'      , './assets/images/bauble_num.png',px(6),px(9),10)

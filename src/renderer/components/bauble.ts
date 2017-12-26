@@ -1,12 +1,14 @@
 import game    from 'core/game'
 import ComponentPanel  from 'components/panel'
+import ComponentParticleGarbage from 'components/particle_garbage'
+import ComponentParticleBauble  from 'components/particle_bauble'
 import { UNIT, CLEAR, BAUBLE_FLOAT } from 'core/data';
 import { px } from 'core/filters';
 
 export default class ComponentBauble {
   get [Symbol.toStringTag](){ return 'Bauble' }
 
-  private panel            : ComponentPanel
+  public  panel            : ComponentPanel
   private chain            : Phaser.Group
   private chain_left       : Phaser.Sprite
   private chain_middle     : Phaser.Sprite
@@ -22,11 +24,44 @@ export default class ComponentBauble {
   private combo_right      : Phaser.Sprite
   private combo_int0       : Phaser.Sprite
   private combo_small_int0 : Phaser.Sprite
+  private particles : Array<ComponentParticleBauble>
+  public particle_garbage : ComponentParticleGarbage
 
+  constructor(){
+    this.particle_garbage = new ComponentParticleGarbage()
+    this.particles = [
+      new ComponentParticleBauble(0),
+      new ComponentParticleBauble(1),
+      new ComponentParticleBauble(2),
+      new ComponentParticleBauble(3),
+      new ComponentParticleBauble(4),
+      new ComponentParticleBauble(5)
+    ]
+  }
   create(panel) {
     this.panel = panel
     this.create_chain()
     this.create_combo()
+
+    this.particle_garbage.create(this)
+    this.particles[0].create(this)
+    this.particles[1].create(this)
+    this.particles[2].create(this)
+    this.particles[3].create(this)
+    this.particles[4].create(this)
+    this.particles[5].create(this)
+
+    // circular path is getting set,
+    // angle needs to be defined so the particles know where to start properly
+    // if type: "normal" you should only define 4 ComponentParticles, not more not less,
+    // if type: "rotate" the amount of particles doesnt matter
+    //let angle = 0;
+    //let step = (2 * Math.PI) / this.particles.length;
+    //this.particles.forEach((particle, i) => {
+      //particle.create({panel: this, type: "rotate", id: i, angle: angle});
+      //angle += step;
+    //});
+
   }
 
   create_chain() {
@@ -73,6 +108,13 @@ export default class ComponentBauble {
 
 
   update() {
+    this.particle_garbage.update()
+    this.particles[0].update()
+    this.particles[1].update()
+    this.particles[2].update()
+    this.particles[3].update()
+    this.particles[4].update()
+    this.particles[5].update()
   }
 
   render() {
@@ -83,6 +125,13 @@ export default class ComponentBauble {
     y    -= BAUBLE_FLOAT[this.panel.time_cur]
     this.render_chain(x,y)
     this.render_combo(x,y)
+    this.particle_garbage.render()
+    this.particles[0].render()
+    this.particles[1].render()
+    this.particles[2].render()
+    this.particles[3].render()
+    this.particles[4].render()
+    this.particles[5].render()
   }
 
   render_chain(x,y) {
