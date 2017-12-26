@@ -1,0 +1,281 @@
+{
+  "assets": [
+    {
+      "type": "music",
+      "name": "msx_stage",
+      "options": {}
+    },
+    {
+      "type": "music",
+      "name": "msx_stage_critical",
+      "options": {}
+    },
+    {
+      "type": "music",
+      "name": "msx_stage_results",
+      "options": {}
+    },
+
+    {
+      "type": "sound_effects",
+      "name": "sfx_confirm",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_select",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_swap",
+      "options": {}
+    },
+
+    {
+      "type": "sound_effects",
+      "name": "sfx_countdown_blip",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_countdown_ding",
+      "options": {}
+    },
+
+    {
+      "type": "sound_effects",
+      "name": "sfx_drop0",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_drop1",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_drop2",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_drop3",
+      "options": {}
+    },
+
+    {
+      "type": "sound_effects",
+      "name": "sfx_pop0",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_pop1",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_pop2",
+      "options": {}
+    },
+    {
+      "type": "sound_effects",
+      "name": "sfx_pop3",
+      "options": {}
+    },
+
+    {
+      "type": "image",
+      "name": "bg_blue",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "bg_green",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "bg_purple",
+      "options": {}
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "ints_small",
+      "options": {
+        "x": 16,
+        "y": 16,
+        "frames": 18
+      }
+    },
+    {
+      "type": "spritesheet",
+      "name": "ints_large",
+      "options": {
+        "x": 16,
+        "y": 24,
+        "frames": 18
+      }
+    },
+
+    {
+      "type": "image",
+      "name": "menu",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "menu_cursor",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "menu_pause_cursor",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "menu_pause",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "pause",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "puzzle_menu",
+      "options": {}
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "playfield_cursor",
+      "options": {
+        "x": 76,
+        "y": 44,
+        "frames": 2
+      }
+    },
+    {
+      "type": "image",
+      "name": "playfield_vs_frame",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "playfield_vs_bg",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "mode_puzzle_bg",
+      "options": {}
+    },
+    {
+      "type": "spritesheet",
+      "name": "playfield_countdown",
+      "options": {
+        "x": 124,
+        "y": 76,
+        "frames": 4
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "panels",
+      "options": {
+        "x": 32,
+        "y": 32,
+        "frames": 56
+      }
+    },
+    {
+      "type": "spritesheet",
+      "name": "garbage",
+      "options": {
+        "x": 32,
+        "y": 32,
+        "frames": 14
+      }
+    },
+
+    {
+      "type": "image",
+      "name": "playfield_wall0",
+      "options": {}
+    },
+    {
+      "type": "image",
+      "name": "playfield_wall1",
+      "options": {}
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "star_counter",
+      "options": {
+        "x": 32,
+        "y": 32,
+        "frames": 12
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "bauble",
+      "options": {
+        "x": 6,
+        "y": 32,
+        "frames": 6
+      }
+    },
+    {
+      "type": "image",
+      "name": "bauble_times",
+      "options": {}
+    },
+    {
+      "type": "spritesheet",
+      "name": "bauble_num",
+      "options": {
+        "x": 12,
+        "y": 18,
+        "frames": 10
+      }
+    },
+    {
+      "type": "spritesheet",
+      "name": "bauble_num_small",
+      "options": {
+        "x": 10,
+        "y": 18,
+        "frames": 10
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "panel_particles",
+      "options": {
+        "x": 32,
+        "y": 32,
+        "frames": 16
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "zephyr",
+      "options": {
+        "x": 48,
+        "y": 48,
+        "frames": 84
+      }
+    }
+  ]
+}

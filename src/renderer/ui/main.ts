@@ -1,67 +1,84 @@
-import * as m          from 'mithril'
+import * as m               from 'mithril'
+import {ipcRenderer as ipc} from 'electron'
+
 import Ui         from 'ui/mode'
 import UiInput    from 'ui/input'
 import UiNetwork  from 'ui/network'
 import UiAudio    from 'ui/audio'
 import UiReplay   from 'ui/replay'
-import * as electron from 'electron'
+import UiAssets   from 'ui/external_assets'
 
-const {ipcRenderer: ipc} = electron
-
+/** declare html window.document to be usable */
 declare var window: {
   document: any
 }
 
-function class_tab(new_mode){
-  if (Ui.mode === new_mode){
-    return 'active'
-  } else {
-    return ''
-  }
+/**
+ * Wether the current mode is active or not
+ * @param new_mode if the current mode equals the new mode return active
+ */
+function class_tab(new_mode: string) : string {
+  return Ui.mode === new_mode ? 'active' : ''
 }
 
-function click_tab(new_mode){
-  return function(){
-    Ui.mode = new_mode
-  }
+/**
+ * Returns a function that will set the current Ui.mode to the defined one
+ * @param new_mode object returns a object
+ */
+function click_tab(new_mode: string) : object {
+  return () => Ui.mode = new_mode
 }
 
-function nav(){
-  return m('nav.divider',[
-    m('.tab',{className: class_tab('input')  , onclick: click_tab('input')}  ,'Inputs'),
-    m('.tab',{className: class_tab('network'), onclick: click_tab('network')},'Network'),
-    m('.tab',{className: class_tab('audio')  , onclick: click_tab('audio')}  ,'Audio'),
-    m('.tab',{className: class_tab('replay') , onclick: click_tab('replay')}  ,'Replays'),
+/** Return a mithril navigator object with all the tabs and on click methods, names etc */
+function nav() : object {
+  function nav_tab(mode: string, name: string) : object {
+    return m('.tab', {className: class_tab(mode), onclick: click_tab(mode)}, name)
+  }
+
+  return m('nav.divider', [
+    nav_tab('input', 'Inputs'),
+    nav_tab('network', 'Network'),
+    nav_tab('audio', 'Audio'),
+    nav_tab('replay', 'Replay'),
+    nav_tab('assets', 'External Assets'),
     m('.clear')
   ])
 }
-function content(){
-  if      (Ui.mode === 'input')  { return m('.content.settings_input'  ,UiInput()   )}
-  else if (Ui.mode === 'network'){ return m('.content.settings_network',UiNetwork() )}
-  else if (Ui.mode === 'audio')  { return m('.content.settings_audio'  ,UiAudio())}
-  else if (Ui.mode === 'replay') { return m('.content.settings_replay' ,UiReplay()  )}
-}
 
-function render(){
-  const app = {view: function(){
-    if (Ui.mode !== false) {
-      return m('.wrap1',
-        m('.wrap2',[
-          nav(),
-          content()
-        ])
-      )
+/**
+ * Looks through all contents and once one is the same as the current mode it gets returned
+ * @returns a mithril object with each mode's content function being called
+ */
+function content() : object {
+  function check_content(contents: any) {
+    for (let content of contents) {
+      if (Ui.mode === content.mode)
+        return m(`.content.settings_${content.mode}`, content.method())
     }
-  }}
+  }
 
-  const el = window.document.getElementById('ui')
-  m.mount(el, app)
+  return check_content([
+    {mode: 'input',   method: UiInput},
+    {mode: 'network', method: UiNetwork},
+    {mode: 'audio',   method: UiAudio},
+    {mode: 'replay',  method: UiReplay},
+    {mode: 'assets',  method: UiAssets},
+  ])
 }
 
-ipc.on('reload',function(event,data){
+/** mounts the all mithril objects to the html ui div, only visible if Ui.mode is true */
+export default function render() : void {
+  m.mount(
+    window.document.getElementById('ui'), 
+    {
+      view: () => Ui.mode !== false ? m('.wrap1', m('.wrap2', [nav(), content()])) : undefined
+    }
+  )
+}
+
+ipc.on('reload', function(event, data) {
   Ui.mode = data.mode
   window.document.getElementById('game').classList.add('hide')
   m.redraw()
 })
 
-export default render
