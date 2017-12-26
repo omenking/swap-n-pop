@@ -1,6 +1,7 @@
 import * as electron       from 'electron'
 import game                from 'core/game'
 import ComponentMenuCursor from 'components/menu_cursor'
+import {px}          from 'core/filters'
 
 const {ipcRenderer: ipc} = electron
 
@@ -15,8 +16,9 @@ export default class ComponentMenu {
 
   create() {
     // create sprite, choose centerXY and anchor to the middle of the sprite - remembered when rescaling
-    this.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'menu');
+    this.sprite = game.add.sprite(0, game.world.centerY, 'menu');
     this.sprite.anchor.setTo(0.5);
+    this.sprite.x =  game.world.width - (px(60) + (this.sprite.width / 2))
 
     this.cursor.create(this, -90, -46, [
       this.mode_1p_vs_2p_local,

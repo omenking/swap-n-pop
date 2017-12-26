@@ -90,6 +90,13 @@
       "name": "bg_blue",
       "options": {}
     },
+
+    {
+      "type": "image",
+      "name": "logo",
+      "options": {}
+    },
+
     {
       "type": "image",
       "name": "bg_green",
