@@ -53,7 +53,7 @@ export default class ComponentPanel {
   private group         : number
   public time_cur       : number
   private time_pop      : number
-  private particles     : Array<ComponentParticleClear>
+  public particles     : Array<ComponentParticleClear>
   public clear_i        : number
   public clear_len      : number
   private _state_timer   : number
