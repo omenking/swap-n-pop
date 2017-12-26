@@ -1,8 +1,8 @@
 import game from 'core/game'
 import blank                  from 'components/panel_blank'
-import ComponentBaubleChain   from 'components/bauble'
+import ComponentBauble        from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
-import ComponentPanelParticle from 'components/panel_particle'
+import ComponentParticleClear from 'components/particle_clear'
 import ComponentPlayfield     from 'components/playfield'
 import * as ss from 'shuffle-seed'
 import { out_of_bounds } from 'core/filters';
@@ -31,8 +31,7 @@ import {
   TIME_SWAP,
   TIME_CLEAR,
   TIME_POP,
-  TIME_FALL,
-  TIME_PARTICLE
+  TIME_FALL
 } from 'core/data';
 
 /**
@@ -45,7 +44,7 @@ export default class ComponentPanel {
   private _counter      : number
   private _state        : Symbol
   private _chain        : number
-  private bauble_chain  : ComponentBaubleChain
+  private bauble        : ComponentBauble
   public garbage        : ComponentPanelGarbage
   public playfield      : ComponentPlayfield
   public x              : number
@@ -54,7 +53,7 @@ export default class ComponentPanel {
   private group         : number
   public time_cur       : number
   private time_pop      : number
-  private particles     : Array<ComponentPanelParticle>
+  private particles     : Array<ComponentParticleClear>
   public clear_i        : number
   public clear_len      : number
   private _state_timer   : number
@@ -102,22 +101,19 @@ export default class ComponentPanel {
 
   /** */
   constructor() {
-    this.bauble_chain  = new ComponentBaubleChain()
-    this.garbage       = new ComponentPanelGarbage()
+    this.bauble  = new ComponentBauble()
+    this.garbage = new ComponentPanelGarbage()
 
-    // each panel has 5 particles - in create these are set to follow a circular path!
-    this.particles = [];
-    for (let i = 0; i < 5; i++)
-      this.particles[i] = new ComponentPanelParticle();
+    this.particles = [
+      new ComponentParticleClear(0),
+      new ComponentParticleClear(1),
+      new ComponentParticleClear(2),
+      new ComponentParticleClear(3)
+    ]
   }
 
   /** */
   get snap() {
-    let snap_particles = []
-    this.particles.forEach((particle, i) => {
-      snap_particles[i] = particle.snap
-    })
-
     return [
       this.x,
       this.y,
@@ -127,7 +123,12 @@ export default class ComponentPanel {
       this.chain,
       this.garbage.snap,
       this.group,
-      snap_particles,
+      [
+        this.particles[0].snap,
+        this.particles[1].snap,
+        this.particles[2].snap,
+        this.particles[3].snap
+      ],
       this.state_timer
     ]
   }
@@ -143,9 +144,10 @@ export default class ComponentPanel {
     this.garbage.load(data[6])
     this.group   = data[7]
     if (data[8]){
-      this.particles.forEach((particle, i) => {
-        particle = data[8][i]
-      })
+      this.particles[0].load(data[8][0])
+      this.particles[1].load(data[8][1])
+      this.particles[2].load(data[8][2])
+      this.particles[3].load(data[8][3])
     }
     this.state_timer = data[9]
   }
@@ -193,18 +195,11 @@ export default class ComponentPanel {
     this.sprite.visible = false
 
     this.garbage.create(this,this.playfield)
-    this.bauble_chain.create(this)
-
-    // circular path is getting set,
-    // angle needs to be defined so the particles know where to start properly
-    // if type: "normal" you should only define 4 ComponentParticles, not more not less,
-    // if type: "rotate" the amount of particles doesnt matter
-    let angle = 0;
-    let step = (2 * Math.PI) / this.particles.length;
-    this.particles.forEach((particle, i) => {
-      particle.create({panel: this, type: "rotate", id: i, angle: angle});
-      angle += step;
-    });
+    this.bauble.create(this)
+    this.particles[0].create(this)
+    this.particles[1].create(this)
+    this.particles[2].create(this)
+    this.particles[3].create(this)
   }
 
   swap_l_execute    () { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
@@ -279,13 +274,9 @@ export default class ComponentPanel {
       this.time_pop = TIME_CLEAR + (TIME_POP*this.clear_i)
       this.time_cur = time_max - this.counter
 
-      if (this.time_cur === this.time_pop) {
-        this.particles.forEach((particle) => {
-          particle.counter = TIME_PARTICLE
-        });
+      this.set_particle_garbage()
+      this.set_particles_clear()
 
-        game.sounds.pop(this.clear_i)
-      }
     } else {
       if (this.above.static_stable)
         this.above.chain += 1
@@ -297,6 +288,31 @@ export default class ComponentPanel {
     this.counter = 0
     this.chain   = 0
     this.group   = null
+  }
+
+  /*
+   * particle garbage is the particle that flies from
+   * the bauble to where the garbage thumbnail will appear
+   * it represents an incoming garbage payload.
+   *
+   */
+  set_particle_garbage(){
+    if (this.time_cur === this.time_pop && this.clear_i === 0) {
+      this.bauble.particle_garbage.set_counter()
+    }
+  }
+
+  /*
+   * these are your standard popping particles
+   */
+  set_particles_clear(){
+    if (this.time_cur === this.time_pop) {
+      this.particles[0].set_counter()
+      this.particles[1].set_counter()
+      this.particles[2].set_counter()
+      this.particles[3].set_counter()
+      game.sounds.pop(this.clear_i)
+    }
   }
 
 
@@ -443,7 +459,11 @@ export default class ComponentPanel {
    *
    */
   update() {
-    this.particles.forEach(particle => particle.update())
+    this.bauble.update()
+    this.particles[0].update()
+    this.particles[1].update()
+    this.particles[2].update()
+    this.particles[3].update()
 
     if (this.state === GARBAGE) {
       this.garbage.update()
@@ -659,13 +679,16 @@ export default class ComponentPanel {
   }
   /** */
   render(){
-    this.particles.forEach(particle => particle.render())
+    this.particles[0].render()
+    this.particles[1].render()
+    this.particles[2].render()
+    this.particles[3].render()
 
     this.sprite.x = this.x * UNIT
     this.sprite.y = this.y * UNIT
     this.animate()
     this.render_visible()
-    this.bauble_chain.render()
+    this.bauble.render()
     this.garbage.render()
   }
   /** */

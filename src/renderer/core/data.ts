@@ -38,6 +38,11 @@ export const COMBO = Symbol('combo');
 export const CHAIN = Symbol('chain');
 
 // Animation Frame
+export const FRAME_CLEAR_PARTICLE     = [1,0,1,0,1 ,1 ,0 ,1 ,2 ,2 ,3 ,3 ,3 ,4 ,4 ,5 ,5 ,6 ,6 ,6 ,7 ,7 ,7 ,7 ,7 ]
+export const ANIM_CLEAR_PARTICLE_MOVE = [4,6,9,9,10,11,11,12,12,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14]
+
+
+
 export const FRAME_LAND = [4, 4, 4, 2, 2, 2, 3, 3, 3, 0];
 export const FRAME_CLEAR = [5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
                             5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
@@ -64,7 +69,7 @@ export const TIME_FALL = 3;
 export const TIME_SWAP = 4;
 export const TIME_PUSH = 1000;
 /** The time the particle stays on the screen for. */
-export const TIME_PARTICLE = 20;
+export const TIME_CLEAR_PARTICLE = FRAME_CLEAR_PARTICLE.length;
 export const TIME_GARBAGE_CLEAR = 30;
 export const TIME_GARBAGE_POP = 12;
 

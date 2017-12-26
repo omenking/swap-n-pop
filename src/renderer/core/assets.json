@@ -260,21 +260,31 @@
 
     {
       "type": "spritesheet",
-      "name": "panel_particles",
-      "options": {
-        "x": 32,
-        "y": 32,
-        "frames": 16
-      }
-    },
-
-    {
-      "type": "spritesheet",
       "name": "zephyr",
       "options": {
         "x": 48,
         "y": 48,
         "frames": 84
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "particle_clear",
+      "options": {
+        "x": 16,
+        "y": 16,
+        "frames": 32
+      }
+    },
+
+    {
+      "type": "spritesheet",
+      "name": "particle_garbage",
+      "options": {
+        "x": 32,
+        "y": 32,
+        "frames": 4
       }
     }
   ]
