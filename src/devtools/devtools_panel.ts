@@ -196,19 +196,19 @@ function stack_y_counter(y){
   }, y)
 }
 
-function stack_row(y : number){
+function stack_row(y : number, pi: number){
   if ( (y < ROWS_INV) && stack_actions_state.rows.inv === false) { return }
   if (!(y < ROWS_INV) && stack_actions_state.rows.vis === false) { return }
 
   return m('tr',[
     stack_y_counter(y),
-    stack_panel(0,y),
-    stack_panel(1,y),
-    stack_panel(2,y),
+    stack_panel(0,y,pi),
+    stack_panel(1,y,pi),
+    stack_panel(2,y,pi),
 
-    stack_panel(3,y),
-    stack_panel(4,y),
-    stack_panel(5,y)
+    stack_panel(3,y,pi),
+    stack_panel(4,y,pi),
+    stack_panel(5,y,pi)
   ])
 }
 
@@ -228,32 +228,40 @@ function stack_panel_data(i: number, data, data_prev){
   ]
 }
 
+function kind_class(val){
+  return `devtools_panel${val}`
+}
+
 function stack_panel_class(data,data_prev){
+  const classes = []
+  if (data[2] !== null)
+    classes.push(kind_class(data[2]))
+
   if (
       data[2] !== data_prev[2] ||
       data[3] !== data_prev[3] ||
       data[4] !== data_prev[4] ||
       data[5] !== data_prev[5]
      ){
-    return 'changed'
+    classes.push('changed')
   }
-  return ''
+  return classes.join(' ')
 }
 
-function stack_panel(x: number, y: number){
+function stack_panel(x: number, y: number, pi: number){
   const i         = xy2i(x,y)
-  const data      = snapshot[1][2][i]
-  const data_prev = snapshot_prev[1][2][i]
+  const data      = snapshot[pi+1][2][i]
+  const data_prev = snapshot_prev[pi+1][2][i]
   return m('td', { className: stack_panel_class(data,data_prev)},
     stack_panel_data(i,data,data_prev)
   )
 }
 
-function stack(pl : number){
-  if (stack_actions_state.playfields[`pl${pl}`] === false) { return }
+function stack(pi : number){
+  if (stack_actions_state.playfields[`pl${pi}`] === false) { return }
   const rows = []
   for(let i = 0; i < ROWS; i++){
-    rows.push(stack_row(i))
+    rows.push(stack_row(i,pi))
   }
   return m('.stack',m('table',rows))
 }

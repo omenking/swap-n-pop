@@ -81,7 +81,7 @@ const config_devtools = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: "css-loader" },
+            { loader: "css-loader", options: {url: false} },
             {
               loader: 'sass-loader',
               options: { indentedSyntax: true }
@@ -93,7 +93,7 @@ const config_devtools = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
-          use: "css-loader"
+          use: [{ loader: "css-loader", options: {url: false} }]
         })
       }
     ]

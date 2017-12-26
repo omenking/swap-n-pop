@@ -37,16 +37,32 @@ body, html {
       font-size: 11px;
       padding: 4px;
       border: solid 1px #c8c8c8;
-      vertical-align: top; }
+      vertical-align: top;
+      background-position: top right;
+      background-repeat: no-repeat; }
+      .content_wrap.mode_vs td.devtools_panel0 {
+        background-image: url("devtools_panel0.png"); }
+      .content_wrap.mode_vs td.devtools_panel1 {
+        background-image: url("devtools_panel1.png"); }
+      .content_wrap.mode_vs td.devtools_panel2 {
+        background-image: url("devtools_panel2.png"); }
+      .content_wrap.mode_vs td.devtools_panel3 {
+        background-image: url("devtools_panel3.png"); }
+      .content_wrap.mode_vs td.devtools_panel4 {
+        background-image: url("devtools_panel4.png"); }
+      .content_wrap.mode_vs td.devtools_panel5 {
+        background-image: url("devtools_panel5.png"); }
+      .content_wrap.mode_vs td.devtools_panel6 {
+        background-image: url("devtools_panel6.png"); }
       .content_wrap.mode_vs td.changed {
-        background: #c8c8ff; }
+        background-color: #c8c8ff; }
       .content_wrap.mode_vs td .prop.changed {
         color: #0000c8;
         font-weight: 600; }
       .content_wrap.mode_vs td.inv {
-        background: #e6e6e6; }
+        background-color: #e6e6e6; }
       .content_wrap.mode_vs td.vis {
-        background: #c8c8c8; }
+        background-color: #c8c8c8; }
     .content_wrap.mode_vs .stack_actions {
       font-size: 12px;
       padding: 6px;
