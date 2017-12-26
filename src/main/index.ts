@@ -1,11 +1,12 @@
+import {app, shell, Menu, BrowserWindow, ipcMain as ipc, dialog} from 'electron'
 import * as path     from 'path'
 import * as url      from 'url'
-import * as electron from 'electron'
+
 import Replay from 'common/replay'
+import ExternalAssets from 'common/external_assets';
 import Logger from 'common/logger'
 import Store  from 'common/store'
 
-const {app, shell, Menu, BrowserWindow, ipcMain: ipc, dialog} = electron
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
 const store = new Store()
@@ -14,6 +15,7 @@ const store = new Store()
 
 let win, win_settings = null
 Replay.dir(undefined, undefined)
+ExternalAssets.dir()
 
 if (!store.has('network.host_port')) { store.set('network.host_port',22022) }
 if (!store.has('network.join_host')) { store.set('network.join_host','192.168.0.0') }
@@ -53,7 +55,8 @@ const template : any = [
       {click: click_settings('input')  , label: "Input"},
       {click: click_settings('network'), label: "Network"},
       {click: click_settings('audio')  , label: "Audio"},
-      {click: click_settings('replay') , label: "Replay"}
+      {click: click_settings('replay') , label: "Replay"},
+      {click: click_settings('assets') , label: "External Assets"},
     ]
   },
   {
@@ -186,6 +189,25 @@ ipc.on('replay-load', (event,name) => {
     win.webContents.send('replay-load',data)
   })
 })
+
+ipc.on('asset-dir-reveal',  e => shell.openItem(ExternalAssets.dir()))
+ipc.on('asset-dir-reset',   e => win.webContents.send('asset-dir', ExternalAssets.dir('reset')))
+
+ipc.on('asset-dir-change', e => {
+  dialog.showOpenDialog(win, {
+    properties: ['openDirectory']
+  }, data => {
+    if (data !== undefined && data !== null && data.length > 0)
+      win.webContents.send('asset-dir', ExternalAssets.dir('change', data[0]))
+  })
+})
+
+ipc.on('asset-list', e => {
+  ExternalAssets.list((err, files) => {
+    win.webContents.send('asset-list', files)
+  })
+})
+
 ipc.on('play-vs', (event,{seed,online,cpu}) => {
   console.log('seed_____:0',seed)
   if (online){

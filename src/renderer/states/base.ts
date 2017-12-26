@@ -10,6 +10,7 @@ export default abstract class State {
   abstract get name(): string;
 
   init(data: any) {}
+  preload() {}
   create() {}
   shutdown() {}
   update() {}
