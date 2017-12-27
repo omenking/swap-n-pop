@@ -214,7 +214,7 @@ export default class ComponentPanel {
   }
 
   hang_enter() {
-    this.counter = 0
+    this.counter = 10
   }
 
   swapping_l_enter() {
@@ -254,7 +254,12 @@ export default class ComponentPanel {
       this.state   = STATIC
       this.counter = 0
       this.chain   = 0
-    } else {
+    } 
+    else if (this.under.state === HANG) {
+        this.state = HANG;
+        this.counter = this.under.counter;
+    }
+    else {
       this.change_state(LAND);
     }
   }
