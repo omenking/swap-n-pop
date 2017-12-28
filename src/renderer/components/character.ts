@@ -141,11 +141,14 @@ export default class ComponentCharacter {
     this.last_animation    = data[4]
   }
 
+  /** tick down the animation frames */
+  update() {
+    this.play_animation()
+  }
+
   /** update the position and render all animations */
   render() {
     this.sprite.x = this.x
     this.sprite.y = this.y
-
-    this.play_animation()
   }
 }
