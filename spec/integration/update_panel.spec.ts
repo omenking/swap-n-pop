@@ -329,4 +329,17 @@ describe('panel_actions', function() {
     playfield.update()
     chec([0,12 ,0,HANG,0,F])
   })
+
+  it('#fall-interrupt', function(){
+      load([0,17,4,STATIC,0,F], [1,17,5,HANG,1,F],
+           [0,18,5,STATIC,0,F], [1,18,4,HANG,1,F],
+           [0,19,4,STATIC,0,F], 
+           [0,20,3,STATIC,0,F],
+                                [1,21,3,HANG,9,F],
+           [0,22,1,STATIC,0,F])
+           
+      playfield.update();
+      
+      chec([1,17,5,FALL,0,F]);
+  })
 }) //klass
