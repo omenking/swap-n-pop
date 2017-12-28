@@ -1,16 +1,17 @@
+import {state} from 'devtools_common/data'
 import * as m  from 'mithril'
 /*
  * currently unused
  */
 function tab_active(kind){
-  if (kind === state)
+  if (kind === state.state_component)
     return 'active'
   return ''
 }
 
 function tab_click(kind){
   return function(){
-    state = kind
+    state.state_component = kind
   }
 }
 
