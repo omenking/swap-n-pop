@@ -125,7 +125,8 @@ export default class Playfield {
       snap_stack,
       snap_countdown,
       this.pushing,
-      this.character.snap
+      this.character.snap,
+      this.garbage.snap
     ]
   }
   load(snapshot) {
@@ -137,6 +138,7 @@ export default class Playfield {
     this.countdown.load(snapshot[3])
     this.pushing = snapshot[4]
     this.character.load(snapshot[5])
+    this.garbage.load(snapshot[6])
   }
   create(stage,opts) {
     if (stage === null) {

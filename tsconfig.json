@@ -11,7 +11,9 @@
       "core/*"       : ["src/renderer/core/*"],
       "states/*"     : ["src/renderer/states/*"],
       "ui/*"         : ["src/renderer/ui/*"],
-      "common/*"     : ["src/common/*"]
+      "common/*"     : ["src/common/*"],
+      "devtools_components/*" : ["src/devtools/components/*"],
+      "devtools_common/*" : ["src/devtools/common/*"]
     }
   },
   "files": [
