@@ -26,6 +26,48 @@ body, html {
   height: 100%; }
   .content_wrap .primer {
     padding-left: 140px; }
+  .content_wrap .actions {
+    font-size: 12px;
+    padding: 6px;
+    border-bottom: solid 1px #c8c8c8; }
+    .content_wrap .actions .lbl {
+      font-weight: 600;
+      padding-right: 8px; }
+  .content_wrap.garbage {
+    padding-left: 290px; }
+    .content_wrap.garbage .actions select {
+      -webkit-appearance: none;
+      display: inline-block;
+      outline: none;
+      background: #f0f0f0;
+      padding: 2px 4px;
+      border: solid 1px #aaaaaa;
+        border-right: none;
+        border-bottom: solid 1px #646464;
+      cursor: pointer;
+      border-radius: 0; }
+      .content_wrap.garbage .actions select:hover {
+        border: solid 1px #8c8c8c;
+          border-right: none;
+          border-bottom: solid 1px #282828; }
+      .content_wrap.garbage .actions select.active {
+        background: #c8ffc8; }
+    .content_wrap.garbage .actions .player_select {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px; }
+    .content_wrap.garbage .actions .button {
+      display: inline-block;
+      background: #f0f0f0;
+      line-height: 1em;
+      border: solid 1px #aaaaaa;
+        border-bottom: solid 1px #646464;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px; }
+      .content_wrap.garbage .actions .button:hover {
+        border: solid 1px #8c8c8c;
+          border-bottom: solid 1px #282828; }
   .content_wrap.mode_vs {
     padding-left: 290px; }
     .content_wrap.mode_vs .stack {
@@ -63,22 +105,15 @@ body, html {
         background-color: #e6e6e6; }
       .content_wrap.mode_vs td.vis {
         background-color: #c8c8c8; }
-    .content_wrap.mode_vs .stack_actions {
-      font-size: 12px;
-      padding: 6px;
-      border-bottom: solid 1px #c8c8c8; }
-      .content_wrap.mode_vs .stack_actions .lbl {
-        font-weight: 600;
-        padding-right: 8px; }
-        .content_wrap.mode_vs .stack_actions .lbl.playfields {
-          padding-right: 12px; }
-      .content_wrap.mode_vs .stack_actions .checkbox {
-        display: inline-block;
-        padding-right: 8px; }
-        .content_wrap.mode_vs .stack_actions .checkbox input {
-          margin: 0;
-          margin-right: 4px;
-          outline: none; }
+    .content_wrap.mode_vs .actions .lbl.playfields {
+      padding-right: 12px; }
+    .content_wrap.mode_vs .actions .checkbox {
+      display: inline-block;
+      padding-right: 8px; }
+      .content_wrap.mode_vs .actions .checkbox input {
+        margin: 0;
+        margin-right: 4px;
+        outline: none; }
 
 .column {
   position: fixed;

@@ -26,6 +26,49 @@ body, html
   height: 100%
   .primer
     padding-left: 140px
+  .actions
+    font-size: 12px
+    padding: 6px
+    border-bottom: solid 1px rgb(200,200,200)
+    .lbl
+      font-weight: 600
+      padding-right: 8px
+  &.garbage
+    padding-left: 290px
+    .actions
+      select
+        -webkit-appearance: none
+        display: inline-block
+        outline: none
+        background: rgb(240,240,240)
+        padding: 2px 4px
+        border: solid 1px rgb(170,170,170)
+          right: none
+          bottom: solid 1px rgb(100,100,100)
+        cursor: pointer
+        border-radius: 0
+        &:hover
+          border: solid 1px rgb(140,140,140)
+            right: none
+            bottom: solid 1px rgb(40,40,40)
+        &.active
+          :background: rgb(200,255,200)
+      .player_select
+        border-top-left-radius: 3px
+        border-bottom-left-radius: 3px
+      .button
+        display: inline-block
+        background: rgb(240,240,240)
+        line-height: 1em
+        border: solid 1px rgb(170,170,170)
+          bottom: solid 1px rgb(100,100,100)
+        cursor: pointer
+        padding: 2px 4px
+        border-top-right-radius: 3px
+        border-bottom-right-radius: 3px
+        &:hover
+          border: solid 1px rgb(140,140,140)
+            bottom: solid 1px rgb(40,40,40)
   &.mode_vs
     padding-left: 290px
     .stack
@@ -63,13 +106,8 @@ body, html
         background-color: rgb(230,230,230)
       &.vis
         background-color: rgb(200,200,200)
-    .stack_actions
-      font-size: 12px
-      padding: 6px
-      border-bottom: solid 1px rgb(200,200,200)
+    .actions
       .lbl
-        font-weight: 600
-        padding-right: 8px
         &.playfields
           padding-right: 12px;
       .checkbox

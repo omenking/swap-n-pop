@@ -60,370 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// This one acts in the context of the panel in the Dev Tools
-//
-// Can use
-// chrome.devtools.*
-// chrome.extension.*
-var m = __webpack_require__(3);
-var COMPONENTS = Symbol('components');
-var SNAPSHOTS = Symbol('snapshots');
-var ROWS_INV = 12;
-var ROWS_VIS = 11;
-var ROWS = ROWS_INV + ROWS_VIS;
-var COLS = 6;
-var port = chrome.runtime.connect({ name: 'devtools-panel' });
-port.onMessage.addListener(on_message);
-port.postMessage('connect');
-function xy2i(x, y) {
-    // x left-right
-    // y top-down
-    return (y * COLS) + x;
-}
-exports.xy2i = xy2i;
-var snapshots = {
-    stage: null,
-    tick: 0,
-    len: 0
-};
-var snapshot;
-var snapshot_prev;
-var selected_tick = null;
-var state = COMPONENTS;
-var stack_actions_state = {
-    rows: {
-        inv: false,
-        vis: true
-    },
-    playfields: {
-        pl0: true,
-        pl1: false
-    }
-};
-function tab_active(kind) {
-    if (kind === state)
-        return 'active';
-    return '';
-}
-function tab_click(kind) {
-    return function () {
-        state = kind;
-    };
-}
-function tab(kind, label) {
-    return m('.tab', {
-        className: tab_active(kind),
-        onclick: tab_click(kind)
-    }, label);
-}
-function connection_status() {
-    var lbl = '';
-    if (snapshots.stage === null) {
-        lbl = 'No Stage Connected';
-    }
-    else if (snapshots.stage === '[object ModeVs]') {
-        lbl = "ModeVs (t." + snapshots.tick + ")";
-    }
-    return m('.title', lbl);
-}
-function heading_components() {
-    return m('.heading', [
-        m('.title', 'Components'),
-        m('.clear')
-    ]);
-}
-function heading_snapshots() {
-    return m('.heading', [
-        connection_status(),
-        //tab(COMPONENTS,'Components'),
-        //tab(SNAPSHOTS,'Snapshots'),
-        m('.clear')
-    ]);
-}
-function item_snapshot_class(tick) {
-    var classes = [];
-    if (snapshots.tick === tick) {
-        classes.push('current');
-    }
-    if (selected_tick === tick) {
-        classes.push('active');
-    }
-    return classes.join(' ');
-}
-function item_snapshot_click(tick) {
-    return function () {
-        selected_tick = tick;
-        port.postMessage({
-            port: 'content-script',
-            msg: {
-                tick: tick,
-                action: 'preview'
-            }
-        });
-    };
-}
-function item_snapshot(i) {
-    var tick = snapshots.tick - i;
-    return m('.item.snapshot', {
-        className: item_snapshot_class(tick),
-        onclick: item_snapshot_click(tick)
-    }, [
-        "t." + tick,
-        m('.marker')
-    ]);
-}
-function items_components() {
-    var items = [m('.item.component.active', 'Stage (ModeVs)')];
-    return m('.column_content', m('.items', items));
-}
-function items_snapshots() {
-    var items = [];
-    for (var i = 0; i < snapshots.len; i++) {
-        items.push(item_snapshot(i));
-    }
-    return m('.column_content', m('.items', items));
-}
-function column_snapshots() {
-    return m('.column.snapshots', [
-        heading_snapshots(),
-        items_snapshots()
-    ]);
-}
-function column_components() {
-    if (snapshots.stage === null) {
-        return;
-    }
-    return m('.column.components', [
-        heading_components(),
-        items_components()
-    ]);
-}
-function content_class() {
-    if (state === COMPONENTS)
-        return 'components_index';
-    else if (state === SNAPSHOTS)
-        return 'snapshots_index';
-}
-function content() {
-    return [
-        content_primer(),
-        content_mode_vs()
-    ];
-}
-function content_primer() {
-    if (snapshots.stage != null) {
-        return;
-    }
-    return m('.content_wrap.primer', m('.content', toast('Data will appear when you start a game and enter step mode')));
-}
-function stack_y_counter_class(y) {
-    if (y < ROWS_INV)
-        return 'inv';
-    else
-        return 'vis';
-}
-function stack_y_counter(y) {
-    return m('td.y', {
-        className: stack_y_counter_class(y)
-    }, y);
-}
-function stack_row(y, pi) {
-    if ((y < ROWS_INV) && stack_actions_state.rows.inv === false) {
-        return;
-    }
-    if (!(y < ROWS_INV) && stack_actions_state.rows.vis === false) {
-        return;
-    }
-    return m('tr', [
-        stack_y_counter(y),
-        stack_panel(0, y, pi),
-        stack_panel(1, y, pi),
-        stack_panel(2, y, pi),
-        stack_panel(3, y, pi),
-        stack_panel(4, y, pi),
-        stack_panel(5, y, pi)
-    ]);
-}
-function stack_panel_prop_class(val, val_prev) {
-    if (val !== val_prev) {
-        return 'changed';
-    }
-    return '';
-}
-function stack_panel_data(i, data, data_prev) {
-    return [
-        m('.prop.index', { title: 'Index' }, i),
-        m('.prop.kind', { title: 'Kind', className: stack_panel_prop_class(data[2], data_prev[2]) }, data[2] ? data[2] : 'null'),
-        m('.prop.state', { title: 'State', className: stack_panel_prop_class(data[3], data_prev[3]) }, data[3]),
-        m('.prop.counter', { title: 'Counter', className: stack_panel_prop_class(data[4], data_prev[4]) }, data[4]),
-        m('.prop.chain', { title: 'Chain', className: stack_panel_prop_class(data[5], data_prev[5]) }, data[5])
-    ];
-}
-function kind_class(val) {
-    return "devtools_panel" + val;
-}
-function stack_panel_class(data, data_prev) {
-    var classes = [];
-    if (data[2] !== null)
-        classes.push(kind_class(data[2]));
-    if (data[2] !== data_prev[2] ||
-        data[3] !== data_prev[3] ||
-        data[4] !== data_prev[4] ||
-        data[5] !== data_prev[5]) {
-        classes.push('changed');
-    }
-    return classes.join(' ');
-}
-function stack_panel(x, y, pi) {
-    var i = xy2i(x, y);
-    var data = snapshot[pi + 1][2][i];
-    var data_prev = snapshot_prev[pi + 1][2][i];
-    return m('td', { className: stack_panel_class(data, data_prev) }, stack_panel_data(i, data, data_prev));
-}
-function stack(pi) {
-    if (stack_actions_state.playfields["pl" + pi] === false) {
-        return;
-    }
-    var rows = [];
-    for (var i = 0; i < ROWS; i++) {
-        rows.push(stack_row(i, pi));
-    }
-    return m('.stack', m('table', rows));
-}
-function stack_actions_checkbox_selected(group, key) {
-    return function (selected) {
-        stack_actions_state[group][key] = selected;
-    };
-}
-function stack_actions_checkbox(group, key, lbl) {
-    return m('.checkbox', [
-        m("input[type='checkbox']", {
-            onclick: m.withAttr('checked', stack_actions_checkbox_selected(group, key)),
-            checked: stack_actions_state[group][key]
-        }),
-        m('span', lbl)
-    ]);
-}
-function stack_actions() {
-    return m('.stack_actions', [
-        m('span.lbl', 'Rows'),
-        stack_actions_checkbox('rows', 'inv', 'Invisible'),
-        stack_actions_checkbox('rows', 'vis', 'Visible'),
-        m('span.lbl.playfields', 'Playfields'),
-        stack_actions_checkbox('playfields', 'pl0', 'Player 1'),
-        stack_actions_checkbox('playfields', 'pl1', 'Player 2')
-    ]);
-}
-function content_mode_vs() {
-    if (snapshots.stage != '[object ModeVs]') {
-        return;
-    }
-    return m('.content_wrap.mode_vs', m('.content', stack_actions(), stack(0), stack(1), m('.clear')));
-}
-function toast(val) {
-    return m('.toast', m('span', val));
-}
-var app = {
-    view: function () {
-        return [
-            column_snapshots(),
-            column_components(),
-            content()
-        ];
-    }
-};
-var el = window.document.body;
-m.mount(el, app);
-function on_message(message, sender, send_response) {
-    if (message.action === 'clear') {
-        snapshots.stage = null;
-        snapshots.tick = 0;
-        snapshots.len = 0;
-        snapshot = null;
-        snapshot_prev = null;
-        selected_tick = 0;
-    }
-    else if (message.action === 'reload') {
-        snapshots.stage = message.stage;
-        snapshots.tick = message.tick;
-        snapshots.len = message.len;
-        snapshot = message.snapshot;
-        snapshot_prev = message.snapshot_prev;
-        selected_tick = message.tick;
-    }
-    else if (message.action === 'load') {
-        snapshots.stage = message.stage;
-        snapshots.tick = message.tick;
-        snapshots.len = message.len;
-        snapshot = message.snapshot;
-        snapshot_prev = message.snapshot_prev;
-        selected_tick = message.tick;
-    }
-    else if (message.action === 'preview') {
-        snapshots.stage = message.stage;
-        snapshots.tick = message.tick;
-        snapshots.len = message.len;
-        snapshot = message.snapshot;
-        snapshot_prev = message.snapshot_prev;
-    }
-    m.redraw();
-}
-window.document.onkeydown = function (e) {
-    if ([38, 87, 75].includes(e.keyCode)) {
-        if (selected_tick !== snapshots.tick) {
-            item_snapshot_click(selected_tick + 1)();
-            m.redraw();
-        }
-    }
-    else if ([40, 83, 74].includes(e.keyCode)) {
-        if (selected_tick !== snapshots.tick - snapshots.len + 1) {
-            item_snapshot_click(selected_tick - 1)();
-            m.redraw();
-        }
-    }
-};
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate, global) {;(function() {
@@ -1669,10 +1310,195 @@ m.vnode = Vnode
 if (true) module["exports"] = m
 else window.m = m
 }());
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4).setImmediate, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6).setImmediate, __webpack_require__(3)))
 
 /***/ }),
-/* 4 */
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.COMP_STAGE = Symbol('stage');
+exports.COMP_GARBA = Symbol('garbage');
+exports.ROWS_INV = 12;
+exports.ROWS_VIS = 11;
+exports.ROWS = exports.ROWS_INV + exports.ROWS_VIS;
+exports.COLS = 6;
+var State = /** @class */ (function () {
+    function State() {
+        this.stage = null;
+        this.snapshots = { tick: 0, len: 0 };
+        this.selected_tick = null;
+        this.state_component = exports.COMP_STAGE;
+        this.garbage_queue = { pi: 0, combo: 0, chain: 0 };
+        this.stack_actions_rows = {
+            inv: false,
+            vis: true
+        };
+        this.stack_actions_playfields = {
+            pl0: true,
+            pl1: false
+        };
+    }
+    Object.defineProperty(State, "Instance", {
+        get: function () {
+            // Do you need arguments? Make it a regular method instead.
+            return this._instance || (this._instance = new this());
+        },
+        enumerable: true,
+        configurable: true
+    });
+    State.prototype.clear = function () {
+        this.stage = null;
+        this.snapshots.tick = 0;
+        this.snapshots.len = 0;
+        this.snapshot = null;
+        this.snapshot_prev = null;
+        this.selected_tick = 0;
+    };
+    return State;
+}());
+exports.state = State.Instance;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+exports.port = chrome.runtime.connect({ name: 'devtools-panel' });
+exports.port.onMessage.addListener(on_message);
+function on_message(message, sender, send_response) {
+    if (message.action === 'clear') {
+        data_1.state.clear();
+    }
+    else if (['reload', 'load', 'preview'].includes(message.action)) {
+        data_1.state.stage = message.stage;
+        data_1.state.snapshots.tick = message.tick;
+        data_1.state.snapshots.len = message.len;
+        data_1.state.snapshot = message.snapshot;
+        data_1.state.snapshot_prev = message.snapshot_prev;
+        if (message.action !== 'preview') {
+            data_1.state.selected_tick = message.tick;
+        }
+    }
+    m.redraw();
+}
+function snapshot_preview(tick) {
+    data_1.state.selected_tick = tick;
+    exports.port.postMessage({
+        port: 'content-script',
+        msg: {
+            tick: tick,
+            action: 'preview'
+        }
+    });
+}
+exports.snapshot_preview = snapshot_preview;
+function queue_garbage() {
+    exports.port.postMessage({
+        port: 'content-script',
+        msg: {
+            action: 'garbage_push',
+            data: {
+                pi: data_1.state.garbage_queue.pi,
+                chain: data_1.state.garbage_queue.chain,
+                combo: data_1.state.garbage_queue.combo
+            }
+        }
+    });
+    data_1.state.garbage_queue.combo = 0;
+    data_1.state.garbage_queue.chain = 0;
+}
+exports.queue_garbage = queue_garbage;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 4 */,
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// This one acts in the context of the panel in the Dev Tools
+//
+// Can use
+// chrome.devtools.*
+// chrome.extension.*
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+var port_1 = __webpack_require__(2);
+var column_components_1 = __webpack_require__(9);
+var column_snapshots_1 = __webpack_require__(10);
+var content_mode_vs_1 = __webpack_require__(11);
+var content_garbage_1 = __webpack_require__(12);
+var content_primer_1 = __webpack_require__(13);
+port_1.port.postMessage('connect');
+window.document.onkeydown = function (e) {
+    if ([38, 87, 75].includes(e.keyCode)) {
+        if (data_1.state.selected_tick !== data_1.state.snapshots.tick) {
+            port_1.snapshot_preview(data_1.state.selected_tick + 1);
+            m.redraw();
+        }
+    }
+    else if ([40, 83, 74].includes(e.keyCode)) {
+        if (data_1.state.selected_tick !== data_1.state.snapshots.tick - data_1.state.snapshots.len + 1) {
+            port_1.snapshot_preview(data_1.state.selected_tick - 1);
+            m.redraw();
+        }
+    }
+};
+var app = {
+    view: function () {
+        return [
+            column_snapshots_1.default(),
+            column_components_1.default(),
+            [
+                content_primer_1.default(),
+                content_mode_vs_1.default(),
+                content_garbage_1.default()
+            ]
+        ];
+    }
+};
+m.mount(window.document.body, app);
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -1725,13 +1551,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(5);
+__webpack_require__(7);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -1921,10 +1747,10 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(8)))
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -2111,6 +1937,365 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+function heading() {
+    return m('.heading', [
+        m('.title', 'Components'),
+        m('.clear')
+    ]);
+}
+function item_click(key) {
+    return function () {
+        data_1.state.state_component = key;
+    };
+}
+function item_class(key) {
+    if (data_1.state.state_component === key)
+        return 'active';
+    return '';
+}
+function item(key, title) {
+    return m('.item.component', {
+        onclick: item_click(key),
+        className: item_class(key)
+    }, title);
+}
+function items() {
+    var items = [
+        item(data_1.COMP_STAGE, 'Stage (ModeVs)'),
+        item(data_1.COMP_GARBA, 'GarbageQueue')
+    ];
+    return m('.column_content', m('.items', items));
+}
+function column() {
+    if (data_1.state.stage === null) {
+        return;
+    }
+    return m('.column.components', [
+        heading(),
+        items()
+    ]);
+}
+exports.default = column;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var port_1 = __webpack_require__(2);
+var data_1 = __webpack_require__(1);
+function connection_status() {
+    var lbl = '';
+    if (data_1.state.stage === null) {
+        lbl = 'No Stage Connected';
+    }
+    else if (data_1.state.stage === '[object ModeVs]') {
+        lbl = "ModeVs (t." + data_1.state.snapshots.tick + ")";
+    }
+    return m('.title', lbl);
+}
+function heading() {
+    return m('.heading', [
+        connection_status(),
+        m('.clear')
+    ]);
+}
+function item_class(tick) {
+    var classes = [];
+    if (data_1.state.snapshots.tick === tick) {
+        classes.push('current');
+    }
+    if (data_1.state.selected_tick === tick) {
+        classes.push('active');
+    }
+    return classes.join(' ');
+}
+function item_click(tick) {
+    return function () {
+        port_1.snapshot_preview(tick);
+    };
+}
+function item(i) {
+    var tick = data_1.state.snapshots.tick - i;
+    return m('.item.snapshot', {
+        className: item_class(tick),
+        onclick: item_click(tick)
+    }, [
+        "t." + tick,
+        m('.marker')
+    ]);
+}
+function items() {
+    var items = [];
+    for (var i = 0; i < data_1.state.snapshots.len; i++) {
+        items.push(item(i));
+    }
+    return m('.column_content', m('.items', items));
+}
+function column() {
+    return m('.column.snapshots', [
+        heading(),
+        items()
+    ]);
+}
+exports.default = column;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+function xy2i(x, y) {
+    // x left-right
+    // y top-down
+    return (y * data_1.COLS) + x;
+}
+exports.xy2i = xy2i;
+function stack_y_counter_class(y) {
+    if (y < data_1.ROWS_INV)
+        return 'inv';
+    else
+        return 'vis';
+}
+function stack_y_counter(y) {
+    return m('td.y', {
+        className: stack_y_counter_class(y)
+    }, y);
+}
+function stack_row(y, pi) {
+    if ((y < data_1.ROWS_INV) && data_1.state.stack_actions_rows.inv === false) {
+        return;
+    }
+    if (!(y < data_1.ROWS_INV) && data_1.state.stack_actions_rows.vis === false) {
+        return;
+    }
+    return m('tr', [
+        stack_y_counter(y),
+        panel(0, y, pi),
+        panel(1, y, pi),
+        panel(2, y, pi),
+        panel(3, y, pi),
+        panel(4, y, pi),
+        panel(5, y, pi)
+    ]);
+}
+function prop_class(val, val_prev) {
+    if (val !== val_prev) {
+        return 'changed';
+    }
+    return '';
+}
+function panel_data(i, data, data_prev) {
+    return [
+        m('.prop.index', { title: 'Index' }, i),
+        m('.prop.kind', { title: 'Kind', className: prop_class(data[2], data_prev[2]) }, data[2] ? data[2] : 'null'),
+        m('.prop.state', { title: 'State', className: prop_class(data[3], data_prev[3]) }, data[3]),
+        m('.prop.counter', { title: 'Counter', className: prop_class(data[4], data_prev[4]) }, data[4]),
+        m('.prop.chain', { title: 'Chain', className: prop_class(data[5], data_prev[5]) }, data[5])
+    ];
+}
+function kind_class(val) {
+    return "devtools_panel" + val;
+}
+function panel_class(data, data_prev) {
+    var classes = [];
+    if (data[2] !== null)
+        classes.push(kind_class(data[2]));
+    if (data[2] !== data_prev[2] ||
+        data[3] !== data_prev[3] ||
+        data[4] !== data_prev[4] ||
+        data[5] !== data_prev[5]) {
+        classes.push('changed');
+    }
+    return classes.join(' ');
+}
+function panel(x, y, pi) {
+    var i = xy2i(x, y);
+    var data = data_1.state.snapshot[pi + 1][2][i];
+    var data_prev = data_1.state.snapshot_prev[pi + 1][2][i];
+    return m('td', { className: panel_class(data, data_prev) }, panel_data(i, data, data_prev));
+}
+function stack(pi) {
+    if (data_1.state.stack_actions_playfields["pl" + pi] === false) {
+        return;
+    }
+    var rows = [];
+    for (var i = 0; i < data_1.ROWS; i++) {
+        rows.push(stack_row(i, pi));
+    }
+    return m('.stack', m('table', rows));
+}
+function selected(group, key) {
+    return function (selected) {
+        data_1.state['stack_actions_' + group][key] = selected;
+    };
+}
+function checkbox(group, key, lbl) {
+    return m('.checkbox', [
+        m("input[type='checkbox']", {
+            onclick: m.withAttr('checked', selected(group, key)),
+            checked: data_1.state['stack_actions_' + group][key]
+        }),
+        m('span', lbl)
+    ]);
+}
+function actions() {
+    return m('.actions.stack_actions', [
+        m('span.lbl', 'Rows'),
+        checkbox('rows', 'inv', 'Invisible'),
+        checkbox('rows', 'vis', 'Visible'),
+        m('span.lbl.playfields', 'Playfields'),
+        checkbox('playfields', 'pl0', 'Player 1'),
+        checkbox('playfields', 'pl1', 'Player 2')
+    ]);
+}
+function content() {
+    if (data_1.state.stage != '[object ModeVs]') {
+        return;
+    }
+    if (data_1.state.state_component !== data_1.COMP_STAGE) {
+        return;
+    }
+    return m('.content_wrap.mode_vs', m('.content', actions(), stack(0), stack(1), m('.clear')));
+}
+exports.default = content;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+var port_1 = __webpack_require__(2);
+function select_class(val) {
+    if (val > 0)
+        return 'active';
+    return '';
+}
+function select_player() {
+    return m('select.player_select', {
+        onchange: m.withAttr('value', function (val) { data_1.state.garbage_queue.pi = val; })
+    }, [
+        m('option', { value: 0 }, 'Player 1'),
+        m('option', { value: 1 }, 'Player 2')
+    ]);
+}
+function select_combo() {
+    return m('select.combo_select', {
+        onchange: m.withAttr('value', function (val) { data_1.state.garbage_queue.combo = val; }),
+        className: select_class(data_1.state.garbage_queue.combo)
+    }, [
+        m('option', { value: 0 }, 'No Combo'),
+        m('option', { value: 4 }, 'Combo x4'),
+        m('option', { value: 5 }, 'Combo x5'),
+        m('option', { value: 6 }, 'Combo x6'),
+        m('option', { value: 7 }, 'Combo x7'),
+        m('option', { value: 8 }, 'Combo x8'),
+        m('option', { value: 9 }, 'Combo x9'),
+        m('option', { value: 10 }, 'Combo x10'),
+        m('option', { value: 11 }, 'Combo x11'),
+        m('option', { value: 12 }, 'Combo x12'),
+        m('option', { value: 13 }, 'Combo x13')
+    ]);
+}
+function select_chain() {
+    return m('select.chain_select', {
+        onchange: m.withAttr('value', function (val) { data_1.state.garbage_queue.chain = val; }),
+        className: select_class(data_1.state.garbage_queue.chain)
+    }, [
+        m('option', { value: 0 }, 'No Chain'),
+        m('option', { value: 2 }, 'Chain x2'),
+        m('option', { value: 3 }, 'Chain x3'),
+        m('option', { value: 4 }, 'Chain x4'),
+        m('option', { value: 5 }, 'Chain x5'),
+        m('option', { value: 6 }, 'Chain x6'),
+        m('option', { value: 7 }, 'Chain x7'),
+        m('option', { value: 8 }, 'Chain x8'),
+        m('option', { value: 9 }, 'Chain x9'),
+        m('option', { value: 10 }, 'Chain x10'),
+        m('option', { value: 11 }, 'Chain x11'),
+        m('option', { value: 12 }, 'Chain x12')
+    ]);
+}
+function actions() {
+    return m('.actions.garbage_actions', [
+        select_player(),
+        select_combo(),
+        select_chain(),
+        m('.button', { onclick: port_1.queue_garbage }, 'Queue'),
+        m('.clear')
+    ]);
+}
+function content_garbage() {
+    if (data_1.state.stage != '[object ModeVs]') {
+        return;
+    }
+    if (data_1.state.state_component !== data_1.COMP_GARBA) {
+        return;
+    }
+    return m('.content_wrap.garbage', m('.content', [
+        actions(),
+        m('.clear')
+    ]));
+}
+exports.default = content_garbage;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+var toast_1 = __webpack_require__(14);
+function content_primer() {
+    if (data_1.state.stage != null) {
+        return;
+    }
+    return m('.content_wrap.primer', m('.content', toast_1.default('Data will appear when you start a game and enter step mode')));
+}
+exports.default = content_primer;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+function toast(val) {
+    return m('.toast', m('span', val));
+}
+exports.default = toast;
 
 
 /***/ })
