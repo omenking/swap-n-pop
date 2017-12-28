@@ -476,6 +476,7 @@ export default class Playfield {
         break;
       case RUNNING:
         this.cursor.update()
+        this.character.update()
         this.update_stoptime()
 
         if (this.counter > 0) { this.counter-- }
