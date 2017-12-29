@@ -1,5 +1,5 @@
 import * as m  from 'mithril'
-import {COMP_STAGE, COMP_GARBA, state} from 'devtools_common/data'
+import {COMP_STAGE, COMP_GARBA, state} from 'devtools/common/data'
 
 function heading(){
   return m('.heading',[

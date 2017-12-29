@@ -1329,6 +1329,8 @@ var State = /** @class */ (function () {
         this.selected_tick = null;
         this.state_component = exports.COMP_STAGE;
         this.garbage_queue = { pi: 0, combo: 0, chain: 0 };
+        this.levels = [1, 1];
+        this.selected_panel = [null, null];
         this.stack_actions_rows = {
             inv: false,
             vis: true
@@ -1337,9 +1339,7 @@ var State = /** @class */ (function () {
             pl0: true,
             pl1: false
         };
-        this.actions_primer = {
-            seed: 'puzzle'
-        };
+        this.seed = '';
         this.reset_panel_form(null);
     }
     Object.defineProperty(State, "Instance", {
@@ -1375,8 +1375,9 @@ var State = /** @class */ (function () {
         this.snapshot = null;
         this.snapshot_prev = null;
         this.selected_tick = 0;
-        this.selected_panel = null;
+        this.selected_panel = [null, null];
         this.reset_panel_form(null);
+        this.levels = [1, 1];
     };
     return State;
 }());
@@ -1403,6 +1404,7 @@ function on_message(message, sender, send_response) {
         data_1.state.snapshots.tick = message.tick;
         data_1.state.snapshots.len = message.len;
         data_1.state.snapshot = message.snapshot;
+        data_1.state.seed = message.seed;
         data_1.state.snapshot_prev = message.snapshot_prev;
         if (message.action !== 'preview') {
             data_1.state.selected_tick = message.tick;
@@ -1437,6 +1439,16 @@ function queue_garbage() {
     data_1.state.garbage_queue.chain = 0;
 }
 exports.queue_garbage = queue_garbage;
+function update_levels() {
+    exports.port.postMessage({
+        port: 'content-script',
+        msg: {
+            action: 'levels_update',
+            levels: data_1.state.levels
+        }
+    });
+}
+exports.update_levels = update_levels;
 
 
 /***/ }),
@@ -1592,11 +1604,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
 var port_1 = __webpack_require__(2);
-var column_components_1 = __webpack_require__(10);
-var column_snapshots_1 = __webpack_require__(11);
-var content_mode_vs_1 = __webpack_require__(12);
-var content_garbage_1 = __webpack_require__(14);
-var content_primer_1 = __webpack_require__(15);
+var column_snapshots_1 = __webpack_require__(10);
+var content_mode_vs_1 = __webpack_require__(11);
+var content_primer_1 = __webpack_require__(13);
+var actions_1 = __webpack_require__(15);
 port_1.port.postMessage('connect');
 window.document.onkeydown = function (e) {
     if ([38, 87, 75].includes(e.keyCode)) {
@@ -1616,12 +1627,10 @@ var app = {
     view: function () {
         return [
             column_snapshots_1.default(),
-            column_components_1.default(),
-            [
-                content_primer_1.default(),
-                content_mode_vs_1.default(),
-                content_garbage_1.default()
-            ]
+            //column_components(),
+            actions_1.default(),
+            content_primer_1.default(),
+            content_mode_vs_1.default()
         ];
     }
 };
@@ -2078,56 +2087,6 @@ process.umask = function() { return 0; };
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
-var data_1 = __webpack_require__(1);
-function heading() {
-    return m('.heading', [
-        m('.title', 'Components'),
-        m('.clear')
-    ]);
-}
-function item_click(key) {
-    return function () {
-        data_1.state.state_component = key;
-    };
-}
-function item_class(key) {
-    if (data_1.state.state_component === key)
-        return 'active';
-    return '';
-}
-function item(key, title) {
-    return m('.item.component', {
-        onclick: item_click(key),
-        className: item_class(key)
-    }, title);
-}
-function items() {
-    var items = [
-        item(data_1.COMP_STAGE, 'Stage (ModeVs)'),
-        item(data_1.COMP_GARBA, 'GarbageQueue')
-    ];
-    return m('.column_content', m('.items', items));
-}
-function column() {
-    if (data_1.state.stage === null) {
-        return;
-    }
-    return m('.column.components', [
-        heading(),
-        items()
-    ]);
-}
-exports.default = column;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var m = __webpack_require__(0);
 var port_1 = __webpack_require__(2);
 var data_1 = __webpack_require__(1);
 function connection_status() {
@@ -2188,15 +2147,14 @@ exports.default = column;
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var port_1 = __webpack_require__(2);
-var panel_form_1 = __webpack_require__(13);
 var m = __webpack_require__(0);
+var panel_form_1 = __webpack_require__(12);
 var data_1 = __webpack_require__(1);
 var data_2 = __webpack_require__(3);
 function xy2i(x, y) {
@@ -2241,10 +2199,10 @@ function prop_class(val, val_prev) {
 }
 function panel_img(kind, i) {
     if (kind === null) {
-        return m('img', { title: i, src: "devtools_panel_null.png" });
+        return m('img', { width: '48px', title: i, src: "devtools_panel_null.png" });
     }
     else {
-        return m('img', { title: i, src: "devtools_panel" + kind + ".png" });
+        return m('img', { width: '48px', title: i, src: "devtools_panel" + kind + ".png" });
     }
 }
 function panel_data(i, data, data_prev) {
@@ -2279,18 +2237,22 @@ function panel_class(data, data_prev) {
     }
     return classes.join(' ');
 }
-function panel_click(i, data) {
+function panel_click(pi, i, data) {
     return function () {
-        data_1.state.reset_panel_form(data);
-        data_1.state.selected_panel = i;
+        if (data_1.state.selected_panel[0] === pi &&
+            data_1.state.selected_panel[1] === i) { }
+        else {
+            data_1.state.reset_panel_form(data);
+            data_1.state.selected_panel = [pi, i];
+        }
     };
 }
 function panel(x, y, pi) {
     var i = xy2i(x, y);
     var data = data_1.state.snapshot[pi + 1][2][i];
     var data_prev = data_1.state.snapshot_prev[pi + 1][2][i];
-    return m('td.panel', { onclick: panel_click(i, data), className: panel_class(data, data_prev) }, [
-        panel_form_1.default(i, data, data_prev),
+    return m('td.panel', { onclick: panel_click(pi, i, data), className: panel_class(data, data_prev) }, [
+        panel_form_1.default(pi, i, data, data_prev),
         panel_data(i, data, data_prev)
     ]);
 }
@@ -2304,48 +2266,6 @@ function stack(pi) {
     }
     return m('.stack', m('table', rows));
 }
-function selected(group, key) {
-    return function (selected) {
-        data_1.state['stack_actions_' + group][key] = selected;
-    };
-}
-function checkbox(group, key, lbl) {
-    return m('.checkbox', [
-        m("input[type='checkbox']", {
-            onclick: m.withAttr('checked', selected(group, key)),
-            checked: data_1.state['stack_actions_' + group][key]
-        }),
-        m('span', lbl)
-    ]);
-}
-function export_replay_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export' } });
-}
-function import_replay_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-import' } });
-}
-function export_snapshot_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export' } });
-}
-function import_snapshot_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-import' } });
-}
-function actions() {
-    return m('.actions.stack_actions', [
-        m('span.lbl.first', 'Rows'),
-        checkbox('rows', 'inv', 'Invisible'),
-        checkbox('rows', 'vis', 'Visible'),
-        m('span.lbl.playfields', 'Playfields'),
-        checkbox('playfields', 'pl0', 'Player 1'),
-        checkbox('playfields', 'pl1', 'Player 2'),
-        m('span.lbl', 'Replays'),
-        m('.button.import', { onclick: import_replay_click }, 'Import'),
-        m('.button.export', { onclick: import_replay_click }, 'Export'),
-        m('span.lbl', 'Snapshots'),
-        m('.button.import', { onclick: import_snapshot_click }, 'Import'),
-        m('.button.export', { onclick: export_snapshot_click }, 'Export')
-    ]);
-}
 function content() {
     if (data_1.state.stage != '[object ModeVs]') {
         return;
@@ -2353,13 +2273,13 @@ function content() {
     if (data_1.state.state_component !== data_1.COMP_STAGE) {
         return;
     }
-    return m('.content_wrap.mode_vs', m('.content', actions(), stack(0), stack(1), m('.clear')));
+    return m('.content_wrap.mode_vs', m('.content', stack(0), stack(1), m('.clear')));
 }
 exports.default = content;
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2412,9 +2332,15 @@ function input_counter() {
         value: data_2.state.panel_form.counter
     });
 }
-function panel_form(i, data, data_prev) {
-    if (data_2.state.selected_panel === i) {
-        return m('.panel_form', m('table', m('tr', m('td.lbl', 'Index'), m('td', i)), m('tr', m('td.lbl', 'Kind'), m('td', select_kind())), m('tr', m('td.lbl', 'State'), m('td', select_state())), m('tr', m('td.lbl', 'Counter'), m('td', input_counter())), m('tr', m('td.lbl', 'Chain'), m('td', input_chain()))));
+function close() {
+    return function () {
+        data_2.state.selected_panel = [null, null];
+    };
+}
+function panel_form(pi, i, data, data_prev) {
+    if (data_2.state.selected_panel[0] === pi &&
+        data_2.state.selected_panel[1] === i) {
+        return m('.panel_form', m('.close', { onclick: close() }, '[ x ]'), m('table', m('tr', m('td.lbl', 'Index'), m('td', i)), m('tr', m('td.lbl', 'Kind'), m('td', select_kind())), m('tr', m('td.lbl', 'State'), m('td', select_state())), m('tr', m('td.lbl', 'Counter'), m('td', input_counter())), m('tr', m('td.lbl', 'Chain'), m('td', input_chain()))));
     }
     else {
         return;
@@ -2424,7 +2350,92 @@ exports.default = panel_form;
 
 
 /***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+var toast_1 = __webpack_require__(14);
+function content_primer() {
+    if (data_1.state.stage != null) {
+        return;
+    }
+    return m('.content_wrap.primer', m('.content', toast_1.default('Data will appear when you start a game and enter step mode')));
+}
+exports.default = content_primer;
+
+
+/***/ }),
 /* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+function toast(val) {
+    return m('.toast', m('span', val));
+}
+exports.default = toast;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var seed_1 = __webpack_require__(16);
+var queue_garbage_1 = __webpack_require__(17);
+var levels_1 = __webpack_require__(18);
+var replay_1 = __webpack_require__(19);
+var snapshot_1 = __webpack_require__(20);
+var stack_1 = __webpack_require__(21);
+function actions() {
+    return m('.actions', [
+        seed_1.default(),
+        queue_garbage_1.default(),
+        stack_1.default(),
+        replay_1.default(),
+        snapshot_1.default(),
+        levels_1.default()
+    ]);
+}
+exports.default = actions;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var data_1 = __webpack_require__(1);
+function input_seed() {
+    return m("input[type='text']", {
+        onchange: m.withAttr('value', function (val) { data_1.state.seed = val; }),
+        value: data_1.state.seed
+    });
+}
+function default_1() {
+    return m('.section.actions_seed', [
+        input_seed(),
+        m('.button', 'Gen'),
+        m('.clear')
+    ]);
+}
+exports.default = default_1;
+
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2442,8 +2453,8 @@ function select_player() {
     return m('select.player_select', {
         onchange: m.withAttr('value', function (val) { data_1.state.garbage_queue.pi = val; })
     }, [
-        m('option', { value: 0 }, 'Player 1'),
-        m('option', { value: 1 }, 'Player 2')
+        m('option', { value: 0 }, 'Pl 1'),
+        m('option', { value: 1 }, 'Pl 2')
     ]);
 }
 function select_combo() {
@@ -2483,32 +2494,110 @@ function select_chain() {
         m('option', { value: 12 }, 'Chain x12')
     ]);
 }
-function actions() {
-    return m('.actions.garbage_actions', [
+function actions_queue_garbage() {
+    return m('.section.queue_garbage', [
         select_player(),
         select_combo(),
         select_chain(),
-        m('.button.queue', { onclick: port_1.queue_garbage }, 'Queue'),
+        m('.button.queue', { onclick: port_1.queue_garbage }, '>>'),
         m('.clear')
     ]);
 }
-function content_garbage() {
-    if (data_1.state.stage != '[object ModeVs]') {
-        return;
-    }
-    if (data_1.state.state_component !== data_1.COMP_GARBA) {
-        return;
-    }
-    return m('.content_wrap.garbage', m('.content', [
-        actions(),
-        m('.clear')
-    ]));
-}
-exports.default = content_garbage;
+exports.default = actions_queue_garbage;
 
 
 /***/ }),
-/* 15 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var port_1 = __webpack_require__(2);
+var data_1 = __webpack_require__(1);
+function level_select(i) {
+    return m("select.level_select.pl_" + i, {
+        onchange: m.withAttr('value', function (val) {
+            data_1.state.levels[i] = parseInt(val);
+            port_1.update_levels();
+        }),
+        value: data_1.state.levels[i]
+    }, [
+        m('option', { value: 1 }, 'Level 1'),
+        m('option', { value: 2 }, 'Level 2'),
+        m('option', { value: 3 }, 'Level 3'),
+        m('option', { value: 4 }, 'Level 4'),
+        m('option', { value: 5 }, 'Level 5'),
+        m('option', { value: 6 }, 'Level 6'),
+        m('option', { value: 7 }, 'Level 7'),
+        m('option', { value: 8 }, 'Level 8'),
+        m('option', { value: 9 }, 'Level 9'),
+        m('option', { value: 10 }, 'Level 10')
+    ]);
+}
+function default_1() {
+    return m('.section.levels', [
+        m('.lbl', 'Levels'),
+        level_select(0),
+        level_select(1)
+    ]);
+}
+exports.default = default_1;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var port_1 = __webpack_require__(2);
+function export_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export' } });
+}
+function import_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-import' } });
+}
+function default_1() {
+    return m('.section.replay_import_export', [
+        m('.lbl', 'Replays'),
+        m('.button.import', { onclick: import_click }, 'Import'),
+        m('.button.export', { onclick: import_click }, 'Export')
+    ]);
+}
+exports.default = default_1;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var m = __webpack_require__(0);
+var port_1 = __webpack_require__(2);
+function export_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export' } });
+}
+function import_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-import' } });
+}
+function default_1() {
+    return m('.section.snapshot_import_export', [
+        m('.lbl', 'Snapshots'),
+        m('.button.import', { onclick: import_click }, 'Import'),
+        m('.button.export', { onclick: export_click }, 'Export')
+    ]);
+}
+exports.default = default_1;
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2516,41 +2605,37 @@ exports.default = content_garbage;
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
-var toast_1 = __webpack_require__(16);
-function input_seed() {
-    return m("input[type='text']", {
-        onchange: m.withAttr('value', function (val) { data_1.state.actions_primer.seed = val; }),
-        value: data_1.state.actions_primer.seed
-    });
+function selected(group, key) {
+    return function (selected) {
+        data_1.state['stack_actions_' + group][key] = selected;
+    };
 }
-function actions() {
-    return m('.actions', [
-        input_seed(),
-        m('.button', 'Gen'),
-        m('.clear')
+function checkbox(group, key, lbl) {
+    return m('.checkbox', [
+        m("input[type='checkbox']", {
+            onclick: m.withAttr('checked', selected(group, key)),
+            checked: data_1.state['stack_actions_' + group][key]
+        }),
+        m('span', lbl)
     ]);
 }
-function content_primer() {
-    if (data_1.state.stage != null) {
-        return;
-    }
-    return m('.content_wrap.primer', m('.content', actions(), toast_1.default('Data will appear when you start a game and enter step mode')));
+function default_1() {
+    return m('.section.stack_actions', [
+        m('table', [
+            m('tr', [
+                m('td', m('.lbl.first', 'Rows')),
+                m('td', checkbox('rows', 'inv', 'INV')),
+                m('td', checkbox('rows', 'vis', 'VIS')),
+            ]),
+            m('tr', [
+                m('td', m('.lbl.playfields', 'Playfields')),
+                m('td', checkbox('playfields', 'pl0', 'PL 1')),
+                m('td', checkbox('playfields', 'pl1', 'PL 2'))
+            ])
+        ])
+    ]);
 }
-exports.default = content_primer;
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var m = __webpack_require__(0);
-function toast(val) {
-    return m('.toast', m('span', val));
-}
-exports.default = toast;
+exports.default = default_1;
 
 
 /***/ })

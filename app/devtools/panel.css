@@ -24,15 +24,22 @@ body, html {
 
 .actions {
   font-size: 12px;
-  height: 28px;
-  padding: 6px;
-  border-bottom: solid 1px #c8c8c8; }
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  border-right: solid 1px #a3a3a3;
+  background: white;
+  width: 200px;
+  left: 140px; }
+  .actions .section {
+    padding: 6px;
+    border-top: solid 1px #e6e6e6; }
+  .actions .section:first-child {
+    border-top: none; }
   .actions .lbl {
     font-weight: 600;
-    padding-right: 16px;
-    padding-left: 12px; }
-    .actions .lbl.first {
-      padding-left: 0; }
+    padding-bottom: 4px; }
   .actions .button {
     display: inline-block;
     background: #f0f0f0;
@@ -54,20 +61,45 @@ body, html {
       border-right: none;
       border-top-left-radius: 3px;
       border-bottom-left-radius: 3px; }
-
-.content_wrap.primer {
-  padding-left: 140px; }
-  .content_wrap.primer .actions input[type='text'] {
+  .actions .replay_import_export .button,
+  .actions .snapshot_import_export .button {
+    text-align: center;
+    width: 50%; }
+  .actions .section.actions_seed input[type='text'] {
     outline: none;
     padding: 2px 4px;
     border: solid 1px #c8c8c8;
       border-right: none;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px; }
-
-.content_wrap.garbage {
-  padding-left: 290px; }
-  .content_wrap.garbage .actions select {
+  .actions .section.actions_seed .button {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    width: 52px;
+    text-align: center; }
+  .actions .section.levels select {
+    -webkit-appearance: none;
+    width: 50%;
+    display: inline-block;
+    outline: none;
+    background: #f0f0f0;
+    padding: 2px 4px;
+    border: solid 1px #aaaaaa;
+      border-bottom: solid 1px #646464;
+    cursor: pointer;
+    border-radius: 0; }
+    .actions .section.levels select:hover {
+      border: solid 1px #8c8c8c;
+        border-right: none;
+        border-bottom: solid 1px #282828; }
+  .actions .section.levels .pl_0 {
+    border-right: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px; }
+  .actions .section.levels .pl_1 {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px; }
+  .actions .section.queue_garbage select {
     -webkit-appearance: none;
     display: inline-block;
     outline: none;
@@ -78,18 +110,33 @@ body, html {
       border-bottom: solid 1px #646464;
     cursor: pointer;
     border-radius: 0; }
-    .content_wrap.garbage .actions select:hover {
+    .actions .section.queue_garbage select:hover {
       border: solid 1px #8c8c8c;
         border-right: none;
         border-bottom: solid 1px #282828; }
-    .content_wrap.garbage .actions select.active {
+    .actions .section.queue_garbage select.active {
       background: #c8ffc8; }
-  .content_wrap.garbage .actions .player_select {
+  .actions .section.queue_garbage .player_select {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px; }
+  .actions .section.queue_garbage .queue {
+    text-align: center;
+    width: 32px; }
+  .actions .section.stack_actions td {
+    padding: 0;
+    vertical-align: top; }
+  .actions .section.stack_actions .lbl {
+    padding-right: 12px; }
+  .actions .section.stack_actions .checkbox {
+    display: inline-block;
+    padding-right: 8px; }
+    .actions .section.stack_actions .checkbox input {
+      margin: 0;
+      margin-right: 4px;
+      outline: none; }
 
-.content_wrap.mode_vs {
-  padding-left: 290px; }
+.content_wrap {
+  padding-left: 340px; }
   .content_wrap.mode_vs .stack {
     padding: 16px;
     float: left; }
@@ -108,6 +155,15 @@ body, html {
     background: white;
     border-radius: 3px;
     padding: 8px; }
+    .content_wrap.mode_vs .panel_form .close {
+      background: white;
+      position: absolute;
+      right: 4px;
+      cursor: pointer;
+      top: 4px;
+      color: #c8c8c8; }
+      .content_wrap.mode_vs .panel_form .close:hover {
+        color: black; }
     .content_wrap.mode_vs .panel_form td.lbl {
       padding-right: 4px; }
     .content_wrap.mode_vs .panel_form td {
@@ -162,13 +218,6 @@ body, html {
       background-color: #e6e6e6; }
     .content_wrap.mode_vs td.panel.vis {
       background-color: #c8c8c8; }
-  .content_wrap.mode_vs .actions .checkbox {
-    display: inline-block;
-    padding-right: 8px; }
-    .content_wrap.mode_vs .actions .checkbox input {
-      margin: 0;
-      margin-right: 4px;
-      outline: none; }
 
 .column {
   position: fixed;

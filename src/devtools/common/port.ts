@@ -1,5 +1,5 @@
 import * as m  from 'mithril'
-import {state} from 'devtools_common/data'
+import {state} from 'devtools/common/data'
 
 declare var chrome : any
 export const port = chrome.runtime.connect({name: 'devtools-panel'})
@@ -12,6 +12,7 @@ function on_message(message, sender, send_response){
     state.snapshots.tick = message.tick
     state.snapshots.len  = message.len
     state.snapshot       = message.snapshot
+    state.seed           = message.seed
     state.snapshot_prev  = message.snapshot_prev
     if (message.action !== 'preview'){
       state.selected_tick  = message.tick
@@ -45,4 +46,14 @@ export function queue_garbage(){
   })
   state.garbage_queue.combo = 0
   state.garbage_queue.chain = 0
+}
+
+export function update_levels(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'levels_update',
+      levels: state.levels
+    }
+  })
 }

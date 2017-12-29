@@ -1,7 +1,6 @@
-import {port}     from 'devtools_common/port'
-import panel_form from 'devtools_components/panel_form'
 import * as m  from 'mithril'
-import {COMP_STAGE, state} from 'devtools_common/data'
+import panel_form          from 'devtools/components/panel_form'
+import {COMP_STAGE, state} from 'devtools/common/data'
 import {ROWS_INV, ROWS_VIS, ROWS, COLS} from 'core/data'
 
 export function xy2i(x: number, y: number): number {
@@ -48,9 +47,9 @@ function prop_class(val,val_prev){
 
 function panel_img(kind,i){
   if (kind === null ) {
-    return m('img', {title: i, src: `devtools_panel_null.png`})
+    return m('img', {width: '48px', title: i, src: `devtools_panel_null.png`})
   } else {
-    return m('img', {title: i, src: `devtools_panel${kind}.png`})
+    return m('img', {width: '48px', title: i, src: `devtools_panel${kind}.png`})
   }
 }
 function panel_data(i: number, data, data_prev){
@@ -91,10 +90,14 @@ function panel_class(data,data_prev){
   return classes.join(' ')
 }
 
-function panel_click(i,data){
+function panel_click(pi,i,data){
   return function(){
+    if (
+      state.selected_panel[0] === pi &&
+      state.selected_panel[1] === i
+       ) { return }
     state.reset_panel_form(data)
-    state.selected_panel = i
+    state.selected_panel = [pi,i]
   }
 }
 
@@ -102,8 +105,8 @@ function panel(x: number, y: number, pi: number){
   const i         = xy2i(x,y)
   const data      = state.snapshot[pi+1][2][i]
   const data_prev = state.snapshot_prev[pi+1][2][i]
-  return m('td.panel', { onclick: panel_click(i,data), className: panel_class(data,data_prev)},[
-    panel_form(i,data,data_prev),
+  return m('td.panel', { onclick: panel_click(pi,i,data), className: panel_class(data,data_prev)},[
+    panel_form(pi,i,data,data_prev),
     panel_data(i,data,data_prev)
   ])
 }
@@ -117,57 +120,10 @@ function stack(pi : number){
   return m('.stack',m('table',rows))
 }
 
-function selected(group,key){
-  return function(selected){
-    state['stack_actions_'+group][key] = selected
-  }
-}
-
-function checkbox(group,key,lbl){
-  return m('.checkbox',[
-    m("input[type='checkbox']",{
-      onclick: m.withAttr('checked', selected(group,key)),
-      checked: state['stack_actions_'+group][key]
-    }),
-    m('span', lbl)
-  ])
-}
-
-function export_replay_click(){
-  port.postMessage({port: 'content-script',msg:{action:'replay-export'}})
-}
-function import_replay_click(){
-  port.postMessage({port: 'content-script',msg:{action:'replay-import'}})
-}
-function export_snapshot_click(){
-  port.postMessage({port: 'content-script',msg:{action:'snapshot-export'}})
-}
-function import_snapshot_click(){
-  port.postMessage({port: 'content-script',msg:{action:'snapshot-import'}})
-}
-
-function actions(){
-  return m('.actions.stack_actions',[
-    m('span.lbl.first','Rows'),
-    checkbox('rows','inv','Invisible'),
-    checkbox('rows','vis','Visible'),
-    m('span.lbl.playfields','Playfields'),
-    checkbox('playfields','pl0','Player 1'),
-    checkbox('playfields','pl1','Player 2'),
-    m('span.lbl'      , 'Replays')  ,
-    m('.button.import', { onclick: import_replay_click }, 'Import' ),
-    m('.button.export', { onclick: import_replay_click }, 'Export' ),
-    m('span.lbl'      , 'Snapshots'),
-    m('.button.import', { onclick: import_snapshot_click }, 'Import' ),
-    m('.button.export', { onclick: export_snapshot_click }, 'Export' )
-  ])
-}
-
 export default function content(){
   if (state.stage != '[object ModeVs]') { return }
   if (state.state_component !== COMP_STAGE ) {return}
   return m('.content_wrap.mode_vs',m('.content',
-    actions(),
     stack(0),
     stack(1),
     m('.clear')

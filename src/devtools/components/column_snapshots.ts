@@ -1,6 +1,6 @@
 import * as m             from 'mithril'
-import {snapshot_preview} from 'devtools_common/port'
-import {state}            from 'devtools_common/data'
+import {snapshot_preview} from 'devtools/common/port'
+import {state}            from 'devtools/common/data'
 
 function connection_status(){
   let lbl = ''
