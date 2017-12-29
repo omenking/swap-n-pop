@@ -36,7 +36,6 @@ export default class Snapshots {
     this.index_tick = 0
     // snapshot size limit 120 saved Frames
     this.snapshot     = new Array(120).fill(null)
-    this.snapshot_rng = new Array(120).fill(null)
   }
   
   get stage(){ return this._stage }
@@ -49,10 +48,7 @@ export default class Snapshots {
   load(tick : number){
     this.index      = this.capture_index(tick)
     this.index_tick = this.capture_index_tick(tick)
-    this.stage.load_snaphot(
-      this.snapshot_rng[this.index],
-      this.snapshot[this.index]
-    )
+    this.stage.load_snaphot(this.snapshot[this.index])
   }
 
   /*
@@ -85,7 +81,6 @@ export default class Snapshots {
     this.loop(tick)
     this.index++
     this.snapshot[this.index] = this.stage.snap
-    this.snapshot_rng[this.index] = this.stage.rng.state()
   }
 
   /*

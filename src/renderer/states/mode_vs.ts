@@ -104,16 +104,15 @@ export default class ModeVs extends CoreStage {
       this.playfield1.snap,
       this.timer.snap,
       this.controls.snap,
-      this.tick
+      this.tick,
+      this.rng.state()
     ];
   }
 
   /*
    * load is reserved for staes so needed another name
    */
-  load_snaphot(rng_state,snapshot) {
-    let state = this.rng.state()
-    this.rng = seedrandom(this.seed, {state: rng_state})
+  load_snaphot(snapshot) {
     this.state = snapshot[0]
     // all objects - subobjects to load with a snapshot
     this.playfield0.load(snapshot[1])
@@ -121,6 +120,7 @@ export default class ModeVs extends CoreStage {
     this.controls.load(snapshot[3])
     this.timer.load(snapshot[4])
     this.tick = snapshot[5]
+    this.rng = seedrandom(this.seed, {state: snapshot[6]})
   }
 
   /*
