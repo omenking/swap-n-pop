@@ -7,18 +7,19 @@ port.onMessage.addListener(on_message)
 function on_message(message, sender, send_response){
   if (message.action === 'clear') {
     state.clear()
+    m.redraw()
   } else if (['reload','load','preview'].includes(message.action)){
     state.stage          = message.stage
     state.snapshots.tick = message.tick
     state.snapshots.len  = message.len
-    state.snapshot       = message.snapshot
     state.seed           = message.seed
+    state.snapshot       = message.snapshot
     state.snapshot_prev  = message.snapshot_prev
     if (message.action !== 'preview'){
       state.selected_tick  = message.tick
     }
+    m.redraw()
   }
-  m.redraw()
 }
 
 export function snapshot_preview(tick: number){
@@ -64,6 +65,15 @@ export function regenerate_from_seed(){
     msg : {
       action: 'regenerate_from_seed',
       seed: state.seed
+export function update_panel(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'panel_update',
+      tick: state.selected_tick,
+      pi: state.selected_panel[0],
+      i : state.selected_panel[1],
+      data: state.panel_form
     }
   })
 }

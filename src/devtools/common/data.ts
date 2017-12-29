@@ -80,6 +80,7 @@ class State {
         counter: 0,
         chain: 0
       }
+      this.selected_panel  = [null,null]
     }
   }
 
@@ -90,7 +91,6 @@ class State {
     this.snapshot       = null
     this.snapshot_prev  = null
     this.selected_tick  = 0
-    this.selected_panel  = [null,null]
     this.reset_panel_form(null)
     this.levels = [1,1]
   }
