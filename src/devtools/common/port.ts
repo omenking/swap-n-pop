@@ -65,6 +65,9 @@ export function regenerate_from_seed(){
     msg : {
       action: 'regenerate_from_seed',
       seed: state.seed
+    }
+  })
+}
 export function update_panel(){
   port.postMessage({
     port: 'content-script',
