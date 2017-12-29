@@ -94,6 +94,14 @@ export default class Snapshots {
   }
 
   /*
+   * used to set snap without incrementing the index.
+   */
+  public snap_override(tick: number){
+    const index = this.capture_index(tick)
+    this.snapshot[index] = this.stage.snap
+  }
+
+  /*
    * loops the index of the snapshot array
    * eg. if our snapshot size is 120 and our 
    * index reaches 119 then reset the index to

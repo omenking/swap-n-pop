@@ -1366,6 +1366,7 @@ var State = /** @class */ (function () {
                 counter: 0,
                 chain: 0
             };
+            this.selected_panel = [null, null];
         }
     };
     State.prototype.clear = function () {
@@ -1375,7 +1376,6 @@ var State = /** @class */ (function () {
         this.snapshot = null;
         this.snapshot_prev = null;
         this.selected_tick = 0;
-        this.selected_panel = [null, null];
         this.reset_panel_form(null);
         this.levels = [1, 1];
     };
@@ -1398,19 +1398,20 @@ exports.port.onMessage.addListener(on_message);
 function on_message(message, sender, send_response) {
     if (message.action === 'clear') {
         data_1.state.clear();
+        m.redraw();
     }
     else if (['reload', 'load', 'preview'].includes(message.action)) {
         data_1.state.stage = message.stage;
         data_1.state.snapshots.tick = message.tick;
         data_1.state.snapshots.len = message.len;
-        data_1.state.snapshot = message.snapshot;
         data_1.state.seed = message.seed;
+        data_1.state.snapshot = message.snapshot;
         data_1.state.snapshot_prev = message.snapshot_prev;
         if (message.action !== 'preview') {
             data_1.state.selected_tick = message.tick;
         }
+        m.redraw();
     }
-    m.redraw();
 }
 function snapshot_preview(tick) {
     data_1.state.selected_tick = tick;
@@ -1449,6 +1450,19 @@ function update_levels() {
     });
 }
 exports.update_levels = update_levels;
+function update_panel() {
+    exports.port.postMessage({
+        port: 'content-script',
+        msg: {
+            action: 'panel_update',
+            tick: data_1.state.selected_tick,
+            pi: data_1.state.selected_panel[0],
+            i: data_1.state.selected_panel[1],
+            data: data_1.state.panel_form
+        }
+    });
+}
+exports.update_panel = update_panel;
 
 
 /***/ }),
@@ -2287,10 +2301,14 @@ exports.default = content;
 Object.defineProperty(exports, "__esModule", { value: true });
 var data_1 = __webpack_require__(3);
 var data_2 = __webpack_require__(1);
+var port_1 = __webpack_require__(2);
 var m = __webpack_require__(0);
 function select_kind() {
     return m('select', {
-        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.kind = val; }),
+        onchange: m.withAttr('value', function (val) {
+            data_2.state.panel_form.kind = val;
+            port_1.update_panel();
+        }),
         value: data_2.state.panel_form.kind
     }, [
         m('option', { value: null }, "null"),
@@ -2305,7 +2323,10 @@ function select_kind() {
 }
 function select_state() {
     return m('select', {
-        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.state = val; }),
+        onchange: m.withAttr('value', function (val) {
+            data_2.state.panel_form.state = val;
+            port_1.update_panel();
+        }),
         value: data_2.state.panel_form.state
     }, [
         m('option', { value: data_1.STATIC }, "STATIC"),
@@ -2320,31 +2341,41 @@ function select_state() {
         m('option', { value: data_1.GARBAGE }, "GARBAGE")
     ]);
 }
+function onsubmit(e) {
+    e.preventDefault();
+    port_1.update_panel();
+    return false;
+}
 function input_chain() {
-    return m("input[type='text']", {
+    return m('form', { onsubmit: onsubmit }, m("input[type='text']", {
         onchange: m.withAttr('value', function (val) { data_2.state.panel_form.chain = val; }),
         value: data_2.state.panel_form.chain
-    });
+    }));
 }
 function input_counter() {
-    return m("input[type='text']", {
+    return m('form', { onsubmit: onsubmit }, m("input[type='text']", {
         onchange: m.withAttr('value', function (val) { data_2.state.panel_form.counter = val; }),
         value: data_2.state.panel_form.counter
-    });
+    }));
 }
-function close() {
-    return function () {
-        data_2.state.selected_panel = [null, null];
-    };
+function close(e) {
+    e.preventDefault();
+    if (true) {
+        throw ('eeee');
+    }
+    data_2.state.reset_panel_form(null);
+    m.redraw();
+    return false;
 }
 function panel_form(pi, i, data, data_prev) {
     if (data_2.state.selected_panel[0] === pi &&
         data_2.state.selected_panel[1] === i) {
-        return m('.panel_form', m('.close', { onclick: close() }, '[ x ]'), m('table', m('tr', m('td.lbl', 'Index'), m('td', i)), m('tr', m('td.lbl', 'Kind'), m('td', select_kind())), m('tr', m('td.lbl', 'State'), m('td', select_state())), m('tr', m('td.lbl', 'Counter'), m('td', input_counter())), m('tr', m('td.lbl', 'Chain'), m('td', input_chain()))));
+        return m('.panel_form', [
+            m('.close', { onclick: close }, '[ x ]'),
+            m('table', m('tr', m('td.lbl', 'Index'), m('td', i)), m('tr', m('td.lbl', 'Kind'), m('td', select_kind())), m('tr', m('td.lbl', 'State'), m('td', select_state())), m('tr', m('td.lbl', 'Counter'), m('td', input_counter())), m('tr', m('td.lbl', 'Chain'), m('td', input_chain())))
+        ]);
     }
-    else {
-        return;
-    }
+    return m('.nada', '');
 }
 exports.default = panel_form;
 

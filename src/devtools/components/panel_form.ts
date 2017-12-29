@@ -11,12 +11,16 @@ import {
   GARBAGE
 } from 'core/data'
 import {state} from 'devtools/common/data'
+import {update_panel} from 'devtools/common/port'
 import * as m  from 'mithril'
 
 function select_kind(){
   return m('select',
   {
-    onchange: m.withAttr('value',function(val){ state.panel_form.kind = val}),
+    onchange: m.withAttr('value',function(val){ 
+      state.panel_form.kind = val
+      update_panel()
+    }),
     value: state.panel_form.kind
   },[
     m('option',{value: null}, "null"),
@@ -33,7 +37,10 @@ function select_kind(){
 function select_state(){
   return m('select',
   {
-    onchange: m.withAttr('value',function(val){ state.panel_form.state = val}),
+    onchange: m.withAttr('value',function(val){ 
+      state.panel_form.state = val
+      update_panel()
+    }),
     value: state.panel_form.state
   },[
     m('option', {value: STATIC}   , "STATIC"),
@@ -49,24 +56,35 @@ function select_state(){
   ])
 }
 
+function onsubmit(e){
+  e.preventDefault()
+  update_panel()
+  return false
+}
 function input_chain(){
-    return m("input[type='text']", {
+  return m('form', {onsubmit: onsubmit},
+    m("input[type='text']", {
     onchange: m.withAttr('value',function(val){ state.panel_form.chain = val}),
     value: state.panel_form.chain
-  })
+  }))
 }
 
 function input_counter(){
-  return m("input[type='text']", {
+  return m('form', {onsubmit: onsubmit},
+  m("input[type='text']", {
     onchange: m.withAttr('value',function(val){ state.panel_form.counter = val}),
     value: state.panel_form.counter
-  })
+  }))
 }
 
-function close(){
-  return function(){
-    state.selected_panel = [null,null]
-  }
+declare const alert : any
+
+function close(e){
+  e.preventDefault()
+  if(true === true){throw('eeee')}
+  state.reset_panel_form(null)
+  m.redraw()
+  return false
 }
 
 export default function panel_form(pi,i,data,data_prev){
@@ -74,16 +92,15 @@ export default function panel_form(pi,i,data,data_prev){
       state.selected_panel[0] === pi &&
       state.selected_panel[1] === i
      ) { 
-    return m('.panel_form',
-    m('.close',{onclick: close()},'[ x ]'),
+    return m('.panel_form',[
+    m('.close',{onclick: close},'[ x ]'),
     m('table',
       m('tr', m('td.lbl', 'Index')  , m('td', i)),
       m('tr', m('td.lbl', 'Kind')   , m('td', select_kind())),
       m('tr', m('td.lbl', 'State')  , m('td', select_state())),
       m('tr', m('td.lbl', 'Counter'), m('td', input_counter())),
       m('tr', m('td.lbl', 'Chain')  , m('td', input_chain()))
-    ))
-  } else {
-    return
+    )])
   }
+  return m('.nada','')
 }
