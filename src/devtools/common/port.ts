@@ -57,3 +57,13 @@ export function update_levels(){
     }
   })
 }
+
+export function regenerate_from_seed(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'regenerate_from_seed',
+      seed: state.seed
+    }
+  })
+}

@@ -1449,6 +1449,16 @@ function update_levels() {
     });
 }
 exports.update_levels = update_levels;
+function regenerate_from_seed() {
+    exports.port.postMessage({
+        port: 'content-script',
+        msg: {
+            action: 'regenerate_from_seed',
+            seed: data_1.state.seed
+        }
+    });
+}
+exports.regenerate_from_seed = regenerate_from_seed;
 
 
 /***/ }),
@@ -1610,13 +1620,15 @@ var content_primer_1 = __webpack_require__(13);
 var actions_1 = __webpack_require__(15);
 port_1.port.postMessage('connect');
 window.document.onkeydown = function (e) {
-    if ([38, 87, 75].includes(e.keyCode)) {
+    //if ([38,87,75].includes(e.keyCode)) { //up w k
+    if ([38].includes(e.keyCode)) {
         if (data_1.state.selected_tick !== data_1.state.snapshots.tick) {
             port_1.snapshot_preview(data_1.state.selected_tick + 1);
             m.redraw();
         }
+        //} else if ([40,83,74].includes(e.keyCode)) { //down s j
     }
-    else if ([40, 83, 74].includes(e.keyCode)) {
+    else if ([40].includes(e.keyCode)) {
         if (data_1.state.selected_tick !== data_1.state.snapshots.tick - data_1.state.snapshots.len + 1) {
             port_1.snapshot_preview(data_1.state.selected_tick - 1);
             m.redraw();
@@ -2417,16 +2429,20 @@ exports.default = actions;
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
+var port_1 = __webpack_require__(2);
 function input_seed() {
     return m("input[type='text']", {
         onchange: m.withAttr('value', function (val) { data_1.state.seed = val; }),
         value: data_1.state.seed
     });
 }
+function gen() {
+    port_1.regenerate_from_seed();
+}
 function default_1() {
     return m('.section.actions_seed', [
         input_seed(),
-        m('.button', 'Gen'),
+        m('.button', { onclick: gen }, 'Gen'),
         m('.clear')
     ]);
 }

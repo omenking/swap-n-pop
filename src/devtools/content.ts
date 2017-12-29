@@ -66,11 +66,18 @@ function replay_import(){
   window.replay_import_send()
 }
 
+function regenerate_from_seed(seed : string){
+  window.stage.seed = seed
+  window.stage.create()
+  window.stage.render()
+}
+
 function on_message(message, sender, send_response){
   if      (message.action === 'preview') { preview(message.tick)}
   else if (message.action === 'reload')  { reload() }
   else if (message.action === 'garbage_push')  { garbage_push(message.data) }
   else if (message.action === 'levels_update') { levels_update(message.levels) }
+  else if (message.action === 'regenerate_from_seed') { regenerate_from_seed(message.seed) }
   else if (message.action === 'snapshot-export'){ snapshot_export(message.tick) }
   else if (message.action === 'snapshot-import'){ snapshot_import() }
   else if (message.action === 'replay-export'){ replay_export() }
