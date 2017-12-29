@@ -31,13 +31,17 @@ export default class Snapshots {
   create(stage){
     // to snap / load
     this.stage = stage
+    this.reset()
+  }
+
+  reset(){
     // counter for each Frame
     this.index      = -1
     this.index_tick = 0
     // snapshot size limit 120 saved Frames
     this.snapshot     = new Array(120).fill(null)
   }
-  
+
   get stage(){ return this._stage }
   set stage(v){ this._stage = v}
 
@@ -74,7 +78,13 @@ export default class Snapshots {
     else            {return this.index_tick-this.snapshot.length}
   }
 
-  public import_from_json(json){
+  public snapshot_import(snapshot){
+    console.log('snapshots.snapshot_import')
+    this.index      = 0
+    this.index_tick = 0
+    this.snapshot[0] = snapshot
+    this.stage.load_snaphot(this.snapshot[0])
+    this.stage.devtools_load()
   }
 
   snap(tick : number){

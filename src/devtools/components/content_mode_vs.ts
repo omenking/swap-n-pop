@@ -120,6 +120,7 @@ function stack(pi : number){
   return m('.stack',m('table',rows))
 }
 
+
 export default function content(){
   if (state.stage != '[object ModeVs]') { return }
   if (state.state_component !== COMP_STAGE ) {return}

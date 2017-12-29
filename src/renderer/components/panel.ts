@@ -82,7 +82,7 @@ export default class ComponentPanel {
   set state(val) {
     this._state = val 
   }
-
+  
   get state_timer() { return this._state_timer }
   set state_timer(val) { this._state_timer = val }
 
@@ -260,7 +260,7 @@ export default class ComponentPanel {
         this.counter = this.under.counter;
     }
     else {
-      this.change_state(LAND);
+        this.change_state(LAND);
     }
   }
 
@@ -345,7 +345,7 @@ export default class ComponentPanel {
   get swappable() {
     // if above is not stable, you can't swap
     if (this.above.state === HANG ) { return false }
-    if (this.state === STATIC && this.kind !== null) { return true }
+    if ((this.state === STATIC || this.state === FALL) && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
     if (this.empty) { return true }
     return false
@@ -366,7 +366,7 @@ export default class ComponentPanel {
     if (this.state === STATIC && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
     // 3 already have been marked for being cleared on first frame
-    if (this.state === CLEAR && this.playfield.clearing.indexOf(this)) { return true }
+    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.state_timer === 0) { return true }
     return false
   }
 

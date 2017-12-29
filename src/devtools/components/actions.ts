@@ -11,7 +11,7 @@ export default function actions(){
     seed(),
     queue_garbage(),
     stack(),
-    replay(),
+    //replay(),
     snapshot(),
     levels()
   ])

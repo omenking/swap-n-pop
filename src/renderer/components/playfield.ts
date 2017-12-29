@@ -114,7 +114,6 @@ export default class Playfield {
 
   get snap() {
     const snap_cursor = this.cursor.snap
-    const snap_countdown = this.countdown.snap
     const snap_stack  = []
     for (let panel of this.stack){
       snap_stack.push(panel.snap)
@@ -123,7 +122,6 @@ export default class Playfield {
       this.push_counter,
       snap_cursor,
       snap_stack,
-      snap_countdown,
       this.pushing,
       this.character.snap,
       this.garbage.snap
@@ -135,10 +133,9 @@ export default class Playfield {
     for (let i = 0; i < this.stack_len; i++) {
       this.stack_i(i).load(snapshot[2][i])
     }
-    this.countdown.load(snapshot[3])
-    this.pushing = snapshot[4]
-    this.character.load(snapshot[5])
-    this.garbage.load(snapshot[6])
+    this.pushing = snapshot[3]
+    this.character.load(snapshot[4])
+    this.garbage.load(snapshot[5])
   }
   create(stage,opts) {
     if (stage === null) {

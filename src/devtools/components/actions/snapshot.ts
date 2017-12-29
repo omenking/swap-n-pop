@@ -1,12 +1,13 @@
 import * as m from 'mithril'
 import {port} from 'devtools/common/port'
+import {state} from 'devtools/common/data'
 
 
 function export_click(){
-  port.postMessage({port: 'content-script',msg:{action:'replay-export'}})
+  port.postMessage({port: 'content-script',msg:{action:'snapshot-export', tick: state.selected_tick}})
 }
 function import_click(){
-  port.postMessage({port: 'content-script',msg:{action:'replay-import'}})
+  port.postMessage({port: 'content-script',msg:{action:'snapshot-import'}})
 }
 
 export default function(){

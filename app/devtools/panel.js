@@ -2240,11 +2240,11 @@ function panel_class(data, data_prev) {
 function panel_click(pi, i, data) {
     return function () {
         if (data_1.state.selected_panel[0] === pi &&
-            data_1.state.selected_panel[1] === i) { }
-        else {
-            data_1.state.reset_panel_form(data);
-            data_1.state.selected_panel = [pi, i];
+            data_1.state.selected_panel[1] === i) {
+            return;
         }
+        data_1.state.reset_panel_form(data);
+        data_1.state.selected_panel = [pi, i];
     };
 }
 function panel(x, y, pi) {
@@ -2393,15 +2393,14 @@ var m = __webpack_require__(0);
 var seed_1 = __webpack_require__(16);
 var queue_garbage_1 = __webpack_require__(17);
 var levels_1 = __webpack_require__(18);
-var replay_1 = __webpack_require__(19);
-var snapshot_1 = __webpack_require__(20);
-var stack_1 = __webpack_require__(21);
+var snapshot_1 = __webpack_require__(19);
+var stack_1 = __webpack_require__(20);
 function actions() {
     return m('.actions', [
         seed_1.default(),
         queue_garbage_1.default(),
         stack_1.default(),
-        replay_1.default(),
+        //replay(),
         snapshot_1.default(),
         levels_1.default()
     ]);
@@ -2555,36 +2554,12 @@ exports.default = default_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var port_1 = __webpack_require__(2);
+var data_1 = __webpack_require__(1);
 function export_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export' } });
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export', tick: data_1.state.selected_tick } });
 }
 function import_click() {
     port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-import' } });
-}
-function default_1() {
-    return m('.section.replay_import_export', [
-        m('.lbl', 'Replays'),
-        m('.button.import', { onclick: import_click }, 'Import'),
-        m('.button.export', { onclick: import_click }, 'Export')
-    ]);
-}
-exports.default = default_1;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var m = __webpack_require__(0);
-var port_1 = __webpack_require__(2);
-function export_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export' } });
-}
-function import_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-import' } });
 }
 function default_1() {
     return m('.section.snapshot_import_export', [
@@ -2597,7 +2572,7 @@ exports.default = default_1;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

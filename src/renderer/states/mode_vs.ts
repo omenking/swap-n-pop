@@ -111,7 +111,8 @@ export default class ModeVs extends CoreStage {
       this.timer.snap,
       this.controls.snap,
       this.tick,
-      this.rng.state()
+      this.rng.state(),
+      this.countdown.snap
     ];
   }
 
@@ -127,6 +128,7 @@ export default class ModeVs extends CoreStage {
     this.timer.load(snapshot[4])
     this.tick = snapshot[5]
     this.rng = seedrandom(this.seed, {state: snapshot[6]})
+    this.countdown.load(snapshot[7])
   }
 
   /*
