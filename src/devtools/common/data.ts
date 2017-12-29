@@ -13,7 +13,7 @@ class State {
   public snapshot        : any
   public snapshot_prev   : any
   public selected_tick   : number
-  public selected_panel  : number
+  public selected_panel  : Array<number>
   public state_component : string
   public garbage_queue : {
     pi: number,
@@ -28,10 +28,7 @@ class State {
     pl0: boolean,
     pl1: boolean
   }
-
-  public actions_primer : {
-    seed: string
-  }
+  seed: string
 
   public panel_form : {
     kind: string,
@@ -40,12 +37,16 @@ class State {
     chain: number
   }
 
+  public levels : Array<number>
+
   constructor(){
     this.stage           = null
     this.snapshots       = { tick: 0, len: 0}
     this.selected_tick   = null
     this.state_component = COMP_STAGE
     this.garbage_queue   = {pi: 0, combo: 0, chain: 0}
+    this.levels = [1,1]
+    this.selected_panel  = [null,null]
     this.stack_actions_rows = {
         inv: false,
         vis: true
@@ -54,10 +55,9 @@ class State {
       pl0: true,
       pl1: false
     }
-    this.actions_primer = {
-      seed: 'puzzle'
-    }
+    this.seed = ''
     this.reset_panel_form(null)
+
   }
 
   public static get Instance(){
@@ -90,8 +90,9 @@ class State {
     this.snapshot       = null
     this.snapshot_prev  = null
     this.selected_tick  = 0
-    this.selected_panel  = null
+    this.selected_panel  = [null,null]
     this.reset_panel_form(null)
+    this.levels = [1,1]
   }
 }
 

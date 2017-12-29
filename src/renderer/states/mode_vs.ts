@@ -13,6 +13,7 @@ import ComponentDebugFrame  from 'components/debug_frame'
 import ComponentTimer       from 'components/timer'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
+import ComponentLevel       from 'components/level'
 import fade                 from 'core/fade'
 import { px } from 'core/filters'
 import {
@@ -58,6 +59,7 @@ export default class ModeVs extends CoreStage {
   private controls        : any
   private _countdown      : CountdownState
   private step_mode       : boolean
+  public  levels          : Array<ComponentLevel>
 
   constructor() {
     super()
@@ -70,6 +72,10 @@ export default class ModeVs extends CoreStage {
     this.menu_pause   = new ComponentMenuPause()
     this.star_counter = new ComponentStarCounter()
     this.countdown    = new CountdownState()
+    this.levels = [
+      new ComponentLevel(0),
+      new ComponentLevel(1)
+    ]
   }
 
   get name(): string {
@@ -79,11 +85,11 @@ export default class ModeVs extends CoreStage {
   public init(data) {
     this.step_mode = false
     this.rounds_won = [2,1]
-    this.tick   = 0
-    this.seed   = data.seed
-    this.cpu    = data.cpu
-    this.online = data.online
-    this.rng    = seedrandom(this.seed, {state: true})
+    this.tick       = 0
+    this.seed       = data.seed
+    this.cpu        = data.cpu
+    this.online     = data.online
+    this.rng        = seedrandom(this.seed, {state: true})
 
     // had to do this to inject controls into for `integration/online.spec.ts`
     this.controls = data.controls || CoreControls
@@ -154,22 +160,15 @@ export default class ModeVs extends CoreStage {
       this.devtools_load()
     } else {
       window.stage = null
-      if (window.devtools_send) {
-        window.devtools_send({action: 'clear'})
+      if (window.devtools_stage_clear) {
+        window.devtools_stage_clear()
       }
     }
   }
 
   devtools_load(){
-    if (window.devtools_send) {
-      window.devtools_send({
-        action: 'load',
-        stage: this.toString(),
-        tick : this.tick,
-        len  : this.snapshots.len,
-        snapshot      : this.snapshots.snapshot_at(this.tick),
-        snapshot_prev : this.snapshots.snapshot_at(this.tick-1)
-      })
+    if (window.devtools_stage_load) {
+      window.devtools_stage_load()
     }
   }
 
@@ -224,6 +223,8 @@ export default class ModeVs extends CoreStage {
 
     this.menu_pause.create(this)
     this.star_counter.create(this,px(91),px(91))
+    this.levels[0].create(px(175)   ,px(134),1)
+    this.levels[1].create(px(175+34),px(134),1)
     fade.in()
     this.controls.map_global({
       sim_forward: this.sim_forward.bind(this),
@@ -469,6 +470,8 @@ export default class ModeVs extends CoreStage {
     }
     //this.debug_frame.render(this.tick)
     this.star_counter.render()
+    this.levels[0].render()
+    this.levels[1].render()
   }
   shutdown() {
     game.sounds.stage_music('none')

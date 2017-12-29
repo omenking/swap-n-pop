@@ -10,7 +10,7 @@ import {
   CLEAR,
   GARBAGE
 } from 'core/data'
-import {state} from 'devtools_common/data'
+import {state} from 'devtools/common/data'
 import * as m  from 'mithril'
 
 function select_kind(){
@@ -63,10 +63,20 @@ function input_counter(){
   })
 }
 
+function close(){
+  return function(){
+    state.selected_panel = [null,null]
+  }
+}
 
-export default function panel_form(i,data,data_prev){
-  if (state.selected_panel === i) { 
-    return m('.panel_form',m('table',
+export default function panel_form(pi,i,data,data_prev){
+  if (
+      state.selected_panel[0] === pi &&
+      state.selected_panel[1] === i
+     ) { 
+    return m('.panel_form',
+    m('.close',{onclick: close()},'[ x ]'),
+    m('table',
       m('tr', m('td.lbl', 'Index')  , m('td', i)),
       m('tr', m('td.lbl', 'Kind')   , m('td', select_kind())),
       m('tr', m('td.lbl', 'State')  , m('td', select_state())),

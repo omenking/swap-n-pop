@@ -4,13 +4,13 @@
 // chrome.devtools.*
 // chrome.extension.*
 import * as m  from 'mithril'
-import {state} from 'devtools_common/data'
-import {port, snapshot_preview} from 'devtools_common/port'
-import column_components from 'devtools_components/column_components'
-import column_snapshots  from 'devtools_components/column_snapshots'
-import content_mode_vs   from 'devtools_components/content_mode_vs'
-import content_garbage   from 'devtools_components/content_garbage'
-import content_primer    from 'devtools_components/content_primer'
+import {state}                  from 'devtools/common/data'
+import {port, snapshot_preview} from 'devtools/common/port'
+import column_components        from 'devtools/components/column_components'
+import column_snapshots         from 'devtools/components/column_snapshots'
+import content_mode_vs          from 'devtools/components/content_mode_vs'
+import content_primer           from 'devtools/components/content_primer'
+import actions                  from 'devtools/components/actions'
 
 declare var window : any
 
@@ -34,12 +34,10 @@ const app = {
   view: function(){
     return [
       column_snapshots(),
-      column_components(),
-      [
-        content_primer(),
-        content_mode_vs(),
-        content_garbage()
-      ]
+      //column_components(),
+      actions(),
+      content_primer(),
+      content_mode_vs()
     ]
   }
 }

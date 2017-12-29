@@ -1,6 +1,6 @@
 import * as m  from 'mithril'
-import {COMP_GARBA, state} from 'devtools_common/data'
-import {queue_garbage} from 'devtools_common/port'
+import {COMP_GARBA, state} from 'devtools/common/data'
+import {queue_garbage}     from 'devtools/common/port'
 
 function select_class(val){
   if (val > 0)
@@ -15,8 +15,8 @@ function select_player(){
        onchange: m.withAttr('value',function(val){ state.garbage_queue.pi = val})
      },
   [
-    m('option',{value: 0},'Player 1'),
-    m('option',{value: 1},'Player 2')
+    m('option',{value: 0},'Pl 1'),
+    m('option',{value: 1},'Pl 2')
   ])
 }
 
@@ -63,22 +63,12 @@ function select_chain(){
   ])
 }
 
-function actions(){
-  return m('.actions.garbage_actions',[
+export default function actions_queue_garbage(){
+  return m('.section.queue_garbage',[
     select_player(),
     select_combo(),
     select_chain(),
-    m('.button.queue', {onclick: queue_garbage}, 'Queue'),
+    m('.button.queue', {onclick: queue_garbage}, '>>'),
     m('.clear')
   ])
-}
-
-export default function content_garbage(){
-  if (state.stage != '[object ModeVs]') { return }
-  if (state.state_component !== COMP_GARBA ) {return}
-  return m('.content_wrap.garbage',m('.content',[
-    actions(),
-    m('.clear')
-  ]
-  ))
 }

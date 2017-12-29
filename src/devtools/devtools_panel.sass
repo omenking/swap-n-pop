@@ -24,15 +24,23 @@ body, html
 
 .actions
   font-size: 12px
-  height: 28px
-  padding: 6px
-  border-bottom: solid 1px rgb(200,200,200)
+  position: fixed
+  z-index: 2
+  top: 0
+  height: 100%
+  border-right: solid 1px rgb(163,163,163)
+  background: rgb(255,255,255)
+  width: 200px
+  left: 140px
+  .section
+    padding: 6px
+    border-top: solid 1px rgb(230,230,230)
+  .section:first-child
+    border-top: none
   .lbl
     font-weight: 600
-    padding-right: 16px
-    padding-left: 12px
-    &.first
-      padding-left: 0
+    padding:
+      bottom: 4px
   .button
     display: inline-block
     background: rgb(240,240,240)
@@ -54,45 +62,88 @@ body, html
       border-right: none
       border-top-left-radius: 3px
       border-bottom-left-radius: 3px
+  .replay_import_export,
+  .snapshot_import_export
+    .button
+      text-align: center
+      width: 50%
+  .section.actions_seed
+    input[type='text']
+      outline: none
+      padding: 2px 4px
+      border : solid 1px rgb(200,200,200)
+        right: none
+      border-top-left-radius   : 3px
+      border-bottom-left-radius: 3px
+    .button
+      border-top-right-radius   : 3px
+      border-bottom-right-radius: 3px
+      width: 52px
+      text-align: center
+  .section.levels
+    select
+      -webkit-appearance: none
+      width: 50%
+      display: inline-block
+      outline: none
+      background: rgb(240,240,240)
+      padding: 2px 4px
+      border: solid 1px rgb(170,170,170)
+        bottom: solid 1px rgb(100,100,100)
+      cursor: pointer
+      border-radius: 0
+      &:hover
+        border: solid 1px rgb(140,140,140)
+          right: none
+          bottom: solid 1px rgb(40,40,40)
+    .pl_0
+      border-right: none
+      border-top-left-radius   : 3px
+      border-bottom-left-radius: 3px
+    .pl_1
+      border-top-right-radius   : 3px
+      border-bottom-right-radius: 3px
+  .section.queue_garbage
+    select
+      -webkit-appearance: none
+      display: inline-block
+      outline: none
+      background: rgb(240,240,240)
+      padding: 2px 4px
+      border: solid 1px rgb(170,170,170)
+        right: none
+        bottom: solid 1px rgb(100,100,100)
+      cursor: pointer
+      border-radius: 0
+      &:hover
+        border: solid 1px rgb(140,140,140)
+          right: none
+          bottom: solid 1px rgb(40,40,40)
+      &.active
+        :background: rgb(200,255,200)
+    .player_select
+      border-top-left-radius: 3px
+      border-bottom-left-radius: 3px
+    .queue
+      text-align: center
+      width: 32px
+  .section.stack_actions
+    td
+      padding: 0
+      vertical-align: top
+    .lbl
+      padding-right: 12px
+    .checkbox
+      display: inline-block
+      padding-right: 8px
+      input
+        margin: 0;
+        margin-right: 4px;
+        outline: none
 
 .content_wrap
-  &.primer
-    padding-left: 140px
-    .actions
-      input[type='text']
-        outline: none
-        padding: 2px 4px
-        border : solid 1px rgb(200,200,200)
-          right: none
-        border-top-left-radius   : 3px
-        border-bottom-left-radius: 3px
-
-  &.garbage
-    padding-left: 290px
-    .actions
-      select
-        -webkit-appearance: none
-        display: inline-block
-        outline: none
-        background: rgb(240,240,240)
-        padding: 2px 4px
-        border: solid 1px rgb(170,170,170)
-          right: none
-          bottom: solid 1px rgb(100,100,100)
-        cursor: pointer
-        border-radius: 0
-        &:hover
-          border: solid 1px rgb(140,140,140)
-            right: none
-            bottom: solid 1px rgb(40,40,40)
-        &.active
-          :background: rgb(200,255,200)
-      .player_select
-        border-top-left-radius: 3px
-        border-bottom-left-radius: 3px
-
+  padding-left: 340px
   &.mode_vs
-    padding-left: 290px
     .stack
       padding: 16px
       float: left
@@ -102,6 +153,15 @@ body, html
       vertical-align: top
       padding: 0
     .panel_form
+      .close
+        background: rgb(255,255,255)
+        position: absolute
+        right: 4px
+        cursor: pointer
+        top: 4px
+        color: rgb(200,200,200)
+        &:hover
+          color: rgb(0,0,0)
       position: absolute
       top: 24px
       left: 24px
@@ -166,14 +226,6 @@ body, html
         background-color: rgb(230,230,230)
       &.vis
         background-color: rgb(200,200,200)
-    .actions
-      .checkbox
-        display: inline-block
-        padding-right: 8px
-        input
-          margin: 0;
-          margin-right: 4px;
-          outline: none
 
 .column
   position: fixed
