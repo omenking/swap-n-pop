@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1310,7 +1310,7 @@ m.vnode = Vnode
 if (true) module["exports"] = m
 else window.m = m
 }());
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6).setImmediate, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).setImmediate, __webpack_require__(4)))
 
 /***/ }),
 /* 1 */
@@ -1319,12 +1319,9 @@ else window.m = m
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.COMP_STAGE = Symbol('stage');
-exports.COMP_GARBA = Symbol('garbage');
-exports.ROWS_INV = 12;
-exports.ROWS_VIS = 11;
-exports.ROWS = exports.ROWS_INV + exports.ROWS_VIS;
-exports.COLS = 6;
+var data_1 = __webpack_require__(3);
+exports.COMP_STAGE = 'stage';
+exports.COMP_GARBA = 'garbage';
 var State = /** @class */ (function () {
     function State() {
         this.stage = null;
@@ -1340,6 +1337,10 @@ var State = /** @class */ (function () {
             pl0: true,
             pl1: false
         };
+        this.actions_primer = {
+            seed: 'puzzle'
+        };
+        this.reset_panel_form(null);
     }
     Object.defineProperty(State, "Instance", {
         get: function () {
@@ -1349,6 +1350,24 @@ var State = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    State.prototype.reset_panel_form = function (data) {
+        if (data) {
+            this.panel_form = {
+                kind: data[2],
+                state: data[3],
+                counter: data[4],
+                chain: data[5]
+            };
+        }
+        else {
+            this.panel_form = {
+                state: data_1.STATIC,
+                kind: null,
+                counter: 0,
+                chain: 0
+            };
+        }
+    };
     State.prototype.clear = function () {
         this.stage = null;
         this.snapshots.tick = 0;
@@ -1356,6 +1375,8 @@ var State = /** @class */ (function () {
         this.snapshot = null;
         this.snapshot_prev = null;
         this.selected_tick = 0;
+        this.selected_panel = null;
+        this.reset_panel_form(null);
     };
     return State;
 }());
@@ -1420,6 +1441,116 @@ exports.queue_garbage = queue_garbage;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ROWS_INV = 12;
+exports.ROWS_VIS = 11;
+exports.ROWS = exports.ROWS_INV + exports.ROWS_VIS;
+exports.COLS = 6;
+exports.PANELS = exports.ROWS * exports.COLS;
+exports.STOPTIME = 60 * 3;
+/** Number of starting blocks. */
+exports.NRBLOCK = 17;
+// States
+exports.STATIC = 'static';
+exports.HANG = 'hang';
+exports.FALL = 'fall';
+exports.LAND = 'land';
+exports.SWAP_L = 'swap_l';
+exports.SWAP_R = 'swap_r';
+exports.SWAPPING_L = 'swaping_l';
+exports.SWAPPING_R = 'swaping_r';
+exports.CLEAR = 'clear';
+exports.GARBAGE = 'garbage';
+// STAGE States
+exports.STARTING = 'starting';
+exports.RUNNING = 'running';
+exports.PAUSE = 'pause';
+exports.GAMEOVER = 'gameover';
+// COUNTDOWN States
+exports.MOVING = 'moving';
+exports.COUNT3 = '3';
+exports.COUNT2 = '2';
+exports.COUNT1 = '1';
+exports.DONE = 'done';
+// Garbage Kinds
+exports.COMBO = 'combo';
+exports.CHAIN = 'chain';
+// Animation Frame
+exports.FRAME_CLEAR_PARTICLE = [1, 0, 1, 0, 1, 1, 0, 1, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7];
+exports.ANIM_CLEAR_PARTICLE_MOVE = [4, 6, 9, 9, 10, 11, 11, 12, 12, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14];
+exports.FRAME_LAND = [4, 4, 4, 2, 2, 2, 3, 3, 3, 0];
+exports.FRAME_CLEAR = [5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+    5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+    5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+    5, 0, 5, 0, 5, 0, 5, 0, 6, 6, 6, 6,
+    6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
+exports.FRAME_LIVE = 0;
+exports.FRAME_DANGER = [0, 0, 0, 0,
+    2, 2, 2, 2,
+    0, 0, 0, 0,
+    3, 3, 3, 3,
+    4, 4, 4, 4];
+exports.FRAME_DEAD = 6;
+exports.FRAME_NEWLINE = 1;
+exports.FRAME_STAR = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1];
+// Timing
+/** The time it takes before the first panel is ready to start popping. */
+exports.TIME_CLEAR = 60;
+/** When a panel is ready to pop is needs to wait for time_pop before popping. */
+exports.TIME_POP = 9;
+/** How long to wait after popping last panel before panel falls. */
+exports.TIME_FALL = 3;
+exports.TIME_SWAP = 4;
+exports.TIME_PUSH = 1000;
+/** The time the particle stays on the screen for. */
+exports.TIME_CLEAR_PARTICLE = exports.FRAME_CLEAR_PARTICLE.length;
+exports.TIME_GARBAGE_CLEAR = 30;
+exports.TIME_GARBAGE_POP = 12;
+exports.UNIT = 32;
+exports.WIN_WIDTH = 398 * 2; // 256
+exports.WIN_HEIGHT = 224 * 2;
+exports.MENUCURSORBLINK = 12;
+exports.STARTPOS_PANELCURSOR_SPEED = 6;
+exports.PLAYFIELD_CURSOR_SPEED = 10;
+exports.GARBAGE_SHAKE = [
+    [
+        1, 1, 1,
+        2, 2, 2,
+        1, 1, 1,
+        0, 0, 0,
+        -1, -1, -1,
+        0, 0, 0
+    ]
+];
+exports.WALL_ROLLUP = [
+    0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0,
+    2, 0, 3, 3, 0, 3, 0, 4, 4, 0,
+    4, 0, 5, 5, 0, 5, 0, 6, 0, 6,
+    0, 7, 7, 0, 7, 0, 0, 8, 0, 0,
+    8, 0, 0, 8, 0, 9, 9, 0, 16, 32,
+    48, 64, 80, 96, 112, 128, 144, 160, 176, 192,
+    192, 188, 185, 185, 188, 192, 192, 189, 187, 187,
+    189, 192, 192, 190, 189, 189, 190, 192, 192, 190,
+    192, 190, 192, 191, 192, 191, 192, 191, 192
+];
+exports.BAUBLE_FLOAT = [
+    -1, -1, 0, 1, 2, 3, 4,
+    4, 5, 5, 6, 6, 7,
+    7, 8, 8, 8, 9, 9,
+    9, 9, 9, 10, 10,
+    10, 10, 10, 10, 10,
+    10, 10, 10, 10, 10,
+    10, 10, 10, 11, 11,
+    11, 11, 11
+];
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1446,8 +1577,8 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1461,11 +1592,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
 var port_1 = __webpack_require__(2);
-var column_components_1 = __webpack_require__(9);
-var column_snapshots_1 = __webpack_require__(10);
-var content_mode_vs_1 = __webpack_require__(11);
-var content_garbage_1 = __webpack_require__(12);
-var content_primer_1 = __webpack_require__(13);
+var column_components_1 = __webpack_require__(10);
+var column_snapshots_1 = __webpack_require__(11);
+var content_mode_vs_1 = __webpack_require__(12);
+var content_garbage_1 = __webpack_require__(14);
+var content_primer_1 = __webpack_require__(15);
 port_1.port.postMessage('connect');
 window.document.onkeydown = function (e) {
     if ([38, 87, 75].includes(e.keyCode)) {
@@ -1498,7 +1629,7 @@ m.mount(window.document.body, app);
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -1551,13 +1682,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(7);
+__webpack_require__(8);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -1747,10 +1878,10 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(9)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1940,7 +2071,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1990,7 +2121,7 @@ exports.default = column;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2057,36 +2188,39 @@ exports.default = column;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var port_1 = __webpack_require__(2);
+var panel_form_1 = __webpack_require__(13);
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
+var data_2 = __webpack_require__(3);
 function xy2i(x, y) {
     // x left-right
     // y top-down
-    return (y * data_1.COLS) + x;
+    return (y * data_2.COLS) + x;
 }
 exports.xy2i = xy2i;
 function stack_y_counter_class(y) {
-    if (y < data_1.ROWS_INV)
+    if (y < data_2.ROWS_INV)
         return 'inv';
     else
         return 'vis';
 }
 function stack_y_counter(y) {
-    return m('td.y', {
+    return m('td.panel.y', {
         className: stack_y_counter_class(y)
     }, y);
 }
 function stack_row(y, pi) {
-    if ((y < data_1.ROWS_INV) && data_1.state.stack_actions_rows.inv === false) {
+    if ((y < data_2.ROWS_INV) && data_1.state.stack_actions_rows.inv === false) {
         return;
     }
-    if (!(y < data_1.ROWS_INV) && data_1.state.stack_actions_rows.vis === false) {
+    if (!(y < data_2.ROWS_INV) && data_1.state.stack_actions_rows.vis === false) {
         return;
     }
     return m('tr', [
@@ -2105,22 +2239,38 @@ function prop_class(val, val_prev) {
     }
     return '';
 }
+function panel_img(kind, i) {
+    if (kind === null) {
+        return m('img', { title: i, src: "devtools_panel_null.png" });
+    }
+    else {
+        return m('img', { title: i, src: "devtools_panel" + kind + ".png" });
+    }
+}
 function panel_data(i, data, data_prev) {
-    return [
-        m('.prop.index', { title: 'Index' }, i),
-        m('.prop.kind', { title: 'Kind', className: prop_class(data[2], data_prev[2]) }, data[2] ? data[2] : 'null'),
-        m('.prop.state', { title: 'State', className: prop_class(data[3], data_prev[3]) }, data[3]),
-        m('.prop.counter', { title: 'Counter', className: prop_class(data[4], data_prev[4]) }, data[4]),
-        m('.prop.chain', { title: 'Chain', className: prop_class(data[5], data_prev[5]) }, data[5])
-    ];
+    return m('.table', [
+        m('tr', [
+            //m('td',m('.prop.index'  ,{title: 'Index'  },i)),
+            m('td', panel_img(data[2], i)),
+            m('td.info', [
+                m('.prop.kind', { title: 'Kind', className: prop_class(data[2], data_prev[2]) }, data[2] ? data[2] : 'null'),
+                m('.prop.state', { title: 'State', className: prop_class(data[3], data_prev[3]) }, data[3]),
+                m('.num', [
+                    m('span.prop.counter', { title: 'Counter', className: prop_class(data[4], data_prev[4]) }, data[4]),
+                    ',',
+                    m('span.prop.chain', { title: 'Chain', className: prop_class(data[5], data_prev[5]) }, data[5])
+                ])
+            ])
+        ])
+    ]);
 }
-function kind_class(val) {
-    return "devtools_panel" + val;
-}
+//function kind_class(val){
+//return `devtools_panel${val}`
+//}
 function panel_class(data, data_prev) {
     var classes = [];
-    if (data[2] !== null)
-        classes.push(kind_class(data[2]));
+    //if (data[2] !== null)
+    //classes.push(kind_class(data[2]))
     if (data[2] !== data_prev[2] ||
         data[3] !== data_prev[3] ||
         data[4] !== data_prev[4] ||
@@ -2129,18 +2279,27 @@ function panel_class(data, data_prev) {
     }
     return classes.join(' ');
 }
+function panel_click(i, data) {
+    return function () {
+        data_1.state.reset_panel_form(data);
+        data_1.state.selected_panel = i;
+    };
+}
 function panel(x, y, pi) {
     var i = xy2i(x, y);
     var data = data_1.state.snapshot[pi + 1][2][i];
     var data_prev = data_1.state.snapshot_prev[pi + 1][2][i];
-    return m('td', { className: panel_class(data, data_prev) }, panel_data(i, data, data_prev));
+    return m('td.panel', { onclick: panel_click(i, data), className: panel_class(data, data_prev) }, [
+        panel_form_1.default(i, data, data_prev),
+        panel_data(i, data, data_prev)
+    ]);
 }
 function stack(pi) {
     if (data_1.state.stack_actions_playfields["pl" + pi] === false) {
         return;
     }
     var rows = [];
-    for (var i = 0; i < data_1.ROWS; i++) {
+    for (var i = 0; i < data_2.ROWS; i++) {
         rows.push(stack_row(i, pi));
     }
     return m('.stack', m('table', rows));
@@ -2159,14 +2318,32 @@ function checkbox(group, key, lbl) {
         m('span', lbl)
     ]);
 }
+function export_replay_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export' } });
+}
+function import_replay_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-import' } });
+}
+function export_snapshot_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export' } });
+}
+function import_snapshot_click() {
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-import' } });
+}
 function actions() {
     return m('.actions.stack_actions', [
-        m('span.lbl', 'Rows'),
+        m('span.lbl.first', 'Rows'),
         checkbox('rows', 'inv', 'Invisible'),
         checkbox('rows', 'vis', 'Visible'),
         m('span.lbl.playfields', 'Playfields'),
         checkbox('playfields', 'pl0', 'Player 1'),
-        checkbox('playfields', 'pl1', 'Player 2')
+        checkbox('playfields', 'pl1', 'Player 2'),
+        m('span.lbl', 'Replays'),
+        m('.button.import', { onclick: import_replay_click }, 'Import'),
+        m('.button.export', { onclick: import_replay_click }, 'Export'),
+        m('span.lbl', 'Snapshots'),
+        m('.button.import', { onclick: import_snapshot_click }, 'Import'),
+        m('.button.export', { onclick: export_snapshot_click }, 'Export')
     ]);
 }
 function content() {
@@ -2182,7 +2359,72 @@ exports.default = content;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var data_1 = __webpack_require__(3);
+var data_2 = __webpack_require__(1);
+var m = __webpack_require__(0);
+function select_kind() {
+    return m('select', {
+        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.kind = val; }),
+        value: data_2.state.panel_form.kind
+    }, [
+        m('option', { value: null }, "null"),
+        m('option', { value: 0 }, "0 - Cyan"),
+        m('option', { value: 1 }, "1 - Blue"),
+        m('option', { value: 2 }, "2 - Green"),
+        m('option', { value: 3 }, "3 - Purple"),
+        m('option', { value: 4 }, "4 - Red"),
+        m('option', { value: 5 }, "5 - Yellow"),
+        m('option', { value: 6 }, "6 - Shock")
+    ]);
+}
+function select_state() {
+    return m('select', {
+        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.state = val; }),
+        value: data_2.state.panel_form.state
+    }, [
+        m('option', { value: data_1.STATIC }, "STATIC"),
+        m('option', { value: data_1.HANG }, "HANG"),
+        m('option', { value: data_1.FALL }, "FALL"),
+        m('option', { value: data_1.LAND }, "LAND"),
+        m('option', { value: data_1.SWAP_L }, "SWAP_L"),
+        m('option', { value: data_1.SWAP_R }, "SWAP_R"),
+        m('option', { value: data_1.SWAPPING_L }, "SWAPING_L"),
+        m('option', { value: data_1.SWAPPING_R }, "SWAPING_R"),
+        m('option', { value: data_1.CLEAR }, "CLEAR"),
+        m('option', { value: data_1.GARBAGE }, "GARBAGE")
+    ]);
+}
+function input_chain() {
+    return m("input[type='text']", {
+        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.chain = val; }),
+        value: data_2.state.panel_form.chain
+    });
+}
+function input_counter() {
+    return m("input[type='text']", {
+        onchange: m.withAttr('value', function (val) { data_2.state.panel_form.counter = val; }),
+        value: data_2.state.panel_form.counter
+    });
+}
+function panel_form(i, data, data_prev) {
+    if (data_2.state.selected_panel === i) {
+        return m('.panel_form', m('table', m('tr', m('td.lbl', 'Index'), m('td', i)), m('tr', m('td.lbl', 'Kind'), m('td', select_kind())), m('tr', m('td.lbl', 'State'), m('td', select_state())), m('tr', m('td.lbl', 'Counter'), m('td', input_counter())), m('tr', m('td.lbl', 'Chain'), m('td', input_chain()))));
+    }
+    else {
+        return;
+    }
+}
+exports.default = panel_form;
+
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2246,7 +2488,7 @@ function actions() {
         select_player(),
         select_combo(),
         select_chain(),
-        m('.button', { onclick: port_1.queue_garbage }, 'Queue'),
+        m('.button.queue', { onclick: port_1.queue_garbage }, 'Queue'),
         m('.clear')
     ]);
 }
@@ -2266,7 +2508,7 @@ exports.default = content_garbage;
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2274,18 +2516,31 @@ exports.default = content_garbage;
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(0);
 var data_1 = __webpack_require__(1);
-var toast_1 = __webpack_require__(14);
+var toast_1 = __webpack_require__(16);
+function input_seed() {
+    return m("input[type='text']", {
+        onchange: m.withAttr('value', function (val) { data_1.state.actions_primer.seed = val; }),
+        value: data_1.state.actions_primer.seed
+    });
+}
+function actions() {
+    return m('.actions', [
+        input_seed(),
+        m('.button', 'Gen'),
+        m('.clear')
+    ]);
+}
 function content_primer() {
     if (data_1.state.stage != null) {
         return;
     }
-    return m('.content_wrap.primer', m('.content', toast_1.default('Data will appear when you start a game and enter step mode')));
+    return m('.content_wrap.primer', m('.content', actions(), toast_1.default('Data will appear when you start a game and enter step mode')));
 }
 exports.default = content_primer;
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

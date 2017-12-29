@@ -20,7 +20,7 @@ import {
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
-  private _state          : Symbol
+  private _state          : string
   /*
    * group is used to group garbage panels to make
    * one piece of garbag
@@ -31,7 +31,7 @@ export default class ComponentPanelGarbage {
    * from different groups into one big group for clearing
    */
   private _group_clearing : number
-  private _kind : Symbol
+  private _kind : string
   private panel     : ComponentPanel
   private playfield : ComponentPlayfield
   private sprite    : Phaser.Sprite

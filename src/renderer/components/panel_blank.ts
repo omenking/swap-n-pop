@@ -6,7 +6,7 @@ class ComponentPanelBlank{
   public kind              : number
   public x                 : number
   public y                 : number
-  public state             : Symbol
+  public state             : string
   public counter           : number
   public animation_state   : string
   public animation_counter : number

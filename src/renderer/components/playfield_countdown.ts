@@ -11,7 +11,7 @@ import {
 } from 'core/data';
 
 export default class ComponentPlayfieldCountdown {
-  public  state      : Symbol
+  public  state      : string
   private counter    : number
   private sprite     : Phaser.Sprite
   private playfield  : ComponentPlayfield

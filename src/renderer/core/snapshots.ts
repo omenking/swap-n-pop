@@ -78,6 +78,9 @@ export default class Snapshots {
     else            {return this.index_tick-this.snapshot.length}
   }
 
+  public import_from_json(json){
+  }
+
   snap(tick : number){
     this.loop(tick)
     this.index++

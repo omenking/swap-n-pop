@@ -9,7 +9,7 @@ import {
 } from 'core/data'
 
 export default class CountdownState {
-  public state   : symbol
+  public state   : string
   public counter : number
   public x       : number
   public y       : number

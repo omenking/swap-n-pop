@@ -68,7 +68,7 @@ function actions(){
     select_player(),
     select_combo(),
     select_chain(),
-    m('.button', {onclick: queue_garbage}, 'Queue'),
+    m('.button.queue', {onclick: queue_garbage}, 'Queue'),
     m('.clear')
   ])
 }

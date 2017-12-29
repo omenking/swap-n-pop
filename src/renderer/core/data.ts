@@ -10,32 +10,32 @@ export const STOPTIME = 60 * 3;
 export const NRBLOCK = 17;
 
 // States
-export const STATIC = Symbol('static');
-export const HANG = Symbol('hang');
-export const FALL = Symbol ('fall');
-export const LAND = Symbol('land');
-export const SWAP_L = Symbol('swap_l');
-export const SWAP_R = Symbol('swap_r');
-export const SWAPPING_L = Symbol('swaping_l');
-export const SWAPPING_R = Symbol('swaping_r');
-export const CLEAR = Symbol('clear');
-export const GARBAGE = Symbol('garbage');
+export const STATIC     = 'static'
+export const HANG       = 'hang'
+export const FALL       = 'fall'
+export const LAND       = 'land'
+export const SWAP_L     = 'swap_l'
+export const SWAP_R     = 'swap_r'
+export const SWAPPING_L = 'swaping_l'
+export const SWAPPING_R = 'swaping_r'
+export const CLEAR      = 'clear'
+export const GARBAGE    = 'garbage'
 // STAGE States
-export const STARTING = Symbol('starting');
-export const RUNNING  = Symbol('running');
-export const PAUSE    = Symbol('pause');
-export const GAMEOVER = Symbol('gameover');
+export const STARTING = 'starting'
+export const RUNNING  = 'running'
+export const PAUSE    = 'pause'
+export const GAMEOVER = 'gameover'
 
 // COUNTDOWN States
-export const MOVING = Symbol('moving')
-export const COUNT3 = Symbol('3')
-export const COUNT2 = Symbol('2')
-export const COUNT1 = Symbol('1')
-export const DONE   = Symbol('done')
+export const MOVING = 'moving'
+export const COUNT3 = '3'
+export const COUNT2 = '2'
+export const COUNT1 = '1'
+export const DONE   = 'done'
 
 // Garbage Kinds
-export const COMBO = Symbol('combo');
-export const CHAIN = Symbol('chain');
+export const COMBO = 'combo'
+export const CHAIN = 'chain'
 
 // Animation Frame
 export const FRAME_CLEAR_PARTICLE     = [1,0,1,0,1 ,1 ,0 ,1 ,2 ,2 ,3 ,3 ,3 ,4 ,4 ,5 ,5 ,6 ,6 ,6 ,7 ,7 ,7 ,7 ,7 ]

@@ -109,7 +109,7 @@ export default class CoreGarbage {
    * @param kind   - COMBO or CHAIN
    * @param size   - The original size of the CHAIN or COMBO
    */
-  generate(playfield,height : number ,width : number ,kind : Symbol ,size : number){
+  generate(playfield,height : number ,width : number ,kind : string ,size : number){
     let o = 0
     if (kind === COMBO)
       o = this.alt(width) //offset

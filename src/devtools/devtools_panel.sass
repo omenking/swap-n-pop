@@ -22,17 +22,51 @@ body, html
     border-radius: 999px
     padding: 16px 32px
 
+.actions
+  font-size: 12px
+  height: 28px
+  padding: 6px
+  border-bottom: solid 1px rgb(200,200,200)
+  .lbl
+    font-weight: 600
+    padding-right: 16px
+    padding-left: 12px
+    &.first
+      padding-left: 0
+  .button
+    display: inline-block
+    background: rgb(240,240,240)
+    line-height: 1em
+    border: solid 1px rgb(170,170,170)
+      bottom: solid 1px rgb(100,100,100)
+    cursor: pointer
+    padding: 2px 4px
+    &:hover
+      border: solid 1px rgb(140,140,140)
+        bottom: solid 1px rgb(40,40,40)
+    &.queue
+      border-top-right-radius: 3px
+      border-bottom-right-radius: 3px
+    &.export
+      border-top-right-radius: 3px
+      border-bottom-right-radius: 3px
+    &.import
+      border-right: none
+      border-top-left-radius: 3px
+      border-bottom-left-radius: 3px
+
 .content_wrap
-  height: 100%
-  .primer
+  &.primer
     padding-left: 140px
-  .actions
-    font-size: 12px
-    padding: 6px
-    border-bottom: solid 1px rgb(200,200,200)
-    .lbl
-      font-weight: 600
-      padding-right: 8px
+    .actions
+      input[type='text']
+        outline: none
+        padding: 2px 4px
+        border : solid 1px rgb(200,200,200)
+          right: none
+        border-top-left-radius   : 3px
+        border-bottom-left-radius: 3px
+
   &.garbage
     padding-left: 290px
     .actions
@@ -56,19 +90,7 @@ body, html
       .player_select
         border-top-left-radius: 3px
         border-bottom-left-radius: 3px
-      .button
-        display: inline-block
-        background: rgb(240,240,240)
-        line-height: 1em
-        border: solid 1px rgb(170,170,170)
-          bottom: solid 1px rgb(100,100,100)
-        cursor: pointer
-        padding: 2px 4px
-        border-top-right-radius: 3px
-        border-bottom-right-radius: 3px
-        &:hover
-          border: solid 1px rgb(140,140,140)
-            bottom: solid 1px rgb(40,40,40)
+
   &.mode_vs
     padding-left: 290px
     .stack
@@ -77,12 +99,45 @@ body, html
     table
       border-collapse: collapse
     td
-      font-size: 11px
-      padding: 4px
+      vertical-align: top
+      padding: 0
+    .panel_form
+      position: absolute
+      top: 24px
+      left: 24px
+      border: solid 1px rgb(40,40,40)
+      min-width: 90px
+      z-index: 10
+      background: rgb(255,255,255)
+      border-radius: 3px
+      padding: 8px;
+      td.lbl
+        :padding-right: 4px
+      td
+        vertical-align: middle
+        padding:
+          bottom: 4px
+      select
+        width: 90px
+      input
+        width: 90px
+        padding: 4px
+        border-radius: 3px
+        border: solid 1px rgb(200,200,200)
+      select,
+      input
+        outline: none
+    td.panel
+      padding: 0
+      font-size: 12px
       border: solid 1px rgb(200,200,200)
       vertical-align: top
       background-position: top right
       background-repeat: no-repeat
+      position: relative
+      .info
+        padding-left: 4px
+        padding-right: 4px
       &.devtools_panel0
         background-image: url('devtools_panel0.png')
       &.devtools_panel1
@@ -99,6 +154,11 @@ body, html
         background-image: url('devtools_panel6.png')
       &.changed
         background-color: rgb(200,200,255)
+      .prop.index
+        text-align: right
+        font-size: 11px
+      .prop.state
+        text-transform: uppercase
       .prop.changed
         color: rgb(0,0,200)
         font-weight: 600
@@ -107,9 +167,6 @@ body, html
       &.vis
         background-color: rgb(200,200,200)
     .actions
-      .lbl
-        &.playfields
-          padding-right: 12px;
       .checkbox
         display: inline-block
         padding-right: 8px

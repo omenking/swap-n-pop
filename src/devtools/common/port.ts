@@ -19,6 +19,7 @@ function on_message(message, sender, send_response){
   }
   m.redraw()
 }
+
 export function snapshot_preview(tick: number){
   state.selected_tick = tick
   port.postMessage({

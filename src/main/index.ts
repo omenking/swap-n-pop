@@ -1,6 +1,7 @@
 import {app, shell, Menu, BrowserWindow, ipcMain as ipc, dialog} from 'electron'
-import * as path     from 'path'
-import * as url      from 'url'
+import * as path  from 'path'
+import * as url   from 'url'
+import * as fs    from 'fs'
 
 import Replay from 'common/replay'
 import ExternalAssets from 'common/external_assets';
@@ -154,6 +155,28 @@ app.on('activate'         , activate)
 ipc.on('controls-update', (event) => {
   win.webContents.send('controls-rebind')
 })
+
+ipc.on('snapshot-export',(event,snapshot) => {
+  const json = JSON.stringify(snapshot)
+  dialog.showSaveDialog(win, {
+    defaultPath: '~/untitled.snap'
+  },function(filename){
+    if (filename === undefined){return}
+    fs.writeFile(filename,json, function (err) {})
+  })
+})
+ipc.on('snapshot-import',(event) => {
+  dialog.showOpenDialog(win, {}, function(filepaths){
+    if (filepaths === undefined){return}
+    const json = JSON.parse(fs.readFileSync(filepaths[0], 'utf8'))
+    win.webContents.send('snapshot-import',json)
+  })
+})
+ipc.on('replay-export',(event) => {
+})
+ipc.on('replay-import',(event) => {
+})
+
 ipc.on('replay-dir-change', (event) => {
   dialog.showOpenDialog(win, {
     properties: ['openDirectory']

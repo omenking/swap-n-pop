@@ -42,7 +42,7 @@ export default class ComponentPanel {
 
   private _kind         : number
   private _counter      : number
-  private _state        : Symbol
+  private _state        : string
   private _chain        : number
   private bauble        : ComponentBauble
   public garbage        : ComponentPanelGarbage
@@ -322,7 +322,7 @@ export default class ComponentPanel {
 
 
 
-  set_garbage(group: number, kind: symbol){
+  set_garbage(group: number, kind: string){
     this.state = GARBAGE
     this.garbage.group = group
     this.garbage.state = FALL

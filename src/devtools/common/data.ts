@@ -1,9 +1,7 @@
-export const COMP_STAGE = Symbol('stage')
-export const COMP_GARBA = Symbol('garbage')
-export const ROWS_INV   = 12
-export const ROWS_VIS   = 11
-export const ROWS       = ROWS_INV + ROWS_VIS
-export const COLS       = 6
+import {STATIC} from 'core/data'
+
+export const COMP_STAGE = 'stage'
+export const COMP_GARBA = 'garbage'
 
 class State {
   private static _instance: State;
@@ -15,7 +13,8 @@ class State {
   public snapshot        : any
   public snapshot_prev   : any
   public selected_tick   : number
-  public state_component : Symbol
+  public selected_panel  : number
+  public state_component : string
   public garbage_queue : {
     pi: number,
     combo: number,
@@ -28,6 +27,17 @@ class State {
   public stack_actions_playfields : {
     pl0: boolean,
     pl1: boolean
+  }
+
+  public actions_primer : {
+    seed: string
+  }
+
+  public panel_form : {
+    kind: string,
+    state: string,
+    counter: number,
+    chain: number
   }
 
   constructor(){
@@ -44,11 +54,33 @@ class State {
       pl0: true,
       pl1: false
     }
+    this.actions_primer = {
+      seed: 'puzzle'
+    }
+    this.reset_panel_form(null)
   }
 
   public static get Instance(){
     // Do you need arguments? Make it a regular method instead.
     return this._instance || (this._instance = new this())
+  }
+
+  public reset_panel_form(data){
+    if (data) {
+      this.panel_form = {
+        kind    : data[2],
+        state   : data[3],
+        counter : data[4],
+        chain   : data[5]
+      }
+    } else {
+      this.panel_form = {
+        state: STATIC,
+        kind: null,
+        counter: 0,
+        chain: 0
+      }
+    }
   }
 
   public clear(){
@@ -58,6 +90,8 @@ class State {
     this.snapshot       = null
     this.snapshot_prev  = null
     this.selected_tick  = 0
+    this.selected_panel  = null
+    this.reset_panel_form(null)
   }
 }
 

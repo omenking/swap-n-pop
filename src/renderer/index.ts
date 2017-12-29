@@ -23,6 +23,8 @@ const stateClasses = [
 
 ui()  
 
+declare const window : any
+
 // Create instance of each known state class and register them to the game
 // instance.
 stateClasses.forEach(stateClass => {
@@ -55,3 +57,12 @@ ipc.on('replay-load', (event, {seed,inputs}) => {
 ipc.on('network-connect', (event, data) => {
   game.state.start('connect',true,false,data)
 })
+
+ipc.on('snapshot-import', (event, json) => {
+  window.stage.snapshots.import_from_json(json)
+})
+
+window.snapshot_export_send = function(snapshot){ ipc.send('snapshot-export',snapshot) }
+window.snapshot_import_send = function(){ ipc.send('snapshot-import') }
+window.replay_export_send = function(){ ipc.send('replay-export') }
+window.replay_import_send = function(){ ipc.send('replay-import') }
