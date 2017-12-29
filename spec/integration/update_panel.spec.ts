@@ -77,8 +77,8 @@ describe('panel_actions', function() {
          [0,22,N,STATIC,0,F])
     //################################################################
     playfield.update()
-    chec([0,19,1,HANG  ,0,F],
-         [0,20,0,HANG  ,0,F],
+    chec([0,19,1,HANG  ,10,F],
+         [0,20,0,HANG  ,10,F],
          [0,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F])
   })
@@ -153,7 +153,7 @@ describe('panel_actions', function() {
          [0,21,1,CLEAR,90,1],
          [0,22,1,CLEAR,90,1])
     for(let i = 0; i < 90; i++){ playfield.update() }
-    chec([0,19,2,HANG  ,0,1],
+    chec([0,19,2,HANG  ,10,1],
          [0,20,N,STATIC,0,F],
          [0,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F])
@@ -327,7 +327,7 @@ describe('panel_actions', function() {
          [0,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F])
     playfield.update()
-    chec([0,12 ,0,HANG,0,F])
+    chec([0,12 ,0,HANG,10,F])
   })
 
   it('#fall-interrupt', function(){
