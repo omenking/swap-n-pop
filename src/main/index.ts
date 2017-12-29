@@ -168,8 +168,8 @@ ipc.on('snapshot-export',(event,snapshot) => {
 ipc.on('snapshot-import',(event) => {
   dialog.showOpenDialog(win, {}, function(filepaths){
     if (filepaths === undefined){return}
-    const json = JSON.parse(fs.readFileSync(filepaths[0], 'utf8'))
-    win.webContents.send('snapshot-import',json)
+    const data = JSON.parse(fs.readFileSync(filepaths[0], 'utf8'))
+    win.webContents.send('snapshot-import',data)
   })
 })
 ipc.on('replay-export',(event) => {

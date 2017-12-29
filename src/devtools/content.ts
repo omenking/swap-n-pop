@@ -37,8 +37,8 @@ function garbage_push(data){
   window.stage.render()
 }
 
-function snapshot_export(){
-  window.snapshot_export_send(window.stage.snapshots.snapshot_at(window.stage.tick))
+function snapshot_export(tick : number){
+  window.snapshot_export_send(window.stage.snapshots.snapshot_at(tick))
 }
 
 function snapshot_import(){
@@ -57,7 +57,7 @@ function on_message(message, sender, send_response){
   if      (message.action === 'preview') { preview(message.tick)}
   else if (message.action === 'reload')  { reload() }
   else if (message.action === 'garbage_push')  { garbage_push(message.data) }
-  else if (message.action === 'snapshot-export'){ snapshot_export() }
+  else if (message.action === 'snapshot-export'){ snapshot_export(message.tick) }
   else if (message.action === 'snapshot-import'){ snapshot_import() }
   else if (message.action === 'replay-export'){ replay_export() }
   else if (message.action === 'replay-import'){ replay_import() }
