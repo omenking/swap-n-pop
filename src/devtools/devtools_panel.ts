@@ -17,12 +17,14 @@ declare var window : any
 port.postMessage('connect')
 
 window.document.onkeydown = function (e) {
-  if ([38,87,75].includes(e.keyCode)) { //up w k
+  //if ([38,87,75].includes(e.keyCode)) { //up w k
+  if ([38].includes(e.keyCode)) { //up w k
     if (state.selected_tick !== state.snapshots.tick){
       snapshot_preview(state.selected_tick+1)
       m.redraw()
     }
-  } else if ([40,83,74].includes(e.keyCode)) { //down s j
+  //} else if ([40,83,74].includes(e.keyCode)) { //down s j
+  } else if ([40].includes(e.keyCode)) { //down s j
     if (state.selected_tick !== state.snapshots.tick-state.snapshots.len+1){
       snapshot_preview(state.selected_tick-1)
       m.redraw()

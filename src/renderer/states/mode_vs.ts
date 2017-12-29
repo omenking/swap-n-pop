@@ -50,7 +50,7 @@ export default class ModeVs extends CoreStage {
   public roll_log_data    : Array<any>
   public tick             : number
   private danger          : boolean
-  private seed            : string
+  public seed            : string
   private rounds_won      : Array<number>
   private bg              : Phaser.Sprite
   private _online         : any
@@ -89,7 +89,6 @@ export default class ModeVs extends CoreStage {
     this.seed       = data.seed
     this.cpu        = data.cpu
     this.online     = data.online
-    this.rng        = seedrandom(this.seed, {state: true})
 
     // had to do this to inject controls into for `integration/online.spec.ts`
     this.controls = data.controls || CoreControls
@@ -189,6 +188,7 @@ export default class ModeVs extends CoreStage {
     this.frame = game.add.sprite(offset,0, 'playfield_vs_frame');
   }
   create() {
+    this.rng = seedrandom(this.seed, {state: true})
     this.state = STARTING
     ipc.send('log',`VS ${this.seed} ------------------------------`)
     this.danger = false
