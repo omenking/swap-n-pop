@@ -58,8 +58,8 @@ ipc.on('network-connect', (event, data) => {
   game.state.start('connect',true,false,data)
 })
 
-ipc.on('snapshot-import', (event, json) => {
-  window.stage.snapshots.import_from_json(json)
+ipc.on('snapshot-import', (event, data) => {
+  window.stage.snapshots.snapshot_import(data)
 })
 
 window.snapshot_export_send = function(snapshot){ ipc.send('snapshot-export',snapshot) }

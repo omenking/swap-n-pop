@@ -134,13 +134,13 @@ function checkbox(group,key,lbl){
 }
 
 function export_replay_click(){
-  port.postMessage({port: 'content-script',msg:{action:'replay-export'}})
+  port.postMessage({port: 'content-script',msg:{action:'replay-export', tick: state.selected_tick}})
 }
 function import_replay_click(){
   port.postMessage({port: 'content-script',msg:{action:'replay-import'}})
 }
 function export_snapshot_click(){
-  port.postMessage({port: 'content-script',msg:{action:'snapshot-export'}})
+  port.postMessage({port: 'content-script',msg:{action:'snapshot-export', tick: state.selected_tick}})
 }
 function import_snapshot_click(){
   port.postMessage({port: 'content-script',msg:{action:'snapshot-import'}})

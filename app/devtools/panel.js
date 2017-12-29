@@ -2319,13 +2319,13 @@ function checkbox(group, key, lbl) {
     ]);
 }
 function export_replay_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export' } });
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-export', tick: data_1.state.selected_tick } });
 }
 function import_replay_click() {
     port_1.port.postMessage({ port: 'content-script', msg: { action: 'replay-import' } });
 }
 function export_snapshot_click() {
-    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export' } });
+    port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-export', tick: data_1.state.selected_tick } });
 }
 function import_snapshot_click() {
     port_1.port.postMessage({ port: 'content-script', msg: { action: 'snapshot-import' } });

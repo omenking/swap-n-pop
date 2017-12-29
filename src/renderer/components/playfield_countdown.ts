@@ -11,21 +11,8 @@ import {
 } from 'core/data';
 
 export default class ComponentPlayfieldCountdown {
-  public  state      : string
-  private counter    : number
   private sprite     : Phaser.Sprite
   private playfield  : ComponentPlayfield
-
-  private states = []
-
-  load(snapshot) {
-    this.state   = snapshot[0]
-    this.counter = snapshot[1]
-  }
-
-  get snap() {
-    return [this.state, this.counter]
-  }
 
   get data(){
     return this.playfield.stage.countdown
@@ -38,7 +25,7 @@ export default class ComponentPlayfieldCountdown {
   }
 
   get done(){
-    return this.state === DONE
+    return this.data.state === DONE
   }
 
   get offset_x(){

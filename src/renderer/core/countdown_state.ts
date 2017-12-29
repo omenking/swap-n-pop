@@ -28,6 +28,22 @@ export default class CountdownState {
 
   }
 
+  get snap(){
+    return [
+      this.state,
+      this.counter,
+      this.x,
+      this.y
+    ]
+  }
+
+  public load(snapshot){
+    this.state = snapshot[0]
+    this.counter = snapshot[1]
+    this.x = snapshot[2]
+    this.y = snapshot[2]
+  }
+
   update(){
     switch (this.state){
       case MOVING: { this.moving_execute(); break; }
