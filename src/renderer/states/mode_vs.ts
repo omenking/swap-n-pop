@@ -61,6 +61,9 @@ export default class ModeVs extends CoreStage {
   private step_mode       : boolean
   public  levels          : Array<ComponentLevel>
 
+  public flag_garbage : boolean
+  public flag_timer   : boolean
+
   constructor() {
     super()
     this.playfield0   = new ComponentPlayfield(0)
@@ -83,7 +86,9 @@ export default class ModeVs extends CoreStage {
   }
 
   public init(data) {
-    this.step_mode = false
+    this.flag_garbage = true
+    this.flag_timer   = false
+    this.step_mode    = false
     this.rounds_won = [2,1]
     this.tick       = 0
     this.seed       = data.seed
@@ -211,7 +216,7 @@ export default class ModeVs extends CoreStage {
     this.countdown.create(true,this.playfield_cursor_entrance.bind(this))
     this.playfield0.create_after()
     this.playfield1.create_after()
-    this.timer.create(offset+px(128),px(168));
+    this.timer.create(this,offset+px(128),px(168))
 
     this.snapshots.create(this)
     this.snapshots.snap(0)

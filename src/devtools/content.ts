@@ -28,7 +28,10 @@ function payload(action,tick){
     seed          : window.stage.seed,
     len           : window.stage.snapshots.len,
     snapshot      : window.stage.snapshots.snapshot_at(tick),
-    snapshot_prev : window.stage.snapshots.snapshot_at(tick-1)
+    snapshot_prev : window.stage.snapshots.snapshot_at(tick-1),
+    garbage       : window.stage.flag_garbage,
+    time_trial    : window.stage.flag_timer,
+    time_trial_val: window.stage.timer.countdown
   }
 }
 
@@ -88,6 +91,26 @@ function regenerate_from_seed(seed : string){
   window.stage.render()
 }
 
+function toggle_garbage(bool){
+  window.stage.flag_garbage = bool
+  window.stage.render()
+}
+
+function toggle_timer(bool,val){
+  window.stage.flag_timer = bool
+  if(bool === true) {
+    window.stage.timer.countdown = val
+    window.stage.timer.tick = 0
+  }
+  window.stage.render()
+}
+
+function timer_update(val){
+  window.stage.timer.countdown = val
+  window.stage.timer.tick = 0
+  window.stage.render()
+}
+
 function on_message(message, sender, send_response){
   if      (message.action === 'preview') { preview(message.tick)}
   else if (message.action === 'reload')  { reload() }
@@ -99,6 +122,9 @@ function on_message(message, sender, send_response){
   else if (message.action === 'snapshot-import'){ snapshot_import() }
   else if (message.action === 'replay-export'){ replay_export() }
   else if (message.action === 'replay-import'){ replay_import() }
+  else if (message.action === 'toggle_garbage'){ toggle_garbage(message.bool) }
+  else if (message.action === 'toggle_timer'){ toggle_timer(message.bool,message.val) }
+  else if (message.action === 'timer_update'){ timer_update(message.val) }
 }
 
 window.devtools_stage_load   = load

@@ -80,7 +80,7 @@ export default class ModePuzzle extends CoreStage {
     this.playfield0.character.sprite.visible = false
 
     this.menu_pause.create(this);
-    this.timer.create(180, 60);
+    this.timer.create(this,180, 60);
     this.step_display.create({ playfield: this.playfield0, step_limit: this.steps_left, x: 575, y: 85 });
   }
 

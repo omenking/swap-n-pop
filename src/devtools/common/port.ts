@@ -15,6 +15,9 @@ function on_message(message, sender, send_response){
     state.seed           = message.seed
     state.snapshot       = message.snapshot
     state.snapshot_prev  = message.snapshot_prev
+    state.garbage        = message.garbage
+    state.time_trial     = message.time_trial
+    state.time_trial_val = message.time_trial_val
     if (message.action !== 'preview'){
       state.selected_tick  = message.tick
     }
@@ -77,6 +80,37 @@ export function update_panel(){
       pi: state.selected_panel[0],
       i : state.selected_panel[1],
       data: state.panel_form
+    }
+  })
+}
+
+export function toggle_garbage(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'toggle_garbage',
+      bool: state.garbage
+    }
+  })
+}
+
+export function toggle_timer(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'toggle_timer',
+      bool: state.time_trial,
+      val: state.time_trial_val
+    }
+  })
+}
+
+export function update_timer(){
+  port.postMessage({
+    port: 'content-script',
+    msg : {
+      action: 'timer_update',
+      val: state.time_trial_val
     }
   })
 }
