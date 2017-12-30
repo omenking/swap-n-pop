@@ -98,6 +98,8 @@ export default class ComponentPanel {
   get right2() { return out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
   get under2() { return out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
   get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
+  
+  get should_hang() { let under = this.under; return under === blank ? false : under.state === STATIC && under.kind === null; }
 
   /** */
   constructor() {
@@ -202,27 +204,42 @@ export default class ComponentPanel {
     this.particles[3].create(this)
   }
 
-  swap_l_execute    () { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
-  swap_r_execute    () { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
-  land_execute      () { if (this.counter <= 0) { this.change_state(STATIC) } }
-  swapping_l_execute() { if (this.counter <= 0) { this.state = STATIC /*TODO: use FSM here*/ } }
-  swapping_r_execute() { if (this.counter <= 0) { this.state = STATIC /*TODO: use FSM here*/ } }
-  hang_execute      () { if (this.counter <= 0) { this.change_state(FALL) } }
-
-  swapping_r_enter() {
-    this.counter = TIME_SWAP
-  }
-
-  hang_enter() {
-    this.counter = 10
-  }
-
+  hang_enter()   { this.counter = 10 }
+  hang_execute() { if (this.counter <= 0) { this.change_state(FALL) } }
+  
+  swap_l_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
+  swap_r_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
+  
   swapping_l_enter() {
     const i1 = this.kind
     const i2 = this.right.kind
     this.kind       = i2
     this.right.kind = i1
     this.counter = TIME_SWAP
+  }
+  
+  swapping_r_enter() { this.counter = TIME_SWAP }
+
+  swapping_l_execute() { 
+    if (this.counter <= 0) { 
+      if (this.should_hang) {
+        this.change_state(HANG)
+      }
+      else {
+        this.change_state(STATIC)
+      } 
+    }
+  }
+    
+  swapping_r_execute() { 
+    if (this.counter <= 0) { 
+      if (this.should_hang) {
+        this.change_state(HANG)
+      }
+      else {
+        this.change_state(STATIC)
+      } 
+    }
   }
 
   static_execute() {
@@ -238,8 +255,17 @@ export default class ComponentPanel {
     }
   }
 
-  land_enter() {
-    this.counter = FRAME_LAND.length
+  land_enter()   { this.counter = FRAME_LAND.length }
+  land_execute() { 
+    if (this.counter <= 0) { 
+      if (this.under === blank ? false : this.under.state === HANG) {
+        this.change_state(HANG)
+        this.counter = this.under.counter
+      }
+      else {
+        this.change_state(STATIC) 
+      }
+    } 
   }
 
   fall_execute() {
@@ -275,7 +301,7 @@ export default class ComponentPanel {
       this.clear_i    = xi
       this.clear_len  = xlen
 
-      const time_max = TIME_CLEAR + (TIME_POP*this.clear_len) + TIME_FALL
+      const time_max = TIME_CLEAR + (TIME_POP*(this.clear_len - 1))
       this.time_pop = TIME_CLEAR + (TIME_POP*this.clear_i)
       this.time_cur = time_max - this.counter
 
@@ -294,7 +320,7 @@ export default class ComponentPanel {
     this.chain   = 0
     this.group   = null
   }
-
+  
   /*
    * particle garbage is the particle that flies from
    * the bauble to where the garbage thumbnail will appear
@@ -514,7 +540,7 @@ export default class ComponentPanel {
     @param {{number}} i
   */
   popping(i) {
-    this.counter = TIME_CLEAR + (TIME_POP*i) + TIME_FALL
+    this.counter = TIME_CLEAR + (TIME_POP*(i-1))
   }
 
   /**
