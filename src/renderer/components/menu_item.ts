@@ -44,7 +44,7 @@ export default class MenuItem {
   }
 
   deselect(){
-    this.image.tint = 0XBFD3EE
+    this.image.tint = 0x5185db
   }
 
   select(){
