@@ -98,6 +98,8 @@ export default class ComponentPanel {
   get right2() { return out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
   get under2() { return out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
   get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
+  
+  get should_hang() { let under = this.under; return under === blank ? false : under.state === STATIC && under.kind === null; }
 
   /** */
   constructor() {
@@ -220,23 +222,23 @@ export default class ComponentPanel {
 
   swapping_l_execute() { 
     if (this.counter <= 0) { 
-        if (this.under === blank ? false : this.under.state === STATIC && this.under.kind === null) {
-            this.change_state(HANG)
-        }
-        else {
-            this.change_state(STATIC)
-        } 
+      if (this.should_hang) {
+        this.change_state(HANG)
+      }
+      else {
+        this.change_state(STATIC)
+      } 
     }
   }
     
   swapping_r_execute() { 
     if (this.counter <= 0) { 
-        if (this.under === blank ? false : this.under.state === STATIC && this.under.kind === null) {
-            this.change_state(HANG)
-        }
-        else {
-            this.change_state(STATIC)
-        } 
+      if (this.should_hang) {
+        this.change_state(HANG)
+      }
+      else {
+        this.change_state(STATIC)
+      } 
     }
   }
 
@@ -318,7 +320,7 @@ export default class ComponentPanel {
     this.chain   = 0
     this.group   = null
   }
-
+  
   /*
    * particle garbage is the particle that flies from
    * the bauble to where the garbage thumbnail will appear
