@@ -56,10 +56,10 @@ export default class LoadState extends State {
       let path : string = this.asset_path(type, name, load_external)
 
       switch (type) {
-        case "music": game.load.audio(name, path); break;
+        case "music"        : game.load.audio(name, path); break;
         case "sound_effects": game.load.audio(name, path); break;
-        case "image": game.load.image(name, path); break;
-        case "spritesheet": 
+        case "image"        : game.load.image(name, path); break;
+        case "spritesheet"  :
           let props = e["options"];
           game.load.spritesheet(name, path, props.x, props.y, props.frames);
           break;

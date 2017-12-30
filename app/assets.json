@@ -3,35 +3,40 @@
      {"type": "music"        , "name": "msx_stage"          , "options": {}}
     ,{"type": "music"        , "name": "msx_stage_critical" , "options": {}}
     ,{"type": "music"        , "name": "msx_stage_results"  , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_confirm"        , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_select"         , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_swap"           , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_countdown_blip" , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_countdown_ding" , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_drop0"          , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_drop1"          , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_drop2"          , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_drop3"          , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_pop0"           , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_pop1"           , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_pop2"           , "options": {}}
-    ,{"type": "sound_effects", "name": "sfx_pop3"           , "options": {}}
-    ,{"type": "image"        , "name": "bg_blue"            , "options": {}}
-    ,{"type": "image"        , "name": "logo"               , "options": {}}
-    ,{"type": "image"        , "name": "bg_green"           , "options": {}}
-    ,{"type": "image"        , "name": "bg_purple"          , "options": {}}
-    ,{"type": "image"        , "name": "menu"               , "options": {}}
-    ,{"type": "image"        , "name": "menu_cursor"        , "options": {}}
-    ,{"type": "image"        , "name": "menu_pause_cursor"  , "options": {}}
-    ,{"type": "image"        , "name": "menu_pause"         , "options": {}}
-    ,{"type": "image"        , "name": "pause"              , "options": {}}
-    ,{"type": "image"        , "name": "puzzle_menu"        , "options": {}}
-    ,{"type": "image"        , "name": "playfield_vs_frame" , "options": {}}
-    ,{"type": "image"        , "name": "playfield_vs_bg"    , "options": {}}
-    ,{"type": "image"        , "name": "mode_puzzle_bg"     , "options": {}}
-    ,{"type": "image"        , "name": "playfield_wall0"    , "options": {}}
-    ,{"type": "image"        , "name": "playfield_wall1"    , "options": {}}
-    ,{"type": "image"        , "name": "bauble_times"       , "options": {}}
+    ,{"type": "sound_effects", "name": "sfx_confirm"        }
+    ,{"type": "sound_effects", "name": "sfx_select"         }
+    ,{"type": "sound_effects", "name": "sfx_swap"           }
+    ,{"type": "sound_effects", "name": "sfx_countdown_blip" }
+    ,{"type": "sound_effects", "name": "sfx_countdown_ding" }
+    ,{"type": "sound_effects", "name": "sfx_drop0"          }
+    ,{"type": "sound_effects", "name": "sfx_drop1"          }
+    ,{"type": "sound_effects", "name": "sfx_drop2"          }
+    ,{"type": "sound_effects", "name": "sfx_drop3"          }
+    ,{"type": "sound_effects", "name": "sfx_pop0"           }
+    ,{"type": "sound_effects", "name": "sfx_pop1"           }
+    ,{"type": "sound_effects", "name": "sfx_pop2"           }
+    ,{"type": "sound_effects", "name": "sfx_pop3"           }
+    ,{"type": "image"        , "name": "bg_blue"            }
+    ,{"type": "image"        , "name": "logo"               }
+    ,{"type": "image"        , "name": "bg_green"           }
+    ,{"type": "image"        , "name": "bg_purple"          }
+    ,{"type": "image"        , "name": "menu_bg"            }
+    ,{"type": "image"        , "name": "menu_frame_content" }
+    ,{"type": "image"        , "name": "menu_frame_corner"  }
+    ,{"type": "image"        , "name": "menu_item_column"   }
+    ,{"type": "image"        , "name": "menu_item_content"  }
+    ,{"type": "image"        , "name": "menu_cursor"        }
+    ,{"type": "image"        , "name": "menu_pause_cursor"  }
+    ,{"type": "image"        , "name": "menu_pause"         }
+    ,{"type": "image"        , "name": "pause"              }
+    ,{"type": "image"        , "name": "puzzle_menu"        }
+    ,{"type": "image"        , "name": "playfield_vs_frame" }
+    ,{"type": "image"        , "name": "playfield_vs_bg"    }
+    ,{"type": "image"        , "name": "mode_puzzle_bg"     }
+    ,{"type": "image"        , "name": "playfield_wall0"    }
+    ,{"type": "image"        , "name": "playfield_wall1"    }
+    ,{"type": "image"        , "name": "bauble_times"       }
+    ,{"type": "image"        , "name": "font"               }
     ,{"type": "spritesheet"  , "name": "ints_small"         , "options": {"x": 16 , "y": 16, "frames": 18}}
     ,{"type": "spritesheet"  , "name": "ints_large"         , "options": {"x": 16 , "y": 24, "frames": 18}}
     ,{"type": "spritesheet"  , "name": "playfield_cursor"   , "options": {"x": 76 , "y": 44, "frames": 2}}
