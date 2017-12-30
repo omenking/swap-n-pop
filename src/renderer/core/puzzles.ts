@@ -1,10 +1,10 @@
 import { PANELS } from 'core/data'
-const _ = 0 // empty panel
-const b = 1 // blue
-const g = 2 // green
-const p = 3 // purple
-const r = 4 // red
-const y = 5 // yellow
+const _ = null // empty panel
+const b = 0 // blue
+const g = 1 // green
+const p = 2 // purple
+const r = 3 // red
+const y = 4 // yellow
 
 /**
  * private method to help with array creation

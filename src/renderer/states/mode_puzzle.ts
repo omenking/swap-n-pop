@@ -71,8 +71,8 @@ export default class ModePuzzle extends CoreStage {
     this.playfield0.create(this, {
       countdown: false,
       push  : false,
-        x   : 320,
-        y   : 80,
+      x     : 320,
+      y     : 80,
       panels: this.panels
     });
 
