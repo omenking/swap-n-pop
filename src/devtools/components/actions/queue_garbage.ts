@@ -74,7 +74,7 @@ function checkbox(){
 }
 
 function selects(){
-  if (state.garbage === false) { return }
+  if (state.garbage !== true) { return }
   return m('.selects',[select_player(),
   select_combo(),
   select_chain(),

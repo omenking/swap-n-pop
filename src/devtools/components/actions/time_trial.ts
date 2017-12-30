@@ -20,7 +20,7 @@ function onsubmit(e){
 }
 
 function input(){
-  if (state.time_trial === false) {return }
+  if (state.time_trial !== true) {return }
   return m('form', {onsubmit: onsubmit},
     m("input[type='text']",{
       oninput: m.withAttr('value',function(val){
