@@ -44,7 +44,9 @@ export default class ComponentMenuCursor {
       game.sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
-      return this.index--;
+      this.menu_items[this.index].deselect()
+      this.index--;
+      this.menu_items[this.index].select()
     }
   }
 
@@ -54,14 +56,16 @@ export default class ComponentMenuCursor {
       game.sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
-      return this.index++;
+      this.menu_items[this.index].deselect()
+      this.index++;
+      this.menu_items[this.index].select()
     }
   }
 
   confirm(tick) {
     if (tick > 0) { return }
     game.sounds.confirm()
-    return this.menu_items[this.index].action()
+    this.menu_items[this.index].action()
   }
 
   cancel(tick) {
@@ -73,7 +77,7 @@ export default class ComponentMenuCursor {
     this.counter++;
     if (this.counter > MENUCURSORBLINK) {
       this.counter = 0;
-      return this.sprite.visible = !this.sprite.visible;
+      this.sprite.visible = !this.sprite.visible;
     }
   }
 }

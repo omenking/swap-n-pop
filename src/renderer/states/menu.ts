@@ -16,7 +16,7 @@ export default class MenuState extends State {
 
   constructor() {
     super()
-    this.menu = new ComponentMenu(5);
+    this.menu = new ComponentMenu(9);
   }
 
   get name(): string {
@@ -29,13 +29,17 @@ export default class MenuState extends State {
     this.logo = game.add.sprite(px(40),0,'logo')
     this.logo.y = game.world.centerY - this.logo.centerY
     this.menu.create(
-        game.world.centerX,
-        game.world.centerY - ((10 + (28 * 5) + 10)/2),
+        game.world.width - (220 + px(70)),
+        game.world.centerY - ((10 + (28 * 9) + 10)/2) + 20,
         220,[
-      {name: 'Play VS'       , action: this.mode_1p_vs_2p_local},
-      {name: 'Play VS Online', action: this.mode_1p_vs_2p_online},
-      {name: 'Play VS CPU'   , action: this.mode_1p_vs_cpu},
-      {name: 'Puzzle Mode'   , action: this.mode_improve},
+      {name: 'Versus Online' , action: this.mode_1p_vs_2p_online},
+      {name: 'Story'         , action: this.mode_story},
+      {name: 'Time Trial'    , action: this.mode_time_trial},
+      {name: 'Endless'       , action: this.mode_story},
+      {name: 'Versus Local'  , action: this.mode_1p_vs_2p_local},
+      {name: 'Challenges'    , action: this.mode_challenges},
+      {name: 'Puzzles'       , action: this.mode_puzzles},
+      {name: 'Training'      , action: this.mode_sandox},
       {name: 'Options'       , action: this.mode_option},
     ])
     fade.in()
@@ -49,17 +53,27 @@ export default class MenuState extends State {
     ipc.send('settings','network')
   }
 
-  mode_1p_vs_cpu() {
-    ipc.send('play-vs',{online: false, cpu: [false,true]})
+  mode_time_trial(){
   }
 
+  mode_endless(){
+  }
+
+  mode_story(){
+  }
   /** starts the mode_puzzle state */
-  mode_improve() {
+  mode_challenges() {
+  }
+
+  mode_puzzles(){
     game.state.start('puzzle_menu', true, false);
   }
 
   mode_option() {
     ipc.send('settings','replay')
+  }
+
+  mode_sandox(){
   }
 
 

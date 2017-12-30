@@ -232,13 +232,11 @@ ipc.on('asset-list', e => {
 })
 
 ipc.on('play-vs', (event,{seed,online,cpu}) => {
-  console.log('seed_____:0',seed)
   if (online){
     seed = seed
   } else {
     seed = Replay.random_seed(16,undefined)
   }
-  console.log('seed_____:1',seed)
   win.webContents.send('play-vs',{
     seed:   seed,
     online: online,
@@ -251,8 +249,9 @@ ipc.on('network-connect', (event,data) => {
   win.focus()
 })
 
-ipc.on('settings', (event,name) => {
-  click_settings(name)()
+ipc.on('settings', function(event,name){
+  win.custom = {mode: name}
+  win.webContents.send('reload',{mode: name})
 })
 
 ipc.on('fullscreen', (event,name) => {

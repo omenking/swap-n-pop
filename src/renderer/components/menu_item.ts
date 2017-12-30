@@ -19,6 +19,12 @@ export default class MenuItem {
     this.image = game.make.image(32,6, this.font)
     this.font.setText(name,false,2)
 
+    if (index === 0)
+      this.select()
+    else
+      this.deselect()
+
+
     this.group = game.add.group()
 
     this.bg_center = game.make.sprite(0,0,'menu_item_content')
@@ -35,6 +41,14 @@ export default class MenuItem {
     this.group.add(this.image)
     this.group.x = 10 + group.x
     this.group.y = 10 + group.y + (28 * index)
+  }
+
+  deselect(){
+    this.image.tint = 0XBFD3EE
+  }
+
+  select(){
+    this.image.tint = 0xE74475
   }
 
   get x(){
