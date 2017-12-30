@@ -2,11 +2,11 @@ import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreControls         from 'core/controls'
+import CountdownState       from 'core/countdown_state'
 import CoreInputs           from 'core/inputs'
 import CoreSnapshots        from 'core/snapshots'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
-import CountdownState       from 'core/countdown_state'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
 import ComponentDebugFrame  from 'components/debug_frame'
@@ -57,7 +57,6 @@ export default class ModeVs extends CoreStage {
   private _cpu            : Array<any>
   private frame           : Phaser.Sprite
   private controls        : any
-  private _countdown      : CountdownState
   private step_mode       : boolean
   public  levels          : Array<ComponentLevel>
 
@@ -183,9 +182,6 @@ export default class ModeVs extends CoreStage {
   get cpu (){  return this._cpu }
   set cpu (v){ this._cpu = v }
 
-  get countdown (){  return this._countdown }
-  set countdown (v) { this._countdown = v }
-
   create_bg() {
     this.bg = game.add.sprite(0,0, 'playfield_vs_bg');
   }
@@ -257,14 +253,12 @@ export default class ModeVs extends CoreStage {
   resume() {
     // only resumes the game if countdown's are over
     if (this.countdown.state === DONE){
-      game.sounds.stage_music('resume');
-
-      this.state = RUNNING;
-      this.timer.running = true;
+      game.sounds.stage_music('resume')
+      this.state         = RUNNING
+      this.timer.running = true
     }
-
-    this.playfield0.cursor.map_controls();
-    this.playfield1.cursor.map_controls();
+    this.playfield0.cursor.map_controls()
+    this.playfield1.cursor.map_controls()
   }
 
   game_over(pi) {

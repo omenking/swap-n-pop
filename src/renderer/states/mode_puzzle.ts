@@ -1,6 +1,7 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import controls             from 'core/controls'
+import CountdownState       from 'core/countdown_state'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
 import Puzzles              from 'core/puzzles'
@@ -13,7 +14,8 @@ import {
   STARTING,
   RUNNING,
   PAUSE,
-  GAMEOVER
+  GAMEOVER,
+  DONE
 } from 'core/data';
 
 /* run by phaser state.start */
@@ -41,6 +43,7 @@ export default class ModePuzzle extends CoreStage {
     this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
     this.inputs       = new CoreInputs(undefined,undefined,undefined)
+    this.countdown    = new CountdownState()
   }
 
   get name(): string {
@@ -75,6 +78,7 @@ export default class ModePuzzle extends CoreStage {
       panels: this.panels
     });
 
+    this.countdown.create(true,this.playfield_cursor_entrance.bind(this))
     this.playfield0.create_after()
     this.playfield0.cursor.mode = "puzzle"
     this.playfield0.character.sprite.visible = false
@@ -82,6 +86,10 @@ export default class ModePuzzle extends CoreStage {
     this.menu_pause.create(this);
     this.timer.create(this,180, 60);
     this.step_display.create({ playfield: this.playfield0, step_limit: this.steps_left, x: 575, y: 85 });
+  }
+
+  playfield_cursor_entrance(){
+    this.playfield0.cursor.entrance()
   }
 
   /** shuts down the playfield0 */
@@ -108,10 +116,11 @@ export default class ModePuzzle extends CoreStage {
 
   /** regains control over playfield0 - plays a sound and timer runs again */
   resume() {
-    game.sounds.stage_music('resume');
-
-    this.state = RUNNING
-    this.timer.running = true;
+    if (this.countdown.state === DONE){
+      game.sounds.stage_music('resume');
+      this.state = RUNNING
+      this.timer.running = true;
+    }
     this.playfield0.cursor.map_controls()
   }
 
@@ -138,20 +147,20 @@ export default class ModePuzzle extends CoreStage {
 
     this.tick++;
 
-    controls.update();
-    this.playfield0.update();
-    this.inputs.update(this.tick,undefined);
-
-    this.menu_pause.update();
+    this.countdown.update()
+    controls.update()
+    this.playfield0.update()
+    this.inputs.update(this.tick,undefined)
+    this.menu_pause.update()
   }
 
   /** calls the render functions of the timer and playfield0 */
   render() {
-    this.bg.x = game.world.centerX;
-    this.timer.render();
-    this.step_display.render();
+    this.bg.x = game.world.centerX
+    this.timer.render()
+    this.step_display.render()
 
     if (this.playfield0)
-      this.playfield0.render();
+      this.playfield0.render()
   }
 }
