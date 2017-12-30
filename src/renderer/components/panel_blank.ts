@@ -36,6 +36,11 @@ class ComponentPanelBlank{
     this.garbage           = { 'group': -1, 'state': null, 'kind': null }
     this.chain             = null
   }
+  
+  get  left() { return blank }
+  get right() { return blank }
+  get under() { return blank }
+  get above() { return blank }
 
   clear(){
   }
