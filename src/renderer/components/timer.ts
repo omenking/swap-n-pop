@@ -50,8 +50,13 @@ export default class ComponentTimer {
     this.group.add(this.d2);
 
     this.tick = 0
-    this.countdown = 0
+    if (stage.flag_timer === true)
+      this.countdown = 120
+    else
+      this.countdown = 0
+
     this.running = false
+    this.render()
   }
 
   get time(){

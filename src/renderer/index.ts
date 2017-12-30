@@ -35,12 +35,14 @@ stateClasses.forEach(stateClass => {
 
 game.state.start('boot')
 
-ipc.on('play-vs', (event, {seed,online,cpu}) => {
+ipc.on('play-vs', (event,data) => {
   fade.out(function(){
     game.state.start('mode_vs',true,false, {
-      seed:   seed,
-      online: online,
-      cpu:    cpu
+      seed:    data.seed,
+      online:  data.online,
+      cpu:     data.cpu,
+      garbage: data.garbage,
+      timer:   data.timer
     })
   })
 })

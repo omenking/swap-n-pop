@@ -85,8 +85,8 @@ export default class ModeVs extends CoreStage {
   }
 
   public init(data) {
-    this.flag_garbage = true
-    this.flag_timer   = false
+    this.flag_garbage = data.garbage
+    this.flag_timer   = data.timer
     this.step_mode    = false
     this.rounds_won = [2,1]
     this.tick       = 0

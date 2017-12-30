@@ -46,7 +46,12 @@ export default class MenuState extends State {
   }
 
   mode_1p_vs_2p_local() {
-    ipc.send('play-vs',{online: false, cpu: [false,false]})
+    ipc.send('play-vs',{
+      online: false,
+      garbage: true,
+      timer: false,
+      cpu: [false,false]
+    })
   }
 
   mode_1p_vs_2p_online() {
@@ -54,6 +59,12 @@ export default class MenuState extends State {
   }
 
   mode_time_trial(){
+    ipc.send('play-vs',{
+      online: false,
+      garbarge: false,
+      timer: true,
+      cpu: [false,false]
+    })
   }
 
   mode_endless(){

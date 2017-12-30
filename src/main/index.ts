@@ -231,16 +231,14 @@ ipc.on('asset-list', e => {
   })
 })
 
-ipc.on('play-vs', (event,{seed,online,cpu}) => {
-  if (online){
-    seed = seed
-  } else {
-    seed = Replay.random_seed(16,undefined)
-  }
+ipc.on('play-vs', (event,data) => {
+  const seed = data.online ? data.seed : Replay.random_seed(16,undefined)
   win.webContents.send('play-vs',{
-    seed:   seed,
-    online: online,
-    cpu:    cpu
+    seed:    seed,
+    online:  data.online,
+    cpu:     data.cpu,
+    garbage: data.garbage,
+    timer:   data.timer
   })
 })
 
