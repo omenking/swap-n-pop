@@ -1,6 +1,6 @@
 import * as m  from 'mithril'
-import {COMP_GARBA, state} from 'devtools/common/data'
-import {queue_garbage}     from 'devtools/common/port'
+import {state} from 'devtools/common/data'
+import {toggle_garbage, queue_garbage} from 'devtools/common/port'
 
 function select_class(val){
   if (val > 0)
@@ -63,12 +63,31 @@ function select_chain(){
   ])
 }
 
-export default function actions_queue_garbage(){
+function checkbox(){
+  return m("input[type='checkbox']",{
+      onclick: m.withAttr('checked', function(val){ 
+        state.garbage = val
+        toggle_garbage()
+      }),
+      checked: state.garbage
+    })
+}
+
+function selects(){
+  if (state.garbage === false) { return }
+  return m('.selects',[select_player(),
+  select_combo(),
+  select_chain(),
+  m('.button.queue', {onclick: queue_garbage}, '>>'),
+  m('.clear')])
+}
+
+export default function(){
   return m('.section.queue_garbage',[
-    select_player(),
-    select_combo(),
-    select_chain(),
-    m('.button.queue', {onclick: queue_garbage}, '>>'),
-    m('.clear')
+    m('.lbl',[
+      checkbox(),
+      'Garbage'
+    ]),
+    selects()
   ])
 }

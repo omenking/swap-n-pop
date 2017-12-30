@@ -6,19 +6,21 @@ import { px } from 'core/filters';
  */
 
 export default class ComponentTimer {
+  private stage : any
   private d0      : Phaser.Sprite
   private d1      : Phaser.Sprite
   private d2      : Phaser.Sprite
   private group   : Phaser.Group
-  private tick    : number
+  public tick    : number
+  public countdown : number
   public running : boolean
 
   /** get snapshot of the timer, get only to not let this be modifyable */
   get snap() {
     return [
-      this.d0.frame,
-      this.d1.frame,
-      this.d2.frame
+      this.tick,
+      this.countdown,
+      this.running
     ];
   }
 
@@ -26,16 +28,17 @@ export default class ComponentTimer {
    * @param {Array} snapshot to get data from if packet loss
    */
   load(snapshot) {
-    this.d0.frame = snapshot[0];
-    this.d0.frame = snapshot[1];
-    this.d0.frame = snapshot[2];
+    this.tick      = snapshot[0]
+    this.countdown = snapshot[1]
+    this.running   = snapshot[2]
   }
 
   /** A Sprite group is created with its position
    *  Each Time Digit gets added as a Sprite
    *  Internal tick counter and a bool to stop everything
    */
-  create(x,y) {
+  create(stage,x,y) {
+    this.stage = stage
     this.group = game.add.group();
     this.group.x = x;
     this.group.y = y;
@@ -46,37 +49,51 @@ export default class ComponentTimer {
     this.group.add(this.d1);
     this.group.add(this.d2);
 
-    this.tick = 0;
-    this.running = false;
+    this.tick = 0
+    this.countdown = 0
+    this.running = false
+  }
+
+  get time(){
+    if(this.stage.flag_timer === true)
+      return this.countdown
+    else
+      return Math.floor(this.tick / 60)
   }
 
   update(){
     if (!this.running)
       return;
-    this.tick++;
+    if(this.stage.flag_timer === true) {
+      if (this.tick >= 60){
+        this.tick = 0
+        this.countdown--
+      } else {
+        this.tick++
+      }
+    } else {
+      this.tick++
+    }
   }
   /** Sets the Sprite Frames of each Digit to a Counter,
    *  Each counter goes up determined by the time passed etc.
    *  everything is stoppable through this.running
    */
   render() {
-    const time = Math.floor(this.tick / 60);
-    if (time > 0){
-      const minutes = Math.floor(time / 60);
-      const seconds = time - minutes * 60;
+    const minutes = Math.floor(this.time / 60)
+    const seconds = this.time - minutes * 60
 
-      if (minutes > 9){
-        this.d0.frame = 9;
-      } else {
-        this.d0.frame = minutes;
-      }
-      if (seconds <= 9){
-        this.d1.frame = 0;
-        this.d2.frame = seconds;
-      } else {
-        this.d1.frame = parseInt(`${seconds}`.charAt(0));
-        this.d2.frame = parseInt(`${seconds}`.charAt(1));
-      }
+    if (minutes > 9){
+      this.d0.frame = 9;
+    } else {
+      this.d0.frame = minutes;
+    }
+    if (seconds <= 9){
+      this.d1.frame = 0;
+      this.d2.frame = seconds;
+    } else {
+      this.d1.frame = parseInt(`${seconds}`.charAt(0));
+      this.d2.frame = parseInt(`${seconds}`.charAt(1));
     }
   }
 

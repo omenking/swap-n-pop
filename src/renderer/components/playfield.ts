@@ -172,7 +172,7 @@ export default class Playfield {
     this.stoptime     = STOPTIME
 
     this.clearing = []
-    if (this.stage.cpu[1] !== null){
+    if (this.stage.flag_garbage === true){
       this.garbage.create(this.stage,this.pi)
       this.clearing_garbage = []
     }
@@ -505,7 +505,8 @@ export default class Playfield {
         if (cnc[1] > 1)
           this.character.current_animation = "charge"
 
-        if (this.stage.cpu[1] !== null) { // if no second player, don't bother with garbage
+
+        if (this.stage.flag_garbage === true) {
           this.update_garbage_clearing()
           this.garbage.update(cnc[0],cnc[1])
         }

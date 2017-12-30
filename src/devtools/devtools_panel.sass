@@ -41,6 +41,10 @@ body, html
     font-weight: 600
     padding:
       bottom: 4px
+    input[type='checkbox']
+      display: inline-block
+      outline: none
+      margin-right: 4px
   .button
     display: inline-block
     background: rgb(240,240,240)
@@ -103,7 +107,25 @@ body, html
     .pl_1
       border-top-right-radius   : 3px
       border-bottom-right-radius: 3px
+  .section.time_trial
+    .lbl
+      padding-bottom: 0
+      display: inline-block
+      width: 50%
+      float: left
+    input[type='text']
+      display: inline-block
+      padding: 2px 4px
+      width: 50%
+      float: right
+      outline: none
+      border : solid 1px rgb(200,200,200)
+      border-radius: 3px
   .section.queue_garbage
+    .lbl
+      padding-bottom: 0
+    .selects
+      padding-top: 4px
     select
       -webkit-appearance: none
       display: inline-block

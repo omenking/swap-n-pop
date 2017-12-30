@@ -15,6 +15,7 @@ class State {
   public selected_tick   : number
   public selected_panel  : Array<number>
   public state_component : string
+  public time_trial_val  : number
   public garbage_queue : {
     pi: number,
     combo: number,
@@ -37,6 +38,8 @@ class State {
     chain: number
   }
 
+  public garbage    : boolean
+  public time_trial : boolean
   public levels : Array<number>
 
   constructor(){
@@ -56,6 +59,9 @@ class State {
       pl1: false
     }
     this.seed = ''
+    this.garbage = false
+    this.time_trial = false
+    this.time_trial_val = 0
     this.reset_panel_form(null)
 
   }
@@ -93,6 +99,9 @@ class State {
     this.selected_tick  = 0
     this.reset_panel_form(null)
     this.levels = [1,1]
+    this.garbage = false
+    this.time_trial = false
+    this.time_trial_val = 0
   }
 }
 
