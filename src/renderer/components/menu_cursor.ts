@@ -39,25 +39,31 @@ export default class ComponentMenuCursor {
   }
 
   up(tick) {
-    if (tick > 0) { return }
-    if (this.index !== 0) {
+    if (tick === 0 || tick % 7 === 0 ) { 
       game.sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
       this.menu_items[this.index].deselect()
-      this.index--;
+      if (this.index !== 0) {
+        this.index--;
+      } else {
+        this.index = this.menu_items.length-1
+      }
       this.menu_items[this.index].select()
     }
   }
 
   down(tick) {
-    if (tick > 0) { return }
-    if (this.index !== (this.menu_items.length-1)) {
+    if (tick === 0 || tick % 7 === 0 ) {
       game.sounds.select()
       this.counter = 0;
       this.sprite.visible = true;
       this.menu_items[this.index].deselect()
-      this.index++;
+      if (this.index !== (this.menu_items.length-1)) {
+        this.index++;
+      } else {
+        this.index = 0
+      }
       this.menu_items[this.index].select()
     }
   }
