@@ -153,7 +153,7 @@ describe('panel_actions', function() {
          [0,21,1,CLEAR,78,1],
          [0,22,1,CLEAR,78,1])
     for(let i = 0; i < 78; i++){ playfield.update() }
-    chec([0,19,2,HANG  ,10,1],
+    chec([0,19,2,HANG  ,9,1],
          [0,20,N,STATIC,0,F],
          [0,21,N,STATIC,0,F],
          [0,22,N,STATIC,0,F])

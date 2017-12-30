@@ -211,10 +211,16 @@ export default class ComponentPanel {
   swap_r_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
   
   swapping_l_enter() {
+    // Swap kind
     const i1 = this.kind
-    const i2 = this.right.kind
-    this.kind       = i2
+    this.kind = this.right.kind
     this.right.kind = i1
+    
+    // Swap chain value
+    const chain = this.chain
+    this.chain = this.right.chain
+    this.right.chain = chain
+    
     this.counter = TIME_SWAP
   }
   
@@ -309,8 +315,16 @@ export default class ComponentPanel {
       this.set_particles_clear()
 
     } else {
-      if (this.above.static_stable)
-        this.above.chain += 1
+      // Propogate upwards, setting all stable panels to be chainable
+      let panel = this.above
+      while (panel !== blank && panel.kind !== null && panel.state !== CLEAR) {
+          if (panel.static_stable) { 
+            panel.chain += this.chain; 
+            panel.change_state(HANG)
+          }
+          panel = panel.above
+      }
+
       this.change_state(STATIC)
     }
   }
@@ -527,8 +541,8 @@ export default class ComponentPanel {
     this.counter        = 0
     this.right.counter  = 0
 
-    this.chain       = 0
-    this.right.chain = 0
+    //this.chain       = 0
+    //this.right.chain = 0
 
     this.change_state(SWAP_L)
     this.right.change_state(SWAP_R)
