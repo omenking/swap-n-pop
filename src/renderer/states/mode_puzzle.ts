@@ -4,7 +4,7 @@ import controls             from 'core/controls'
 import CountdownState       from 'core/countdown_state'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
-import Puzzles              from 'core/puzzles'
+import puzzles              from 'core/puzzles'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentTimer       from 'components/timer'
@@ -25,7 +25,6 @@ export default class ModePuzzle extends CoreStage {
   private timer        : ComponentTimer
   private step_display : ComponentStepCounter
   private inputs       : CoreInputs
-  private puzzles      : Puzzles
   private tick         : number
   private seed         : string
   private cpu          : Array<boolean>
@@ -67,8 +66,7 @@ export default class ModePuzzle extends CoreStage {
     this.rng    = seedrandom(this.seed)
 
     // gathered from level puzzle data
-    this.puzzles = new Puzzles()
-    this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
+    this.change_level(puzzles[this.level_index++]);
 
     this.playfield0.create(this, {
       countdown: false,
@@ -129,12 +127,12 @@ export default class ModePuzzle extends CoreStage {
    */
   update() {
     if (this.playfield0.stack_is_empty()) {
-      if (this.puzzles.puzzle_levels.length === (this.level_index)) {
+      if (puzzles.length === (this.level_index)) {
         game.state.start("menu");
         return;
       }
 
-      this.change_level(this.puzzles.puzzle_levels[this.level_index++]);
+      this.change_level(puzzles[this.level_index++]);
       this.playfield0.cursor.cursor_swap_history = [];
       this.playfield0.reset_stack(this.panels, 0);
     }

@@ -1,6 +1,7 @@
 import game     from 'core/game'
 import controls from 'core/controls'
-import { UNIT } from 'core/data';
+import puzzles  from 'core/puzzles'
+import { UNIT } from 'core/data'
 
 export default class PuzzleSelectCursor {
   private x     : number
@@ -45,7 +46,7 @@ export default class PuzzleSelectCursor {
     if (tick > 0)
       return;
 
-    if (this.index < this.parent.puzzles.puzzle_levels.length - 1)
+    if (this.index < puzzles.length - 1)
       ++this.index;
   }
 
@@ -56,8 +57,7 @@ export default class PuzzleSelectCursor {
   cancel(tick) {
     if (tick > 0)
       return;
-
-    game.state.start("menu");
+    game.state.start("menu")
   }
 
   update() {
