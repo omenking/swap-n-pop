@@ -56,9 +56,9 @@ describe('garbage_actions', function() {
     playfield.update()
     playfield.update()
     chec([0,19,R,GARBAGE,54,F,[CLEAR,5,COMBO]], [1,19,R,GARBAGE,54,F,[CLEAR,5,COMBO]],
-         [0,20,1,CLEAR ,89,1,NN],
-         [0,21,1,CLEAR ,89,1,NN],
-         [0,22,1,CLEAR ,89,1,NN])
+         [0,20,1,CLEAR ,77,1,NN],
+         [0,21,1,CLEAR ,77,1,NN],
+         [0,22,1,CLEAR ,77,1,NN])
   })
 
   it('should clear garbage touching from below', function(){
@@ -73,9 +73,9 @@ describe('garbage_actions', function() {
     //################################################################
     playfield.update()
     playfield.update()
-    chec([0,19,1,CLEAR ,89,1,NN],
-         [0,20,1,CLEAR ,89,1,NN],
-         [0,21,1,CLEAR ,89,1,NN],
+    chec([0,19,1,CLEAR ,77,1,NN],
+         [0,20,1,CLEAR ,77,1,NN],
+         [0,21,1,CLEAR ,77,1,NN],
          [0,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]])
   })
   it('should clear garbage touching from the right', function(){
@@ -88,9 +88,9 @@ describe('garbage_actions', function() {
     //################################################################
     playfield.update()
     playfield.update()
-    chec([0,20,1,CLEAR ,89,1,NN],
-         [0,21,1,CLEAR ,89,1,NN],
-         [0,22,1,CLEAR ,89,1,NN],[1,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]])
+    chec([0,20,1,CLEAR ,77,1,NN],
+         [0,21,1,CLEAR ,77,1,NN],
+         [0,22,1,CLEAR ,77,1,NN],[1,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]])
   })
   it('should clear garbage touching from the left', function(){
     //   C
@@ -102,9 +102,9 @@ describe('garbage_actions', function() {
     //################################################################
     playfield.update()
     playfield.update()
-    chec(                                        [1,20,1,CLEAR ,89,1,NN],
-                                                 [1,21,1,CLEAR ,89,1,NN],
-         [0,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]], [1,22,1,CLEAR ,89,1,NN])
+    chec(                                        [1,20,1,CLEAR ,77,1,NN],
+                                                 [1,21,1,CLEAR ,77,1,NN],
+         [0,22,R,GARBAGE ,42,F,[CLEAR,5,COMBO]], [1,22,1,CLEAR ,77,1,NN])
   })
   it('should clear garbage touching in all directions', function(){
     //   G
@@ -121,9 +121,9 @@ describe('garbage_actions', function() {
     playfield.update()
     playfield.update()
     chec(                                        [1,18,R,GARBAGE ,78,F,[CLEAR,4,COMBO]],
-                                                 [1,19,1,CLEAR   ,89,1,NN],
-                                                 [1,20,1,CLEAR   ,89,1,NN],
-         [0,21,R,GARBAGE ,78,F,[CLEAR,1,COMBO]], [1,21,1,CLEAR   ,89,1,NN]             , [2,21,R,GARBAGE ,78,F,[CLEAR,3,COMBO]],
+                                                 [1,19,1,CLEAR   ,77,1,NN],
+                                                 [1,20,1,CLEAR   ,77,1,NN],
+         [0,21,R,GARBAGE ,78,F,[CLEAR,1,COMBO]], [1,21,1,CLEAR   ,77,1,NN]             , [2,21,R,GARBAGE ,78,F,[CLEAR,3,COMBO]],
          [0,22,1,STATIC  ,0,F,NN]              , [1,22,R,GARBAGE ,78,F,[CLEAR,2,COMBO]], [2,22,1,STATIC  ,0,F,NN])
   })
 
@@ -139,7 +139,7 @@ describe('garbage_actions', function() {
     playfield.update()
     chec([0,20,R,GARBAGE ,54,F,[CLEAR,2,COMBO]],
          [0,21,R,GARBAGE ,54,F,[CLEAR,1,COMBO]],
-         [0,22,1,CLEAR,89,1,NN], [1,22,1,CLEAR  ,89,1,NN], [2,22,1,CLEAR  ,89,1,NN])
+         [0,22,1,CLEAR,77,1,NN], [1,22,1,CLEAR  ,77,1,NN], [2,22,1,CLEAR  ,77,1,NN])
   })
 
   it('time_max,time_cur,time_pop',function(){

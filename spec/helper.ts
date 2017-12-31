@@ -1,3 +1,4 @@
+import controls     from 'core/controls'
 import Stage        from 'states/mode_vs'
 import Playfield    from 'components/playfield'
 import {
@@ -15,12 +16,19 @@ export function playfield_helper(opts={}){
   const cpu       = opts.cpu       ? opts.cpu       : [false,false]
   const countdown = opts.countdown ? opts.countdown : false
   const push      = opts.countdown ? opts.push      : false
+  const garbage   = opts.garbage   ? opts.garbage   : true
+  const timer     = opts.timer     ? opts.timer     : false
   const panels    = opts.panels    ? opts.panels    : new Array(PANELS).fill(null)
+  controls.create()
   const stage = new Stage()
   stage.init({
-    seed: 'test',
-    cpu: cpu
+    seed    : 'test',
+    online  : false,
+    cpu     : cpu,
+    garbage : garbage,
+    timer   : timer
   })
+  stage.create()
   stage.state = RUNNING
   const playfield      = new Playfield(0)
   playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }

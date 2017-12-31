@@ -36,13 +36,28 @@ const stub_audio = sinon.stub()
 stub_audio.returns({
 })
 
+const stub_bitmapData = sinon.stub()
+stub_bitmapData.returns({
+  rect: sinon.stub()
+})
+
+const stub_tween = sinon.stub()
+stub_tween.returns({
+  to: sinon.stub().returns({
+    start: sinon.stub()
+  })
+  onComplete: sinon.stub()
+})
+
 class GameMock {
   constructor(){
     this.add = {
       group:  stub_group,
       sprite: stub_sprite,
       text:   stub_text,
-      audio:  stub_audio
+      audio:  stub_audio,
+      bitmapData: stub_bitmapData,
+      tween: stub_tween
     }
     this.make = {
       sprite: stub_sprite

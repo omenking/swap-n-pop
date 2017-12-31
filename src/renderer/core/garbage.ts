@@ -71,7 +71,6 @@ export default class CoreGarbage {
   }
 
   push(combo,chain) {
-    console.log('pushing garbage',combo,chain)
     const delay = 20
     if (chain >= 2) { this.queue.push({kind: CHAIN, size: chain, counter: delay}) }
     if (combo >= 4) { this.queue.push({kind: COMBO, size: combo, counter: delay}) }

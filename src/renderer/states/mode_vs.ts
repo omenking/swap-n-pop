@@ -191,7 +191,6 @@ export default class ModeVs extends CoreStage {
   create() {
     this.rng = seedrandom(this.seed, {state: true})
     this.state = STARTING
-    ipc.send('log',`VS ${this.seed} ------------------------------`)
     this.danger = false
 
     const offset = px(55)
