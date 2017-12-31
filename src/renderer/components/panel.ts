@@ -388,6 +388,7 @@ export default class ComponentPanel {
     if ((this.state === STATIC || this.state === FALL) && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
     if (this.empty) { return true }
+    if (this.state === SWAP_L || this.state === SWAP_R || this.state === SWAPPING_L || this.state === SWAPPING_R) { return true }
     return false
   }
   /**
@@ -540,9 +541,6 @@ export default class ComponentPanel {
 
     this.counter        = 0
     this.right.counter  = 0
-
-    //this.chain       = 0
-    //this.right.chain = 0
 
     this.change_state(SWAP_L)
     this.right.change_state(SWAP_R)
