@@ -32,15 +32,15 @@ export default class MenuState extends State {
         game.world.width - (220 + px(70)),
         game.world.centerY - ((10 + (28 * 9) + 10)/2) + 20,
         220,[
-      {name: 'Versus Online' , action: this.mode_1p_vs_2p_online},
-      {name: 'Story'         , action: this.mode_story},
-      {name: 'Time Trial'    , action: this.mode_time_trial},
-      {name: 'Endless'       , action: this.mode_story},
-      {name: 'Versus Local'  , action: this.mode_1p_vs_2p_local},
-      {name: 'Challenges'    , action: this.mode_challenges},
-      {name: 'Puzzles'       , action: this.mode_puzzles},
-      {name: 'Training'      , action: this.mode_sandox},
-      {name: 'Options'       , action: this.mode_option},
+      {name: 'Play Online'  , action: this.mode_1p_vs_2p_online},
+      {name: 'Story'        , action: this.mode_story},
+      {name: 'Time Trial'   , action: this.mode_time_trial},
+      {name: 'Endless'      , action: this.mode_story},
+      {name: 'Versus Local' , action: this.mode_1p_vs_2p_local},
+      {name: 'Challenges'   , action: this.mode_challenges},
+      {name: 'Puzzles'      , action: this.mode_puzzles},
+      {name: 'Training'     , action: this.mode_sandox},
+      {name: 'Options'      , action: this.mode_option},
     ])
     fade.in()
   }
