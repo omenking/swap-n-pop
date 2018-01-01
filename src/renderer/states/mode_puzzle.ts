@@ -20,8 +20,10 @@ import {
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {
+  get [Symbol.toStringTag](){ return 'ModePuzzle' }
+  get name(): string { return 'mode_puzzle' }
+
   private step_display : ComponentStepCounter
-  private cpu          : Array<boolean>
   private steps        : number
   private panels       : Array<number>
   private level_index  : number
@@ -29,20 +31,15 @@ export default class ModePuzzle extends CoreStage {
 
   constructor() {
     super()
-    this.playfield0   = new ComponentPlayfield(0)
-    this.menu_pause   = new ComponentMenuPause()
     this.timer        = new ComponentTimer()
     this.step_display = new ComponentStepCounter()
-    this.inputs       = new CoreInputs(undefined,undefined,undefined)
     this.countdown    = new CountdownState()
   }
 
-  get name(): string { return 'mode_puzzle' }
-
-  init(data) {
+  public init(data) {
+    this.seed        = 'puzzle'
+    this.inputs      = new CoreInputs(undefined,undefined,undefined)
     this.level_index = data.chosen_index
-    this.seed   = 'puzzle'
-    this.cpu    = [false, null]
     super.init(data)
   }
 
@@ -82,6 +79,17 @@ export default class ModePuzzle extends CoreStage {
     super.callback_countdown()
   }
 
+  protected start_execute(){
+    this.countdown.update()
+    if (this.countdown.state === DONE){ 
+      if (this.timer)
+        this.timer.running = true
+      this.state = RUNNING
+      game.sounds.ding()
+      game.sounds.stage_music('active')
+    }
+  }
+
   /** changes the current level to the next one from the puzzle array - counters go up */
   change_level(lvl) {
     this.panels = lvl.panels;
@@ -110,12 +118,9 @@ export default class ModePuzzle extends CoreStage {
     this.countdown.update()
   }
 
-  /** calls the render functions of the timer and playfield0 */
   render() {
     this.timer.render()
+    if (this.playfield0) { this.playfield0.render() }
     this.step_display.render()
-
-    if (this.playfield0)
-      this.playfield0.render()
   }
 }

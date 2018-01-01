@@ -1,4 +1,3 @@
-import game from 'core/game'
 /**
  * Common base class for all states.
  */

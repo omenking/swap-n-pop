@@ -39,12 +39,18 @@ export default abstract class Stage extends State {
   public roll_log_data    : Array<any>
   protected playfield_cursor_entrance : any
 
+  constructor(){
+    super()
+    this.playfield0   = new ComponentPlayfield(0)
+    this.menu_pause   = new ComponentMenuPause()
+    this.countdown    = new CountdownState()
+  }
 
   public init(data) {
+    this.step_mode = false
     this.tick = 0
     // had to do this to inject controls into for `integration/online.spec.ts`
     this.controls  = data.controls || CoreControls
-    this.inputs    = new CoreInputs(data.inputs,data.online,this)
     this.snapshots = new CoreSnapshots()
     this.roll = {
       ready : false,

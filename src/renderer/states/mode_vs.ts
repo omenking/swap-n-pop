@@ -8,6 +8,7 @@ import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
 import ComponentDebugFrame  from 'components/debug_frame'
 import ComponentTimer       from 'components/timer'
+import CoreInputs           from 'core/inputs'
 import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
 import ComponentLevel       from 'components/level'
@@ -26,6 +27,7 @@ const {ipcRenderer: ipc} = electron
 
 export default class ModeVs extends CoreStage {
   get [Symbol.toStringTag](){ return 'ModeVs' }
+  get name(): string { return 'mode_vs' }
 
   private ping         : ComponentPing
   private star_counter : ComponentStarCounter
@@ -41,28 +43,22 @@ export default class ModeVs extends CoreStage {
 
   constructor() {
     super()
-    this.playfield0   = new ComponentPlayfield(0)
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
     this.timer        = new ComponentTimer()
-
-    this.menu_pause   = new ComponentMenuPause()
     this.star_counter = new ComponentStarCounter()
-    this.countdown    = new CountdownState()
     this.levels = [
       new ComponentLevel(0),
       new ComponentLevel(1)
     ]
   }
 
-  get name(): string { return 'mode_vs' }
-
   public init(data) {
+    this.seed      = data.seed
+    this.inputs    = new CoreInputs(data.inputs,data.online,this)
     this.flag_garbage = data.garbage
     this.flag_timer   = data.timer
-    this.step_mode    = false
     this.rounds_won = [2,1]
-    this.seed       = data.seed
     this.cpu        = data.cpu
     this.online     = data.online
     super.init(data)
