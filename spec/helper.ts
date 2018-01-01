@@ -1,3 +1,6 @@
+import * as fs       from 'fs'
+import * as fx       from 'mkdir-recursive'
+import * as child_process from 'child_process'
 import controls     from 'core/controls'
 import Stage        from 'states/mode_vs'
 import Playfield    from 'components/playfield'
@@ -11,6 +14,18 @@ export const T  = true
 export const F  = 0
 export const N  = null
 export const NN = [null,null,null,null]
+
+export function open_devtools(playfield : Playfield,filename : string){
+  const json = JSON.stringify(playfield.stage.snap)
+  const dir  = 'tmp'
+  if (filename === null) { filename = Date.now() }
+  if (!fs.existsSync(dir)){ fx.mkdirSync(dir); } // create dir if it don't exist.
+  fs.writeFile(`tmp/${filename}.snap`,json, function (err) {
+    //child_process.exec(`npm run debug -- tmp/${filename}/.snap`,function puts(error, stdout, stderr) {
+      //console.log("Launching SwapNPop")
+    //})
+  })
+}
 
 export function playfield_helper(opts={}){
   const cpu       = opts.cpu       ? opts.cpu       : [false,false]

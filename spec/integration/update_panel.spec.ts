@@ -4,6 +4,7 @@ import Stage           from 'states/mode_vs'
 import Playfield       from 'components/playfield'
 import Stack           from 'core/stack'
 import {
+  open_devtools,
   playfield_load,
   playfield_check,
   playfield_helper,

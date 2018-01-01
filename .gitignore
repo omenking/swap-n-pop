@@ -13,3 +13,4 @@ app/TODO
 /app/devtools/content.js
 /app/devtools/background.js
 .vscode/tasks.json
+tmp
