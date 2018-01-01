@@ -82,7 +82,7 @@ export default class ComponentPanel {
   set state(val) {
     this._state = val 
   }
-  
+
   get state_timer() { return this._state_timer }
   set state_timer(val) { this._state_timer = val }
 
@@ -98,7 +98,7 @@ export default class ComponentPanel {
   get right2() { return out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
   get under2() { return out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
   get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
-  
+
   get should_hang() { let under = this.under; return under === blank ? false : under.state === STATIC && under.kind === null; }
 
   /** */
@@ -206,24 +206,24 @@ export default class ComponentPanel {
 
   hang_enter()   { this.counter = 10 }
   hang_execute() { if (this.counter <= 0) { this.change_state(FALL) } }
-  
+
   swap_l_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
   swap_r_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
-  
+
   swapping_l_enter() {
     // Swap kind
     const i1 = this.kind
     this.kind = this.right.kind
     this.right.kind = i1
-    
+
     // Swap chain value
     const chain = this.chain
     this.chain = this.right.chain
     this.right.chain = chain
-    
+
     this.counter = TIME_SWAP
   }
-  
+
   swapping_r_enter() { this.counter = TIME_SWAP }
 
   swapping_l_execute() { 
@@ -334,7 +334,7 @@ export default class ComponentPanel {
     this.chain   = 0
     this.group   = null
   }
-  
+
   /*
    * particle garbage is the particle that flies from
    * the bauble to where the garbage thumbnail will appear
@@ -342,7 +342,9 @@ export default class ComponentPanel {
    *
    */
   set_particle_garbage(){
-    if (this.time_cur === this.time_pop && this.clear_i === 0) {
+    if (!this.playfield.stage.flag_garbage) { return }
+    if (!this.first_pop)          { return }
+    if (this.chain >= 2 || this.clear_len >= 4) {
       this.bauble.particle_garbage.set_counter()
     }
   }
@@ -581,6 +583,12 @@ export default class ComponentPanel {
     })
   }
 
+  /*
+   * if this is the first panel to have popped in a chain
+   */
+  get first_pop(){
+    return this.time_cur === this.time_pop && this.clear_i === 0
+  }
   /**
   * `danger()` will check if the this panel's column
   *  contains any active panel's a few panels from the top.
