@@ -54,7 +54,8 @@
     "coverage": "jest --coverage",
     "start": "webpack && electron app/main.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "debug": "webpack && electron app/main.js tmp/debug.snap"
   },
   "postinstall": "electron-builder install-app-deps",
   "dependencies": {
