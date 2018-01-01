@@ -37,6 +37,7 @@
     ,{"type": "image"        , "name": "playfield_wall1"    }
     ,{"type": "image"        , "name": "bauble_times"       }
     ,{"type": "image"        , "name": "font"               }
+    ,{"type": "spritesheet"  , "name": "garbage_thumb"      , "options": {"x": 48 , "y": 32, "frames": 4}}
     ,{"type": "spritesheet"  , "name": "ints_small"         , "options": {"x": 16 , "y": 16, "frames": 18}}
     ,{"type": "spritesheet"  , "name": "ints_large"         , "options": {"x": 16 , "y": 24, "frames": 18}}
     ,{"type": "spritesheet"  , "name": "playfield_cursor"   , "options": {"x": 76 , "y": 44, "frames": 2}}

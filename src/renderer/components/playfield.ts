@@ -9,6 +9,7 @@ import ComponentScore              from 'components/score'
 import ComponentPanel              from 'components/panel'
 import ComponentCharacter          from 'components/character'
 import ComponentAi                 from 'components/ai'
+import ComponentGarbagePreview     from 'components/garbage_preview'
 
 import { i2xy, xy2i } from 'core/filters';
 
@@ -37,14 +38,15 @@ export default class Playfield {
   public combo : number
   public chain : number
 
-  public  stage      : any //CoreStage
-  private garbage    : CoreGarbage
-  public  countdown  : ComponentPlayfieldCountdown
-  public  cursor     : ComponentPlayfieldCursor
-  private wall       : ComponentPlayfieldWall
-  private score_lbl  : ComponentScore
-  private ai         : ComponentAi
-  public  character  : ComponentCharacter
+  public  stage           : any //CoreStage
+  private garbage         : CoreGarbage
+  public  garbage_preview : ComponentGarbagePreview
+  public  countdown       : ComponentPlayfieldCountdown
+  public  cursor          : ComponentPlayfieldCursor
+  private wall            : ComponentPlayfieldWall
+  private score_lbl       : ComponentScore
+  private ai              : ComponentAi
+  public  character       : ComponentCharacter
 
   public  should_push      : boolean
   private height : number
@@ -64,11 +66,11 @@ export default class Playfield {
   private land              : boolean
 
   public _stack    : Array<ComponentPanel>
-  private _stoptime : number
-  private _shake    : number
-  private _counter  : number
-  private _pushing  : boolean
-  private _push_counter  : number
+  public stoptime : number
+  public shake    : number
+  public counter  : number
+  public pushing  : boolean
+  public push_counter  : number
 
   constructor(pi){
     if (pi !== 0 && pi !== 1){
@@ -76,29 +78,15 @@ export default class Playfield {
     }
 
     this.pi = pi
-    this.garbage    = new CoreGarbage()
-    this.countdown  = new ComponentPlayfieldCountdown()
-    this.cursor     = new ComponentPlayfieldCursor()
-    this.wall       = new ComponentPlayfieldWall()
-    this.score_lbl  = new ComponentScore()
-    this.ai         = new ComponentAi()
-    this.character     = new ComponentCharacter()
+    this.garbage         = new CoreGarbage()
+    this.garbage_preview = new ComponentGarbagePreview()
+    this.countdown       = new ComponentPlayfieldCountdown()
+    this.cursor          = new ComponentPlayfieldCursor()
+    this.wall            = new ComponentPlayfieldWall()
+    this.score_lbl       = new ComponentScore()
+    this.ai              = new ComponentAi()
+    this.character       = new ComponentCharacter()
   }
-
-  get stoptime() { return this._stoptime }
-  set stoptime(v) { this._stoptime = v }
-
-  get shake() { return this._shake }
-  set shake(v) { this._shake = v }
-
-  get counter() { return this._counter }
-  set counter(v) { this._counter = v }
-
-  get push_counter() { return this._push_counter }
-  set push_counter(v) { this._push_counter = v }
-
-  get pushing() { return this._pushing }
-  set pushing(v) { this._pushing = v }
 
   get stack(){
     return this._stack
@@ -174,6 +162,7 @@ export default class Playfield {
     this.clearing = []
     if (this.stage.flag_garbage === true){
       this.garbage.create(this.stage,this.pi)
+      this.garbage_preview.create(this,this.x,0)
       this.clearing_garbage = []
     }
 
@@ -450,6 +439,9 @@ export default class Playfield {
     this.wall.render()
     this.render_stack()
     this.character.render()
+    if (this.stage.flag_garbage === true) {
+      this.garbage_preview.render()
+    }
 
     let shake = 0
     if (this.shake >= 0 && this.counter > 0) {
@@ -509,6 +501,7 @@ export default class Playfield {
         if (this.stage.flag_garbage === true) {
           this.update_garbage_clearing()
           this.garbage.update(cnc[0],cnc[1])
+          this.garbage_preview.update()
         }
         this.update_score(cnc[0],cnc[1])
 

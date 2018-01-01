@@ -1,5 +1,4 @@
 import game from 'core/game'
-import ComponentPanel from 'components/panel'
 import {
   FRAME_CLEAR_PARTICLE,
   ANIM_CLEAR_PARTICLE_MOVE,
@@ -8,19 +7,21 @@ import {
 } from 'core/data'
 
 export default class ComponentPanelClear {
-  private panel   : ComponentPanel
   private sprite  : Phaser.Sprite
   private x       : number
   private y       : number
   private corner  : number
   public  counter : number
+  public  anchor  : any
+  private pi : number
 
   constructor(corner : number){
     this.corner = corner
   }
 
-  create(panel){
-    this.panel  = panel
+  create(anchor,pi){
+    this.anchor = anchor
+    this.pi = pi
     this.sprite = game.add.sprite(0, 0, 'particle_clear', 0)
     this.sprite.visible = false
     this.sprite.anchor.setTo(0.5)
@@ -56,10 +57,10 @@ export default class ComponentPanelClear {
   }
 
   load(data){
-    this.x       = data[0]
-    this.y       = data[1]
-    this.corner  = data[2]
-    this.counter = data[3]
+    this.x        = data[0]
+    this.y        = data[1]
+    this.corner   = data[2]
+    this.counter  = data[3]
   }
 
   update(){
@@ -68,22 +69,13 @@ export default class ComponentPanelClear {
   }
 
   get frame(){
-    const i = this.playfield.pi
-    return (i * 8) + FRAME_CLEAR_PARTICLE[this.index]
-  }
-
-  get playfield(){
-    return this.panel.playfield
+    return (this.pi * 8) + FRAME_CLEAR_PARTICLE[this.index]
   }
 
   render(){
     let offset = 6
-    let x = this.playfield.layer_block.x
-    let y = this.playfield.layer_block.y
-    x += (this.panel.x * UNIT)
-    y += (this.panel.y * UNIT)
-    x += (UNIT / 2)
-    y += (UNIT / 2)
+    let x = this.anchor.absolute_center_x
+    let y = this.anchor.absolute_center_y
     if (this.corner === 0){  // top left
       x -= ANIM_CLEAR_PARTICLE_MOVE[this.index] + offset
       y -= ANIM_CLEAR_PARTICLE_MOVE[this.index] + offset

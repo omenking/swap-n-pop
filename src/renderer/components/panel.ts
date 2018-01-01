@@ -31,7 +31,9 @@ import {
   TIME_SWAP,
   TIME_CLEAR,
   TIME_POP,
-  TIME_FALL
+  TIME_FALL,
+  COMBO,
+  CHAIN
 } from 'core/data';
 
 /**
@@ -100,6 +102,19 @@ export default class ComponentPanel {
   get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
 
   get should_hang() { let under = this.under; return under === blank ? false : under.state === STATIC && under.kind === null; }
+
+  get absolute_center_x(){
+    let x = this.playfield.layer_block.x
+    x += (this.x * UNIT)
+    x += (UNIT / 2)
+    return x
+  }
+  get absolute_center_y(){
+    let y = this.playfield.layer_block.y
+    y += (this.y * UNIT)
+    y += (UNIT / 2)
+    return y
+  }
 
   /** */
   constructor() {
@@ -198,10 +213,10 @@ export default class ComponentPanel {
 
     this.garbage.create(this,this.playfield)
     this.bauble.create(this)
-    this.particles[0].create(this)
-    this.particles[1].create(this)
-    this.particles[2].create(this)
-    this.particles[3].create(this)
+    this.particles[0].create(this,this.playfield.pi)
+    this.particles[1].create(this,this.playfield.pi)
+    this.particles[2].create(this,this.playfield.pi)
+    this.particles[3].create(this,this.playfield.pi)
   }
 
   hang_enter()   { this.counter = 10 }
@@ -343,10 +358,9 @@ export default class ComponentPanel {
    */
   set_particle_garbage(){
     if (!this.playfield.stage.flag_garbage) { return }
-    if (!this.first_pop)          { return }
-    if (this.chain >= 2 || this.clear_len >= 4) {
-      this.bauble.particle_garbage.set_counter()
-    }
+    if (!this.first_pop)                    { return }
+    if (!this.sending_payload)              { return }
+    this.bauble.particle_garbage.set_counter(COMBO,this.clear_len)
   }
 
   /*
@@ -583,6 +597,9 @@ export default class ComponentPanel {
     })
   }
 
+  get sending_payload(){
+    return this.chain >= 2 || this.clear_len >= 4
+  }
   /*
    * if this is the first panel to have popped in a chain
    */

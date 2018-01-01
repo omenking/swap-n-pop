@@ -72,6 +72,8 @@ export const TIME_PUSH = 1000;
 export const TIME_CLEAR_PARTICLE = FRAME_CLEAR_PARTICLE.length;
 export const TIME_GARBAGE_CLEAR = 30;
 export const TIME_GARBAGE_POP = 12;
+// time it takes for garbage payload to arrive to garbage thumb
+export const TIME_PARTICLE_GARAGE = 40
 
 export const UNIT = 32;
 export const WIN_WIDTH = 398 * 2; // 256
