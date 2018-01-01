@@ -1,0 +1,79 @@
+{
+  "music": {
+     "msx_stage"          : {}
+    ,"msx_stage_critical" : {}
+    ,"msx_stage_results"  : {}
+  },
+  "sound_effects" : [
+     "sfx_confirm"
+    ,"sfx_select"
+    ,"sfx_swap"
+    ,"sfx_countdown_blip"
+    ,"sfx_countdown_ding"
+    ,"sfx_drop0"
+    ,"sfx_drop1"
+    ,"sfx_drop2"
+    ,"sfx_drop3"
+    ,"sfx_pop0"
+    ,"sfx_pop1"
+    ,"sfx_pop2"
+    ,"sfx_pop3"
+  ],
+  "images": [
+     "bg_blue"
+    ,"logo"
+    ,"bg_green"
+    ,"bg_purple"
+    ,"menu_bg"
+    ,"menu_frame_content"
+    ,"menu_frame_corner"
+    ,"menu_item_column" 
+    ,"menu_item_content"
+    ,"menu_cursor"
+    ,"menu_pause_cursor"
+    ,"menu_pause"
+    ,"pause"
+    ,"puzzle_menu"
+    ,"playfield_vs_frame"
+    ,"playfield_vs_bg"
+    ,"mode_puzzle_bg"
+    ,"playfield_wall0"
+    ,"playfield_wall1"
+    ,"bauble_times"
+    ,"font"
+  ],
+  "spritesheets" : {
+     "garbage_thumb"      : {"size": "48x32" , "frames": 4}
+    ,"ints_small"         : {"size": "16x16" , "frames": 18}
+    ,"ints_large"         : {"size": "16x24" , "frames": 18}
+    ,"playfield_cursor"   : {"size": "76x44" , "frames": 2}
+    ,"playfield_countdown": {"size": "124x76", "frames": 4}
+    ,"panels"             : {"size": "32x32" , "frames": 56}
+    ,"garbage"            : {"size": "32x32" , "frames": 14}
+    ,"star_counter"       : {"size": "32x32" , "frames": 12}
+    ,"bauble"             : {"size": "6x32"  , "frames": 6}
+    ,"bauble_num"         : {"size": "12x18" , "frames": 10}
+    ,"bauble_num_small"   : {"size": "10x18" , "frames": 10}
+    ,"particle_clear"     : {"size": "16x16" , "frames": 32}
+    ,"particle_garbage"   : {"size": "32x32" , "frames": 4}
+    ,"mode_vs_level"      : {"size": "28x28" , "frames": 20}
+    ,"zephyr" : {"size": "48x48" , "frames": 84, "animations": {
+       "stand"    : [0,1,2,3,4,5,6,7]
+      ,"attack"   : [12,13,14,15,16,17,18,19,20]
+      ,"attacked" : [24,25,26,27,28,29,30,31,32]
+      ,"lost"     : [36,37,38,39,40,41,42,43,44,45,46,47]
+      ,"losing"   : [48,49,50,51]
+      ,"charge"   : [60,61,62,63,64,65]
+      ,"won"      : [72,73,74,75,76,77,78,79,80,81]
+    }},
+    "kindle" : {"size": "48x48" , "frames": 84, "animations": {
+       "stand"    : [0,1,2,3,4,5,6,7]
+      ,"attack"   : [12,13,14,15,16,17,18,19]
+      ,"attacked" : [24,25,26,27,28,29,30,31,32]
+      ,"lost"     : [36,37,38,39,40,41,42,43,44,45,46,47]
+      ,"losing"   : [48,49,50,51,52,53,54,55]
+      ,"charge"   : [60,61,62,63,64,65]
+      ,"won"      : [72,73,74,75,76,77,78,79,80,81]
+    }}
+  }
+}

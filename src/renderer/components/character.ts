@@ -1,4 +1,5 @@
-import game from 'core/game'
+import assets from 'core/assets'
+import game   from 'core/game'
 
 export default class ComponentCharacter {
   private playfield_num     : number
@@ -14,6 +15,7 @@ export default class ComponentCharacter {
   private stopped           : boolean
   public  current_animation : string
   private last_animation    : string
+  private name : string  
   /** 
    * A Sprite is added to the object and several animation objects
    * 
@@ -22,10 +24,11 @@ export default class ComponentCharacter {
    * @param {integer} y default 0
    * @param {integer} pi playfield number
    */
-  create(sprite, x = 0, y = 0, pi) {
+  create(name, x = 0, y = 0, pi) {
+    this.name = name
     this.playfield_num = pi
     // sprite creation
-    this.sprite = game.add.sprite(x, y, sprite, 0)
+    this.sprite = game.add.sprite(x, y, name, 0)
     this.sprite.anchor.setTo(0.5)
     this.sprite.scale.set(2)
     this.sprite.smoothed = false
@@ -34,17 +37,19 @@ export default class ComponentCharacter {
 
     if (pi == 1) {
       this.sprite.scale.x = -2
-      this.x -= -60
+      this.x += 40
+    } else {
+      this.x -= 40
     }
 
     this.animations = new Map()
-    this.add_animation("stand",     8,  0)
-    this.add_animation("attack",    9,  12, "stand")
-    this.add_animation("attacked",  9,  24, "stand")
-    this.add_animation("lost",      12, 36, "", true)
-    this.add_animation("losing",    4,  48)
-    this.add_animation("charge",    6,  60)
-    this.add_animation("won",       10, 72, "", true)
+    this.add_animation(this.name, "stand")
+    this.add_animation(this.name, "attack"  , "stand")
+    this.add_animation(this.name, "attacked", "stand")
+    this.add_animation(this.name, "lost", "", true)
+    this.add_animation(this.name, "losing")
+    this.add_animation(this.name, "charge")
+    this.add_animation(this.name, "won", "", true)
 
     this.tick_counter = 0
     this.frame_counter = 0
@@ -57,22 +62,19 @@ export default class ComponentCharacter {
    * Add an animation object with information to the Map object inside this character,
    * the defined name can then be called from the Map to return the animation object
    * 
-   * @param {String} name simple name to be called by the animations map
+   * @param {string} character key
+   * @param {string} name simple name to be called by the animations map
    * @param {integer} hframes amount of horizontal frames to run through
    * @param {integer} offset amount of offset to start the hframes counting from
    * @param {String} return_to_animation the animation.name to return to after finishing the animation
    * @param {boolean} stop_animation if the animation cycle should in general stop
    */
-  add_animation(name, hframes, offset, return_to_animation = "", stop_animation = false) {
+  add_animation(key, name, return_to_animation = "", stop_animation = false) {
     const animation = {
-      frames           : [],
+      frames           : assets.spritesheets[key].animations[name],
       stop_animation   : stop_animation,
       parent_animation : return_to_animation
     }
-
-    let ct = 0;
-    for (let frame = offset; frame < offset + hframes; frame++)
-      animation.frames[ct++] = frame
     this.animations.set(name, animation)
   }
 
