@@ -2,7 +2,9 @@ import game from 'core/game'
 import { 
   GARBAGE,
   CHAIN,
-  COMBO
+  COMBO,
+  TIME_PARTICLE_GARAGE,
+  TIME_CLEAR
 } from 'core/data';
 
 export default class CoreGarbage {
@@ -71,10 +73,10 @@ export default class CoreGarbage {
   }
 
   push(combo,chain) {
-    const delay = 20
+    const delay = TIME_CLEAR + TIME_PARTICLE_GARAGE
     if (chain >= 2) { this.queue.push({kind: CHAIN, size: chain, counter: delay}) }
     if (combo >= 4) { this.queue.push({kind: COMBO, size: combo, counter: delay}) }
-    // send out character animation before the 20frames delay
+    // send out character animation before the TIME_PARTICLE_GARAGE delay
     this.my_playfield.character.current_animation = "attack"
   }
 
