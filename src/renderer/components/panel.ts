@@ -286,6 +286,19 @@ export default class ComponentPanel {
       else {
         this.change_state(STATIC) 
       }
+    }
+    else if (this.counter <= FRAME_LAND.length - 2) { 
+      // If there is an empty space below in this panel's column, do not reset chain
+      let ground = true
+      let under = this.under
+      while (under !== blank) {
+          if (under.kind === null && under.state === STATIC) {
+              ground = false
+              break
+          }
+          under = under.under
+      }
+      if (ground) { this.chain = 0 }   
     } 
   }
 
@@ -312,7 +325,7 @@ export default class ComponentPanel {
   }
 
   clear_enter() {
-    this.chain += 1
+    this.chain += 1 
     this.playfield.clearing.push(this)
     this.group = this.playfield.stage.tick
   }
