@@ -16,35 +16,23 @@ export default class ExternalAssets {
 
       // dir is reset to code defined path
       case 'reset':
-        dir = path.join(app.getPath('appData'), 'swap-n-pop', 'external-assets')
+        dir = null
         break;
 
       // dir is set to last known if exists, otherwhise it resets
       case '': 
-        dir = store.has('asset-dir') ? store.get('asset-dir') : path.join(app.getPath('appData'), 'swap-n-pop', 'external-assets')
+        dir = store.has('asset-dir') ? store.get('asset-dir') : null
         break;
     }
 
+    console.log('reset',dir)
     // set dir to newest defined
-    store.set('asset-dir', dir) 
+    store.set('asset-dir', dir)
 
     // create actual folder through dir if it doesnt exist
-    if (!fs.existsSync(dir))
-      fx.mkdirSync(dir); 
+    if (dir !== null && !fs.existsSync(dir))
+      fx.mkdirSync(dir) 
 
     return dir;
-  }
-
-  public static list(callback) {
-    let dir = path.join(store.get('asset-dir'), '*.png')
-    
-    glob(dir, {}, (err, files) => {
-      let filenames = []
-
-      for (let file of files)
-        filenames.push(path.basename(file, '.png'))
-      
-      callback(err,filenames)
-    })
   }
 }

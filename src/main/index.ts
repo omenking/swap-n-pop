@@ -226,12 +226,6 @@ ipc.on('asset-dir-change', e => {
   })
 })
 
-ipc.on('asset-list', e => {
-  ExternalAssets.list((err, files) => {
-    win.webContents.send('asset-list', files)
-  })
-})
-
 ipc.on('play-single', (event,data) => {
   const seed = Replay.random_seed(16,undefined)
   win.webContents.send('play-single',{

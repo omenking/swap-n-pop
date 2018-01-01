@@ -8,10 +8,6 @@ import Store    from 'common/store'
 
 const store = new Store()
 
-// load any external assets and store them in an scoped array
-let external_assets = []
-ipc.on('asset-list', (e, files) => external_assets = files)
-
 /** Loads all sprites, spritesheets, sound effects, etc to the phaser game
  *  Uses signals to detect once everything has been loaded correctly
  */

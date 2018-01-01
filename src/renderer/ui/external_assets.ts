@@ -20,7 +20,7 @@ export default function render() {
       m('label', 'Asset Folder Location:'),
       m('.input', asset_dir),
       m('.buttons', [
-        m('.button.reveal', {onclick: () => ipc.send('asset-dir-reveal')}, 'Reveal'),
+        //m('.button.reveal', {onclick: () => ipc.send('asset-dir-reveal')}, 'Reveal'),
         m('.button.change', {onclick: () => ipc.send('asset-dir-change')}, 'Change'),
         m('.button.reset' , {onclick: () => ipc.send('asset-dir-reset')},  'Reset'),
       ]),

@@ -176,10 +176,13 @@ input[type='submit'] {
 
 .p0, .p1 { float: left; }
 
+.settings_assets .buttons,
 .settings_replay .buttons {
   padding-top: 16px;
   text-align: right;
 }
+.settings_assets .buttons .reveal,
+.settings_assets .buttons .change,
 .settings_replay .buttons .reveal,
 .settings_replay .buttons .change{
   margin-right: 8px;
