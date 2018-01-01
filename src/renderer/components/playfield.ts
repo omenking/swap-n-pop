@@ -169,12 +169,6 @@ export default class Playfield {
     //this.score_lbl.create()
     // for mode_puzzle, couting all swaps
     this.swap_counter = 0;
-    this.character.create(
-      "zephyr",
-      game.world.centerX - 30,
-      game.world.centerY - 100,
-      this.pi
-    );
   }
 
   get clear(){
@@ -197,6 +191,12 @@ export default class Playfield {
     this.cursor.create(this)
     if (this.has_ai) { this.ai.create(this, this.cursor) }
     this.wall.create(this,this.x,this.y)
+    this.character.create(
+      (this.pi === 0) ? 'zephyr' : 'kindle',
+      game.world.centerX,
+      game.world.centerY - 100,
+      this.pi
+    );
   }
   create_stack(data){
     this._stack = []
