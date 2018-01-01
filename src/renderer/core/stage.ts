@@ -1,3 +1,4 @@
+import {ipcRenderer as ipc} from 'electron'
 import * as seedrandom    from 'seedrandom'
 import game               from 'core/game'
 import State              from 'states/base'
@@ -44,6 +45,7 @@ export default abstract class Stage extends State {
     this.playfield0   = new ComponentPlayfield(0)
     this.menu_pause   = new ComponentMenuPause()
     this.countdown    = new CountdownState()
+    this.timer        = new ComponentTimer()
   }
 
   public init(data) {
@@ -69,6 +71,7 @@ export default abstract class Stage extends State {
   }
 
   create_exit(){
+    this.menu_pause.create(this)
     this.controls.map_global({
       sim_forward : this.sim_forward.bind(this),
       sim_backward: this.sim_backward.bind(this),
@@ -164,6 +167,13 @@ export default abstract class Stage extends State {
   }
 
   game_over(pi) {
+    if(!this.inputs.replay){
+      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
+    }
+    game.sounds.stage_music('results')
+    this.timer.running = false
+    if (this.playfield0) {this.playfield0.game_over() }
+    if (this.playfield1) {this.playfield1.game_over() }
   }
 
   roll_to(from,to) {

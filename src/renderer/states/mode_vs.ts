@@ -1,4 +1,3 @@
-import * as electron        from 'electron'
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CountdownState       from 'core/countdown_state'
@@ -7,23 +6,17 @@ import Stack                from 'core/stack'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
 import ComponentDebugFrame  from 'components/debug_frame'
-import ComponentTimer       from 'components/timer'
 import CoreInputs           from 'core/inputs'
-import ComponentMenuPause   from 'components/menu_pause'
 import ComponentStarCounter from 'components/star_counter'
 import ComponentLevel       from 'components/level'
-import { px } from 'core/filters'
+import {px} from 'core/filters'
 import {
-  COLS,
-  ROWS,
   STARTING,
   RUNNING,
   PAUSE,
   GAMEOVER,
   DONE
 } from 'core/data'
-
-const {ipcRenderer: ipc} = electron
 
 export default class ModeVs extends CoreStage {
   get [Symbol.toStringTag](){ return 'ModeVs' }
@@ -45,7 +38,6 @@ export default class ModeVs extends CoreStage {
     super()
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
-    this.timer        = new ComponentTimer()
     this.star_counter = new ComponentStarCounter()
     this.levels = [
       new ComponentLevel(0),
@@ -106,11 +98,11 @@ export default class ModeVs extends CoreStage {
     stack.create(6,2,"average","many");
 
     if (this.online && game.server.pos === 1) {
-      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
-      this.playfield0.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
     } else {
-      this.playfield0.create(this, {countdown: true, push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
-      this.playfield1.create(this, {countdown: true, push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: stack.panels})
     }
 
     this.create_frame(offset)
@@ -119,7 +111,6 @@ export default class ModeVs extends CoreStage {
     this.playfield1.create_after()
     this.timer.create(this,offset+px(128),px(168))
     if (this.online){ this.ping.create() }
-    this.menu_pause.create(this)
     this.star_counter.create(this,px(91),px(91))
     this.levels[0].create(px(175)   ,px(134),1)
     this.levels[1].create(px(175+34),px(134),1)
@@ -131,14 +122,7 @@ export default class ModeVs extends CoreStage {
   }
 
   game_over(pi) {
-    if(!this.inputs.replay){
-      ipc.send('replay-save', {seed: this.seed, inputs: this.inputs.serialize});
-    }
-    game.sounds.stage_music('results')
-    this.timer.running = false
-    this.playfield0.game_over()
-    this.playfield1.game_over()
-
+    super.game_over(pi)
     if (pi === 0) {
       this.playfield0.character.current_animation = "lost"
       this.playfield1.character.current_animation = "won"
@@ -148,6 +132,7 @@ export default class ModeVs extends CoreStage {
       this.playfield1.character.current_animation = "lost"
     }
   }
+
   danger_check() {
     const d1 = this.playfield0.danger(1)
     const d2 = this.playfield1.danger(2)

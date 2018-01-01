@@ -4,8 +4,7 @@ import controls             from 'core/controls'
 import CountdownState       from 'core/countdown_state'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
-import puzzles              from 'core/puzzles'
-import ComponentStepCounter from 'components/step_counter'
+import Stack                from 'core/stack'
 
 import {
   STARTING,
@@ -17,24 +16,22 @@ import {
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {
-  get [Symbol.toStringTag](){ return 'ModePuzzle' }
-  get name(): string { return 'mode_puzzle' }
+  get [Symbol.toStringTag](){ return 'ModeSingle' }
+  get name(): string { return 'mode_single' }
 
-  private step_display : ComponentStepCounter
   private steps        : number
   private panels       : Array<number>
-  private level_index  : number
-  private steps_left   : number
+  public  flag_timer   : boolean
+  private danger       : boolean
 
   constructor() {
     super()
-    this.step_display = new ComponentStepCounter()
   }
 
   public init(data) {
     this.seed        = 'puzzle'
     this.inputs      = new CoreInputs(undefined,undefined,undefined)
-    this.level_index = data.chosen_index
+    this.flag_timer  = data.timer
     super.init(data)
   }
 
@@ -43,21 +40,18 @@ export default class ModePuzzle extends CoreStage {
    */
   create() {
     super.create_enter()
-    // gathered from level puzzle data
-    this.change_level(puzzles[this.level_index++]);
+    this.danger = false
+    const stack = new Stack(this.rng);
+    stack.create(6,2,"average","many");
     this.playfield0.create(this, {
-      push  : false,
+      push: true,
       x     : 320,
       y     : 80,
-      panels: this.panels
-    });
-
+      panels: stack.panels
+    })
     this.countdown.create(true,this.callback_countdown.bind(this))
     this.playfield0.create_after()
-    this.playfield0.cursor.mode = "puzzle"
-    this.playfield0.character.sprite.visible = false
     this.timer.create(this,180, 60)
-    this.step_display.create({ playfield: this.playfield0, step_limit: this.steps_left, x: 575, y: 85 });
     super.create_exit()
   }
 
@@ -71,6 +65,20 @@ export default class ModePuzzle extends CoreStage {
     super.callback_countdown()
   }
 
+  game_over(pi) {
+    super.game_over(pi)
+  }
+
+  danger_check() {
+    if (this.playfield0.danger(1)) {
+      if (this.danger === false) { game.sounds.stage_music('danger') }
+      this.danger = true
+    } else {
+      if (this.danger === true) { game.sounds.stage_music('active') }
+      this.danger = false
+    }
+  }
+
   protected start_execute(){
     this.countdown.update()
     if (this.countdown.state === DONE){ 
@@ -82,37 +90,13 @@ export default class ModePuzzle extends CoreStage {
     }
   }
 
-  /** changes the current level to the next one from the puzzle array - counters go up */
-  change_level(lvl) {
-    this.panels = lvl.panels;
-    this.steps_left = lvl.steps;
-    this.step_display.step_limit = lvl.steps;
-  }
-
   step(tick) {
-    if (this.playfield0.stack_is_empty()) {
-      if (puzzles.length === (this.level_index)) {
-        game.state.start("menu");
-        return;
-      }
-
-      this.change_level(puzzles[this.level_index++]);
-      this.playfield0.cursor.cursor_swap_history = [];
-      this.playfield0.reset_stack(this.panels, 0);
-    }
-
-    // if over a limit overcrossed reset
-    if (this.playfield0.swap_counter > this.steps_left) {
-      this.playfield0.cursor.cursor_swap_history = [];
-      this.playfield0.reset_stack(this.panels, 0);
-    }
     super.step(tick)
-    this.countdown.update()
+    this.timer.update()
   }
 
   render() {
     this.timer.render()
     if (this.playfield0) { this.playfield0.render() }
-    this.step_display.render()
   }
 }

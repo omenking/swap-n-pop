@@ -232,6 +232,14 @@ ipc.on('asset-list', e => {
   })
 })
 
+ipc.on('play-single', (event,data) => {
+  const seed = Replay.random_seed(16,undefined)
+  win.webContents.send('play-single',{
+    seed:    seed,
+    timer:   data.timer
+  })
+})
+
 ipc.on('play-vs', (event,data) => {
   const seed = data.online ? data.seed : Replay.random_seed(16,undefined)
   win.webContents.send('play-vs',{

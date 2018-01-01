@@ -35,7 +35,7 @@ export default class MenuState extends State {
       {name: 'Play Online'  , action: this.mode_1p_vs_2p_online},
       {name: 'Story'        , action: this.mode_story},
       {name: 'Time Trial'   , action: this.mode_time_trial},
-      {name: 'Endless'      , action: this.mode_story},
+      {name: 'Endless'      , action: this.mode_endless},
       {name: 'Versus Local' , action: this.mode_1p_vs_2p_local},
       {name: 'Challenges'   , action: this.mode_challenges},
       {name: 'Puzzles'      , action: this.mode_puzzles},
@@ -59,15 +59,14 @@ export default class MenuState extends State {
   }
 
   mode_time_trial(){
-    ipc.send('play-vs',{
-      online: false,
-      garbarge: false,
-      timer: true,
-      cpu: [false,false]
+    ipc.send('play-single',{
+      timer: true
     })
   }
 
   mode_endless(){
+    ipc.send('play-single',{
+    })
   }
 
   mode_story(){

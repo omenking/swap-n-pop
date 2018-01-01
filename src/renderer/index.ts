@@ -3,38 +3,47 @@ import ui   from 'ui/main'
 import game from 'core/game'
 import fade from 'core/fade'
 
-import BootState from './states/boot';
-import ConnectState from './states/connect';
-import LoadState from './states/load';
-import MenuState from './states/menu';
-import ModePuzzleState from './states/mode_puzzle';
-import ModeVsState from './states/mode_vs';
-import PuzzleMenuState from './states/puzzle_menu';
+import BootState       from 'states/boot'
+import ConnectState    from 'states/connect'
+import LoadState       from 'states/load'
+import MenuState       from 'states/menu'
+import ModePuzzleState from 'states/mode_puzzle'
+import ModeSingleState from 'states/mode_single'
+import ModeVsState     from 'states/mode_vs'
+import PuzzleMenuState from 'states/puzzle_menu'
 
-const stateClasses = [
+const states = [
   BootState,
   LoadState,
   MenuState,
   ConnectState,
   ModeVsState,
+  ModeSingleState,
   ModePuzzleState,
   PuzzleMenuState
 ];
 
-ui()  
+ui()
 
 declare const window : any
 
 // Create instance of each known state class and register them to the game
 // instance.
-stateClasses.forEach(stateClass => {
+states.forEach(stateClass => {
   const stateInstance = new stateClass();
-
   game.state.add(stateInstance.name, stateInstance);
 });
 
 game.state.start('boot')
 
+ipc.on('play-single',(event,data) => {
+  fade.out(function(){
+    game.state.start('mode_single',true,false, {
+      seed:    data.seed,
+      timer:   data.timer
+    })
+  })
+})
 ipc.on('play-vs', (event,data) => {
   fade.out(function(){
     game.state.start('mode_vs',true,false, {
