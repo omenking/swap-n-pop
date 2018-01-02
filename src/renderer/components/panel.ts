@@ -276,7 +276,10 @@ export default class ComponentPanel {
     }
   }
 
-  land_enter()   { this.counter = FRAME_LAND.length }
+  land_enter()   { 
+    this.counter = FRAME_LAND.length
+    this.chain = this.playfield.chain
+  }
   land_execute() { 
     if (this.counter <= 0) { 
       if (this.under === blank ? false : this.under.state === HANG) {
@@ -326,7 +329,7 @@ export default class ComponentPanel {
   }
 
   clear_enter() {
-    this.chain += 1
+    this.chain++
     this.playfield.clearing.push(this)
     this.group = this.playfield.stage.tick
   }
@@ -348,7 +351,7 @@ export default class ComponentPanel {
       let panel = this.above
       while (panel !== blank && panel.kind !== null && panel.state !== CLEAR) {
           if (panel.static_stable) { 
-            panel.chain += this.chain; 
+            panel.chain = this.chain; 
             panel.change_state(HANG)
           }
           panel = panel.above

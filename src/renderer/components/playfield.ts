@@ -315,11 +315,28 @@ export default class Playfield {
     let   chain = 0
     for (let panel of this.clearing){
       panel.popping(this.clearing.length)
-    if (panel.chain > 0) { /*console.log(panel.chain)*/ }
       chain = Math.max(chain,panel.chain)
     }
+    this.chain = Math.max(this.chain,chain)
+    
     for (let panel of this.clearing){ panel.chain = chain }
-    return [combo, chain]
+    
+    // Check if current chain has ended
+    if (this.chain > 0) {
+      let chain_active = false
+      for (i = 0; i < this.stack_size; i++) {
+        if (this.stack_i(i).chain === this.chain) { 
+            chain_active = true
+            break
+        }
+      }
+      if (!chain_active) {
+          // todo: fanfare if >= x4 chain
+          this.chain = 0
+      }
+    }
+    
+    return [combo, this.chain]
   }
 
   /**
@@ -493,7 +510,7 @@ export default class Playfield {
         // combo n chain
         const cnc = this.chain_and_combo()
         this.combo = cnc[0]
-        this.chain = cnc[1]
+        //this.chain = cnc[1]
         if (cnc[1] > 1)
           this.character.current_animation = "charge"
 
