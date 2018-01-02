@@ -276,7 +276,12 @@ export default class ComponentPanel {
     }
   }
 
-  land_enter()   { this.counter = FRAME_LAND.length }
+  land_enter()   { 
+    this.counter = FRAME_LAND.length
+    
+    // If chain is 0, it means the panel did not fall as a result of a clear and should not chain
+    if (this.chain > 0) { this.chain = this.playfield.chain }
+  }
   land_execute() { 
     if (this.counter <= 0) { 
       if (this.under === blank ? false : this.under.state === HANG) {
@@ -286,6 +291,20 @@ export default class ComponentPanel {
       else {
         this.change_state(STATIC) 
       }
+    }
+    else if (this.counter < FRAME_LAND.length - 1) { 
+      // Don't reset chain value if a panel in column below is swapping, hanging, falling, or empty
+      let under = this.under
+      let ground = false
+      while (under !== blank) {
+          if (under.kind !== null && under.state !== LAND && under.state !== SWAP_L && under.state !== SWAPPING_L 
+          && under.state !== SWAP_R && under.state !== SWAPPING_R && under.state !== HANG && under.state !== FALL) {
+              ground = true
+              break
+          }         
+          under = under.under
+      }
+      if (ground) { this.chain = 0 }
     } 
   }
 
@@ -312,7 +331,7 @@ export default class ComponentPanel {
   }
 
   clear_enter() {
-    this.chain += 1
+    this.chain++
     this.playfield.clearing.push(this)
     this.group = this.playfield.stage.tick
   }
@@ -334,7 +353,7 @@ export default class ComponentPanel {
       let panel = this.above
       while (panel !== blank && panel.kind !== null && panel.state !== CLEAR) {
           if (panel.static_stable) { 
-            panel.chain += this.chain; 
+            panel.chain = this.chain; 
             panel.change_state(HANG)
           }
           panel = panel.above
