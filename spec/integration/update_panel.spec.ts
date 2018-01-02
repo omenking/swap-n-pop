@@ -343,4 +343,59 @@ describe('panel_actions', function() {
       
       chec([1,17,5,FALL,0,F]);
   })
+  
+  it('#swap-ground-chain', function(){
+      load(                                           [2,20,2,FALL,0,1],
+            [0,21,2,STATIC,0,F], [1,21,2,STATIC,0,F], [2,21,null,STATIC,0,F],
+            [0,22,0,STATIC,0,F], [1,22,0,STATIC,0,F], [2,22,null,SWAP_L,0,F], [3,22,2,SWAP_R,0,F])
+            
+      playfield.update()
+      
+      chec([2,21,2,FALL,0,1],
+           [2,22,2,SWAPPING_L,4,0], [3,22,null,SWAPPING_R,4,0])
+           
+      playfield.update()
+      
+      chec([2,21,2,LAND,10,1])
+      
+      playfield.update()
+      
+      chec([0,21,2,CLEAR,78,2], [1,21,2,CLEAR,78,2], [2,21,2,CLEAR,78,2])
+  })
+  
+  it('#swap-falling-into-static-clear', function(){
+      load([0,20,0,STATIC,0,F],
+           [0,21,1,SWAP_L,0,F], [1,21,0,SWAP_R,0,4],
+           [0,22,0,STATIC,0,F], [1,22,null,STATIC,0,F])
+           
+      playfield.update()
+      
+      chec([0,21,0,SWAPPING_L,4,1], [1,21,1,SWAPPING_R,4,0])   
+      playfield.update()   
+      chec([0,21,0,SWAPPING_L,3,1], [1,21,1,SWAPPING_R,3,0])    
+      playfield.update()  
+      chec([0,21,0,SWAPPING_L,2,1], [1,21,1,SWAPPING_R,2,0])    
+      playfield.update()      
+      chec([0,21,0,SWAPPING_L,1,1], [1,21,1,SWAPPING_R,1,0])  
+      playfield.update()
+      
+      chec([0,20,0,CLEAR,78,2], [0,21,0,CLEAR,78,2], [0,22,0,CLEAR,78,2])
+  })
+  
+  it('#swap-time-hang-abuse', function(){
+      load(                     [1,17,1,STATIC,0,F],
+                                [1,18,1,STATIC,0,F],
+           [0,19,1,SWAP_L,0,F], [1,19,5,SWAP_R,0,F],
+           [0,20,2,STATIC,0,F], [1,20,4,CLEAR,3,1],
+           [0,21,3,STATIC,0,F], [1,21,4,CLEAR,3,1],
+           [0,22,2,STATIC,0,F], [1,22,4,CLEAR,3,1])
+          
+      for (int i = 0; i < 5; i++) { playfield.update() }   
+            
+      chec([1,17,1,HANG,7,1], [1,18,1,HANG,7,1], [1,19,1,HANG,10,1])
+      
+      for (int i = 0; i < 15; i++) { playfield.update() }
+      
+      chec([1,20,1,CLEAR,78,2], [1,21,1,CLEAR,78,2], [1,22,1,CLEAR,78,2])
+  })
 }) //klass
