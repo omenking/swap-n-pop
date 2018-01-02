@@ -278,6 +278,8 @@ export default class ComponentPanel {
 
   land_enter()   { 
     this.counter = FRAME_LAND.length
+    
+    // If chain is 0, it means the panel did not fall as a result of a clear and should not chain
     if (this.chain > 0) { this.chain = this.playfield.chain }
   }
   land_execute() { 
@@ -291,18 +293,12 @@ export default class ComponentPanel {
       }
     }
     else if (this.counter < FRAME_LAND.length - 1) { 
-      // If there is an empty space below in this panel's column, do not reset chain
-      let ground = true
+      // Don't reset chain value if below panel is swapping
       let under = this.under
-      while (under !== blank) {
-          if (under.state === GARBAGE) { break }
-          if (under.kind === null && under.state === STATIC) {
-              ground = false
-              break
-          }
-          under = under.under
+      if (under === blank ? true : under.state !== SWAP_L && under.state !== SWAPPING_L 
+      && under.state !== SWAP_R && under.state !== SWAPPING_R && under.state !== HANG && under.state !== FALL) {
+          this.chain = 0
       }
-      if (ground) { this.chain = 0 }   
     } 
   }
 
