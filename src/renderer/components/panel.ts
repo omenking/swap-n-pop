@@ -292,6 +292,7 @@ export default class ComponentPanel {
       let ground = true
       let under = this.under
       while (under !== blank) {
+          if (under.state === GARBAGE) { break }
           if (under.kind === null && under.state === STATIC) {
               ground = false
               break
@@ -325,7 +326,7 @@ export default class ComponentPanel {
   }
 
   clear_enter() {
-    this.chain += 1 
+    this.chain += 1
     this.playfield.clearing.push(this)
     this.group = this.playfield.stage.tick
   }
