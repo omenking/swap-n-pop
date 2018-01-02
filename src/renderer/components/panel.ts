@@ -305,10 +305,6 @@ export default class ComponentPanel {
           under = under.under
       }
       if (ground) { this.chain = 0 }
-      /*if (under === blank ? true : under.kind !== null && under.state !== SWAP_L && under.state !== SWAPPING_L 
-        && under.state !== SWAP_R && under.state !== SWAPPING_R && under.state !== HANG && under.state !== FALL) {
-          this.chain = 0
-      }*/
     } 
   }
 
