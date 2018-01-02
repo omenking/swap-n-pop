@@ -278,7 +278,7 @@ export default class ComponentPanel {
 
   land_enter()   { 
     this.counter = FRAME_LAND.length
-    this.chain = this.playfield.chain
+    if (this.chain > 0) { this.chain = this.playfield.chain }
   }
   land_execute() { 
     if (this.counter <= 0) { 
@@ -290,7 +290,7 @@ export default class ComponentPanel {
         this.change_state(STATIC) 
       }
     }
-    else if (this.counter <= FRAME_LAND.length - 2) { 
+    else if (this.counter < FRAME_LAND.length - 1) { 
       // If there is an empty space below in this panel's column, do not reset chain
       let ground = true
       let under = this.under
