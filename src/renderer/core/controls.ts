@@ -159,26 +159,40 @@ class CoreControls {
     this.map(0,{})
     this.map(1,{})
   }
-  map(pi,opts){
-    const keys = "up down left right a b l r start".split(' ');
-    for (let key of keys) {
-      this.map_key(pi,key,opts)
+
+  public map(pi,opts){
+    let nada = function(){}
+    if (pi === 0) {
+      this.callbacks.pl0_up    = opts.up    ? opts.up    : nada
+      this.callbacks.pl0_down  = opts.down  ? opts.down  : nada
+      this.callbacks.pl0_left  = opts.left  ? opts.left  : nada
+      this.callbacks.pl0_right = opts.right ? opts.right : nada
+      this.callbacks.pl0_a     = opts.a     ? opts.a     : nada
+      this.callbacks.pl0_b     = opts.b     ? opts.b     : nada
+      this.callbacks.pl0_l     = opts.l     ? opts.l     : nada
+      this.callbacks.pl0_r     = opts.r     ? opts.r     : nada
+      this.callbacks.pl0_start = opts.start ? opts.start : nada
+    } else {
+      this.callbacks.pl1_up    = opts.up    ? opts.up    : nada
+      this.callbacks.pl1_down  = opts.down  ? opts.down  : nada
+      this.callbacks.pl1_left  = opts.left  ? opts.left  : nada
+      this.callbacks.pl1_right = opts.right ? opts.right : nada
+      this.callbacks.pl1_a     = opts.a     ? opts.a     : nada
+      this.callbacks.pl1_b     = opts.b     ? opts.b     : nada
+      this.callbacks.pl1_l     = opts.l     ? opts.l     : nada
+      this.callbacks.pl1_r     = opts.r     ? opts.r     : nada
+      this.callbacks.pl1_start = opts.start ? opts.start : nada
     }
   }
-  map_key(pi,key,opts){
-    const fun = opts[key] ? opts[key] : function() {};
-    this.callbacks[`pl${pi}_${key}`] = fun
-  }
 
-  map_global(opts){
-    const keys = "sim_toggle sim_forward sim_backward".split(' ');
-    let fun = null
-    for (let key of keys) {
-      fun = opts[key] ? opts[key] : function() {};
-      this.callbacks[key] = fun
-    }
+  public map_global(opts){
+    let nada = function(){}
+    this.callbacks.sim_toggle   = opts.sim_toggle   ? opts.sim_toggle   : nada
+    this.callbacks.sim_forward  = opts.sim_forward  ? opts.sim_forward  : nada
+    this.callbacks.sim_backward = opts.sim_backward ? opts.sim_backward : nada
 
   }
+
   serialize(pi){
     var byte = 0x00
     if(this.check_down(false,`pl${pi}_up`   )){byte = byte | 0x01} //0000 0001
