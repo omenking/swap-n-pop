@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 const stub_group = sinon.stub()
 stub_group.returns({
   x: null,
@@ -12,7 +14,8 @@ stub_sprite.returns({
   visible: true,
   animations: {
     add: sinon.stub(),
-    play: sinon.stub()
+    play: sinon.stub(),
+    get: sinon.stub()
   },
   addChild: sinon.stub(),
   anchor: {
@@ -48,6 +51,11 @@ stub_tween.returns({
   })
   onComplete: sinon.stub()
 })
+
+const asset_json = JSON.parse(fs.readFileSync('./app/assets/assets.json', 'utf8'))
+
+const stub_get_json = sinon.stub()
+stub_get_json.withArgs('assets').returns(asset_json)
 
 class GameMock {
   constructor(){
@@ -101,6 +109,14 @@ class GameMock {
       ping: sinon.stub(),
       on: sinon.stub(),
       send: sinon.stub()
+    }
+
+    this.load = {
+      json: sinon.stub()
+    }
+
+    this.cache = {
+      getJSON: stub_get_json
     }
   }//constructor
 }
