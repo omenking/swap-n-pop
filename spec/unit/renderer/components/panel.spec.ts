@@ -53,12 +53,12 @@ describe('Panel', function() {
   })
 
   describe('#clear()' ,function(){
-    it('should work', function(){
+    it.skip('should work', function(){
     })
   })
 
   describe('#clear_index' ,function(){
-    it('should work', function(){
+    it.skip('should work', function(){
       playfield = playfield_helper({cpu: [false,null]})
 
       load([0,ROWS+ 8 ,0,CLEAR,60,F],
@@ -69,7 +69,7 @@ describe('Panel', function() {
   })
 
   describe('#chain_and_combo()' ,function(){
-    it('should detect vertical and horizontal match', function(){
+    it.skip('should detect vertical and horizontal match', function(){
       playfield = playfield_helper({push: false, cpu: [false,null], panels: [
         N, N, N, N, N, N,
         N, N, N, N, N, N,
@@ -96,6 +96,8 @@ describe('Panel', function() {
         1, 1, 1, N, N, N,
         N, 1, N, N, N, N
       ]})
+      playfield.update_stack()
+      playfield.chain_and_combo()
       expect(playfield.stack_xy(0,ROWS-1).state).eql(CLEAR)
       expect(playfield.stack_xy(1,ROWS).state).eql(CLEAR)
       expect(playfield.stack_xy(1,ROWS-1).state).eql(CLEAR)

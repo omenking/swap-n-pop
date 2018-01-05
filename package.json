@@ -17,6 +17,7 @@
     "electron-builder": "^19.46.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "jest": "^22.0.4",
+    "jest-cli": "^22.0.4",
     "jsdoc": "^3.5.5",
     "mocha": "^3.5.0",
     "mock-require": "^2.0.2",
