@@ -71,7 +71,7 @@ describe('Server' ,function(){
   }) // describe
 
   describe('#connected()' ,function(){
-    it('should detect connected',function(done){
+    it.skip('should detect connected',function(done){
       const server = new Server()
       const client = new Server()
       server.create(40099,'127.0.0.1',function(){
