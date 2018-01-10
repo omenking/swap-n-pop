@@ -1,15 +1,39 @@
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const path = require('path');
+
+const ts = { test: /\.ts$/, loader: 'ts-loader' }
+
+const scss = {
+  test: /\.sass$/,
+  use: ExtractTextPlugin.extract({
+    fallback: 'style-loader',
+    use: [
+      { loader: "css-loader", options: {url: false} },
+      {
+        loader: 'sass-loader',
+        options: { indentedSyntax: true }
+      }
+    ]
+  })
+}
+const css = {
+  test: /\.css$/,
+  use: ExtractTextPlugin.extract({
+    fallback: "style-loader",
+    use: [{ loader: "css-loader", options: {url: false} }]
+  })
+}
+
+
+
+
 const config_main = {
   target: 'electron-main',
   entry: path.resolve(__dirname, 'src/main/index.ts'),
   output: {
     path    : path.resolve(__dirname, 'app'),
     filename: 'main.js'
-  },
-  node: {
-    __dirname: false
   },
   resolve: {
     extensions: ['.js', '.json', '.ts'],
@@ -18,22 +42,18 @@ const config_main = {
       common : path.resolve(__dirname, 'src/common/')
     }
   },
-  module: {
-    rules: [
-      { test: /\.ts$/, loader: 'ts-loader' }
-    ]
-  }
+  node: { __dirname: false },
+  module: { rules: [ts] }
 };
 
 const config_renderer = {
   target: 'electron-renderer',
-  entry: path.resolve(__dirname, 'src/renderer/index.ts'),
+  entry: {
+    'renderer.js' : path.resolve(__dirname, 'src/renderer/index.ts'),
+  },
   output: {
     path    : path.resolve(__dirname, 'app'),
-    filename: 'renderer.js'
-  },
-  node: {
-    __dirname: false
+    filename: '[name]'
   },
   resolve: {
     extensions: ['.js', '.json', '.ts'],
@@ -45,12 +65,23 @@ const config_renderer = {
       common     : path.resolve(__dirname, 'src/common/'),
     }
   },
-  module: {
-    rules: [
-      { test: /\.ts$/, loader: 'ts-loader' }
-    ]
-  }
+  node: { __dirname: false },
+  module : { rules: [ts] }
 };
+
+const config_ui = {
+  target: 'web',
+  entry: {
+    'app.css' : path.resolve(__dirname, 'src/renderer/ui/ui.sass')
+  },
+  output: {
+    path    : path.resolve(__dirname, 'app', 'css'),
+    filename: '[name]'
+  },
+  node: { __dirname: false },
+  module : { rules: [scss,css] },
+  plugins: [ new ExtractTextPlugin("app.css")]
+}
 
 const config_devtools = {
   target: 'web',
@@ -75,38 +106,13 @@ const config_devtools = {
       'devtools/common'     : path.resolve(__dirname, 'src/devtools/common/'),
     }
   },
-  module: {
-    rules: [
-      { test: /\.ts$/, loader: 'ts-loader' },
-      {
-        test: /\.sass$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: "css-loader", options: {url: false} },
-            {
-              loader: 'sass-loader',
-              options: { indentedSyntax: true }
-            }
-          ]
-        })
-      },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: [{ loader: "css-loader", options: {url: false} }]
-        })
-      }
-    ]
-  },
-  plugins: [
-    new ExtractTextPlugin("panel.css"),
-  ]
+  module : { rules: [ts,scss,css] },
+  plugins: [ new ExtractTextPlugin("panel.css") ]
 };
 
 module.exports = [
   config_main,
   config_renderer,
+  config_ui,
   config_devtools
 ];

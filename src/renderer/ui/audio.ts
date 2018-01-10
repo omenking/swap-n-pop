@@ -49,7 +49,6 @@ export default function render() {
         min:"0",
         max:"100",
         value: audio_msx_volume,
-        
         // registered when click is over
         onclick: function() {
           store.set("audio", [
@@ -76,7 +75,6 @@ export default function render() {
         onclick: function(e) { 
           muted = !muted;
           game.sounds.mute_all(muted);
-          
           store.set("audio", [
             audio_sfx_volume,
             audio_msx_volume,

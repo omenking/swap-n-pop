@@ -122,6 +122,8 @@ function create_window () {
 
   win.loadURL(url.format(load_url))
 
+  click_settings('login')
+
   win.webContents.openDevTools()
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
