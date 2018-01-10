@@ -66,14 +66,24 @@ function content() : object {
   ])
 }
 
-/** mounts the all mithril objects to the html ui div, only visible if Ui.mode is true */
-export default function render() : void {
-  m.mount(
-    window.document.getElementById('ui'), 
-    {
-      view: () => Ui.mode !== false ? m('.wrap1', m('.wrap2', [nav(), content()])) : undefined
+
+const app = {
+  view: function(){
+    if (Ui.mode === 'login') {
+      return m('.login', 'login')
+    } else if  (Ui.mode !== false) {
+      return m('.wrap1', m('.wrap2',
+       [nav(), content()]
+      ))
+    } else {
+      undefined
     }
-  )
+  }
+}
+
+/** mounts the all mithril objects to the html ui div, only visible if Ui.mode is true */
+export default function render(){
+  m.mount(window.document.getElementById('ui'), app)
 }
 
 ipc.on('reload', function(event, data) {

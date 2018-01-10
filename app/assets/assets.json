@@ -48,7 +48,26 @@
     ,"ints_large"         : {"size": "16x24" , "frames": 18}
     ,"playfield_cursor"   : {"size": "76x44" , "frames": 2}
     ,"playfield_countdown": {"size": "124x76", "frames": 4}
-    ,"panels"             : {"size": "32x32" , "frames": 56}
+    ,"panels"             : {"size": "32x32" , "frames": 56, "animations": {
+      "clear"  : [
+       5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+       5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+       5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0,
+       5, 0, 5, 0, 5, 0, 5, 0, 6, 6, 6, 6,
+       6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+      ],
+      "land"   : [4, 4, 4, 2, 2, 2, 3, 3, 3, 0],
+      "danger" : [
+        0, 0, 0, 0,
+        2, 2, 2, 2,
+        0, 0, 0, 0,
+        3, 3, 3, 3,
+        4, 4, 4, 4
+      ],
+      "live": 0,
+      "newline": 1,
+      "dead": 6
+    }}
     ,"garbage"            : {"size": "32x32" , "frames": 14}
     ,"star_counter"       : {"size": "32x32" , "frames": 12}
     ,"bauble"             : {"size": "6x32"  , "frames": 6}
