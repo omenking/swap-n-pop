@@ -29,7 +29,7 @@ export function stack_log(s: number[]) {
   console.log(' 6 -',s[36],s[37],s[38],s[39],s[40],s[41]);
   console.log(' 7 -',s[42],s[43],s[44],s[45],s[46],s[47]);
   console.log(' 8 -',s[48],s[49],s[50],s[51],s[52],s[53]);
-  console.log('9 -',s[54],s[55],s[56],s[57],s[58],s[59]);
+  console.log(' 9 -',s[54],s[55],s[56],s[57],s[58],s[59]);
   console.log('10 -',s[60],s[61],s[62],s[63],s[64],s[65]);
 }
 

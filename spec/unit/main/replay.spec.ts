@@ -35,7 +35,7 @@ describe('Replay' ,function(){
     it('should saved date in octets', function(done){
       fs.readFile(filename, function(err,data){
         if (err) { done(err) }
-        data.should.eql(Buffer.from([
+        expect(data).eql(Buffer.from([
            0x04 // length of seed
           ,0x01 // length of integer for player 0 frame_count
           ,0x01 // length of integer for player 1 frame_count

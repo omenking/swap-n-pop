@@ -1,4 +1,5 @@
 import game from 'core/game'
+import assets from 'core/assets'
 import blank                  from 'components/panel_blank'
 import ComponentBauble        from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
@@ -22,12 +23,6 @@ import {
   COLS,
   ROWS_INV,
   ROWS,
-  FRAME_LAND,
-  FRAME_CLEAR,
-  FRAME_LIVE,
-  FRAME_DANGER,
-  FRAME_DEAD,
-  FRAME_NEWLINE,
   TIME_SWAP,
   TIME_CLEAR,
   TIME_POP,
@@ -270,14 +265,14 @@ export default class ComponentPanel {
       // we add 1 otherwise we will miss out on one frame
       // since counter can never really hit zero and render
       this.chain = 0
-      this.counter = FRAME_DANGER.length+1
+      this.counter = assets.spritesheets.panels.animations.danger.length+1
     } else {
       this.chain = 0
     }
   }
 
   land_enter()   { 
-    this.counter = FRAME_LAND.length
+    this.counter = assets.spritesheets.panels.animations.land.length
     
     // If chain is 0, it means the panel did not fall as a result of a clear and should not chain
     if (this.chain > 0) { this.chain = this.playfield.chain }
@@ -292,8 +287,9 @@ export default class ComponentPanel {
         this.change_state(STATIC) 
       }
     }
-    else if (this.counter < FRAME_LAND.length - 1) { 
-      // Only reset chain counter if entire column is grounded
+    else if (this.counter < assets.spritesheets.panels.animations.land.length - 1) { 
+      // Don't reset chain value if a panel in column below is swapping, hanging, falling, or empty
+
       let under = this.under
       let ground = true
       while (under !== blank && under.state !== GARBAGE) {
@@ -420,7 +416,7 @@ export default class ComponentPanel {
     // if above is not stable, you can't swap
     if (this.above.state === HANG ) { return false }
     if ((this.state === STATIC || this.state === FALL) && this.kind !== null) { return true }
-    if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
+    if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     if (this.empty) { return true }
     if (this.state === SWAP_L || this.state === SWAP_R || this.state === SWAPPING_L || this.state === SWAPPING_R) { return true }
     return false
@@ -439,7 +435,7 @@ export default class ComponentPanel {
     if (this.under.state === GARBAGE && this.under.garbage.state !== STATIC) { return false }
     // 2. be comboable
     if (this.state === STATIC && this.kind !== null) { return true }
-    if (this.state === LAND && this.counter < FRAME_LAND.length) { return true }
+    if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     // 3 already have been marked for being cleared on first frame
     if (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.state_timer === 0) { return true }
     return false
@@ -737,15 +733,19 @@ export default class ComponentPanel {
    */
   animate(){
     if (this.newline) {
-      this.frame = FRAME_NEWLINE
+      this.frame = assets.spritesheets.panels.animations.newline
     } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
-      this.frame = FRAME_DEAD
+      this.frame = assets.spritesheets.panels.animations.dead
     } else if (this.state === CLEAR){
-      if (FRAME_CLEAR.length > this.time_cur){
-        this.frame = FRAME_CLEAR[this.time_cur]
+      const frames = assets.spritesheets.panels.animations.clear
+      const len = frames.len
+      if (len > this.time_cur){
+        this.frame = frames[this.time_cur]
       }
     } else if (this.state === LAND){
-      this.frame = FRAME_LAND[FRAME_LAND.length-this.counter]
+      const frames = assets.spritesheets.panels.animations.land
+      const len    = frames.length
+      this.frame = frames[len-this.counter]
     } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
       let v = (UNIT / TIME_SWAP) * this.counter
       switch (this.state) {
@@ -756,12 +756,14 @@ export default class ComponentPanel {
           this.sprite.x -= v
           break
       }
-      this.frame = FRAME_LIVE
+      this.frame = assets.spritesheets.panels.animations.live
     } else if (this.danger){
-      const i = FRAME_DANGER[FRAME_DANGER.length - this.counter+1]
+      const frames = assets.spritesheets.panels.animations.danger
+      const len    = frames.length
+      const i      = frames[len - this.counter+1]
       this.frame = i
     } else {
-      this.frame = FRAME_LIVE
+      this.frame = assets.spritesheets.panels.animations.live
     }
   }
   /** */

@@ -8,7 +8,7 @@ import ComponentMenuPause from 'components/menu_pause'
 import ComponentPlayfield from 'components/playfield'
 import CoreInputs         from 'core/inputs'
 import CoreSnapshots      from 'core/snapshots'
-import CoreControls       from 'core/controls'
+import controls           from 'core/controls'
 import fade               from 'core/fade'
 import {
   STARTING,
@@ -34,7 +34,7 @@ export default abstract class Stage extends State {
   protected bg            : Phaser.Sprite
   protected inputs        : CoreInputs
   protected snapshots     : CoreSnapshots
-  protected controls      : any
+  public    controls      : any
   protected roll          : any
   public roll_log_heading : Array<any>
   public roll_log_data    : Array<any>
@@ -52,7 +52,11 @@ export default abstract class Stage extends State {
     this.step_mode = false
     this.tick = 0
     // had to do this to inject controls into for `integration/online.spec.ts`
-    this.controls  = data.controls || CoreControls
+    if (data.controls) {
+      this.controls  = data.controls
+    } else {
+      this.controls  = controls
+    }
     this.snapshots = new CoreSnapshots()
     this.roll = {
       ready : false,
@@ -61,7 +65,7 @@ export default abstract class Stage extends State {
     }
   }
 
-  create_enter(){
+  public create_enter(){
     this.rng = seedrandom(this.seed, {state: true})
     this.state = STARTING
     this.create_bg()
@@ -70,7 +74,7 @@ export default abstract class Stage extends State {
   create_bg(){
   }
 
-  create_exit(){
+  public create_exit(){
     this.menu_pause.create(this)
     this.controls.map_global({
       sim_forward : this.sim_forward.bind(this),
@@ -146,7 +150,7 @@ export default abstract class Stage extends State {
     this.devtools_load()
   }
 
-  sim_toggle(tick){
+  public sim_toggle(tick){
     if (tick > 0) { return }
     this.step_mode = !this.step_mode
     if (this.step_mode) {

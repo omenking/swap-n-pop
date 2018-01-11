@@ -92,7 +92,7 @@ describe('_f', function() {
       out_of_bounds(0,-1).should.be.true
     })
     it('+y out of bounds',function(){
-      out_of_bounds(0,11).should.be.true
+      out_of_bounds(0,23).should.be.true
     })
     it('should be in bounds',function(){
       out_of_bounds(0,0).should.be.false

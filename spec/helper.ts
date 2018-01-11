@@ -4,6 +4,7 @@ import * as child_process from 'child_process'
 import controls     from 'core/controls'
 import Stage        from 'states/mode_vs'
 import Playfield    from 'components/playfield'
+import assets   from 'core/assets'
 import {
   PANELS,
   RUNNING
@@ -34,6 +35,9 @@ export function playfield_helper(opts={}){
   const garbage   = opts.garbage   ? opts.garbage   : true
   const timer     = opts.timer     ? opts.timer     : false
   const panels    = opts.panels    ? opts.panels    : new Array(PANELS).fill(null)
+  assets.load()
+  assets.preload()
+
   controls.create()
   const stage = new Stage()
   stage.init({
@@ -57,6 +61,7 @@ export function playfield_helper(opts={}){
     y         : 0,
     panels    : panels
   })
+  playfield.create_after()
   return playfield
 }
 

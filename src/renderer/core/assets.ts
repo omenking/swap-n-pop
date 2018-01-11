@@ -10,7 +10,7 @@ class Assets {
     music         : {},
     sound_effects : Array<string>,
     images        : Array<string>,
-    spritesheets  : {}
+    spritesheets  : any
   }
 
   public static get Instance(){
