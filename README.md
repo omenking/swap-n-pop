@@ -72,7 +72,7 @@ OSX, Windows, Linux.
 ### 5. First-Class Lag Compensation
 
 If we want a game as competitive as SFV or other modern online
-fighting games, we need to adopt modern lag compensation techniques (UPD P2P).
+fighting games, we need to adopt modern lag compensation techniques (UDP P2P).
 
 ### 6. No-Frills Codebase
 
