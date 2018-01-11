@@ -228,6 +228,7 @@ export default class Playfield {
     if (this.cursor.y > 0) { this.cursor.y--; }
     return 1
   }
+  
   create_newline(){
     if (!this.should_push) { return; }
     const rows = (ROWS + (this.should_push ? 1 : 0 ))
@@ -239,8 +240,20 @@ export default class Playfield {
       this.stack_i(i).create(this, x, y)
     }
     // fill panels
-    for (let i = PANELS; i < PANELS+COLS; i++){
+    this.stack_i(PANELS).set_kind('unique')
+    let consecutive = 1
+    let kind = this.stack_i(PANELS).kind
+    for (let i = PANELS + 1; i < PANELS+COLS; i++){
       this.stack_i(i).set_kind('unique')
+      if (this.stack_i(i).kind == kind) {
+          if (++consecutive === 3) {
+              // todo: num_kinds setting variable to signify if dark blues are included or not
+              this.stack_i(i).kind = (this.stack_i(i).kind + 1) % 6
+              consecutive = 1
+          }
+      }
+      else { consecutive = 1 }
+      kind = this.stack_i(i).kind
     }
   }
 

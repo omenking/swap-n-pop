@@ -606,6 +606,7 @@ export default class ComponentPanel {
    *
    * @returns {number} new kind to be set to!
   */
+  // TODO: fix
   nocombo() {
     const arr = [0, 1, 2, 3, 4]
     if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
