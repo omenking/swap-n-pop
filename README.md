@@ -45,8 +45,8 @@ To build a binary for the filesystem you are on:
 
 ## Project Tenets
 
-There's multiple TA/PdP/PPL clones in development but they did not
-adhere to the teants below.
+There are multiple TA/PdP/PPL clones in development but they do not
+adhere to the tenets below:
 
 
 ### 1. Open-Source
@@ -72,7 +72,7 @@ OSX, Windows, Linux.
 ### 5. First-Class Lag Compensation
 
 If we want a game as competitive as SFV or other modern online
-fighting games, we need to adopt modern lag compensation techniques (UPD P2P).
+fighting games, we need to adopt modern lag compensation techniques (UDP P2P).
 
 ### 6. No-Frills Codebase
 
