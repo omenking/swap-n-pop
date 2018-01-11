@@ -293,15 +293,14 @@ export default class ComponentPanel {
       }
     }
     else if (this.counter < FRAME_LAND.length - 1) { 
-      // Don't reset chain value if a panel in column below is swapping, hanging, falling, or empty
+      // Only reset chain counter if entire column is grounded
       let under = this.under
-      let ground = false
-      while (under !== blank) {
-          if (under.kind !== null && under.state !== LAND && under.state !== SWAP_L && under.state !== SWAPPING_L 
-          && under.state !== SWAP_R && under.state !== SWAPPING_R && under.state !== HANG && under.state !== FALL) {
-              ground = true
+      let ground = true
+      while (under !== blank && under.state !== GARBAGE) {
+          if (under.kind === null) {
+              ground = false
               break
-          }         
+          }
           under = under.under
       }
       if (ground) { this.chain = 0 }
