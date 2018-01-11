@@ -45,8 +45,8 @@ To build a binary for the filesystem you are on:
 
 ## Project Tenets
 
-There's multiple TA/PdP/PPL clones in development but they did not
-adhere to the teants below.
+There are multiple TA/PdP/PPL clones in development but they do not
+adhere to the tenets below:
 
 
 ### 1. Open-Source
