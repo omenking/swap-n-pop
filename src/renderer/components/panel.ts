@@ -297,12 +297,8 @@ export default class ComponentPanel {
       let under = this.under
       let ground = false
       while (under !== blank) {
-          if (under.state === GARBAGE) {
-              ground = true
-              break
-          }
-          else if (under.kind !== null && under.state !== LAND && under.state !== HANG && under.state !== FALL &&
-           under.state !== SWAP_L && under.state !== SWAPPING_L && under.state !== SWAP_R && under.state !== SWAPPING_R ) {
+          if (under.kind !== null && under.state !== LAND && under.state !== SWAP_L && under.state !== SWAPPING_L 
+          && under.state !== SWAP_R && under.state !== SWAPPING_R && under.state !== HANG && under.state !== FALL) {
               ground = true
               break
           }         
