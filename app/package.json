@@ -10,6 +10,7 @@
   },
   "main": "main.js",
   "dependencies": {
+    "discord.js": "^11.2.1",
     "glob": "^7.1.2",
     "keycode": "^2.1.9",
     "mithril": "^1.1.5",
