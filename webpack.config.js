@@ -1,6 +1,6 @@
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
-const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const path              = require('path')
+const webpack           = require('webpack')
 
 const ts = { test: /\.ts$/, loader: 'ts-loader' }
 
@@ -43,7 +43,10 @@ const config_main = {
     }
   },
   node: { __dirname: false },
-  module: { rules: [ts] }
+  module: { rules: [ts] },
+  plugins: [
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
+  ]
 };
 
 const config_renderer = {
@@ -66,7 +69,10 @@ const config_renderer = {
     }
   },
   node: { __dirname: false },
-  module : { rules: [ts] }
+  module : { rules: [ts] },
+  plugins: [
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
+  ]
 };
 
 const config_ui = {
@@ -80,7 +86,10 @@ const config_ui = {
   },
   node: { __dirname: false },
   module : { rules: [scss,css] },
-  plugins: [ new ExtractTextPlugin("app.css")]
+  plugins: [ 
+    new ExtractTextPlugin("app.css"),
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
+  ]
 }
 
 const config_devtools = {
@@ -107,7 +116,10 @@ const config_devtools = {
     }
   },
   module : { rules: [ts,scss,css] },
-  plugins: [ new ExtractTextPlugin("panel.css") ]
+  plugins: [ 
+    new ExtractTextPlugin("panel.css"),
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
+  ]
 };
 
 module.exports = [

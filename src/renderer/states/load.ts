@@ -3,6 +3,7 @@ import game     from 'core/game'
 import assets   from 'core/assets'
 import State    from 'states/base'
 import controls from 'core/controls'
+import UiMode   from 'ui/mode'
 import Store    from 'common/store'
 //import * as assets   from 'core/assets'
 
@@ -23,6 +24,15 @@ export default class LoadState extends State {
     this.load_assets()
     game.load.onLoadComplete.add(() => {
       controls.create()
+
+      if (store.has('auth_token')) {
+        if (!store.has('username')) {
+          UiMode.show('incomplete')
+        }
+      } else {
+        UiMode.show('login')
+      }
+
       game.sounds.create()
       game.state.start('menu')
     }, this)

@@ -1,3 +1,16 @@
+console.log('pp',process.env.NODE_ENV)
+let _env;
+let _host;
+if        (process.env.NODE_ENV === 'production') {
+  _env  = 'production'
+  _host = 'http://swapnpop.com'
+} else if (process.env.NODE_ENV === 'development') {
+  _env  = 'development'
+  _host = 'http://localhost:3000'
+}
+
+export const ENV  = _env
+export const HOST = _host
 export const ROWS_INV = 12;
 export const ROWS_VIS = 11;
 export const ROWS = ROWS_INV + ROWS_VIS;

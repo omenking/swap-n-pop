@@ -43,12 +43,6 @@ div::-webkit-scrollbar-thumb {
   height: 100%;
   z-index: 10; }
 
-.login {
-  padding: 24px;
-  background: #161616;
-  width: 100%;
-  height: 100%; }
-
 .wrap1 {
   padding: 24px;
   background: #161616;
@@ -189,3 +183,117 @@ input[type='submit'] {
 
 .settings_replay .actions .replay {
   margin-right: 8px; }
+
+.logo {
+  background: url("../assets/images/logo.png") no-repeat;
+  width: 292px;
+  height: 270px;
+  margin: 0px auto; }
+
+main {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: #161616; }
+  main form {
+    display: inline-block;
+    padding: 0;
+      padding-top: 16px;
+    border: none; }
+  main .err {
+    text-align: left;
+    padding-top: 2px;
+    font-size: 13px;
+    color: #ff3535;
+    padding-left: 4px; }
+  main .text_field input {
+    width: 320px;
+    font-size: 16px;
+    padding: 10px;
+    height: auto; }
+  main .submit {
+    text-align: left; }
+    main .submit input[type='submit'],
+    main .submit .button {
+      font-size: 15px;
+      padding: 10px 25px; }
+    main .submit input[type='submit'] {
+      color: white;
+      background: linear-gradient(#e94576, #6d1d57); }
+    main .submit .button {
+      margin-left: 16px; }
+  main .or {
+    border-bottom: solid 1px #212121;
+    position: relative;
+    height: 1px;
+    margin: 24px 0;
+    text-align: center; }
+    main .or span {
+      top: -10px;
+      font-size: 14px;
+      position: relative;
+      background: #161616;
+      padding: 0px 8px;
+      color: #282828;
+      font-weight: 600;
+      display: inline-block; }
+  main .connect.discord {
+    cursor: pointer;
+    background: #7289da;
+    border-bottom: solid 4px #2e365d;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px;
+    width: 320px;
+    margin-bottom: 16px;
+    position: relative; }
+    main .connect.discord:hover {
+      background: #718ae1; }
+    main .connect.discord .icon {
+      cursor: pointer;
+      display: block;
+      top: 3px;
+      left: 16px;
+      position: absolute;
+      background: url("discord_icon.png");
+      width: 40px;
+      height: 40px;
+      background-size: contain; }
+
+main.login .skip {
+  font-size: 14px;
+  color: #787878;
+  cursor: pointer; }
+  main.login .skip:hover {
+    color: white; }
+
+main.login .signup {
+  width: 320px;
+  font-size: 16px;
+  color: #787878;
+  margin: 16px auto;
+  padding: 16px 0;
+  border: dashed 1px #212121;
+  cursor: pointer;
+  border-radius: 4px; }
+  main.login .signup .action {
+    font-weight: 600;
+    padding-left: 8px;
+    color: #e94576;
+    cursor: pointer; }
+  main.login .signup:hover {
+    border: dashed 1px #e94576; }
+    main.login .signup:hover .action {
+      color: #f8769d; }
+
+main.login .forgot {
+  display: inline-block;
+  padding-left: 20px;
+  color: #787878;
+  font-weight: 500px;
+  cursor: pointer;
+  font-size: 13px; }
+  main.login .forgot:hover {
+    color: #e6e6e6; }

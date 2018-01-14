@@ -53,13 +53,14 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "start": "webpack && electron app/main.js",
+    "start": "NODE_ENV=development webpack && electron app/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "debug": "webpack && electron app/main.js tmp/debug.snap"
   },
   "postinstall": "electron-builder install-app-deps",
   "dependencies": {
+    "discord.js": "^11.2.1",
     "glob": "^7.1.2",
     "keycode": "^2.1.9",
     "mithril": "^1.1.5",

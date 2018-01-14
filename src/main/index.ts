@@ -1,13 +1,13 @@
 import {app, shell, Menu, BrowserWindow, ipcMain as ipc, dialog} from 'electron'
-import * as process  from 'process'
 import * as path     from 'path'
 import * as url      from 'url'
 import * as fs       from 'fs'
+import {URL} from 'url'
 
-import Replay from 'common/replay'
+import Replay         from 'common/replay'
 import ExternalAssets from 'common/external_assets';
-import Logger from 'common/logger'
-import Store  from 'common/store'
+import Logger         from 'common/logger'
+import Store          from 'common/store'
 
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
@@ -15,7 +15,7 @@ const store = new Store()
 
 //require('electron-reload')(__dirname);
 
-let win, win_settings = null
+let win, win_discord = null
 Replay.dir(undefined, undefined)
 ExternalAssets.dir()
 
@@ -121,10 +121,8 @@ function create_window () {
   }
 
   win.loadURL(url.format(load_url))
-
-  click_settings('login')
-
   win.webContents.openDevTools()
+
   win.webContents.on('devtools-opened', () => {setImmediate(function() { win.focus()})})
   win.on('closed', function () {
     app.quit()
@@ -154,7 +152,44 @@ function activate(){
 app.on('ready'            , ready)
 app.on('window-all-closed', window_all_closed)
 app.on('activate'         , activate)
+ipc.on('logout',(event) => {
+  store.delete('auth_token')
+  store.delete('username')
+  win.custom = {mode: 'login'}
+  win.webContents.send('reload',{mode: 'login'})
+})
 
+ipc.on('discord', (event)=> {
+  win_discord = new BrowserWindow({
+    title     : "Swap'N'Pop",
+    width     : 480,
+    height    : 540,
+    useContentSize: true,
+    backgroundColor: '#FFFFFF',
+    webPreferences: {
+      nodeIntegration: false,
+      webSecurity: false
+    }
+  })
+  const path = "http://localhost:3000/auth/discord"
+  win_discord.webContents.on('did-navigate', function (event, _url) {
+    const url : URL = new URL(_url)
+    if (url.pathname === '/auth/result') {
+      const token = url.searchParams.get('auth_token')
+      store.set('auth_token',token)
+      const state = url.searchParams.get('state')
+      if (state === 'incomplete'){
+        win.custom = {mode: 'incomplete'}
+        win.webContents.send('reload',{mode: 'incomplete'})
+      } else if (state === 'ready'){
+        win.webContents.send('close')
+      }
+      win_discord.close()
+    }
+  })
+  win_discord.loadURL(path)
+  win_discord.show()
+})
 ipc.on('controls-update', (event) => {
   win.webContents.send('controls-rebind')
 })
