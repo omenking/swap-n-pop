@@ -1,4 +1,3 @@
-import * as Discord from 'discord.js'
 import * as m  from 'mithril'
 import Ui from 'ui/mode'
 import {ipcRenderer as ipc} from 'electron'
