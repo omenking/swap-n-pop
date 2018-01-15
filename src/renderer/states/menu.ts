@@ -5,6 +5,8 @@ import {px}          from 'core/filters'
 import ComponentMenu from 'components/menu'
 import State         from './base'
 import {ipcRenderer as ipc} from 'electron'
+import Store  from 'common/store'
+const store = new Store()
 
 /**
  * Higher Order Menu that keeps the menu updated - Adds Background
@@ -16,7 +18,11 @@ export default class MenuState extends State {
 
   constructor() {
     super()
-    this.menu = new ComponentMenu(9);
+    if (store.has('auth_token')) {
+      this.menu = new ComponentMenu(10);
+    } else {
+      this.menu = new ComponentMenu(9);
+    }
   }
 
   get name(): string {
@@ -28,10 +34,8 @@ export default class MenuState extends State {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
     this.logo = game.add.sprite(px(40),0,'logo')
     this.logo.y = game.world.centerY - this.logo.centerY
-    this.menu.create(
-        game.world.width - (220 + px(70)),
-        game.world.centerY - ((10 + (28 * 9) + 10)/2) + 20,
-        220,[
+
+    const items = [
       {name: 'Play Online'  , action: this.mode_1p_vs_2p_online},
       {name: 'Story'        , action: this.mode_story},
       {name: 'Time Trial'   , action: this.mode_time_trial},
@@ -41,8 +45,20 @@ export default class MenuState extends State {
       {name: 'Puzzles'      , action: this.mode_puzzles},
       {name: 'Training'     , action: this.mode_sandox},
       {name: 'Options'      , action: this.mode_option},
-    ])
+    ]
+    if (store.has('auth_token')) {
+      items.push({name: 'Logout', action: this.logout})
+    }
+
+    this.menu.create(
+        game.world.width - (220 + px(70)),
+        game.world.centerY - ((10 + (28 * items.length-1) + 10)/2) + 20,
+        220, items)
     fade.in()
+  }
+
+  logout(){
+    ipc.send('logout')
   }
 
   mode_1p_vs_2p_local() {

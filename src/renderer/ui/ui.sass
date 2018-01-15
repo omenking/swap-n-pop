@@ -42,12 +42,6 @@ div::-webkit-scrollbar-thumb
   height: 100%
   z-index: 10
 
-.login
-  padding: 24px
-  background: rgb(22,22,22)
-  width: 100%
-  height: 100%
-
 .wrap1
   padding: 24px
   background: rgb(22,22,22)
@@ -179,3 +173,119 @@ input[type='submit']
   text-align: right
 .settings_replay .actions .replay
   margin-right: 8px
+
+.logo
+  background: url('../assets/images/logo.png') no-repeat
+  width: 292px
+  height: 270px
+  margin: 0px auto
+
+main
+  text-align: center
+  width: 100%
+  height: 100%
+  padding: 24px
+  background: rgb(22,22,22)
+  form
+    display: inline-block
+    padding: 0
+      top: 16px
+    border: none
+  .err
+    text-align: left
+    padding-top: 2px
+    font-size: 13px
+    color: rgb(255,53,53)
+    padding-left: 4px
+  .text_field input
+    width: 320px
+    font-size: 16px
+    padding: 10px
+    height: auto
+  .submit
+    text-align: left
+    input[type='submit'],
+    .button
+      font-size: 15px
+      padding: 10px 25px
+    input[type='submit']
+      color: rgb(255,255,255)
+      background: linear-gradient(rgb(233,69,118), rgb(109,29,87))
+    .button
+      margin-left: 16px
+  .or
+    border-bottom: solid 1px rgb(33,33,33)
+    position: relative
+    height: 1px
+    margin: 24px 0
+    text-align: center
+    span
+      top: -10px
+      font-size: 14px
+      position: relative
+      background: rgb(22,22,22)
+      padding: 0px 8px
+      color: rgb(40,40,40)
+      font-weight: 600
+      display: inline-block
+  .connect.discord
+    cursor: pointer
+    background: #7289da
+    border-bottom: solid 4px rgb(46,54,93)
+    border-radius: 3px
+    font-size: 16px
+    font-weight: 500
+    padding: 12px
+    width: 320px
+    margin-bottom: 16px
+    position: relative
+    &:hover
+      background: #718ae1
+    .icon
+      cursor: pointer
+      display: block
+      top: 3px
+      left: 16px
+      position: absolute
+      background: url('discord_icon.png')
+      width: 40px
+      height: 40px
+      background-size: contain
+
+main.login
+
+  .skip
+    font-size: 14px
+    color: rgb(120,120,120)
+    cursor: pointer
+    &:hover
+      color: rgb(255,255,255)
+
+  .signup
+    width: 320px
+    font-size: 16px
+    color: rgb(120,120,120)
+    margin: 16px auto
+    padding: 16px 0
+    border: dashed 1px rgb(33,33,33)
+    cursor: pointer
+    border-radius: 4px
+    .action
+      font-weight: 600
+      padding-left: 8px
+      color: rgb(233,69,118)
+      cursor: pointer
+    &:hover
+      border: dashed 1px rgb(233,69,118)
+      .action
+        color: #f8769d
+
+  .forgot
+    display: inline-block
+    padding-left: 20px
+    color: rgb(120,120,120)
+    font-weight: 500px
+    cursor: pointer
+    font-size: 13px
+    &:hover
+      color: rgb(230,230,230)

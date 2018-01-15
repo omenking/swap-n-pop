@@ -3,13 +3,14 @@
   "productName": "swap-n-pop",
   "license": "MIT",
   "description": "Puzzle Game",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "Andrew Brown",
   "repository": {
     "url": "https://github.com/omenking/swap-n-pop"
   },
   "main": "main.js",
   "dependencies": {
+    "discord.js": "^11.2.1",
     "glob": "^7.1.2",
     "keycode": "^2.1.9",
     "mithril": "^1.1.5",

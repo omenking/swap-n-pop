@@ -1,5 +1,6 @@
 import game                from 'core/game'
 import ComponentMenuItem   from 'components/menu_item'
+import ComponentBadge      from 'components/badge'
 import ComponentMenuCursor from 'components/menu_cursor'
 import {px}                from 'core/filters'
 
@@ -15,6 +16,7 @@ export default class ComponentMenu {
   private pipe_left  : Phaser.Sprite
   private pipe_right : Phaser.Sprite
   private bg         : Phaser.Sprite
+  private badge      : ComponentBadge
   private cursor     : ComponentMenuCursor
   private menu_items : Array<ComponentMenuItem>
 
@@ -24,6 +26,7 @@ export default class ComponentMenu {
       this.menu_items.push(new ComponentMenuItem())
     }
     this.cursor = new ComponentMenuCursor()
+    this.badge  = new ComponentBadge()
   }
 
   create(x : number,y : number ,width : number, actions : Array<{name : string, action: any}>) {
@@ -100,6 +103,7 @@ export default class ComponentMenu {
     }
 
     this.cursor.create(this, this.menu_items)
+    this.badge.create('omenking')
   }
 
   get x(){

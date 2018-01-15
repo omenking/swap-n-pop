@@ -105,8 +105,8 @@ class CoreControls {
     let inputs = store.get('inputs')
     game.input.keyboard.reset()
     this.keys = {}
-    this.keys.pl0_up    = this.add_input(inputs[0])
     //player 1
+    this.keys.pl0_up    = this.add_input(inputs[0])
     this.keys.pl0_down  = this.add_input(inputs[1])
     this.keys.pl0_left  = this.add_input(inputs[2])
     this.keys.pl0_right = this.add_input(inputs[3])
@@ -129,6 +129,12 @@ class CoreControls {
     this.keys.sim_toggle  = this.add_input(inputs[18])
     this.keys.sim_forward = this.add_input(inputs[19])
     this.keys.sim_backward = this.add_input(inputs[20])
+  }
+  start(){
+    game.input.enabled = true
+  }
+  stop(){
+    game.input.enabled = false
   }
   toggle_menu(){
     console.log('toggle menu')

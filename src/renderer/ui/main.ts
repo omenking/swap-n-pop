@@ -1,5 +1,6 @@
-import * as m               from 'mithril'
+import * as m  from 'mithril'
 import {ipcRenderer as ipc} from 'electron'
+import controls from 'core/controls'
 
 import Ui         from 'ui/mode'
 import UiInput    from 'ui/input'
@@ -7,6 +8,10 @@ import UiNetwork  from 'ui/network'
 import UiAudio    from 'ui/audio'
 import UiReplay   from 'ui/replay'
 import UiAssets   from 'ui/external_assets'
+import {render as UiLogin}  from 'ui/login'
+import {render as UiSignup} from 'ui/signup'
+import {render as UiForgot} from 'ui/forgot'
+import {render as UiIncomplete} from 'ui/incomplete'
 
 /** declare html window.document to be usable */
 declare var window: {
@@ -62,16 +67,18 @@ function content() : object {
     {mode: 'network', method: UiNetwork},
     {mode: 'audio',   method: UiAudio},
     {mode: 'replay',  method: UiReplay},
-    {mode: 'assets',  method: UiAssets},
+    {mode: 'assets',  method: UiAssets}
   ])
 }
 
 
 const app = {
   view: function(){
-    if (Ui.mode === 'login') {
-      return m('.login', 'login')
-    } else if  (Ui.mode !== false) {
+    if       (Ui.mode === 'incomplete' ) { return UiIncomplete()  }
+    else if  (Ui.mode === 'login'      ) { return UiLogin()  }
+    else if  (Ui.mode === 'signup'     ) { return UiSignup() }
+    else if  (Ui.mode === 'forgot'     ) { return UiForgot() }
+    else if  (Ui.mode !== false) {
       return m('.wrap1', m('.wrap2',
        [nav(), content()]
       ))
@@ -86,7 +93,14 @@ export default function render(){
   m.mount(window.document.getElementById('ui'), app)
 }
 
+ipc.on('close', function(event, data) {
+  console.log('closing time')
+  Ui.access()
+})
+
 ipc.on('reload', function(event, data) {
+  console.log('reload',data.mode)
+  controls.stop()
   Ui.mode = data.mode
   window.document.getElementById('game').classList.add('hide')
   m.redraw()

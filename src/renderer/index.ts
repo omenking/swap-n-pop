@@ -2,6 +2,9 @@ import { ipcRenderer as ipc } from 'electron';
 import ui   from 'ui/main'
 import game from 'core/game'
 import fade from 'core/fade'
+import controls from 'core/controls'
+import Store          from 'common/store'
+const store = new Store()
 
 import BootState       from 'states/boot'
 import ConnectState    from 'states/connect'
