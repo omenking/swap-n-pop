@@ -3,7 +3,7 @@ let _env;
 let _host;
 if        (process.env.NODE_ENV === 'production') {
   _env  = 'production'
-  _host = 'http://swapnpop.com'
+  _host = 'http://www.swapnpop.com'
 } else if (process.env.NODE_ENV === 'development') {
   _env  = 'development'
   _host = 'http://localhost:3000'
