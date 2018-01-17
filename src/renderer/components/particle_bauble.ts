@@ -1,6 +1,6 @@
 import game from 'core/game'
 import ComponentBauble from 'components/bauble'
-import { TIME_CLEAR_PARTICLE, UNIT } from 'core/data'
+import { TIME_CLEAR_PARTICLE, UNIT } from 'common/data'
 
 const normalType = [
   {x:  1, y:  1},

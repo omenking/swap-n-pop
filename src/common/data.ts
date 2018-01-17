@@ -1,4 +1,3 @@
-console.log('pp',process.env.NODE_ENV)
 let _env;
 let _host;
 if        (process.env.NODE_ENV === 'production') {

@@ -16,7 +16,7 @@ import {
   PAUSE,
   GAMEOVER,
   DONE
-} from 'core/data'
+} from 'common/data'
 
 export default class ModeVs extends CoreStage {
   get [Symbol.toStringTag](){ return 'ModeVs' }

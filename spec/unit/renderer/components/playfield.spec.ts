@@ -9,7 +9,7 @@ import {
   STATIC,
   GARBAGE,
   COMBO
-} from 'core/data'
+} from 'common/data'
 import {
   playfield_load,
   playfield_check_garbage,

@@ -27,7 +27,7 @@ import {
   PAUSE,
   GAMEOVER,
   CLEAR
-} from 'core/data';
+} from 'common/data';
 
 export default class Playfield {
   get [Symbol.toStringTag](){ return 'Playfield' }

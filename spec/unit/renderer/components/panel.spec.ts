@@ -2,7 +2,7 @@ import * as fs   from 'fs'
 import Stage     from 'states/mode_vs'
 import Playfield from 'components/playfield'
 import Panel     from 'components/panel'
-import { STATIC, HANG, FALL, CLEAR, PANELS ROWS} from 'core/data';
+import { STATIC, HANG, FALL, CLEAR, PANELS ROWS} from 'common/data';
 import {
   playfield_load,
   playfield_helper

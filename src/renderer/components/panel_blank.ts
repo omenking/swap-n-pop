@@ -1,5 +1,5 @@
 import game from 'core/game'
-import { STATIC } from 'core/data';
+import { STATIC } from 'common/data';
 
 class ComponentPanelBlank{
   get [Symbol.toStringTag](){ return 'PanelBlank' }

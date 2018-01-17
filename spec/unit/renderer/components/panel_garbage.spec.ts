@@ -6,7 +6,7 @@ import {
   GARBAGE,
   CLEAR,
   COMBO
-} from 'core/data';
+} from 'common/data';
 
 describe('PanelGarbage', function() {
   describe('#class_name' ,function(){

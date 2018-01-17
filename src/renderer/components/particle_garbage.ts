@@ -6,7 +6,7 @@ import {
   CHAIN,
   BAUBLE_FLOAT,
   TIME_PARTICLE_GARAGE
-} from 'core/data'
+} from 'common/data'
 import {px} from 'core/filters'
 
 export default class ComponentPanelGarbage {

@@ -1,6 +1,6 @@
 import game from 'core/game'
 import * as ss   from 'shuffle-seed'
-import { COLS, PANELS, ROWS } from 'core/data';
+import { COLS, PANELS, ROWS } from 'common/data';
 import { i2xy, xy2i } from 'core/filters';
 
 /**

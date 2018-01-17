@@ -20,7 +20,7 @@ import {
   ROWS,
   COMBO,
   CHAIN
-} from 'core/data';
+} from 'common/data';
 
 //shorthands
 

@@ -1,4 +1,4 @@
-import { COLS, ROWS } from 'core/data';
+import { COLS, ROWS } from 'common/data';
 
 /* upscale base pixels to the correct size */
 export function px(px: number): number {

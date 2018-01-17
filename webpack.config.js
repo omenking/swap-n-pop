@@ -110,6 +110,7 @@ const config_devtools = {
   resolve: {
     extensions: ['.js', '.json', '.ts'],
     alias: {
+      common                : path.resolve(__dirname, 'src/common/'),
       core                  : path.resolve(__dirname, 'src/renderer/core/'),
       'devtools/components' : path.resolve(__dirname, 'src/devtools/components/'),
       'devtools/common'     : path.resolve(__dirname, 'src/devtools/common/'),

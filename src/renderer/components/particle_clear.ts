@@ -4,7 +4,7 @@ import {
   ANIM_CLEAR_PARTICLE_MOVE,
   TIME_CLEAR_PARTICLE,
   UNIT
-} from 'core/data'
+} from 'common/data'
 
 export default class ComponentPanelClear {
   private sprite  : Phaser.Sprite

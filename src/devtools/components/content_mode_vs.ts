@@ -1,7 +1,7 @@
 import * as m  from 'mithril'
 import panel_form          from 'devtools/components/panel_form'
 import {COMP_STAGE, state} from 'devtools/common/data'
-import {ROWS_INV, ROWS_VIS, ROWS, COLS} from 'core/data'
+import {ROWS_INV, ROWS_VIS, ROWS, COLS} from 'common/data'
 
 export function xy2i(x: number, y: number): number {
   // x left-right

@@ -5,7 +5,7 @@ import {
   COMBO,
   TIME_PARTICLE_GARAGE,
   TIME_CLEAR
-} from 'core/data';
+} from 'common/data';
 
 export default class CoreGarbage {
   private stage     : any

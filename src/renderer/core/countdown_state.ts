@@ -6,7 +6,7 @@ import {
   COUNT2,
   COUNT1,
   DONE
-} from 'core/data'
+} from 'common/data'
 
 export default class CountdownState {
   public state   : string

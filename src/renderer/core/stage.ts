@@ -16,7 +16,7 @@ import {
   PAUSE,
   GAMEOVER,
   DONE
-} from 'core/data'
+} from 'common/data'
 
 declare var window: any
 
