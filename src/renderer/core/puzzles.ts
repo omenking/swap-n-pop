@@ -1,4 +1,4 @@
-import { PANELS } from 'core/data'
+import { PANELS } from 'common/data'
 const _ = null // empty panel
 const b = 0 // blue
 const g = 1 // green

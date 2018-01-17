@@ -8,6 +8,7 @@ import Replay         from 'common/replay'
 import ExternalAssets from 'common/external_assets';
 import Logger         from 'common/logger'
 import Store          from 'common/store'
+import {HOST}         from 'common/data'
 
 const WIN_WIDTH  = 398 * 2
 const WIN_HEIGHT = 224 * 2
@@ -171,7 +172,7 @@ ipc.on('discord', (event)=> {
       webSecurity: false
     }
   })
-  const path = "http://localhost:3000/auth/discord"
+  const path = `${HOST}/auth/discord`
   win_discord.webContents.on('did-navigate', function (event, _url) {
     const url : URL = new URL(_url)
     if (url.pathname === '/auth/result') {
@@ -187,8 +188,10 @@ ipc.on('discord', (event)=> {
       win_discord.close()
     }
   })
+  console.log('discord_path',path)
   win_discord.loadURL(path)
   win_discord.show()
+  win_discord.webContents.openDevTools()
 })
 ipc.on('controls-update', (event) => {
   win.webContents.send('controls-rebind')

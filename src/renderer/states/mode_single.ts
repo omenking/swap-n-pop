@@ -12,7 +12,7 @@ import {
   PAUSE,
   GAMEOVER,
   DONE
-} from 'core/data';
+} from 'common/data';
 
 /* run by phaser state.start */
 export default class ModePuzzle extends CoreStage {

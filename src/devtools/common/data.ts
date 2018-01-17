@@ -1,4 +1,4 @@
-import {STATIC} from 'core/data'
+import {STATIC} from 'common/data'
 
 export const COMP_STAGE = 'stage'
 export const COMP_GARBA = 'garbage'

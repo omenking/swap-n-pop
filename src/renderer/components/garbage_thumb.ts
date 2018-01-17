@@ -4,7 +4,7 @@ import ComponentParticleClear from 'components/particle_clear'
 import { 
   CHAIN,
   COMBO
-} from 'core/data';
+} from 'common/data';
 
 export default class ComponentGarbageThumb {
   private preview  : ComponentGarbagePreview

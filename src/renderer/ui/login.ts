@@ -1,7 +1,7 @@
 import * as m  from 'mithril'
 import Ui from 'ui/mode'
 import {ipcRenderer as ipc} from 'electron'
-import {HOST}  from 'core/data'
+import {HOST}  from 'common/data'
 import Store  from 'common/store'
 const store = new Store()
 

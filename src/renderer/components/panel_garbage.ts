@@ -15,7 +15,7 @@ import {
   GARBAGE_SHAKE,
   COMBO,
   CHAIN
-} from 'core/data';
+} from 'common/data';
 
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }

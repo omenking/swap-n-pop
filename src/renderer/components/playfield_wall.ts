@@ -1,6 +1,6 @@
 import game    from 'core/game'
 import ComponentPlayfield from 'components/playfield'
-import { WALL_ROLLUP } from 'core/data';
+import { WALL_ROLLUP } from 'common/data';
 import { px } from 'core/filters';
 
 export default class ComponentPlayfieldWall {

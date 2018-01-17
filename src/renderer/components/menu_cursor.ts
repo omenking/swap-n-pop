@@ -1,7 +1,7 @@
 import game from 'core/game'
 import controls from 'core/controls'
 import ComponentMenuItem   from 'components/menu_item'
-import { MENUCURSORBLINK, UNIT } from 'core/data';
+import { MENUCURSORBLINK, UNIT } from 'common/data';
 
 export default class ComponentMenuCursor {
   private menu       : any

@@ -1,6 +1,6 @@
 import * as m  from 'mithril'
 import Ui from 'ui/mode'
-import {HOST}  from 'core/data'
+import {HOST}  from 'common/data'
 
 const SEND  = 'form_send'
 const CODE  = 'code'

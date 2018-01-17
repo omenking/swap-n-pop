@@ -8,7 +8,7 @@ import assets   from 'core/assets'
 import {
   PANELS,
   RUNNING
-} from 'core/data'
+} from 'common/data'
 
 export const R = Symbol('random_panel')
 export const T  = true

@@ -1,5 +1,5 @@
 import game    from 'core/game'
-import { FRAME_STAR } from 'core/data';
+import { FRAME_STAR } from 'common/data';
 import { px } from 'core/filters';
 
 export default class StarCounter {

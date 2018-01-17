@@ -29,7 +29,7 @@ import {
   TIME_FALL,
   COMBO,
   CHAIN
-} from 'core/data';
+} from 'common/data';
 
 /**
  *
@@ -738,7 +738,7 @@ export default class ComponentPanel {
       this.frame = assets.spritesheets.panels.animations.dead
     } else if (this.state === CLEAR){
       const frames = assets.spritesheets.panels.animations.clear
-      const len = frames.len
+      const len = frames.length
       if (len > this.time_cur){
         this.frame = frames[this.time_cur]
       }

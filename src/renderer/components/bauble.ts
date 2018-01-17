@@ -2,7 +2,7 @@ import game    from 'core/game'
 import ComponentPanel  from 'components/panel'
 import ComponentParticleGarbage from 'components/particle_garbage'
 import ComponentParticleBauble  from 'components/particle_bauble'
-import { UNIT, CLEAR, BAUBLE_FLOAT } from 'core/data';
+import { UNIT, CLEAR, BAUBLE_FLOAT } from 'common/data';
 import { px } from 'core/filters';
 
 export default class ComponentBauble {

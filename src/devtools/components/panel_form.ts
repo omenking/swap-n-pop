@@ -9,7 +9,7 @@ import {
   SWAPPING_R,
   CLEAR,
   GARBAGE
-} from 'core/data'
+} from 'common/data'
 import {state} from 'devtools/common/data'
 import {update_panel} from 'devtools/common/port'
 import * as m  from 'mithril'

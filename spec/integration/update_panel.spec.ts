@@ -22,7 +22,7 @@ import {
   LAND,
   CLEAR,
   ROWS
-} from 'core/data';
+} from 'common/data';
 
 //shorthands
 const R = Symbol('random_panel')

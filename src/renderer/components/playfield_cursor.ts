@@ -13,7 +13,7 @@ import {
   STARTING,
   MOVING,
   PLAYFIELD_CURSOR_SPEED
-} from 'core/data';
+} from 'common/data';
 
 export default class ComponentPlayfieldCursor {
   public cursor_swap_history : Array<any>
