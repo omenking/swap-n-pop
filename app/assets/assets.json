@@ -1,8 +1,8 @@
 {
   "music": {
-     "msx_stage"          : {}
-    ,"msx_stage_critical" : {}
-    ,"msx_stage_results"  : {}
+     "msx_stage"          : { "start": 12.759, "end": 26.85, "test": 23 }
+    ,"msx_stage_critical" : { "start": 12.759, "end": 26.85, "test": 23 }
+    ,"msx_stage_results"  : { "start": 12.759, "end": 26.85, "test": 23 }
   },
   "sound_effects" : [
      "sfx_confirm"

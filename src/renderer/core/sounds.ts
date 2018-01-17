@@ -1,5 +1,6 @@
 import Store from 'common/store'
 import game from 'core/game'
+import assets from 'core/assets'
 
 const store = new Store()
 
@@ -9,8 +10,8 @@ const store = new Store()
  */
 export default class CoreSounds {
   private sfw_swap           : Phaser.Sound
-  private msx_stage_results  : Phaser.Sound
-  private msx_stage          : Phaser.Sound
+  private msx_stage_results  : any
+  private msx_stage          : any
   private msx_stage_critical : any
   private state_music        : string
   private sfx_land           : Array<Phaser.Sound>
@@ -30,9 +31,27 @@ export default class CoreSounds {
   create() {
     this.sfx_swap = game.add.audio('sfx_swap')
 
-    this.msx_stage_results  = game.add.audio('msx_stage_results')
-    this.msx_stage          = game.add.audio('msx_stage')
-    this.msx_stage_critical = this.loop("msx_stage_critical", this.msx_volume, 12.759, 26.85, 23)
+    this.msx_stage_results  = this.loop(
+      "msx_stage_results",
+      this.msx_volume,
+      assets.music.msx_stage_results.start,
+      assets.music.msx_stage_results.end,
+      assets.music.msx_stage_results.test
+    )
+    this.msx_stage = this.loop(
+      "msx_stage",
+      this.msx_volume,
+      assets.music.msx_stage.start,
+      assets.music.msx_stage.end,
+      assets.music.msx_stage.test
+    )
+    this.msx_stage_critical = this.loop(
+      "msx_stage_critical",
+      this.msx_volume,
+      assets.music.msx_stage_critical.start,
+      assets.music.msx_stage_critical.end,
+      assets.music.msx_stage_critical.test
+    )
 
     this.state_music = 'none'
 
@@ -53,12 +72,12 @@ export default class CoreSounds {
 
     this.sfx_blip  = game.add.audio('sfx_countdown_blip')
     this.sfx_ding  = game.add.audio('sfx_countdown_ding')
-  
-    let audio_settings = store.get("audio");
+
+    let audio_settings = store.get("audio")
     if (audio_settings !== undefined) {
-      this.set_sfx_volume(audio_settings[0]);
-      this.set_msx_volume(audio_settings[1]);
-      this.mute_all(audio_settings[2]);
+      this.set_sfx_volume(audio_settings[0])
+      this.set_msx_volume(audio_settings[1])
+      this.mute_all(audio_settings[2])
     }
   } 
 
@@ -67,13 +86,15 @@ export default class CoreSounds {
    * @param {integer} volume from 0 to 100
    */
   set_sfx_volume(volume) {
-    let decimal_volume = volume * 0.01
+    console.log('sfx',volume)
+    const decimal_volume = volume * 0.01
 
     this.sfx_land.forEach(sfx => sfx.volume = decimal_volume)
     this.sfx_pop.forEach(sfx => sfx.volume = decimal_volume)
     this.sfx_confirm.volume = decimal_volume
     this.sfx_select.volume  = decimal_volume
     this.sfx_blip.volume    = decimal_volume
+    this.sfx_ding.volume    = decimal_volume
     this.sfx_swap.volume    = decimal_volume
   }
 
@@ -82,11 +103,12 @@ export default class CoreSounds {
    * @param {integer} volume from 0 to 100
    */
   set_msx_volume(volume) {
-    let decimal_volume = volume * 0.01
+    console.log('msx',volume)
+    const decimal_volume = volume * 0.01
 
-    this.msx_stage_results.volume  = decimal_volume
     this.msx_stage.volume          = decimal_volume
     this.msx_stage_critical.volume = decimal_volume
+    this.msx_stage_results.volume  = decimal_volume
   }
 
  /**
@@ -170,32 +192,32 @@ export default class CoreSounds {
         break;
       case 'none':
         this.state_music = state;
-        this.msx_stage.stop()
+        this.msx_stage.stop_loop()
         this.msx_stage_critical.stop_loop()
-        this.msx_stage_results.stop()
+        this.msx_stage_results.stop_loop()
         break;
       case 'active':
         if (this.state_music != 'active') {
           this.state_music = state
-          this.msx_stage.loopFull(this.msx_volume)
+          this.msx_stage.play_loop("start")
           this.msx_stage_critical.stop_loop()
-          this.msx_stage_results.stop()
+          this.msx_stage_results.stop_loop()
         }
         break;
       case 'danger':
         if (this.state_music != 'danger') {
           this.state_music = state
-          this.msx_stage.stop()
+          this.msx_stage.stop_loop()
           this.msx_stage_critical.play_loop("start")
-          this.msx_stage_results.stop()
+          this.msx_stage_results.stop_loop()
         }
         break;
       case 'results':
         if (this.state_music != 'results') {
           this.state_music = state
-          this.msx_stage.stop()
+          this.msx_stage.stop_loop()
           this.msx_stage_critical.stop_loop()
-          this.msx_stage_results.loopFull(this.msx_volume)
+          this.msx_stage_results.play_loop("start")
         }
         break;
     }
@@ -217,7 +239,7 @@ export default class CoreSounds {
    */
   loop (key, volume, start_time, end_time, test_end_time) {
     // need to use game.add.audio()... extending phaser.sound has issues when returning the extended object
-    let sound = game.add.audio(key)
+    const sound = game.add.audio(key)
     sound.addMarker("start"      , 0            , start_time              , volume, true)
     sound.addMarker("main"       , start_time   , end_time - start_time   , volume, true)
     sound.addMarker("testLoopEnd", test_end_time, end_time - test_end_time, volume, true)
