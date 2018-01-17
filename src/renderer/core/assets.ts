@@ -7,7 +7,7 @@ class Assets {
   private static _instance: Assets
   private dir : string
   private assets : {
-    music         : {},
+    music         : any,
     sound_effects : Array<string>,
     images        : Array<string>,
     spritesheets  : any
