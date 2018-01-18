@@ -14,9 +14,7 @@ import {render as UiForgot} from 'ui/forgot'
 import {render as UiIncomplete} from 'ui/incomplete'
 
 /** declare html window.document to be usable */
-declare var window: {
-  document: any
-}
+declare const window : any
 
 /**
  * Wether the current mode is active or not
@@ -93,16 +91,4 @@ export default function render(){
   m.mount(window.document.getElementById('ui'), app)
 }
 
-ipc.on('close', function(event, data) {
-  console.log('closing time')
-  Ui.access()
-})
-
-ipc.on('reload', function(event, data) {
-  console.log('reload',data.mode)
-  controls.stop()
-  Ui.mode = data.mode
-  window.document.getElementById('game').classList.add('hide')
-  m.redraw()
-})
 

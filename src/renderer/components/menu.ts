@@ -3,6 +3,8 @@ import ComponentMenuItem   from 'components/menu_item'
 import ComponentBadge      from 'components/badge'
 import ComponentMenuCursor from 'components/menu_cursor'
 import {px}                from 'core/filters'
+import Store          from 'common/store'
+const store = new Store()
 
 /** Class representing a menu. */
 export default class ComponentMenu {
@@ -103,7 +105,10 @@ export default class ComponentMenu {
     }
 
     this.cursor.create(this, this.menu_items)
-    this.badge.create('omenking')
+
+    if (store.has('auth_token') && store.has('username')) {
+      this.badge.create(store.get('username'))
+    }
   }
 
   get x(){

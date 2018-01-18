@@ -1,9 +1,11 @@
+import * as m  from 'mithril'
 import { ipcRenderer as ipc } from 'electron';
 import ui   from 'ui/main'
 import game from 'core/game'
 import fade from 'core/fade'
 import controls from 'core/controls'
 import Store          from 'common/store'
+import Ui         from 'ui/mode'
 const store = new Store()
 
 import BootState       from 'states/boot'
@@ -74,6 +76,19 @@ ipc.on('network-connect', (event, data) => {
 
 ipc.on('snapshot-import', (event, data) => {
   window.stage.snapshots.snapshot_import(data)
+})
+
+ipc.on('close', function(event, data) {
+  console.log('closing time')
+  Ui.access()
+})
+
+ipc.on('reload', function(event, data) {
+  console.log('reload',data.mode)
+  controls.stop()
+  Ui.mode = data.mode
+  window.document.getElementById('game').classList.add('hide')
+  m.redraw()
 })
 
 window.snapshot_export_send = function(snapshot){ ipc.send('snapshot-export',snapshot) }

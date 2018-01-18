@@ -1,5 +1,5 @@
 import * as m  from 'mithril'
-import electron from 'electron'
+import * as electron from 'electron'
 const {remote} = electron
 import controls from 'core/controls'
 import {reset as StateResetLogin}  from 'ui/login'
@@ -27,6 +27,7 @@ class UiMode {
     controls.start()
     mode = false
     document.getElementById('game').classList.remove('hide')
+    m.redraw()
   }
   get mode(){
     return mode

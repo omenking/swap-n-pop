@@ -18,11 +18,7 @@ export default class MenuState extends State {
 
   constructor() {
     super()
-    if (store.has('auth_token')) {
-      this.menu = new ComponentMenu(10);
-    } else {
-      this.menu = new ComponentMenu(9);
-    }
+    this.menu = new ComponentMenu(10);
   }
 
   get name(): string {
@@ -48,6 +44,8 @@ export default class MenuState extends State {
     ]
     if (store.has('auth_token')) {
       items.push({name: 'Logout', action: this.logout})
+    } else {
+      items.push({name: 'Login', action: this.login})
     }
 
     this.menu.create(
@@ -55,6 +53,10 @@ export default class MenuState extends State {
         game.world.centerY - ((10 + (28 * items.length-1) + 10)/2) + 20,
         220, items)
     fade.in()
+  }
+
+  login(){
+    ipc.send('login')
   }
 
   logout(){
