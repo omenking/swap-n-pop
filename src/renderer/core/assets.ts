@@ -63,7 +63,7 @@ class Assets {
 
   filename(kind : string, name : string){
     switch (kind) {
-      case "music"         : return `music/${name}.mp3`
+      case "music"         : return `music/${name}.ogg`
       case "sound_effects" : return `sound_effects/${name}.ogg`
       case "images"        : return `images/${name}.png`
       case "spritesheets"  : return `spritesheets/${name}.png`

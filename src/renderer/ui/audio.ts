@@ -36,7 +36,7 @@ export default function render() {
 
         oninput: function(e){
           audio_sfx_volume = e.target.value
-          game.sounds.set_sfx_volume(audio_sfx_volume)
+          game.sounds.set_sfx_volume(audio_sfx_volume * 0.01)
         }
       }),
       m('.val',[
@@ -60,7 +60,7 @@ export default function render() {
 
         oninput: function(e){
           audio_msx_volume = e.target.value
-          game.sounds.set_msx_volume(audio_msx_volume)
+          game.sounds.set_msx_volume(audio_msx_volume * 0.01)
         },
       }),
       m('.val',[
