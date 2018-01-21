@@ -2,8 +2,9 @@ import * as m  from 'mithril'
 import * as electron from 'electron'
 const {remote} = electron
 import controls from 'core/controls'
-import {reset as StateResetLogin}  from 'ui/login'
-import {reset as StateResetSignup} from 'ui/signup'
+import {reset as StateResetForgot}     from 'ui/forgot'
+import {reset as StateResetLogin}      from 'ui/login'
+import {reset as StateResetSignup}     from 'ui/signup'
 import {reset as StateResetIncomplete} from 'ui/incomplete'
 
 let mode = remote.getCurrentWindow().custom.mode
