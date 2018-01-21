@@ -77,7 +77,10 @@ export default class CoreGarbage {
     if (chain >= 2) { this.queue.push({kind: CHAIN, size: chain, counter: delay}) }
     if (combo >= 4) { this.queue.push({kind: COMBO, size: combo, counter: delay}) }
     // send out character animation before the TIME_PARTICLE_GARAGE delay
+    if (chain >= 2 || combo >= 4) {
+    console.log('pushing')
     this.my_playfield.character.current_animation = "attack"
+    }
   }
 
   /*
