@@ -21,7 +21,6 @@ export default class CoreSounds {
   private sfx_blip           : Phaser.Sound
   private sfx_ding           : Phaser.Sound
   private sfx_swap           : Phaser.Sound
-  private msx_volume : number
   private stay_muted : boolean
   private stay_loop  : boolean
   private play_loop  : boolean
@@ -75,8 +74,8 @@ export default class CoreSounds {
 
     let audio_settings = store.get("audio")
     if (audio_settings !== undefined) {
-      this.set_sfx_volume(audio_settings[0])
-      this.set_msx_volume(audio_settings[1])
+      this.set_sfx_volume(this.sfx_volume)
+      this.set_msx_volume(this.msx_volume)
       this.mute_all(audio_settings[2])
     }
   } 
@@ -86,16 +85,13 @@ export default class CoreSounds {
    * @param {integer} volume from 0 to 100
    */
   set_sfx_volume(volume) {
-    console.log('sfx',volume)
-    const decimal_volume = volume * 0.01
-
-    this.sfx_land.forEach(sfx => sfx.volume = decimal_volume)
-    this.sfx_pop.forEach(sfx => sfx.volume = decimal_volume)
-    this.sfx_confirm.volume = decimal_volume
-    this.sfx_select.volume  = decimal_volume
-    this.sfx_blip.volume    = decimal_volume
-    this.sfx_ding.volume    = decimal_volume
-    this.sfx_swap.volume    = decimal_volume
+    this.sfx_land.forEach(sfx => sfx.volume = volume)
+    this.sfx_pop.forEach(sfx => sfx.volume = volume)
+    this.sfx_confirm.volume = volume
+    this.sfx_select.volume  = volume
+    this.sfx_blip.volume    = volume
+    this.sfx_ding.volume    = volume
+    this.sfx_swap.volume    = volume
   }
 
   /**
@@ -103,12 +99,9 @@ export default class CoreSounds {
    * @param {integer} volume from 0 to 100
    */
   set_msx_volume(volume) {
-    console.log('msx',volume)
-    const decimal_volume = volume * 0.01
-
-    this.msx_stage.volume          = decimal_volume
-    this.msx_stage_critical.volume = decimal_volume
-    this.msx_stage_results.volume  = decimal_volume
+    this.msx_stage.volume          = volume
+    this.msx_stage_critical.volume = volume
+    this.msx_stage_results.volume  = volume
   }
 
  /**
@@ -266,8 +259,20 @@ export default class CoreSounds {
     return function (key) {
       if (sound.stay_muted !== true) {
         sound.mute = false
-        sound.play(key)
+        console.log('key',key,this.msx_volume)
+        sound.play(key,null,this.msx_volume)
       }
     }
+  }
+
+  get msx_volume(){
+    const volume = store.get("audio")[0] * 0.01
+    console.log('sfx_volume',volume)
+    return volume
+  }
+  get sfx_volume(){
+    const volume = store.get("audio")[1] * 0.01
+    console.log('sfx_volume',volume)
+    return volume
   }
 }
