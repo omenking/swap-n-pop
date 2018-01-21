@@ -544,6 +544,7 @@ export default class Playfield {
         break;
       case GAMEOVER:
         this.wall.update()
+        this.character.update()
         break;
     }
   }
