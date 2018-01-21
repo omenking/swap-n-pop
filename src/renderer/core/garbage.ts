@@ -14,10 +14,20 @@ export default class CoreGarbage {
   private alternate : Array<any>
   private left      : boolean
 
+  /*
+   * We store in here the garbage group when it first
+   * gets shifted off the queue. When a garbage panel with that
+   * garbage group  lands  for the first time we can then
+   * remove it from falling and play the sound once via the
+   * playfield
+   */
+  public falling   : Array<number>
+
   create(stage, pi){
     this.stage = stage
     this.pi    = pi
     this.queue = []
+    this.falling = []
     // 0 1 2 3 4 5
     this.alternate = [
       {index: 0, frame: [0,1,2,3,4,5]}, // 1 garbage wide
@@ -130,6 +140,9 @@ export default class CoreGarbage {
     if (!this.empty_row(pl)) { return }
     this.left = !this.left
     const v = this.queue.shift()
+
+    this.falling.push(this.stage.tick)
+    console.log('falling shift', this.falling, this.stage.tick)
 
     // if garbage sent after delay - play attacked on the playfield chosen
     if (v.kind === COMBO){
