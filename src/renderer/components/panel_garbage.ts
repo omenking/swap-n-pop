@@ -79,6 +79,7 @@ export default class ComponentPanelGarbage {
     this.state_execute = new Map()
     this.state_exit    = new Map()
 
+    this.state_enter.set(STATIC, this.static_enter.bind(this))
     this.state_execute.set(STATIC, this.static_execute.bind(this))
     this.state_execute.set(FALL  , this.fall_execute.bind(this))
     this.state_execute.set(CLEAR , this.clear_execute.bind(this))
@@ -149,6 +150,20 @@ export default class ComponentPanelGarbage {
 
   private get tick(){
     return this.playfield.stage.tick
+  }
+
+  get other_playfield(){
+    if (this.playfield.pi === 0) { return this.playfield.stage.playfield1 }
+    else               { return this.playfield.stage.playfield0 }
+  }
+
+  static_enter() {
+    const pl = this.other_playfield
+    const i = pl.garbage.falling.indexOf(this.group)
+    if (i !== -1){
+      pl.garbage.falling.splice(i,1)
+      pl.garbage_landing = true
+    }
   }
 
   static_execute() {

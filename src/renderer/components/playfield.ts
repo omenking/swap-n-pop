@@ -39,7 +39,7 @@ export default class Playfield {
   public chain : number
 
   public  stage           : any //CoreStage
-  private garbage         : CoreGarbage
+  public  garbage         : CoreGarbage
   public  garbage_preview : ComponentGarbagePreview
   public  countdown       : ComponentPlayfieldCountdown
   public  cursor          : ComponentPlayfieldCursor
@@ -71,6 +71,7 @@ export default class Playfield {
   public counter  : number
   public pushing  : boolean
   public push_counter  : number
+  public garbage_landing : boolean
 
   constructor(pi){
     if (pi !== 0 && pi !== 1){
@@ -169,6 +170,7 @@ export default class Playfield {
     //this.score_lbl.create()
     // for mode_puzzle, couting all swaps
     this.swap_counter = 0;
+    this.garbage_landing = false
   }
 
   get clear(){
@@ -535,6 +537,10 @@ export default class Playfield {
         }
         this.update_score(cnc[0],cnc[1])
 
+        if (this.garbage_landing === true){
+          game.sounds.land()
+          this.garbage_landing = false
+        }
         if (this.land === true) {
           game.sounds.land()
           this.land = false

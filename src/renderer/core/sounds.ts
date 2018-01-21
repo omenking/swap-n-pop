@@ -259,7 +259,6 @@ export default class CoreSounds {
     return function (key) {
       if (sound.stay_muted !== true) {
         sound.mute = false
-        console.log('key',key,this.msx_volume)
         sound.play(key,null,this.msx_volume)
       }
     }
@@ -267,12 +266,10 @@ export default class CoreSounds {
 
   get msx_volume(){
     const volume = store.get("audio")[0] * 0.01
-    console.log('sfx_volume',volume)
     return volume
   }
   get sfx_volume(){
     const volume = store.get("audio")[1] * 0.01
-    console.log('sfx_volume',volume)
     return volume
   }
 }
