@@ -46,7 +46,7 @@ export default class ComponentPanelGarbage {
   create(bauble){
     this.bauble = bauble
     this.sprite = game.add.sprite(0, 0, 'particle_garbage', 0)
-    //this.sprite.visible = false
+    this.sprite.visible = false
   }
 
   get preview(){
