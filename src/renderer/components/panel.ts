@@ -382,6 +382,9 @@ export default class ComponentPanel {
    */
   set_particles_clear(){
     if (this.time_cur === this.time_pop) {
+      // Score 10 per pop
+      this.playfield.add_score(10)  
+        
       this.particles[0].set_counter()
       this.particles[1].set_counter()
       this.particles[2].set_counter()

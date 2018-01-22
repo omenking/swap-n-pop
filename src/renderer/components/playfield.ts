@@ -26,7 +26,9 @@ import {
   RUNNING,
   PAUSE,
   GAMEOVER,
-  CLEAR
+  CLEAR,
+  SCORE_COMBO,
+  SCORE_CHAIN
 } from 'common/data';
 
 export default class Playfield {
@@ -411,48 +413,18 @@ export default class Playfield {
       this.score         += this.push()
     }
   }
+  
+  add_score(value) {
+      this.score += value
+  }
   score_combo(combo) {
-    switch (combo) {
-      case 4: return 20;
-      case 5: return 30;
-      case 6: return 50;
-      case 7: return 60;
-      case 8: return 70;
-      case 9: return 80;
-      case 10: return 100;
-      case 11: return 140;
-      case 12: return 170;
-      default:
-        return 0;
-    }
+    this.score += SCORE_COMBO[Math.min(combo, SCORE_COMBO.length)]
   }
   score_chain(chain) {
-    switch (chain) {
-      case 2:  return 50;
-      case 3:  return 80;
-      case 4:  return 150;
-      case 5:  return 300;
-      case 6:  return 400;
-      case 7:  return 500;
-      case 8:  return 700;
-      case 9:  return 900;
-      case 10: return 1100;
-      case 11: return 1300;
-      case 12: return 1500;
-      case 13: return 1800;
-      default:
-        return 0;
-    }
+    this.score += SCORE_CHAIN[Math.min(chain, SCORE_CHAIN.length)]
   }
-  update_score(combo,chain) {
-    if (combo > 0) {
-      this.score += combo * 10
-      this.score += this.score_combo(combo)
-      if (chain) {
-        this.score += this.score_chain(chain)
-      }
-    }
-  }
+  
+  
   update_garbage_clearing(){
     if (this.clearing_garbage.length > 0){
       for (let panel of this.stack){
@@ -535,8 +507,7 @@ export default class Playfield {
           this.garbage.update(cnc[0],cnc[1])
           this.garbage_preview.update()
         }
-        this.update_score(cnc[0],cnc[1])
-
+        
         if (this.garbage_landing === true){
           game.sounds.land()
           this.garbage_landing = false
