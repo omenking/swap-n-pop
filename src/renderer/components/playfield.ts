@@ -418,10 +418,10 @@ export default class Playfield {
       this.score += value
   }
   score_combo(combo) {
-    this.score += SCORE_COMBO[Math.min(combo, SCORE_COMBO.length)]
+    this.score += SCORE_COMBO[Math.min(combo, SCORE_COMBO.length - 1)]
   }
   score_chain(chain) {
-    this.score += SCORE_CHAIN[Math.min(chain, SCORE_CHAIN.length)]
+    this.score += SCORE_CHAIN[Math.min(chain, SCORE_CHAIN.length - 1)]
   }
   
   
