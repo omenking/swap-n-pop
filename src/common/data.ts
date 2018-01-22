@@ -136,9 +136,9 @@ export const SCORE_COMBO = [0,    0,    0,   20,   30,
                           610,  680,  750,  820,  900,
                           980, 1060, 1150, 1240, 1330]
 
-export const SCORE_CHAIN = [0,   50,   80,  150,  300,
-                          400,  500,  700,  900, 1100,
-                         1300, 1500, 1800]
+export const SCORE_CHAIN = [0,0,  50,   80,  150,  300,
+                            400,  500,  700,  900, 1100,
+                           1300, 1500, 1800]
 
 export const UNIT = 32;
 export const WIN_WIDTH = 398 * 2; // 256
