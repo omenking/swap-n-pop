@@ -81,6 +81,12 @@ function render(){
      textfield(19,'Step Forward'),
      textfield(20,'Step Backward')
     ])),
+
+    m('.other',
+     m('.title','Other'),
+     m('table',[
+     textfield(21,'Fullscreen'),
+    ])),
    m('.clear')
  ])
 }
@@ -102,9 +108,7 @@ window.document.onclick = function (e) {
 }
 
 window.document.onkeydown = function (e) {
-  if (e.keyCode === 70) { //f (for fullscreen)
-    ipc.send('fullscreen')
-  } else if (e.keyCode === 27) { //esc
+  if (e.keyCode === 27) { //esc
     if (Ui.mode === false) {
       Ui.show()
     } else {

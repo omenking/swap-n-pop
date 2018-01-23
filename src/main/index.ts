@@ -48,7 +48,8 @@ if (!store.has('inputs')){
 
   null, //sim_toggle
   null, //sim_forward
-  null  //sim_backward
+  null, //sim_backward
+  70  //fullscreen
   ])
 }
 const template : any = [

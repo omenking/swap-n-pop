@@ -22,27 +22,28 @@ class CoreControls {
 
   create() {
     this.callbacks = {
-      pl0_up    : function(){},
-      pl0_down  : function(){},
-      pl0_left  : function(){},
-      pl0_right : function(){},
-      pl0_a     : function(){},
-      pl0_b     : function(){},
-      pl0_l     : function(){},
-      pl0_r     : function(){},
-      pl0_start : function(){},
-      pl1_up    : function(){},
-      pl1_down  : function(){},
-      pl1_left  : function(){},
-      pl1_right : function(){},
-      pl1_a     : function(){},
-      pl1_b     : function(){},
-      pl1_l     : function(){},
-      pl1_r     : function(){},
-      pl1_start : function(){},
-      sim_toggle  : function(){},
-      sim_forward : function(){},
-      sim_backward : function(){}
+      pl0_up       : function(){},
+      pl0_down     : function(){},
+      pl0_left     : function(){},
+      pl0_right    : function(){},
+      pl0_a        : function(){},
+      pl0_b        : function(){},
+      pl0_l        : function(){},
+      pl0_r        : function(){},
+      pl0_start    : function(){},
+      pl1_up       : function(){},
+      pl1_down     : function(){},
+      pl1_left     : function(){},
+      pl1_right    : function(){},
+      pl1_a        : function(){},
+      pl1_b        : function(){},
+      pl1_l        : function(){},
+      pl1_r        : function(){},
+      pl1_start    : function(){},
+      sim_toggle   : function(){},
+      sim_forward  : function(){},
+      sim_backward : function(){},
+      fullscreen   : function(){}
     }
 
     game.input.gamepad.start()
@@ -69,7 +70,7 @@ class CoreControls {
       pl1_start : false,
       sim_toggle  : false,
       sim_forward : false,
-      sim_backward : false
+      fullscreen : false
     } //simulated down
     this._down = {}
     this.keys  = {}
@@ -105,6 +106,7 @@ class CoreControls {
     let inputs = store.get('inputs')
     game.input.keyboard.reset()
     this.keys = {}
+
     //player 1
     this.keys.pl0_up    = this.add_input(inputs[0])
     this.keys.pl0_down  = this.add_input(inputs[1])
@@ -115,6 +117,7 @@ class CoreControls {
     this.keys.pl0_l     = this.add_input(inputs[6])
     this.keys.pl0_r     = this.add_input(inputs[7])
     this.keys.pl0_start = this.add_input(inputs[8])
+
     //player 2
     this.keys.pl1_up    = this.add_input(inputs[9])
     this.keys.pl1_down  = this.add_input(inputs[10])
@@ -125,10 +128,12 @@ class CoreControls {
     this.keys.pl1_l     = this.add_input(inputs[15])
     this.keys.pl1_r     = this.add_input(inputs[16])
     this.keys.pl1_start = this.add_input(inputs[17])
+
     //global bindings
-    this.keys.sim_toggle  = this.add_input(inputs[18])
-    this.keys.sim_forward = this.add_input(inputs[19])
-    this.keys.sim_backward = this.add_input(inputs[20])
+    this.keys.sim_toggle     = this.add_input(inputs[18])
+    this.keys.sim_forward    = this.add_input(inputs[19])
+    this.keys.sim_backward   = this.add_input(inputs[20])
+    this.keys.fullscreen = this.add_input(inputs[21])
   }
   start(){
     game.input.enabled = true
@@ -138,6 +143,10 @@ class CoreControls {
   }
   toggle_menu(){
     console.log('toggle menu')
+  }
+  fullscreen(tick){
+    if (tick > 0) { return }
+    ipc.send('fullscreen')
   }
   add_input(i){
     if(typeof(i) === 'string'){
@@ -168,6 +177,7 @@ class CoreControls {
 
   public map(pi,opts){
     let nada = function(){}
+    this.map_fixed_global()
     if (pi === 0) {
       this.callbacks.pl0_up    = opts.up    ? opts.up    : nada
       this.callbacks.pl0_down  = opts.down  ? opts.down  : nada
@@ -196,7 +206,10 @@ class CoreControls {
     this.callbacks.sim_toggle   = opts.sim_toggle   ? opts.sim_toggle   : nada
     this.callbacks.sim_forward  = opts.sim_forward  ? opts.sim_forward  : nada
     this.callbacks.sim_backward = opts.sim_backward ? opts.sim_backward : nada
+  }
 
+  public map_fixed_global(){
+    this.callbacks.fullscreen = this.fullscreen
   }
 
   serialize(pi){
@@ -354,6 +367,7 @@ class CoreControls {
    * loop on the stage is being stopped
    */
   update(sim0=false,sim1=false){
+    this.update_fixed_global()
     this.update_pl(sim0,0)
     this.update_pl(sim1,1)
   }
@@ -387,6 +401,10 @@ class CoreControls {
     if (this.check_down(false,'sim_toggle' )){ this.trigger('sim_toggle')  } else { this._down.sim_toggle  = 0 }
     if (this.check_down(false,'sim_forward')){ this.trigger('sim_forward') } else { this._down.sim_forward = 0 }
     if (this.check_down(false,'sim_backward')){ this.trigger('sim_backward') } else { this._down.sim_backward = 0 }
+  }
+
+  update_fixed_global(){
+    if (this.check_down(false,'fullscreen')){ this.trigger('fullscreen') } else { this._down.fullscreen = 0 }
   }
 }
 const controls = new CoreControls()
