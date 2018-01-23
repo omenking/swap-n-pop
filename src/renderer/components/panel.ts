@@ -336,7 +336,7 @@ export default class ComponentPanel {
       this.clear_i    = xi
       this.clear_len  = xlen
 
-      const time_max = TIME_CLEAR + (TIME_POP*(this.clear_len - 1))
+      const time_max = TIME_CLEAR + (TIME_POP*(this.clear_len - 1) + 1)
       this.time_pop = TIME_CLEAR + (TIME_POP*this.clear_i)
       this.time_cur = time_max - this.counter
 
