@@ -41,6 +41,8 @@
     ,"playfield_wall1"
     ,"bauble_times"
     ,"font"
+    ,"char_00"
+    ,"char_01"
   ],
   "spritesheets" : {
      "garbage_thumb"      : {"size": "48x32" , "frames": 4}
