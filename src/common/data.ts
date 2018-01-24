@@ -37,6 +37,10 @@ export const STARTING = 'starting'
 export const RUNNING  = 'running'
 export const PAUSE    = 'pause'
 export const GAMEOVER = 'gameover'
+// WALL States
+export const ROLLUP   = 'rollup'
+export const ROLLDOWN = 'rolldown'
+export const WAIT     = 'wait'
 
 // COUNTDOWN States
 export const MOVING = 'moving'
@@ -65,6 +69,7 @@ export const TIME_FALL = 3;
 export const TIME_SWAP = 4;
 
 
+export const TIME_WALL_WAIT = 60 * 3
 
 export const TIME_PUSH = 1000;
 /** The time the particle stays on the screen for. */

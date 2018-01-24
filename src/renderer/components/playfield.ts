@@ -117,7 +117,8 @@ export default class Playfield {
       snap_stack,
       this.pushing,
       this.character.snap,
-      this.garbage.snap
+      this.garbage.snap,
+      this.wall.snap
     ]
   }
   load(snapshot) {
@@ -129,6 +130,7 @@ export default class Playfield {
     this.pushing = snapshot[3]
     this.character.load(snapshot[4])
     this.garbage.load(snapshot[5])
+    this.wall.load(snapshot[6])
   }
   create(stage,opts) {
     if (stage === null) {
@@ -236,7 +238,7 @@ export default class Playfield {
     if (this.cursor.y > 0) { this.cursor.y--; }
     return 1
   }
-  
+
   create_newline(){
     if (!this.should_push) { return; }
     const rows = (ROWS + (this.should_push ? 1 : 0 ))
