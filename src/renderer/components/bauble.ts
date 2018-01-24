@@ -64,6 +64,10 @@ export default class ComponentBauble {
 
   }
 
+  get stage(){
+    return this.panel.playfield.stage
+  }
+
   create_chain() {
     this.chain = game.add.group()
     this.chain.visible = false
@@ -108,7 +112,9 @@ export default class ComponentBauble {
 
 
   update() {
-    this.particle_garbage.update()
+    if (this.stage.flag_garbage === true){
+      this.particle_garbage.update()
+    }
     this.particles[0].update()
     this.particles[1].update()
     this.particles[2].update()
@@ -125,7 +131,9 @@ export default class ComponentBauble {
     y    -= BAUBLE_FLOAT[this.panel.time_cur]
     this.render_chain(x,y)
     this.render_combo(x,y)
-    this.particle_garbage.render()
+    if (this.stage.flag_garbage === true){
+      this.particle_garbage.render()
+    }
     this.particles[0].render()
     this.particles[1].render()
     this.particles[2].render()
