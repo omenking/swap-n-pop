@@ -49,6 +49,7 @@ export default class Playfield {
   private score_lbl       : ComponentScore
   private ai              : ComponentAi
   public  character       : ComponentCharacter
+  private bg : Phaser.Sprite
 
   public  should_push      : boolean
   private height : number
@@ -89,6 +90,7 @@ export default class Playfield {
     this.score_lbl       = new ComponentScore()
     this.ai              = new ComponentAi()
     this.character       = new ComponentCharacter()
+
   }
 
   get stack(){
@@ -149,6 +151,8 @@ export default class Playfield {
 
     this.x = opts.x
     this.y = opts.y
+
+    this.bg = game.add.sprite(this.x,this.y,`char_0${this.pi}`)
 
     this.layer_block  = game.add.group()
     this.layer_block.x  = this.x
@@ -507,7 +511,7 @@ export default class Playfield {
           this.garbage.update(cnc[0],cnc[1])
           this.garbage_preview.update()
         }
-        
+
         if (this.garbage_landing === true){
           game.sounds.land()
           this.garbage_landing = false
