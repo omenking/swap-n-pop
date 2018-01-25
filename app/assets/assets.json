@@ -45,9 +45,7 @@
     ,"char_01"
   ],
   "spritesheets" : {
-    "garbage_face"      : { "size": "20x32", "frames": 1 }
-    ,"garbage_thumb"      : {"size": "48x32" , "frames": 4}
-    ,"ints_small"         : {"size": "16x16" , "frames": 18}
+     "ints_small"         : {"size": "16x16" , "frames": 18}
     ,"ints_large"         : {"size": "16x24" , "frames": 18}
     ,"playfield_cursor"   : {"size": "76x44" , "frames": 2}
     ,"playfield_countdown": {"size": "124x76", "frames": 4}
@@ -71,7 +69,9 @@
       "newline": 1,
       "dead": 6
     }}
-    ,"garbage"            : {"size": "32x32" , "frames": 14}
+    ,"garbage"    : {"size": "32x32" , "frames": 14}
+    ,"garbage_face" : { "size": "32x20", "frames": 5, "animations": { "blink": [1,2,3,4,3,2,1] } }
+    ,"garbage_thumb"      : {"size": "48x32" , "frames": 4}
     ,"star_counter"       : {"size": "32x32" , "frames": 12}
     ,"bauble"             : {"size": "6x32"  , "frames": 6}
     ,"bauble_num"         : {"size": "12x18" , "frames": 10}

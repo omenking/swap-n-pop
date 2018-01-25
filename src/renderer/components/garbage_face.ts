@@ -1,10 +1,11 @@
-import game                 from 'core/game'
+import game   from 'core/game'
+import assets from 'core/assets'
 import ComponentPanelGarbage from 'components/panel_garbage'
 import {px, xy2i} from 'core/filters'
 import { UNIT } from 'common/data'
 
 export default class ComponentGarbageFace {
-  private sprite: Phaser.Sprite
+  private sprite : Phaser.Sprite
   private panel_garbage : ComponentPanelGarbage
 
   constructor(){
@@ -12,12 +13,7 @@ export default class ComponentGarbageFace {
 
   create(panel_garbage){
     this.panel_garbage = panel_garbage
-    this.sprite = game.add.sprite(
-      panel_garbage.x,
-      panel_garbage.y,
-      'garbage_face',
-      0
-    )
+    this.sprite = game.add.sprite(panel_garbage.x,panel_garbage.y,'garbage_face',0)
     this.sprite.visible = false
   }
 
@@ -57,6 +53,16 @@ export default class ComponentGarbageFace {
     }
   }
 
+  get frame(){
+    const i      = this.playfield.stage.tick % (60 * 6)
+    const frames = assets.spritesheets.garbage_face.animations.blink
+    if (i >= frames.length) {
+      return 0
+    } else {
+      return frames[i]
+    }
+  }
+
   render(){
     this.sprite.x = this.panel_garbage.x
     this.sprite.y = this.panel_garbage.y + px(3)
@@ -69,5 +75,6 @@ export default class ComponentGarbageFace {
     } else {
       this.sprite.visible = false
     }
+    this.sprite.frame = this.frame
   }
 }

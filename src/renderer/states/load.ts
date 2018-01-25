@@ -78,6 +78,7 @@ export default class LoadState extends State {
     Object.keys(assets.spritesheets).forEach(function(key) { 
       data  = assets.spritesheets[key]
       pos = data.size.split('x')
+
       game.load.spritesheet(key,assets.path('spritesheets',key),
                             parseInt(pos[0]),
                             parseInt(pos[1]),
