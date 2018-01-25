@@ -249,6 +249,9 @@ export default class Playfield {
       this._stack[i] = new ComponentPanel()
       this.stack_i(i).create(this, x, y)
     }
+    for (let i = PANELS; i < PANELS+COLS; i++){
+      this.stack_i(i).create_after()
+    }
     // fill panels
     this.stack_i(PANELS).set_kind('unique')
     let consecutive = 1
@@ -281,6 +284,9 @@ export default class Playfield {
       const [x,y] = Array.from(i2xy(i))
       this._stack[i] = new ComponentPanel()
       this.stack_i(i).create(this, x, y)
+    }
+    for (let p of this.stack){
+      p.create_after()
     }
   }
 

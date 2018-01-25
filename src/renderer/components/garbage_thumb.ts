@@ -1,6 +1,6 @@
 import game from 'core/game'
 import ComponentGarbagePreview from 'components/garbage_preview'
-import ComponentParticleClear from 'components/particle_clear'
+import ComponentParticleClear  from 'components/particle_clear'
 import { 
   CHAIN,
   COMBO

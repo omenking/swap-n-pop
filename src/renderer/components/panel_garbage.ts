@@ -1,6 +1,7 @@
-import game               from 'core/game'
-import ComponentPanel     from 'components/panel'
-import ComponentPlayfield from 'components/playfield'
+import game                 from 'core/game'
+import ComponentPanel       from 'components/panel'
+import ComponentPlayfield   from 'components/playfield'
+import ComponentGarbageFace from 'components/garbage_face'
 
 import {
   COLS,
@@ -20,6 +21,7 @@ import {
 export default class ComponentPanelGarbage {
   get [Symbol.toStringTag](){ return 'PanelGarbage' }
 
+  public face : ComponentGarbageFace
   private _state          : string
   /*
    * group is used to group garbage panels to make
@@ -30,10 +32,11 @@ export default class ComponentPanelGarbage {
    * group_clearing is used to group garbage panels
    * from different groups into one big group for clearing
    */
+
   private _group_clearing : number
   private _kind : string
-  private panel     : ComponentPanel
-  private playfield : ComponentPlayfield
+  public panel     : ComponentPanel
+  public playfield : ComponentPlayfield
   private sprite    : Phaser.Sprite
   public time_max : number
   public time_pop : number
@@ -66,6 +69,9 @@ export default class ComponentPanelGarbage {
   get group_clearing()    {return this._group_clearing }
   set group_clearing(val) {       this._group_clearing = val }
 
+  constructor(){
+    this.face = new ComponentGarbageFace()
+  }
   create(panel : ComponentPanel ,playfield : ComponentPlayfield) {
     this.panel     = panel
     this.playfield = playfield
@@ -267,12 +273,24 @@ export default class ComponentPanelGarbage {
     return fall
   }
 
-  render_visible(){
+  get visible(){
     if (this.state === CLEAR){
-      this.sprite.visible = this.time_cur < this.time_pop
+      return this.time_cur < this.time_pop
     } else {
-      this.sprite.visible = this.panel.state === GARBAGE
+      return this.panel.state === GARBAGE
     }
+  }
+
+  get x(){
+    let x = this.playfield.layer_block.x
+    x    += (this.panel.x * UNIT)
+    return x
+  }
+
+  get y(){
+    let y = this.playfield.layer_block.y
+    y    += (this.panel.y * UNIT)
+    return y
   }
 
   /** */
@@ -305,14 +323,10 @@ export default class ComponentPanelGarbage {
       else if (str === '1010'){ this.sprite.frame = 12}
     }
 
-    let x = this.playfield.layer_block.x
-    let y = this.playfield.layer_block.y
-    x    += (this.panel.x * UNIT)
-    y    += (this.panel.y * UNIT)
-    this.sprite.x = x
-    this.sprite.y = y
-
-    this.render_visible()
+    this.sprite.x = this.x
+    this.sprite.y = this.y
+    this.sprite.visible = this.visible
+    this.face.render()
   }
   /** */
   shutdown(){}
