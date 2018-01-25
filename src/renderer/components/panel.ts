@@ -214,6 +214,10 @@ export default class ComponentPanel {
     this.particles[3].create(this,this.playfield.pi)
   }
 
+  create_after(){
+    this.garbage.face.create(this.garbage)
+  }
+
   hang_enter()   { this.counter = 10 }
   hang_execute() { if (this.counter <= 0) { this.change_state(FALL) } }
 

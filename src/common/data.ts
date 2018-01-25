@@ -103,7 +103,7 @@ export const SPEED_TO_RISE_TIME = [
      47,  47,  47,  47,  47,  47,  47,  47,  47,  47,
      47,  47,  47,  47,  47,  47,  47,  47,  47 
  ]
-     
+
 // Endless *AND* 1P Time Attack increase speed level based on number of panels cleared
 export const PANELS_TO_NEXT_SPEED = [
    9, 12, 12, 12, 12, 12, 15, 15, 18, 18,

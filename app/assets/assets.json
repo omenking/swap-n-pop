@@ -45,7 +45,8 @@
     ,"char_01"
   ],
   "spritesheets" : {
-     "garbage_thumb"      : {"size": "48x32" , "frames": 4}
+    "garbage_face"      : { "size": "20x32", "frames": 1 }
+    ,"garbage_thumb"      : {"size": "48x32" , "frames": 4}
     ,"ints_small"         : {"size": "16x16" , "frames": 18}
     ,"ints_large"         : {"size": "16x24" , "frames": 18}
     ,"playfield_cursor"   : {"size": "76x44" , "frames": 2}
