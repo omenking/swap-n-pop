@@ -11,8 +11,8 @@ const store = new Store()
  */
 export default class CoreSounds {
   private sfw_swap           : Phaser.Sound
-  private sfx_land           : Array<Phaser.Sound>
-  private sfx_pop            : Array<Phaser.Sound>
+  private sfx_land           : any
+  private sfx_pop            : any
   private sfx_confirm        : Phaser.Sound
   private sfx_select         : Phaser.Sound
   private sfx_blip           : Phaser.Sound
@@ -28,18 +28,10 @@ export default class CoreSounds {
       ["msx_stage_results", assets.music.msx_stage_results]
     )
 
-    this.sfx_land = []
-    this.sfx_land[0]  = game.add.audio('sfx_drop0')
-    this.sfx_land[1]  = game.add.audio('sfx_drop1')
-    this.sfx_land[2]  = game.add.audio('sfx_drop2')
-    this.sfx_land[3]  = game.add.audio('sfx_drop3')
-
-    this.sfx_pop = []
-    this.sfx_pop[0] = game.add.audio('sfx_pop0')
-    this.sfx_pop[1] = game.add.audio('sfx_pop1')
-    this.sfx_pop[2] = game.add.audio('sfx_pop2')
-    this.sfx_pop[3] = game.add.audio('sfx_pop3')
-
+    this.sfx_pop = game.add.audio('sfx_pop')
+    this.sfx_pop.allow_multiple = true
+    
+    this.sfx_land = game.add.audio('sfx_drop')
     this.sfx_confirm = game.add.audio('sfx_confirm')
     this.sfx_select  = game.add.audio('sfx_select')
 
@@ -55,16 +47,16 @@ export default class CoreSounds {
     }
   } 
   
-  get msx_volume() { return store.get("audio")[0] * 0.01 }
-  get sfx_volume() { return store.get("audio")[1] * 0.01 }
+  get sfx_volume() { return store.get("audio")[0] * 0.01 }
+  get msx_volume() { return store.get("audio")[1] * 0.01 }
 
   /**
    * Sets all current sfx files to the volume amount passed in
    * @param {integer} volume from 0 to 100
    */
   set_sfx_volume(volume) {
-    this.sfx_land.forEach(sfx => sfx.volume = volume)
-    this.sfx_pop.forEach(sfx => sfx.volume = volume)
+    this.sfx_land.volume = volume
+    this.sfx_pop.volume = volume
     this.sfx_confirm.volume = volume
     this.sfx_select.volume  = volume
     this.sfx_blip.volume    = volume
@@ -85,8 +77,8 @@ export default class CoreSounds {
   * @param {boolean} bool wether to mute or not mute all files
   */
   mute_all(bool) {
-    this.sfx_land.forEach(sfx => sfx.mute = bool)
-    this.sfx_pop.forEach(sfx => sfx.mute = bool)
+    this.sfx_land.mute = bool
+    this.sfx_pop.mute = bool
     this.sfx_confirm.mute = bool
     this.sfx_select.mute  = bool
     this.sfx_blip.mute    = bool
@@ -98,7 +90,7 @@ export default class CoreSounds {
 
   /** plays the sfx_land file */
   land() {
-    this.sfx_land[0].play()
+    this.sfx_land.play()
   }
 
   /** plays the swap file */
@@ -126,8 +118,14 @@ export default class CoreSounds {
     this.sfx_ding.play()
   }
 
-  pop(index) {
-    this.sfx_pop[Math.min(index,this.sfx_pop.length-1)].play()
+  /**
+   * plays a pop sound, each pop increases in pitch until the highest range is reached 
+   * @param index current pop
+   * @param range length of the popping
+   */
+  pop(index, range) {
+    this.sfx_pop.play()
+    this.sfx_pop._sound.playbackRate.value = game.math.linear(index, range, 1 / range)
   }
 
   /**
