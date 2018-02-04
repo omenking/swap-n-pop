@@ -1,7 +1,7 @@
 import Store from 'common/store'
 import game from 'core/game'
 import assets from 'core/assets'
-//import audio_stream from 'core/audio_stream'
+import SoundGroup from 'core/sound_group'
 
 const store = new Store()
 
@@ -11,10 +11,6 @@ const store = new Store()
  */
 export default class CoreSounds {
   private sfw_swap           : Phaser.Sound
-  private msx_stage_results  : any
-  private msx_stage          : any
-  private msx_stage_critical : any
-  private state_music        : string
   private sfx_land           : Array<Phaser.Sound>
   private sfx_pop            : Array<Phaser.Sound>
   private sfx_confirm        : Phaser.Sound
@@ -22,36 +18,15 @@ export default class CoreSounds {
   private sfx_blip           : Phaser.Sound
   private sfx_ding           : Phaser.Sound
   private sfx_swap           : Phaser.Sound
-  private stay_muted : boolean
-  private stay_loop  : boolean
-  private play_loop  : boolean
-  private stop_loop  : boolean
+  private mode_vs            : SoundGroup
 
-  /**
-   * Extends a phaser sound object that starts playing at a start point again 
-   * once the file is played through
-   * @param key name of the audio file
-   * @param start_time looppoint in seconds
-   * @returns Phaser.Sound extended
-   */
-  loopable_sound(key : string, start_time : number) {
-    let sound = game.add.audio(key)
-    sound.start_time = start_time
-
-    sound.step = function() {
-      if (sound.isPlaying)
-        if ((sound.currentTime * 0.001) > sound.duration) 
-          sound.play("", sound.start_time, sound.volume)
-    }
-
-    return sound
-  }
-  
   /** Defines all the sound files this class contains, volume vars and loopable sounds */
   create() {  
-    this.msx_stage = this.loopable_sound("msx_stage", assets.music.msx_stage)
-    this.msx_stage_critical = this.loopable_sound("msx_stage_critical", assets.music.msx_stage_critical)
-    this.msx_stage_results  = this.loopable_sound("msx_stage_results", assets.music.msx_stage_results)
+    this.mode_vs = new SoundGroup(
+      ["msx_stage", assets.music.msx_stage], 
+      ["msx_stage_critical", assets.music.msx_stage_critical],
+      ["msx_stage_results", assets.music.msx_stage_results]
+    )
 
     this.sfx_land = []
     this.sfx_land[0]  = game.add.audio('sfx_drop0')
@@ -79,6 +54,9 @@ export default class CoreSounds {
       this.mute_all(audio_settings[2])
     }
   } 
+  
+  get msx_volume() { return store.get("audio")[0] * 0.01 }
+  get sfx_volume() { return store.get("audio")[1] * 0.01 }
 
   /**
    * Sets all current sfx files to the volume amount passed in
@@ -99,9 +77,7 @@ export default class CoreSounds {
    * @param {integer} volume from 0 to 100
    */
   set_msx_volume(volume) {
-    this.msx_stage.volume          = volume
-    this.msx_stage_critical.volume = volume
-    this.msx_stage_results.volume  = volume
+    this.mode_vs.volume(volume)
   }
 
  /**
@@ -117,9 +93,7 @@ export default class CoreSounds {
     this.sfx_ding.mute    = bool
     this.sfx_swap.mute    = bool
 
-    this.msx_stage_results.mute        = bool
-    this.msx_stage.mute                = bool
-    this.msx_stage_critical.mute       = bool
+    this.mode_vs.mute(bool)
   }
 
   /** plays the sfx_land file */
@@ -161,44 +135,6 @@ export default class CoreSounds {
    * @param {String} state "pause", "resume", "none", "active", "danger" or "results"
    */
   stage_music(state) {
-    switch (state) {
-      case 'pause':
-        this.msx_stage.pause();
-        this.msx_stage_critical.pause();
-        break;
-      case 'resume':
-        this.msx_stage.resume();
-        this.msx_stage_critical.resume();
-        break;
-      case 'none':
-        this.msx_stage.stop()
-        this.msx_stage_critical.stop()
-        this.msx_stage_results.stop()
-        break;
-      case 'active':
-        this.msx_stage.play("", 0, this.msx_volume)
-        this.msx_stage_critical.stop()
-        this.msx_stage_results.stop()
-        break;
-      case 'danger':
-        this.msx_stage.stop()
-        this.msx_stage_critical.play("", 0, this.msx_volume)
-        this.msx_stage_results.stop()
-        break;
-      case 'results':
-        this.msx_stage.stop()
-        this.msx_stage_critical.stop()
-        this.msx_stage_results.play("", 0, this.msx_volume)
-        break;
-    }
-  }
-
-  get msx_volume(){
-    const volume = store.get("audio")[0] * 0.01
-    return volume
-  }
-  get sfx_volume(){
-    const volume = store.get("audio")[1] * 0.01
-    return volume
+    this.mode_vs.execute(state)
   }
 }
