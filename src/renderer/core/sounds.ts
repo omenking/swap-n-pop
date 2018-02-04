@@ -10,14 +10,13 @@ const store = new Store()
  * Sounds holds all sounds and has helper methods with different states
  */
 export default class CoreSounds {
-  private sfw_swap           : Phaser.Sound
   private sfx_land           : any
   private sfx_pop            : any
   private sfx_confirm        : Phaser.Sound
-  private sfx_select         : Phaser.Sound
+  private sfx_select         : any
   private sfx_blip           : Phaser.Sound
   private sfx_ding           : Phaser.Sound
-  private sfx_swap           : Phaser.Sound
+  private sfx_swap           : any
   private mode_vs            : SoundGroup
 
   /** Defines all the sound files this class contains, volume vars and loopable sounds */
@@ -96,6 +95,7 @@ export default class CoreSounds {
   /** plays the swap file */
   swap() {
     this.sfx_swap.play()
+    this.sfx_swap._sound.playbackRate.value = game.rnd.realInRange(0.99, 1.01)
   }
 
   /** plays the confirm file */
@@ -106,6 +106,7 @@ export default class CoreSounds {
   /** plays the select file */
   select() {
     this.sfx_select.play()
+    this.sfx_select._sound.playbackRate.value = game.rnd.realInRange(0.99, 1.01)
   }
 
   /** plays the blip file */
