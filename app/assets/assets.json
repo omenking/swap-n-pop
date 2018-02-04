@@ -10,14 +10,8 @@
     ,"sfx_swap"
     ,"sfx_countdown_blip"
     ,"sfx_countdown_ding"
-    ,"sfx_drop0"
-    ,"sfx_drop1"
-    ,"sfx_drop2"
-    ,"sfx_drop3"
-    ,"sfx_pop0"
-    ,"sfx_pop1"
-    ,"sfx_pop2"
-    ,"sfx_pop3"
+    ,"sfx_drop"
+    ,"sfx_pop"
   ],
   "images": [
      "bg_blue"
