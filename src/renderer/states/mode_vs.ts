@@ -162,9 +162,7 @@ export default class ModeVs extends CoreStage {
 
   step(tick) {
     super.step(tick)
-    game.sounds.msx_stage.step()
-    game.sounds.msx_stage_critical.step()
-    game.sounds.msx_stage_results.step()
+    game.sounds.mode_vs.step()
     this.timer.update()
     this.star_counter.update()
   }
