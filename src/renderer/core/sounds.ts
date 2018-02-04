@@ -1,6 +1,7 @@
 import Store from 'common/store'
 import game from 'core/game'
 import assets from 'core/assets'
+//import audio_stream from 'core/audio_stream'
 
 const store = new Store()
 
@@ -26,33 +27,31 @@ export default class CoreSounds {
   private play_loop  : boolean
   private stop_loop  : boolean
 
+  /**
+   * Extends a phaser sound object that starts playing at a start point again 
+   * once the file is played through
+   * @param key name of the audio file
+   * @param start_time looppoint in seconds
+   * @returns Phaser.Sound extended
+   */
+  loopable_sound(key : string, start_time : number) {
+    let sound = game.add.audio(key)
+    sound.start_time = start_time
+
+    sound.step = function() {
+      if (sound.isPlaying)
+        if ((sound.currentTime * 0.001) > sound.duration) 
+          sound.play("", sound.start_time, sound.volume)
+    }
+
+    return sound
+  }
+  
   /** Defines all the sound files this class contains, volume vars and loopable sounds */
-  create() {
-    this.sfx_swap = game.add.audio('sfx_swap')
-
-    this.msx_stage_results  = this.loop(
-      "msx_stage_results",
-      this.msx_volume,
-      assets.music.msx_stage_results.start,
-      assets.music.msx_stage_results.end,
-      assets.music.msx_stage_results.test
-    )
-    this.msx_stage = this.loop(
-      "msx_stage",
-      this.msx_volume,
-      assets.music.msx_stage.start,
-      assets.music.msx_stage.end,
-      assets.music.msx_stage.test
-    )
-    this.msx_stage_critical = this.loop(
-      "msx_stage_critical",
-      this.msx_volume,
-      assets.music.msx_stage_critical.start,
-      assets.music.msx_stage_critical.end,
-      assets.music.msx_stage_critical.test
-    )
-
-    this.state_music = 'none'
+  create() {  
+    this.msx_stage = this.loopable_sound("msx_stage", assets.music.msx_stage)
+    this.msx_stage_critical = this.loopable_sound("msx_stage_critical", assets.music.msx_stage_critical)
+    this.msx_stage_results  = this.loopable_sound("msx_stage_results", assets.music.msx_stage_results)
 
     this.sfx_land = []
     this.sfx_land[0]  = game.add.audio('sfx_drop0')
@@ -71,6 +70,7 @@ export default class CoreSounds {
 
     this.sfx_blip  = game.add.audio('sfx_countdown_blip')
     this.sfx_ding  = game.add.audio('sfx_countdown_ding')
+    this.sfx_swap = game.add.audio('sfx_swap')
 
     let audio_settings = store.get("audio")
     if (audio_settings !== undefined) {
@@ -119,7 +119,6 @@ export default class CoreSounds {
 
     this.msx_stage_results.mute        = bool
     this.msx_stage.mute                = bool
-    this.msx_stage_critical.stay_muted = bool
     this.msx_stage_critical.mute       = bool
   }
 
@@ -164,103 +163,33 @@ export default class CoreSounds {
   stage_music(state) {
     switch (state) {
       case 'pause':
-        switch (this.state_music) {
-          case 'active':
-            this.msx_stage.pause();
-            break;
-          case 'danger': 
-            this.msx_stage_critical.pause();
-            break;
-        }
+        this.msx_stage.pause();
+        this.msx_stage_critical.pause();
         break;
       case 'resume':
-        switch (this.state_music) {
-          case 'active':
-            this.msx_stage.resume();
-            break;
-          case 'danger':
-            this.msx_stage_critical.resume();
-            break;
-        }
+        this.msx_stage.resume();
+        this.msx_stage_critical.resume();
         break;
       case 'none':
-        this.state_music = state;
-        this.msx_stage.stop_loop()
-        this.msx_stage_critical.stop_loop()
-        this.msx_stage_results.stop_loop()
+        this.msx_stage.stop()
+        this.msx_stage_critical.stop()
+        this.msx_stage_results.stop()
         break;
       case 'active':
-        if (this.state_music != 'active') {
-          this.state_music = state
-          this.msx_stage.play_loop("start")
-          this.msx_stage_critical.stop_loop()
-          this.msx_stage_results.stop_loop()
-        }
+        this.msx_stage.play("", 0, this.msx_volume)
+        this.msx_stage_critical.stop()
+        this.msx_stage_results.stop()
         break;
       case 'danger':
-        if (this.state_music != 'danger') {
-          this.state_music = state
-          this.msx_stage.stop_loop()
-          this.msx_stage_critical.play_loop("start")
-          this.msx_stage_results.stop_loop()
-        }
+        this.msx_stage.stop()
+        this.msx_stage_critical.play("", 0, this.msx_volume)
+        this.msx_stage_results.stop()
         break;
       case 'results':
-        if (this.state_music != 'results') {
-          this.state_music = state
-          this.msx_stage.stop_loop()
-          this.msx_stage_critical.stop_loop()
-          this.msx_stage_results.play_loop("start")
-        }
+        this.msx_stage.stop()
+        this.msx_stage_critical.stop()
+        this.msx_stage_results.play("", 0, this.msx_volume)
         break;
-    }
-  }
-
-  /**
-   * Adds different Markers for a sound by the defined parameters,
-   * The sound starts playing from 0 until start_time,
-   * Then it loops from start_time until end_time,
-   * test_end_time is a marker used for testing loops so you dont have to wait
-   * for the loop to occur everytime - test_end_time should be a few seconds smaller than end_time
-   * @param {Object} game reference to the game
-   * @param {String} key the name of the audio file defined in loadjs
-   * @param {integer} volume from 0.0 to 1.0
-   * @param {integer} start_time in seconds
-   * @param {integer} end_time in seconds
-   * @param {integer} test_end_time in seconds
-   * @returns a Sound reference 
-   */
-  loop (key, volume, start_time, end_time, test_end_time) {
-    // need to use game.add.audio()... extending phaser.sound has issues when returning the extended object
-    const sound = game.add.audio(key)
-    sound.addMarker("start"      , 0            , start_time              , volume, true)
-    sound.addMarker("main"       , start_time   , end_time - start_time   , volume, true)
-    sound.addMarker("testLoopEnd", test_end_time, end_time - test_end_time, volume, true)
-    sound.stay_muted = false
-    sound.onMarkerComplete.add(this.loop_complete(sound))
-    sound.stop_loop = this.loop_stop(sound)
-    sound.play_loop = this.loop_play(sound)
-    return sound
-  }
-
-  loop_complete (sound){
-    return function(m) {
-      if (m !== "main")
-        sound.play("main")
-    }
-  }
-  loop_stop (sound){
-    return function (){
-      sound.stop()
-      sound.mute = true
-    }
-  }
-  loop_play (sound){
-    return function (key) {
-      if (sound.stay_muted !== true) {
-        sound.mute = false
-        sound.play(key,null,this.msx_volume)
-      }
     }
   }
 
