@@ -14,6 +14,7 @@ export default class CountdownState {
   public x       : number
   public y       : number
   public moving_exit : any
+  public isPaused : boolean
 
   create(should_countdown : boolean, moving_exit){
     this.moving_exit = moving_exit
@@ -25,7 +26,7 @@ export default class CountdownState {
     } else {
       this.state = DONE
     }
-
+    this.isPaused = false
   }
 
   get snap(){
@@ -65,7 +66,11 @@ export default class CountdownState {
   }
 
   count3_execute(){
-    this.counter++;
+    if (this.isPaused === false)
+      this.counter++;
+    else 
+      return 
+      
     if (this.counter > 60) {
       game.sounds.blip()
       this.counter = 0;
@@ -74,7 +79,11 @@ export default class CountdownState {
   }
 
   count2_execute(){
-    this.counter++;
+    if (this.isPaused === false)
+      this.counter++;
+    else 
+      return 
+
     if (this.counter > 60) {
       game.sounds.blip()
       this.counter = 0;
@@ -83,7 +92,11 @@ export default class CountdownState {
   }
 
   count1_execute(){
-    this.counter++;
+    if (this.isPaused === false)
+      this.counter++;
+    else 
+      return 
+    
     if (this.counter > 60) {
       this.state = DONE
     }
