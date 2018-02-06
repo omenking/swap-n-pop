@@ -18,7 +18,7 @@ export default class MenuState extends State {
 
   constructor() {
     super()
-    this.menu = new ComponentMenu(10);
+    this.menu = new ComponentMenu(11);
   }
 
   get name(): string {
@@ -41,7 +41,9 @@ export default class MenuState extends State {
       {name: 'Puzzles'      , action: this.mode_puzzles},
       {name: 'Training'     , action: this.mode_sandox},
       {name: 'Options'      , action: this.mode_option},
+      {name: 'Credits'      , action: this.mode_credits}
     ]
+    
     if (store.has('auth_token')) {
       items.push({name: 'Logout', action: this.logout})
     } else {
@@ -49,17 +51,18 @@ export default class MenuState extends State {
     }
 
     this.menu.create(
-        game.world.width - (220 + px(70)),
-        game.world.centerY - ((10 + (28 * items.length-1) + 10)/2) + 20,
-        220, items)
+      game.world.width - (220 + px(70)),
+      game.world.centerY - ((10 + (28 * items.length-1) + 10)/2) + 20,
+      220, items
+    )
     fade.in()
   }
 
-  login(){
+  login() {
     ipc.send('login')
   }
 
-  logout(){
+  logout() {
     ipc.send('logout')
   }
 
@@ -76,24 +79,27 @@ export default class MenuState extends State {
     ipc.send('settings','network')
   }
 
-  mode_time_trial(){
+  mode_time_trial() {
     ipc.send('play-single',{
       timer: true
     })
   }
 
-  mode_endless(){
-    ipc.send('play-single',{
+  mode_endless() {
+    ipc.send('play-single', {
     })
   }
 
-  mode_story(){
-  }
-  /** starts the mode_puzzle state */
-  mode_challenges() {
+  mode_story() {
+
   }
 
-  mode_puzzles(){
+  /** starts the mode_puzzle state */
+  mode_challenges() {
+
+  }
+
+  mode_puzzles() {
     game.state.start('puzzle_menu', true, false);
   }
 
@@ -101,9 +107,13 @@ export default class MenuState extends State {
     ipc.send('settings','replay')
   }
 
-  mode_sandox(){
+  mode_sandox() {
+
   }
 
+  mode_credits() {
+    game.state.start('credits', true, false)
+  }
 
   /** controls & and menu are updated to move around,
    *  tilepos is changed to act as a parralax
