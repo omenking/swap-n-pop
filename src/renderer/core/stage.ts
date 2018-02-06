@@ -209,17 +209,23 @@ export default abstract class Stage extends State {
     game.sounds.stage_music('pause');
     this.state = PAUSE;
     this.timer.running = false;
+    this.countdown.isPaused = true;
     this.menu_pause.pause();
   }
 
   /** called by the menu and reassigns control to both playfields, timer runs again */
   resume() {
     // only resumes the game if countdown's are over
-    if (this.countdown.state === DONE){
+    if (this.countdown.state === DONE) {
       game.sounds.stage_music('resume')
       this.state         = RUNNING
       this.timer.running = true
     }
+    else {
+      this.state = STARTING
+      this.countdown.isPaused = false
+    }
+
     this.playfield0.cursor.map_controls()
     if (this.playfield1) {
       this.playfield1.cursor.map_controls()
