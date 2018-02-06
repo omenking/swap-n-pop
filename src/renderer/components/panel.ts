@@ -393,7 +393,7 @@ export default class ComponentPanel {
       this.particles[1].set_counter()
       this.particles[2].set_counter()
       this.particles[3].set_counter()
-      game.sounds.pop(this.clear_i)
+      game.sounds.pop(this.clear_i, this.clear_len)
     }
   }
 

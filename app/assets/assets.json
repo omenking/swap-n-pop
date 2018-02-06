@@ -1,8 +1,8 @@
 {
   "music": {
-     "msx_stage"          : { "start": 3.198, "end": 67.199, "test": 65 }
-    ,"msx_stage_critical" : { "start": 12.708, "end": 26.85, "test": 23 }
-    ,"msx_stage_results"  : { "start": 1.997, "end": 18, "test": 16 }
+     "msx_stage"          : 3.198
+    ,"msx_stage_critical" : 12.708
+    ,"msx_stage_results"  : 1.997
   },
   "sound_effects" : [
      "sfx_confirm"
@@ -10,14 +10,8 @@
     ,"sfx_swap"
     ,"sfx_countdown_blip"
     ,"sfx_countdown_ding"
-    ,"sfx_drop0"
-    ,"sfx_drop1"
-    ,"sfx_drop2"
-    ,"sfx_drop3"
-    ,"sfx_pop0"
-    ,"sfx_pop1"
-    ,"sfx_pop2"
-    ,"sfx_pop3"
+    ,"sfx_drop"
+    ,"sfx_pop"
   ],
   "images": [
      "bg_blue"

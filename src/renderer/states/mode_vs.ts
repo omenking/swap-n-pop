@@ -162,6 +162,7 @@ export default class ModeVs extends CoreStage {
 
   step(tick) {
     super.step(tick)
+    game.sounds.mode_vs.step()
     this.timer.update()
     this.star_counter.update()
   }
