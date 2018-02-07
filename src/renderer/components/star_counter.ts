@@ -6,11 +6,9 @@ export default class StarCounter {
   private stage   : any
   private group   : Phaser.Group
   private sprites : Array<Phaser.Sprite>
-  private x       : number
-  private y       : number
   private counter : number
 
-  create(stage,x,y) {
+  create(stage, x : number, y : number) {
     this.stage = stage
     this.group = game.add.group()
     this.group.x = x
@@ -38,29 +36,9 @@ export default class StarCounter {
   }
 
   render() {
-    if (this.stage.rounds_won[0] > 0) {
-      this.sprites[0].frame = FRAME_STAR[this.counter]
-    } else {
-      this.sprites[0].frame = 0
-    }
-
-    if (this.stage.rounds_won[0] > 1) {
-      this.sprites[2].frame = FRAME_STAR[this.counter]
-    } else {
-      this.sprites[2].frame = 0
-    }
-
-
-    if (this.stage.rounds_won[1] > 0) {
-      this.sprites[1].frame = FRAME_STAR[this.counter] + 6
-    } else {
-      this.sprites[1].frame = 6
-    }
-
-    if (this.stage.rounds_won[1] > 1) {
-      this.sprites[3].frame = FRAME_STAR[this.counter] + 6
-    } else {
-      this.sprites[3].frame = 6
-    }
+    this.sprites[0].frame = this.stage.rounds_won[0] > 0 ? FRAME_STAR[this.counter] : 0
+    this.sprites[2].frame = this.stage.rounds_won[0] > 1 ? FRAME_STAR[this.counter] : 0
+    this.sprites[1].frame = this.stage.rounds_won[1] > 0 ? FRAME_STAR[this.counter] + 6: 6
+    this.sprites[3].frame = this.stage.rounds_won[1] > 1 ? FRAME_STAR[this.counter] + 6: 6
   }
 }
