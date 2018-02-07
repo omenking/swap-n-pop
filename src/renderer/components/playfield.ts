@@ -45,7 +45,7 @@ export default class Playfield {
   public  garbage_preview : ComponentGarbagePreview
   public  countdown       : ComponentPlayfieldCountdown
   public  cursor          : ComponentPlayfieldCursor
-  private wall            : ComponentPlayfieldWall
+  public  wall            : ComponentPlayfieldWall
   private score_lbl       : ComponentScore
   private ai              : ComponentAi
   public  character       : ComponentCharacter
