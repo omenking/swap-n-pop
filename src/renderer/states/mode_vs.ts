@@ -17,6 +17,7 @@ import {
   GAMEOVER,
   DONE
 } from 'common/data'
+import { ipcRenderer as ipc } from "electron";
 
 export default class ModeVs extends CoreStage {
   get [Symbol.toStringTag](){ return 'ModeVs' }
@@ -25,11 +26,13 @@ export default class ModeVs extends CoreStage {
   private ping         : ComponentPing
   private star_counter : ComponentStarCounter
   private danger       : boolean
-  private rounds_won   : Array<number>
   public  online       : any
   public  cpu          : Array<any>
   private frame        : Phaser.Sprite
   public  levels       : Array<ComponentLevel>
+  public rounds_won    : Array<number>
+  public wall_done     : boolean
+  private round_winner : number 
 
   public flag_garbage : boolean
   public flag_timer   : boolean
@@ -50,7 +53,9 @@ export default class ModeVs extends CoreStage {
     this.inputs    = new CoreInputs(data.inputs,data.online,this)
     this.flag_garbage = data.garbage
     this.flag_timer   = data.timer
-    this.rounds_won = [2,1]
+    console.log(data.rounds_won);
+    
+    this.rounds_won = data.rounds_won
     this.cpu        = data.cpu
     this.online     = data.online
     super.init(data)
@@ -112,6 +117,7 @@ export default class ModeVs extends CoreStage {
     this.timer.create(this,offset+px(128),px(168))
     if (this.online){ this.ping.create() }
     this.star_counter.create(this,px(91),px(91))
+    this.wall_done = false
     this.levels[0].create(px(175)   ,px(134),1)
     this.levels[1].create(px(175+34),px(134),1)
     super.create_exit()
@@ -126,10 +132,12 @@ export default class ModeVs extends CoreStage {
     if (pi === 0) {
       this.playfield0.character.current_animation = "lost"
       this.playfield1.character.current_animation = "won"
+      this.round_winner = 1
     }
     else if (pi === 1) {
       this.playfield0.character.current_animation = "won"
       this.playfield1.character.current_animation = "lost"
+      this.round_winner = 0
     }
   }
 
@@ -165,6 +173,17 @@ export default class ModeVs extends CoreStage {
     game.sounds.mode_vs.step()
     this.timer.update()
     this.star_counter.update()
+
+    // doesnt matter which wall we check is done
+    if (this.playfield0.wall.is_done && !this.wall_done) {
+      if (this.round_winner === 0)  
+        this.rounds_won[0] = Math.min(this.rounds_won[0] + 1, 2)
+      else if (this.round_winner === 1)
+        this.rounds_won[1] = Math.min(this.rounds_won[1] + 1, 2)
+
+      this.wall_done = true
+      super.pause()
+    }
   }
 
   update_playfields(){
