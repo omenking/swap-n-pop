@@ -298,7 +298,8 @@ ipc.on('play-vs', (event,data) => {
     online:  data.online,
     cpu:     data.cpu,
     garbage: data.garbage,
-    timer:   data.timer
+    timer:   data.timer,
+    rounds_won: data.rounds_won
   })
 })
 
