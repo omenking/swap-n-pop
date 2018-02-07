@@ -14,10 +14,13 @@ export default class ComponentPlayfieldWall {
   private state_enter   : any
   private state_execute : any
   private state_exit    : any
+  public is_done : boolean
 
   create(playfield,x,y) {
     this.playfield = playfield
     this.sprite    = game.add.sprite(x, y, `playfield_wall${this.playfield.pi}`)
+    this.is_done   = false
+
     this.state     = ROLLUP
     this.state_timer = 0
     this.state_enter   = new Map()
@@ -104,6 +107,7 @@ export default class ComponentPlayfieldWall {
           this.playfield.y +
           (y_offset - WALL_ROLLUP[0])
         )
+        this.is_done = true
         break;
     }
   }
