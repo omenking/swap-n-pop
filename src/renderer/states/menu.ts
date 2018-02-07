@@ -71,7 +71,8 @@ export default class MenuState extends State {
       online: false,
       garbage: true,
       timer: false,
-      cpu: [false,false]
+      cpu: [false,false],
+      rounds_won: [0, 0]
     })
   }
 
