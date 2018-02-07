@@ -39,13 +39,13 @@ export default class CreditsState extends State {
       if (i === 0 || names[i].role !== names[i - 1].role) {
         let role = game.add.text(game.world.centerX, (i + counter++) * this.font_size, names[i].role, get_style("#e2402d"))
         role.anchor.setTo(0.5)
-        role.setShadow(3, 3, "rgba(0, 0, 0, 0.5)", 0)
+        role.setShadow(2, 2, "rgba(0, 0, 0, 0.5)", 0)
         this.creditText.add(role)
       }
     
       let name = game.add.text(game.world.centerX, (i + counter) * this.font_size, names[i].name, get_style("#ffffff"))
       name.anchor.setTo(0.5)
-      name.setShadow(3, 3, "rgba(0, 0, 0, 0.5)", 0)
+      name.setShadow(2, 2, "rgba(0, 0, 0, 0.5)", 0)
       this.creditText.add(name)
       
       // shift all text after a role switches to something different
