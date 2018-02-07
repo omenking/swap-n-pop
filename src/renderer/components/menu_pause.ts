@@ -46,16 +46,29 @@ export default class ComponentPauseMenu {
     fade.out(function(){
       game.state.start('menu');
     })
-
   }
 
   /** called through cursor, unpauses the menu and turns of the sprite again
    * also calls the mode_vs||stage resume method which will return new cursor controls
    */
   continue() {
-    this.paused         = false;
-    this.sprite.visible = false;
-    this.stage.resume();
+    if (!this.stage.wall_done) {
+      this.paused         = false;
+      this.sprite.visible = false;
+      this.stage.resume();
+    }
+    else {
+      let temp = this.stage.rounds_won 
+      fade.out(function(){
+        game.state.restart(true, false, {
+          online: false,
+          garbage: true,
+          timer: false,
+          cpu: [false,false],
+          rounds_won: temp
+        })
+      })
+    }
   }
 
   /** unpauses update method of the menu,
