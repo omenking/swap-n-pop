@@ -299,7 +299,9 @@ export default class ComponentPlayfieldCursor {
   }
 
   render_visible(){
-    if (this.stage.state === STARTING) {
+    if (this.stage.state === GAMEOVER) {
+      this.sprite.visible = false
+    } else if (this.stage.state === STARTING) {
       this.sprite.visible = this.counter_flicker === 1
     } else {
       this.sprite.visible = true
