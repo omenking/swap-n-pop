@@ -235,7 +235,7 @@ export default class Playfield {
 
     this.create_newline()
 
-    if (this.cursor.y > 0) { this.cursor.y--; }
+    if (this.cursor.y > ROWS_INV) { this.cursor.y--; }
     return 1
   }
 

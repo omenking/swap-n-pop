@@ -152,7 +152,7 @@ export default class ComponentPlayfieldCursor {
    */
   up(tick) {
     if (this.pressed_then_held(tick))
-      if (this.y > ROWS_VIS) {
+      if (this.y > ROWS_VIS + 1) {
         this.y--;
         game.sounds.select();
       }
