@@ -12,6 +12,7 @@ import {
   RUNNING,
   STARTING,
   MOVING,
+  GAMEOVER,
   PLAYFIELD_CURSOR_SPEED
 } from 'common/data';
 
@@ -243,8 +244,9 @@ export default class ComponentPlayfieldCursor {
   pause(tick) {
     if (tick > 0)
       return;
-
-    this.playfield.stage.pause();
+    if (this.playfield.stage.state !== GAMEOVER) {
+      this.playfield.stage.pause();
+    }
   }
 
   /**
