@@ -81,7 +81,6 @@ declare const alert : any
 
 function close(e){
   e.preventDefault()
-  if(true === true){throw('eeee')}
   state.reset_panel_form(null)
   m.redraw()
   return false
