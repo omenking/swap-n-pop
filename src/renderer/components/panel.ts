@@ -8,6 +8,7 @@ import ComponentPlayfield     from 'components/playfield'
 import * as ss from 'shuffle-seed'
 import { out_of_bounds } from 'core/filters';
 import {
+  GAMEOVER,
   UNIT,
   SWAP_L,
   SWAP_R,
@@ -741,7 +742,7 @@ export default class ComponentPanel {
   animate(){
     if (this.newline) {
       this.frame = assets.spritesheets.panels.animations.newline
-    } else if (this.dead === true && this.playfield.stage.state === 'gameover'){
+    } else if (this.dead === true && this.playfield.stage.state === GAMEOVER){
       this.frame = assets.spritesheets.panels.animations.dead
     } else if (this.state === CLEAR){
       const frames = assets.spritesheets.panels.animations.clear
