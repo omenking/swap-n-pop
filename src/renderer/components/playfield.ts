@@ -365,7 +365,7 @@ export default class Playfield {
       }
     }
     
-    return [combo, this.chain]
+    return [combo, chain]
   }
 
   /**
