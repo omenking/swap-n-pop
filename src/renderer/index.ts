@@ -16,6 +16,7 @@ import ModePuzzleState from 'states/mode_puzzle'
 import ModeSingleState from 'states/mode_single'
 import ModeVsState     from 'states/mode_vs'
 import PuzzleMenuState from 'states/puzzle_menu'
+import CreditsState    from 'states/credits'
 
 const states = [
   BootState,
@@ -25,7 +26,8 @@ const states = [
   ModeVsState,
   ModeSingleState,
   ModePuzzleState,
-  PuzzleMenuState
+  PuzzleMenuState,
+  CreditsState
 ];
 
 ui()
