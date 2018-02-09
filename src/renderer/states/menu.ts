@@ -18,7 +18,7 @@ export default class MenuState extends State {
 
   constructor() {
     super()
-    this.menu = new ComponentMenu(11);
+    this.menu = new ComponentMenu(8);
   }
 
   get name(): string {
@@ -33,13 +33,13 @@ export default class MenuState extends State {
 
     const items = [
       {name: 'Play Online'  , action: this.mode_1p_vs_2p_online},
-      {name: 'Story'        , action: this.mode_story},
+      //{name: 'Story'        , action: this.mode_story},
       {name: 'Time Trial'   , action: this.mode_time_trial},
       {name: 'Endless'      , action: this.mode_endless},
       {name: 'Versus Local' , action: this.mode_1p_vs_2p_local},
-      {name: 'Challenges'   , action: this.mode_challenges},
+      //{name: 'Challenges'   , action: this.mode_challenges},
       {name: 'Puzzles'      , action: this.mode_puzzles},
-      {name: 'Training'     , action: this.mode_sandox},
+      //{name: 'Training'     , action: this.mode_sandox},
       {name: 'Options'      , action: this.mode_option},
       {name: 'Credits'      , action: this.mode_credits}
     ]

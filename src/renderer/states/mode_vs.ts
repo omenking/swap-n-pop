@@ -50,7 +50,7 @@ export default class ModeVs extends CoreStage {
     this.inputs    = new CoreInputs(data.inputs,data.online,this)
     this.flag_garbage = data.garbage
     this.flag_timer   = data.timer
-    this.rounds_won = [2,1]
+    this.rounds_won = [0,0]
     this.cpu        = data.cpu
     this.online     = data.online
     super.init(data)
