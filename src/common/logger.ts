@@ -19,6 +19,19 @@ function debug(data){
   fs.appendFileSync(dir + '/production.log', `${t} ${data}${eol}`)
 }
 
+function debug_to(filename,data){
+  let dir = path.join(app.getPath('appData'),'swap-n-pop','logs')
+
+  if (!fs.existsSync(dir)){ 
+    fx.mkdirSync(dir) 
+  } // create dir if it don't exist.
+
+  const t = strftime('[%d/%b/%Y:%H:%M:%S %z]')
+  const fname = dir + '/' + filename + '.log'
+  fs.appendFileSync(fname, `${t} ${data}${eol}`)
+}
+
 export default {
-  debug: debug
+  debug: debug,
+  debug_to: debug_to
 }

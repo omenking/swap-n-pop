@@ -69,7 +69,7 @@ export default class CoreInputs {
     const frame_end   = data.ack0+data.frame_count-1
 
     ipc.send(
-      'log',
+      'log_to', `${this.stage.seed}_UN`,
       `UN ${this.tick}: ${data.ack0} ${data.ack1} ${data.frames.join(',')}`
     )
     //console.log('unpack__:',frame_start,frame_end,'|',this.ack[0])
@@ -124,7 +124,7 @@ export default class CoreInputs {
     if (this.online && send){
       this.last_pack = this.pack()
       ipc.send(
-        'log',
+        'log_to', `${this.stage.seed}_PK`,
         `PK ${tick}: ${this.last_pack.ack0} ${this.last_pack.ack1} ${this.last_pack.frames.join(',')}`
       )
       game.server.send('framedata',this.last_pack)

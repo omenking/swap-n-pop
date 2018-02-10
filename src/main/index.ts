@@ -319,3 +319,7 @@ ipc.on('fullscreen', (event,name) => {
 ipc.on('log', (event,data) => {
   Logger.debug(data)
 })
+
+ipc.on('log_to', (event,filename,data) => {
+  Logger.debug_to(filename,data)
+})
