@@ -33,6 +33,15 @@ export default class ComponentTimer {
     this.running   = snapshot[2]
   }
 
+  public reset(){
+    this.tick = 0
+    if (this.stage.flag_timer === true)
+      this.countdown = 120
+    else
+      this.countdown = 0
+    this.running = false
+  }
+
   /** A Sprite group is created with its position
    *  Each Time Digit gets added as a Sprite
    *  Internal tick counter and a bool to stop everything
@@ -49,13 +58,7 @@ export default class ComponentTimer {
     this.group.add(this.d1);
     this.group.add(this.d2);
 
-    this.tick = 0
-    if (stage.flag_timer === true)
-      this.countdown = 120
-    else
-      this.countdown = 0
-
-    this.running = false
+    this.reset()
     this.render()
   }
 

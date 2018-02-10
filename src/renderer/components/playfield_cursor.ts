@@ -39,8 +39,18 @@ export default class ComponentPlayfieldCursor {
    */
   create(playfield, modetype = "vs") {
     this.playfield  = playfield
-    this.state      = 'hidden'
 
+    this.menu_controls()
+    this.sprite = game.make.sprite(0, 0, 'playfield_cursor', 0)
+
+    this.playfield.layer_cursor.add(this.sprite);
+
+    this.reset(modetype)
+  }
+
+  public reset(modetype){
+    if (!this.playfield) { return }
+    this.state      = 'hidden'
     this.counter_flicker = 0
     this.counter         = 0
 
@@ -50,9 +60,7 @@ export default class ComponentPlayfieldCursor {
     // of the playfield
     this.x = 2
     this.y = 6 + ROWS_INV
-
     let x,y, visible
-
     if(this.playfield.stage.countdown.state === MOVING){
       x = ((COLS-2)*UNIT) - this.offset
       y = 0               - this.offset
@@ -63,16 +71,13 @@ export default class ComponentPlayfieldCursor {
       visible = true
       this.state = 'active'
     }
-    this.menu_controls()
-    this.sprite = game.make.sprite(x, y, 'playfield_cursor', 0);
-    this.sprite.visible = visible;
+    this.sprite.x = x
+    this.sprite.x = y
+    this.sprite.visible = visible
 
-    this.playfield.layer_cursor.add(this.sprite);
-
-    this.ignore = false;
-
-    this.mode = modetype;
-    this.cursor_swap_history = [];
+    this.ignore = false
+    this.mode = modetype || 'vs'
+    this.cursor_swap_history = []
   }
 
   /**

@@ -29,7 +29,8 @@ import {
   TIME_POP,
   TIME_FALL,
   COMBO,
-  CHAIN
+  CHAIN,
+  ROLLDOWN
 } from 'common/data';
 
 /**
@@ -191,12 +192,8 @@ export default class ComponentPanel {
     this.state_execute.set(LAND      , this.land_execute.bind(this))
 
     this.playfield = playfield
-    this.counter   = 0
-    this.kind = null
     this.x = x;
     this.y = y;
-    this.state = STATIC
-    this.chain = 0
 
     this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
     this.playfield.layer_block.add(this.sprite)
@@ -205,7 +202,6 @@ export default class ComponentPanel {
     // but without it here, it causes a flicker at
     // start of match. If we can find someone way to
     // move this in the render that would be ideal.
-    this.sprite.visible = false
 
     this.garbage.create(this,this.playfield)
     this.bauble.create(this)
@@ -213,6 +209,17 @@ export default class ComponentPanel {
     this.particles[1].create(this,this.playfield.pi)
     this.particles[2].create(this,this.playfield.pi)
     this.particles[3].create(this,this.playfield.pi)
+
+    this.reset()
+  }
+
+  public reset(){
+    this.counter   = 0
+    this.kind = null
+    this.state = STATIC
+    this.chain = 0
+    this.sprite.visible = false
+    this.garbage.reset()
   }
 
   create_after(){

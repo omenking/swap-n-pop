@@ -1,6 +1,6 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
-import CountdownState       from 'core/countdown_state'
+import WallState            from 'core/wall_state'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
 import ComponentPlayfield   from 'components/playfield'
@@ -30,6 +30,7 @@ export default class ModeVs extends CoreStage {
   public  cpu          : Array<any>
   private frame        : Phaser.Sprite
   public  levels       : Array<ComponentLevel>
+  public  wall         : WallState
 
   public flag_garbage : boolean
   public flag_timer   : boolean
@@ -39,6 +40,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
     this.star_counter = new ComponentStarCounter()
+    this.wall = new WallState()
     this.levels = [
       new ComponentLevel(0),
       new ComponentLevel(1)
@@ -106,6 +108,10 @@ export default class ModeVs extends CoreStage {
     }
 
     this.create_frame(offset)
+    this.wall.create(
+      this.callback_wall_rollup_exit.bind(this),
+      this.callback_wall_done.bind(this)
+    )
     this.countdown.create(true,this.callback_countdown.bind(this))
     this.playfield0.create_after()
     this.playfield1.create_after()
@@ -121,19 +127,37 @@ export default class ModeVs extends CoreStage {
     super.callback_countdown()
   }
 
+  protected callback_wall_rollup_exit(){
+    const stack = new Stack(this.rng)
+    stack.create(6,2,"average","many")
+    this.playfield0.reset()
+    this.playfield1.reset()
+    this.playfield0.fill_panels(stack.panels)
+    this.playfield1.fill_panels(stack.panels)
+  }
+
+  protected callback_wall_done(){
+    this.countdown.reset()
+    this.timer.reset()
+    this.state = STARTING
+  }
+
   game_over(pi) {
     super.game_over(pi)
     if (pi === 0) {
+      this.rounds_won[1]++
       this.playfield0.character.current_animation = "lost"
       this.playfield1.character.current_animation = "won"
     }
     else if (pi === 1) {
+      this.rounds_won[0]++
       this.playfield0.character.current_animation = "won"
       this.playfield1.character.current_animation = "lost"
     }
   }
 
   danger_check() {
+    if (this.state !== RUNNING) {return}
     const d1 = this.playfield0.danger(1)
     const d2 = this.playfield1.danger(2)
 
@@ -164,6 +188,9 @@ export default class ModeVs extends CoreStage {
     super.step(tick)
     game.sounds.mode_vs.step()
     this.timer.update()
+    if (this.state == GAMEOVER) {
+      this.wall.update()
+    }
     this.star_counter.update()
   }
 

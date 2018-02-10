@@ -38,11 +38,19 @@ export default class CountdownState {
     ]
   }
 
+
   public load(snapshot){
     this.state = snapshot[0]
     this.counter = snapshot[1]
     this.x = snapshot[2]
     this.y = snapshot[2]
+  }
+
+  public reset(){
+    this.state = MOVING
+    this.counter = 0
+    this.y = px(-38)
+    this.x = 0
   }
 
   update(){

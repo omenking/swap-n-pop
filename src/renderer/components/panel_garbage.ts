@@ -76,7 +76,6 @@ export default class ComponentPanelGarbage {
     this.panel     = panel
     this.playfield = playfield
     this.sprite = game.add.sprite(0,0, 'garbage',0)
-    this.sprite.visible = false
 
     /************************************************
     * STATE MACHINE
@@ -89,6 +88,15 @@ export default class ComponentPanelGarbage {
     this.state_execute.set(STATIC, this.static_execute.bind(this))
     this.state_execute.set(FALL  , this.fall_execute.bind(this))
     this.state_execute.set(CLEAR , this.clear_execute.bind(this))
+
+    this.reset()
+  }
+
+  public reset(){
+    this.state = null
+    this.group = null
+    this.kind  = null
+    this.sprite.visible = false
   }
 
   get snap(){

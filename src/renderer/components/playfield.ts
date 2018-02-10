@@ -117,8 +117,7 @@ export default class Playfield {
       snap_stack,
       this.pushing,
       this.character.snap,
-      this.garbage.snap,
-      this.wall.snap
+      this.garbage.snap
     ]
   }
   load(snapshot) {
@@ -130,7 +129,6 @@ export default class Playfield {
     this.pushing = snapshot[3]
     this.character.load(snapshot[4])
     this.garbage.load(snapshot[5])
-    this.wall.load(snapshot[6])
   }
   create(stage,opts) {
     if (stage === null) {
@@ -144,7 +142,6 @@ export default class Playfield {
       throw new Error("must pass at least x,y,countdown and panels")
     }
 
-
     this.stage       = stage
     this.should_push = opts.push || false
 
@@ -157,28 +154,17 @@ export default class Playfield {
     this.bg = game.add.sprite(this.x,this.y,`char_0${this.pi}`)
 
     this.layer_block  = game.add.group()
-    this.layer_block.x  = this.x
-    this.layer_block.y  = this.y - (ROWS_INV*UNIT)
 
     this.create_stack(opts.panels)
 
-    this.score        = 0
-    this.combo        = 0
-    this.chain        = 0
-    this.push_counter = TIME_PUSH
-    this.stoptime     = STOPTIME
-
-    this.clearing = []
     if (this.stage.flag_garbage === true){
       this.garbage.create(this.stage,this.pi)
       this.garbage_preview.create(this,this.x,0)
-      this.clearing_garbage = []
     }
 
+    this.reset()
     //this.score_lbl.create()
     // for mode_puzzle, couting all swaps
-    this.swap_counter = 0;
-    this.garbage_landing = false
   }
 
   get clear(){
@@ -296,8 +282,11 @@ export default class Playfield {
    *
    * @param {Array} data the panel.kind data from 0 to ~10 or nulls = empty
    */
-  fill_panels(data) {
-    this.stack.forEach((panel, i) => { panel.set_kind(data[i]); });
+  public fill_panels(data) {
+    this.stack.forEach((panel, i) => { 
+      panel.reset()
+      panel.set_kind(data[i]); 
+    });
 
     if (this.should_push)
       for (let i = PANELS; i < PANELS+COLS; i++)
@@ -321,6 +310,24 @@ export default class Playfield {
     this.stack.forEach((panel) => { panel.soft_reset() })
     this.swap_counter = new_counter_size
     this.fill_panels(new_Panels)
+  }
+
+  public reset(){
+    this.clearing = []
+    if (this.stage.flag_garbage === true){
+      this.clearing_garbage = []
+    }
+    this.score        = 0
+    this.combo        = 0
+    this.chain        = 0
+    this.push_counter = TIME_PUSH
+    this.stoptime     = STOPTIME
+    this.pushing      = false
+    this.swap_counter = 0
+    this.garbage_landing = false
+    this.cursor.reset('vs')
+    this.layer_block.x  = this.x
+    this.layer_block.y  = this.y - (ROWS_INV*UNIT)
   }
 
   /**
@@ -481,7 +488,6 @@ export default class Playfield {
     if (this.danger(0) && this.push_counter <= 0) {
       this.stoptime--
       this.character.current_animation = "losing"
-      console.log('stoptime',this.stoptime)
       if (this.stoptime <= 0){
         this.stage.game_over(this.pi)
       }
@@ -532,7 +538,6 @@ export default class Playfield {
       case PAUSE:
         break;
       case GAMEOVER:
-        this.wall.update()
         this.character.update()
         break;
     }
