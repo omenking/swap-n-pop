@@ -25,7 +25,7 @@ export default class ConnectState extends State {
 
   create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
-    game.server.create(this.host_port,'0.0.0.0',this.listening)
+    game.server.create(this.host_port,'0.0.0.0',this.listening.bind(this))
   }
 
   listening() {
