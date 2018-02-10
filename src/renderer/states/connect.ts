@@ -6,10 +6,10 @@ import State from './base';
 const {ipcRenderer: ipc} = electron
 
 export default class ConnectState extends State {
-  private _mode      : string
-  private _host_port : string
-  private _join_host : string
-  private _join_port : number
+  public mode      : string
+  public host_port : string
+  public join_host : string
+  public join_port : number
   private bg         : Phaser.TileSprite
 
   get name(): string {
@@ -22,16 +22,6 @@ export default class ConnectState extends State {
     this.join_host = data.join_host
     this.join_port = data.join_port
   }
-
-  get mode(){      return this._mode      }
-  get host_port(){ return this._host_port }
-  get join_host(){ return this._join_host }
-  get join_port(){ return this._join_port }
-
-  set mode(v){      this._mode      = v}
-  set host_port(v){ this._host_port = v}
-  set join_host(v){ this._join_host = v}
-  set join_port(v){ this._join_port = v}
 
   create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
