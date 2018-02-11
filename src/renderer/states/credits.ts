@@ -1,57 +1,68 @@
 import game from "core/game";
 import State from "./base"
 import controls from 'core/controls'
+import ComponentMenuItem from 'components/menu_item'
+import ComponentMenu from "../components/menu";
 
 /** quick mockup of a credits page state */
 export default class CreditsState extends State {
   private bg : Phaser.TileSprite
-  private creditText : any
+  private creditText : Phaser.Group
   private font_size : number
+  private items : Array<ComponentMenuItem>
+  private names : any
+  private counter : number
+
+  constructor() { 
+    super() 
   
-  constructor() { super() }
+    this.names = [
+      {role: "Developers", alias: "Omenking", name: "Andrew Brown"},
+      {role: "Developers", alias: "Halfbakedprophet", name: ""},
+      {role: "Developers", alias: "Cappu", name: ""},
+      {role: "Developers", alias: "Skytrias", name: "Michael Kutowski"},
+      {role: "Concept Artists", alias: "Wish", name: "Camryn Tanner"},
+      {role: "Spritists", alias: "Neweegee", name: ""},
+      {role: "Spritists", alias: "Gaem", name: ""},
+      {role: "Spritists", alias: "RJ", name: ""},
+      {role: "Ui", alias: "Jash", name: ""},
+      {role: "Music and SFX", alias: "Jaxcheese", name: ""},
+      {role: "Special Thanks to", alias: "Jon", name: ""}
+    ]
+  }
+
   get name(): string { return 'credits' }
 
   /** simulates the menu background, draws text and assigns controls */
   create() {
     this.bg = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'bg_green')
 
-    let names = [
-      {role: "Developers", name: "Omenking"},
-      {role: "Developers", name: "Halfbakedprophet"},
-      {role: "Developers", name: "Cappu"},
-      {role: "Developers", name: "Skytrias"},
-      {role: "Concept Artists", name: "Wish"},
-      {role: "Spritists", name: "Neweegee"},
-      {role: "Spritists", name: "Gaem"},
-      {role: "Spritists", name: "RJ"},
-      {role: "Ui", name: "Jash"},
-      {role: "Music and SFX", name: "Jaxcheese"},
-    ]
-
     this.creditText = game.add.group()
     this.creditText.y = game.world.height
-    this.font_size = 48
+    this.font_size = 36
     
-    let get_style = (hex) => ({ font: `${this.font_size}px Arial`, fill: hex})
-
-    let counter = 0
-    for (var i = 0; i < names.length; i++) {
-      if (i === 0 || names[i].role !== names[i - 1].role) {
-        let role = game.add.text(game.world.centerX, (i + counter++) * this.font_size, names[i].role, get_style("#e2402d"))
-        role.anchor.setTo(0.5)
-        role.setShadow(2, 2, "rgba(0, 0, 0, 0.5)", 0)
-        this.creditText.add(role)
+    this.counter = 0
+    for (var i = 0; i < this.names.length; i++) {
+      if (i === 0 || this.names[i].role !== this.names[i - 1].role) {
+        this.set_text(this.names[i].role, 0xE74475, i, 3)
+        this.counter += 2
       }
     
-      let name = game.add.text(game.world.centerX, (i + counter) * this.font_size, names[i].name, get_style("#ffffff"))
-      name.anchor.setTo(0.5)
-      name.setShadow(2, 2, "rgba(0, 0, 0, 0.5)", 0)
-      this.creditText.add(name)
-      
+      if (this.names[i].name != "") {
+        this.set_text(this.names[i].name, 0x814fbc, i, 2)
+        this.counter++
+        this.set_text(this.names[i].alias, 0x5185db, i, 2)
+        this.counter++
+      }
+      else {
+        this.set_text(this.names[i].alias, 0x5185db, i, 2)
+        this.counter++
+      }
+
       // shift all text after a role switches to something different
-      if (i < (names.length - 1))
-        if (names[i].role !== names[i + 1].role)
-          counter++
+      if (i < (this.names.length - 1))
+        if (this.names[i].role !== this.names[i + 1].role)
+          this.counter++
     }
 
     controls.map(0, {
@@ -60,6 +71,17 @@ export default class CreditsState extends State {
       start   : this.leave.bind(this),
       cancel  : this.leave.bind(this),
     });
+  }
+
+  /** creates retro font and an image that will get text and be added to a group */
+  set_text(text, hex_color, i, scale_amount) {
+    let font = game.add.retroFont('font', 10, 18, Phaser.RetroFont.TEXT_SET10)
+    let role = game.add.image(game.world.centerX, (i + this.counter) * this.font_size, font)
+    role.anchor.setTo(0.5)
+    role.scale.setTo(scale_amount)
+    role.tint = hex_color
+    font.setText(text, false, 2)
+    this.creditText.add(role)
   }
 
   /** starts the menu */
@@ -71,9 +93,10 @@ export default class CreditsState extends State {
   update() {
     controls.update();
 
-    if (this.creditText.y > (-this.font_size * this.creditText.length) + game.world.centerY)
+    // estimated end. bad
+    if (this.creditText.y > (-1 * (this.font_size * 2) * this.creditText.length) + game.world.centerY)
       this.creditText.y -= 1
-    
+
     this.bg.tilePosition.y += 0.5;
     this.bg.tilePosition.x -= 0.5;
   }
