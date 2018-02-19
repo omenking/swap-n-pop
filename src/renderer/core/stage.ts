@@ -90,7 +90,13 @@ export default abstract class Stage extends State {
     this.tick++
     this.update_playfields()
     this.danger_check()
+    console.log('step',tick,this.tick)
+    // false is the default behaviour for a step
+    // meaning its not faking the tick value because
+    // its realtime not a snapshot rolling forward
     if (tick === false) {
+      // we say true because we want to send data since
+      // this is a real tick
       this.inputs.update(this.tick,true)
       this.controls.update()
       this.snapshots.snap(this.tick)

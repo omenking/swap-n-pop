@@ -1,5 +1,4 @@
 import game     from 'core/game'
-import controls from 'core/controls'
 import ComponentPlayfield from 'components/playfield'
 
 import {
@@ -48,6 +47,10 @@ export default class ComponentPlayfieldCursor {
     this.reset(modetype)
   }
 
+  get controls(){
+    return this.playfield.stage.controls
+  }
+
   public reset(modetype){
     if (!this.playfield) { return }
     this.state      = 'hidden'
@@ -70,6 +73,7 @@ export default class ComponentPlayfieldCursor {
       y = (this.y * UNIT) - this.offset
       visible = true
       this.state = 'active'
+      this.map_controls()
     }
     this.sprite.x = x
     this.sprite.x = y
@@ -113,7 +117,7 @@ export default class ComponentPlayfieldCursor {
 
   /** gives cursor control of only the start button */
   menu_controls() {
-    controls.map(this.playfield.pi, {
+    this.controls.map(this.playfield.pi, {
       start: this.pause.bind(this)
     })
   }
@@ -122,7 +126,7 @@ export default class ComponentPlayfieldCursor {
    * defines the game controls and links the callsbacks to this cursors methods
    */
   map_controls() {
-    controls.map(this.playfield.pi, {
+    this.controls.map(this.playfield.pi, {
       up   : this.up.bind(this),
       down : this.down.bind(this),
       left : this.left.bind(this),

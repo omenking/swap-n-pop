@@ -1,5 +1,4 @@
 import game      from 'core/game'
-import controls  from 'core/controls'
 import * as electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
@@ -7,11 +6,11 @@ const {ipcRenderer: ipc} = electron
 export default class CoreInputs {
   public replay      : boolean
   private ack         : Array<any>
-  private _tick       : number
-  private _stage      : any
-  private _online     : any
-  private _inputs     : Array<any>
-  private _last_pack : any
+  public tick       : number
+  public stage      : any
+  public online     : any
+  public inputs     : Array<any>
+  public last_pack : any
 
   constructor(inputs,online,stage) {
     this.create(inputs,online,stage)
@@ -32,20 +31,6 @@ export default class CoreInputs {
       }
     }
   }
-  get stage(){ return this._stage }
-  set stage(v){ this._stage = v}
-
-  get last_pack(){ return this._last_pack }
-  set last_pack(v){ this._last_pack = v}
-
-  get tick(){ return this._tick }
-  set tick(v){ this._tick = v}
-
-  get online(){ return this._online }
-  set online(v){ this._online = v}
-
-  get inputs(){ return this._inputs }
-  set inputs(v){ this._inputs = v}
 
   get serialize(){
     return this.inputs
@@ -77,10 +62,8 @@ export default class CoreInputs {
     for (let tick = frame_start; frame_end >= tick; tick++) {
       let byte = data.frames[tick-data.ack0]
       if(typeof this.inputs[1][tick] === 'undefined') {
-        if (byte === 0x01){ console.log('+',this.tick,tick) }
         this.inputs[1].push(byte)
       } else {
-        if (byte === 0x01){ console.log('=',this.tick,tick) }
         this.inputs[1][tick] = byte
       }
     }
@@ -99,13 +82,13 @@ export default class CoreInputs {
   }
 
   update_input =(pi,tick)=> {
-    const byte = controls.serialize(pi)
+    const byte = stage.controls.serialize(pi)
     this.inputs[pi].push(byte)
   }
 
   replay_input =(pi,tick)=> {
     const byte = this.inputs[pi][tick]
-    controls.execute(pi,byte)
+    stage.controls.execute(pi,byte)
   }
 
   update =(tick,send)=> {

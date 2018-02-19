@@ -85,7 +85,10 @@ class GameMock {
       land: sinon.stub(),
       confirm: sinon.stub(),
       select: sinon.stub(),
-      stage_music: sinon.stub()
+      stage_music: sinon.stub(),
+      mode_vs: {
+        step: sinon.stub()
+      }
     }
     this.server = {
       on: sinon.stub()
