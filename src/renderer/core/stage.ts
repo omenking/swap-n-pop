@@ -188,13 +188,13 @@ export default abstract class Stage extends State {
   roll_to(from,to) {
     if (from > to) { // rollback
     } else { //rollforward
-      console.log('load from',from)
+      //console.log('load from',from)
       this.snapshots.load(from)
       //this.log_stack(from,'snap')
       // since we loaded a snapshot, maybe we don't need to step
       // throuh the frame we loaded the snapshot on.
       for (let i = from+1; i <= to; i++) {
-        console.log('step',i)
+        //console.log('step',i)
         this.step(i)
         //this.log_stack(i)
       }
