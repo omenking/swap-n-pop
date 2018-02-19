@@ -152,7 +152,7 @@ export default class Playfield {
     this.y = opts.y
 
     let pos = this.pi
-    if (this.online && game.server.pos === 1) {
+    if (this.stage.online && game.server.pos === 1) {
       pos = (this.pi === 0) ? 1 : 0
     }
     this.bg = game.add.sprite(this.x,this.y,`char_0${pos}`)
@@ -193,12 +193,11 @@ export default class Playfield {
     this.wall.create(this,this.x,this.y)
 
     let pos = null
-    if (this.online && game.server.pos === 1) {
+    if (this.stage.online && game.server.pos === 1) {
       pos = (this.pi === 0) ? 'kindle' : 'zephyr'
     } else {
       pos = (this.pi === 0) ? 'zephyr' : 'kindle'
     }
-    console.log('character pos',pos,this.online,game.server.pos)
     this.character.create(
       pos,
       game.world.centerX,
