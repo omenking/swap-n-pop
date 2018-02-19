@@ -198,6 +198,7 @@ export default class Playfield {
     } else {
       pos = (this.pi === 0) ? 'zephyr' : 'kindle'
     }
+    console.log('character pos',pos)
     this.character.create(
       pos,
       game.world.centerX,
