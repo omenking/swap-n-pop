@@ -199,7 +199,8 @@ export default class ModeVs extends CoreStage {
   update_playfields(){
     // we need to swap the playfield update order for
     // one of the players otherwise in multipalyer it will
-    // generate the panels on the wrong side.
+    // generate the panels on the wrong side because of the ordering
+    // of the RNG.
     if (this.online && game.server.pos === 1) {
       this.playfield1.update()
       this.playfield0.update()

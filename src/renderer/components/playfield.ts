@@ -187,8 +187,15 @@ export default class Playfield {
     this.cursor.create(this)
     if (this.has_ai) { this.ai.create(this, this.cursor) }
     this.wall.create(this,this.x,this.y)
+
+    let pos = null
+    if (this.online && game.server.pos === 1) {
+      pos = (this.pi === 0) ? 'kindle' : 'zephyr'
+    } else {
+      pos = (this.pi === 0) ? 'zephyr' : 'kindle'
+    }
     this.character.create(
-      (this.pi === 0) ? 'zephyr' : 'kindle',
+      pos,
       game.world.centerX,
       game.world.centerY - 100,
       this.pi
