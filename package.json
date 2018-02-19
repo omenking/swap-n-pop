@@ -54,11 +54,12 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "start": "cross-env NODE_ENV=development webpack --config webpack.config.renderer.js && electron app/main.js",
+    "start"   : "npm run renderer && npm run devtools && npm run main && npm run ui && npm run build",
     "devtools": "cross-env NODE_ENV=development webpack --config webpack.config.devtools.js",
     "main": "cross-env NODE_ENV=development webpack --config webpack.config.main.js",
     "renderer": "cross-env NODE_ENV=development webpack --config webpack.config.renderer.js",
     "ui": "cross-env NODE_ENV=development webpack --config webpack.config.ui.js",
+    "build": "electron app/main.js",
     "pack": "electron-builder --dir",
     "dist": "cross-env NODE_ENV=production webpack && electron-builder",
     "debug": "webpack && electron app/main.js tmp/debug.snap"
