@@ -151,7 +151,11 @@ export default class Playfield {
     this.x = opts.x
     this.y = opts.y
 
-    this.bg = game.add.sprite(this.x,this.y,`char_0${this.pi}`)
+    let pos = this.pi
+    if (this.online && game.server.pos === 1) {
+      pos = (this.pi === 0) ? 1 : 0
+    }
+    this.bg = game.add.sprite(this.x,this.y,`char_0${pos}`)
 
     this.layer_block  = game.add.group()
 
