@@ -1,8 +1,7 @@
-import game from "core/game";
-import State from "./base"
-import controls from 'core/controls'
+import game              from 'core/game'
+import State             from 'states/base'
+import controls          from 'core/controls'
 import ComponentMenuItem from 'components/menu_item'
-import ComponentMenu from "../components/menu";
 
 /** quick mockup of a credits page state */
 export default class CreditsState extends State {
