@@ -51,7 +51,7 @@ export function playfield_helper(opts={}){
   stage.state = RUNNING
   const playfield      = new Playfield(0)
   playfield.countdown  = { create: sinon.stub(), update: sinon.stub() }
-  playfield.cursor     = { create: sinon.stub(), update: sinon.stub() }
+  playfield.cursor     = { create: sinon.stub(), reset: sinon.stub(), update: sinon.stub() }
   playfield.menu_pause = { create: sinon.stub(), update: sinon.stub() }
   playfield.score_lbl  = { create: sinon.stub(), update: sinon.stub() }
   playfield.create(stage,{
