@@ -37,7 +37,7 @@ export default class ComponentPanelGarbage {
   private _kind : string
   public panel     : ComponentPanel
   public playfield : ComponentPlayfield
-  private sprite    : Phaser.Sprite
+  public sprite    : Phaser.Sprite
   public time_max : number
   public time_pop : number
   public time_cur : number
