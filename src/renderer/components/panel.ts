@@ -452,7 +452,7 @@ export default class ComponentPanel {
     if (this.state === STATIC && this.kind !== null) { return true }
     if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     // 3 already have been marked for being cleared on first frame
-    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) && this.state_timer === 0) { return true }
+    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) !== -1 && this.state_timer === 0) { return true }
     return false
   }
 
