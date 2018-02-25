@@ -335,12 +335,12 @@ describe('panel_actions', function() {
     chec( [0,20,1,CLEAR,96,1],
           [1,20,1,CLEAR,96,1],
           [2,20,1,CLEAR,96,1],
-          [0,21,1,CLEAR,96,F],
+          [0,21,1,CLEAR,96,1],
           [1,21,2,STATIC,0,F],
-          [2,21,2,STATIC,0,1],
-          [0,22,1,CLEAR,96,F],
+          [2,21,2,STATIC,0,F],
+          [0,22,1,CLEAR,96,1],
           [1,22,2,STATIC,0,F],
-          [2,22,2,STATIC,0,1])
+          [2,22,2,STATIC,0,F])
     update(96)
     chec( [0,20,N,STATIC,0,F],
           [1,20,N,STATIC,0,F],
