@@ -226,16 +226,8 @@ export default class ComponentPanel {
     this.garbage.face.create(this.garbage)
   }
 
-  hang_enter()   { 
-   
-   
-    this.counter = 10 
-  }
-  hang_execute() { 
-    if (this.kind !== null && this.counter <= 0) 
-      this.change_state(FALL) 
-     
-  }
+  hang_enter()   { this.counter = 10 }
+  hang_execute() { if (this.counter <= 0) { this.change_state(FALL) } }
 
   swap_l_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_L) } }
   swap_r_execute() { if (this.counter <= 0) { this.change_state(SWAPPING_R) } }
@@ -280,8 +272,7 @@ export default class ComponentPanel {
 
   static_execute() {
     if (!this.empty && (this.under.empty || this.under.state === HANG)) {
-      if (!this.empty)
-        this.change_state(HANG)
+      this.change_state(HANG)
     } else if (this.danger && this.counter === 0) {
       // we add 1 otherwise we will miss out on one frame
       // since counter can never really hit zero and render
@@ -326,7 +317,6 @@ export default class ComponentPanel {
 
   fall_execute() {
     if (this.counter > 0) { return }
-
     if (this.under.empty) {
       this.under.kind    = this.kind
       this.under.state   = this.state
@@ -605,9 +595,7 @@ export default class ComponentPanel {
    * Swaps the this panel with the panel to it's right.
    */
   swap() {
-    if (this.empty) 
-      if (this.right.empty)
-        return 
+    if (this.empty && this.right.empty) { return }
 
     this.counter        = 0
     this.right.counter  = 0
