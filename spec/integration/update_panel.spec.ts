@@ -73,6 +73,79 @@ describe('panel_actions', function() {
     update(); chec([0,22 ,N,STATIC    ,0,F], [1,22 ,0,STATIC    ,0,F])
   })
 
+  // a panel with a real panel being swapped to should be allowed to be switched when falling
+  it('#swap_falling_real_panel', function() {
+    // 0 1 
+    // 1 N 
+
+    // jump to swapping
+    load(
+      [0,21 ,0,SWAP_L,0,F], [1,21 ,1,SWAP_R,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+    // skip swapping
+    update(5)
+
+    // jump to fall
+    update(10)
+    chec(
+      [0,21 ,1,STATIC,0,F], [1,21 ,0,FALL  ,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+
+    // allow swapping since one of the blocks is is swappable
+    playfield.swap(0, 21) 
+    chec(
+      [0,21 ,1,SWAP_L,0,F], [1,21 ,0,SWAP_R,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+  })
+
+  // a panel without a real panel being swapped to shoulnt be allowed to be switched when falling
+  it('#dont_swap_falling_null_panel', function() {
+    // 0 N
+    // 1 N 
+
+    // jump to swapping
+    load(
+      [0,21 ,0,SWAP_L,0,F], [1,21 ,N,SWAP_R,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+    // skip swapping
+    update(5)
+
+    // jump to fall
+    update(10)
+    chec(
+      [0,21 ,N,STATIC,0,F], [1,21 ,0,FALL  ,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+
+    // not allow swapping since one of the blocks is null
+    playfield.swap(0, 21) 
+    chec(
+      [0,21 ,N,STATIC,0,F], [1,21 ,0,FALL,0,F],
+      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+    )
+  })
+
+  // swapping can be done multiple times but not when one block is null
+  it("#swap_multiple", function() {
+    // 0 N
+    // 1 N 
+
+    // jump to swapping
+    load([0,22 ,0,SWAP_L,0,F], [1,22 ,N,SWAP_R,0,F])
+    
+    update(1)
+
+    // swap again while swapping
+    playfield.swap(0, 22)
+    
+    // shouldnt be possible with one of the panels being null
+    chec([0,22 ,N,SWAPPING_L,4,F], [1,22 ,0,SWAPPING_R,4,F])
+  }) 
+
   it('#hang', function(){
     // 1
     // 0
