@@ -132,7 +132,6 @@ describe('panel_actions', function() {
   // swapping can be done multiple times but not when one block is null
   it("#swap_multiple", function() {
     // 0 N
-    // 1 N 
 
     // jump to swapping
     load([0,22 ,0,SWAP_L,0,F], [1,22 ,N,SWAP_R,0,F])
