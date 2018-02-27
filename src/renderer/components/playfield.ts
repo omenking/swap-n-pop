@@ -384,15 +384,17 @@ export default class Playfield {
    * @param {integer} y ypos to be accessed in the stack - 2D Array whise
    */
   swap(x,y) {
-    let panelLeft   = this.stack_xy(x, y);
-    let panelRight  = this.stack_xy(x + 1, y);
+    let panel_left   = this.stack_xy(x, y);
+    let panel_right  = this.stack_xy(x + 1, y);
 
-    if (panelLeft.swappable && panelRight.swappable) {
-      panelLeft.swap();
+    if (panel_left.swappable(panel_right)) {
+      if (panel_right.swappable(panel_left)) {
+        panel_left.swap();
 
-      if (!panelLeft.empty && !panelRight.empty ) {
-        this.swap_counter++;
-        return true;
+        if (!panel_left.empty && !panel_right.empty) {
+          this.swap_counter++;
+          return true;
+        }
       }
     }
   }
