@@ -104,13 +104,13 @@ export default class CoreInputs {
   }
 
   update_input =(pi,tick)=> {
-    const byte = stage.controls.serialize(pi)
+    const byte = this.stage.controls.serialize(pi)
     this.inputs[pi].push(byte)
   }
 
   replay_input =(pi,tick)=> {
     const byte = this.inputs[pi][tick]
-    stage.controls.execute(pi,byte)
+    this.stage.controls.execute(pi,byte)
   }
 
   update =(tick,send)=> {
