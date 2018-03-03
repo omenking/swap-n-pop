@@ -72,7 +72,26 @@ class CoreControls {
       sim_forward : false,
       fullscreen : false
     } //simulated down
-    this._down = {}
+    this._down = {
+      pl0_up    : 0,
+      pl0_down  : 0,
+      pl0_left  : 0,
+      pl0_right : 0,
+      pl0_a     : 0,
+      pl0_b     : 0,
+      pl0_l     : 0,
+      pl0_r     : 0,
+      pl0_start : 0,
+      pl1_up    : 0,
+      pl1_down  : 0,
+      pl1_left  : 0,
+      pl1_right : 0,
+      pl1_a     : 0,
+      pl1_b     : 0,
+      pl1_l     : 0,
+      pl1_r     : 0,
+      pl1_start : 0
+    }
     this.keys  = {}
     this.rebind()
 

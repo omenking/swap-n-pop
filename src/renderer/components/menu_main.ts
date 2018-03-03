@@ -3,11 +3,16 @@ import ComponentMenuItem   from 'components/menu_item'
 import ComponentBadge      from 'components/badge'
 import ComponentMenuCursor from 'components/menu_cursor'
 import {px}                from 'core/filters'
+import {ipcRenderer as ipc} from 'electron'
 import Store          from 'common/store'
+import {
+  MENU_MAIN
+} from 'common/data'
 const store = new Store()
 
 /** Class representing a menu. */
-export default class ComponentMenu {
+export default class ComponentMenuMain {
+  private stage      : any
   private group      : Phaser.Group
   private corner_tl  : Phaser.Sprite // top left
   private corner_tr  : Phaser.Sprite // top right
@@ -22,8 +27,9 @@ export default class ComponentMenu {
   private cursor     : ComponentMenuCursor
   private menu_items : Array<ComponentMenuItem>
 
-  constructor(actions_len: number) {
+  constructor() {
     this.menu_items = []
+    const actions_len = 8
     for(let i = 0; i < actions_len; i++){
       this.menu_items.push(new ComponentMenuItem())
     }
@@ -31,7 +37,29 @@ export default class ComponentMenu {
     this.badge  = new ComponentBadge()
   }
 
-  create(x : number,y : number ,width : number, actions : Array<{name : string, action: any}>) {
+  create(stage){
+    this.stage = stage
+    const items = [
+      {name: 'Play Online'  , action: this.mode_online},
+      //{name: 'Story'        , action: this.mode_story},
+      {name: 'Time Trial'   , action: this.mode_time_trial},
+      {name: 'Endless'      , action: this.mode_endless},
+      {name: 'Versus Local' , action: this.mode_vs},
+      //{name: 'Challenges'   , action: this.mode_challenges},
+      {name: 'Puzzles'      , action: this.mode_puzzles},
+      //{name: 'Training'     , action: this.mode_sandox},
+      {name: 'Options'      , action: this.mode_option},
+      {name: 'Credits'      , action: this.mode_credits}
+    ]
+    const x = game.world.width - (220 + px(70))
+    const y = game.world.centerY - ((10 + (28 * items.length-1) + 10)/2) + 20
+    const width = 220
+    if (store.has('auth_token')) {
+      items.push({name: 'Logout', action: this.logout})
+    } else {
+      items.push({name: 'Login', action: this.login})
+    }
+
 
     this.group = game.add.group()
     this.group.x = x
@@ -71,7 +99,7 @@ export default class ComponentMenu {
     this.bg.width          = width
     this.pipe_top.width    = width
     this.pipe_bottom.width = width
-    const height =  actions.length * 28
+    const height =  items.length * 28
     this.bg.height         = height
     this.pipe_left.width  = height
     this.pipe_right.width = height
@@ -96,8 +124,8 @@ export default class ComponentMenu {
 
     for(let i = 0; i < this.menu_items.length; i++){
       this.menu_items[i].create(
-        actions[i].name,
-        actions[i].action,
+        items[i].name,
+        items[i].action,
         width,
         this.group,
         i
@@ -110,6 +138,66 @@ export default class ComponentMenu {
       this.badge.create(store.get('username'))
     }
   }
+
+  login() {
+    ipc.send('login')
+  }
+
+  logout() {
+    ipc.send('logout')
+  }
+
+  mode_vs() {
+    //this.stage.state = MENU_MAIN
+    ipc.send('play-vs',{
+      online: false,
+      garbage: true,
+      timer: false,
+      countdown: false,
+      cpu: [false,false]
+    })
+  }
+
+  mode_online() {
+    ipc.send('settings','network')
+  }
+
+  mode_time_trial() {
+    ipc.send('play-single',{
+      timer: true
+    })
+  }
+
+  mode_endless() {
+    ipc.send('play-single', {
+    })
+  }
+
+  mode_story() {
+
+  }
+
+  /** starts the mode_puzzle state */
+  mode_challenges() {
+
+  }
+
+  mode_puzzles() {
+    game.state.start('puzzle_menu', true, false);
+  }
+
+  mode_option() {
+    ipc.send('settings','replay')
+  }
+
+  mode_sandox() {
+
+  }
+
+  mode_credits() {
+    game.state.start('credits', true, false)
+  }
+
 
   get x(){
     return this.group.x

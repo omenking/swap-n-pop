@@ -151,7 +151,11 @@ export default class Playfield {
     this.x = opts.x
     this.y = opts.y
 
-    this.bg = game.add.sprite(this.x,this.y,`char_0${this.pi}`)
+    let pos = this.pi
+    if (this.stage.online && game.server.pos === 1) {
+      pos = (this.pi === 0) ? 1 : 0
+    }
+    this.bg = game.add.sprite(this.x,this.y,`char_0${pos}`)
 
     this.layer_block  = game.add.group()
 
@@ -187,8 +191,15 @@ export default class Playfield {
     this.cursor.create(this)
     if (this.has_ai) { this.ai.create(this, this.cursor) }
     this.wall.create(this,this.x,this.y)
+
+    let pos = null
+    if (this.stage.online && game.server.pos === 1) {
+      pos = (this.pi === 0) ? 'kindle' : 'zephyr'
+    } else {
+      pos = (this.pi === 0) ? 'zephyr' : 'kindle'
+    }
     this.character.create(
-      (this.pi === 0) ? 'zephyr' : 'kindle',
+      pos,
       game.world.centerX,
       game.world.centerY - 100,
       this.pi

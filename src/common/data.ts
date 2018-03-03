@@ -41,6 +41,9 @@ export const GAMEOVER = 'gameover'
 export const ROLLUP   = 'rollup'
 export const ROLLDOWN = 'rolldown'
 export const WAIT     = 'wait'
+// Menu States
+export const MENU_MAIN   = 'menu_main'
+export const MENU_VS     = 'menu_vs'
 
 // COUNTDOWN States
 export const MOVING = 'moving'
