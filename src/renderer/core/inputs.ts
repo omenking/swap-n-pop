@@ -3,6 +3,25 @@ import * as electron from 'electron'
 
 const {ipcRenderer: ipc} = electron
 
+/*
+ * packed data looks like this:
+ * {
+ *  ack0: 40
+ *  ack1: 20
+ *  frames: [0x00,0x01,0x08]
+ *  frame_count: 3
+ * }
+ *
+ * ack is short for acknowledgement
+ * We are acknowledging the last known frame/tick
+ * we have recieved from the other player.
+ *
+ * ack's only get updated when packed data gets unpacked.
+ *
+ *
+ * ack0 is the last frame we acknowledge we recieved for their stack
+ * ack1 is last frame they acknowledge to recieved about our stack
+ */
 export default class CoreInputs {
   public replay      : boolean
   private ack         : Array<any>
