@@ -32,8 +32,9 @@ export default class ModeVs extends CoreStage {
   public  levels       : Array<ComponentLevel>
   public  wall         : WallState
 
-  public flag_garbage : boolean
-  public flag_timer   : boolean
+  public flag_garbage   : boolean
+  public flag_timer     : boolean
+  public flag_countdown : boolean
 
   constructor() {
     super()
@@ -55,6 +56,7 @@ export default class ModeVs extends CoreStage {
     this.rounds_won = [0,0]
     this.cpu        = data.cpu
     this.online     = data.online
+    this.flag_countdown = (data.countdown || false)
     super.init(data)
   }
 
@@ -112,7 +114,7 @@ export default class ModeVs extends CoreStage {
       this.callback_wall_rollup_exit.bind(this),
       this.callback_wall_done.bind(this)
     )
-    this.countdown.create(true,this.callback_countdown.bind(this))
+    this.countdown.create(this.flag_countdown,this.callback_countdown.bind(this))
     this.playfield0.create_after()
     this.playfield1.create_after()
     this.timer.create(this,offset+px(128),px(168))
@@ -197,7 +199,8 @@ export default class ModeVs extends CoreStage {
   update_playfields(){
     // we need to swap the playfield update order for
     // one of the players otherwise in multipalyer it will
-    // generate the panels on the wrong side.
+    // generate the panels on the wrong side because of the ordering
+    // of the RNG.
     if (this.online && game.server.pos === 1) {
       this.playfield1.update()
       this.playfield0.update()

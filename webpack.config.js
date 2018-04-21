@@ -1,4 +1,3 @@
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const path              = require('path')
 const webpack           = require('webpack')
@@ -54,8 +53,6 @@ const config_devtools = {
   module : { rules: [ts,scss,css] },
   plugins: [ 
     new ExtractTextPlugin("panel.css"),
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new HardSourceWebpackPlugin()
   ]
 };
 
@@ -75,10 +72,7 @@ const config_main = {
   },
   node: { __dirname: false },
   module: { rules: [ts] },
-  plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new HardSourceWebpackPlugin()
-  ]
+
 };
 
 const config_renderer = {
@@ -102,10 +96,7 @@ const config_renderer = {
   },
   node: { __dirname: false },
   module : { rules: [ts] },
-  plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new HardSourceWebpackPlugin()
-  ]
+
 };
 
 const config_ui = {
@@ -121,8 +112,6 @@ const config_ui = {
   module : { rules: [scss,css] },
   plugins: [ 
     new ExtractTextPlugin("app.css"),
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new HardSourceWebpackPlugin()
   ]
 }
 

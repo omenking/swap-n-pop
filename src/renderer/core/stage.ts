@@ -90,7 +90,12 @@ export default abstract class Stage extends State {
     this.tick++
     this.update_playfields()
     this.danger_check()
+    // false is the default behaviour for a step
+    // meaning its not faking the tick value because
+    // its realtime not a snapshot rolling forward
     if (tick === false) {
+      // we say true because we want to send data since
+      // this is a real tick
       this.inputs.update(this.tick,true)
       this.controls.update()
       this.snapshots.snap(this.tick)
@@ -183,11 +188,13 @@ export default abstract class Stage extends State {
   roll_to(from,to) {
     if (from > to) { // rollback
     } else { //rollforward
+      //console.log('load from',from)
       this.snapshots.load(from)
       //this.log_stack(from,'snap')
       // since we loaded a snapshot, maybe we don't need to step
       // throuh the frame we loaded the snapshot on.
       for (let i = from+1; i <= to; i++) {
+        //console.log('step',i)
         this.step(i)
         //this.log_stack(i)
       }
@@ -198,6 +205,12 @@ export default abstract class Stage extends State {
   update() {
     if (this.step_mode === false){
       //this.log_stack_setup()
+      if (this.roll.ready){
+        this.roll_to(
+          this.roll.from,
+          this.roll.to
+        )
+      }
       this.step(false)
       //this.log_stack(this.tick,'end')
     }
