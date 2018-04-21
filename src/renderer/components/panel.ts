@@ -423,17 +423,30 @@ export default class ComponentPanel {
   /*
    * In order for this panel to be swappable it must:
    *   * not have a panel hanging over above
-   *   * this panel needs to be static with a kind, or...
+   *   * swapping_panel isnt empty and current state is fall
+   *   * this panel needs to be static 
    *   * during a land as long as 1 frame of land has been played out
    *   * if its empty you can swap
+   *   * if swapping_panel isnt empty it can be switched while in switching states
    * */
-  get swappable() {
+  swappable(swapping_panel) {
     // if above is not stable, you can't swap
     if (this.above.state === HANG ) { return false }
-    if ((this.state === STATIC || this.state === FALL) && this.kind !== null) { return true }
+    
+    // only let swappable while falling be able when the swapping panel isnt empty
+    if (!swapping_panel.empty && this.state === FALL) { return true }
+
+    // if static let this be swappable
+    if (this.state === STATIC) { return true }
+        
     if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     if (this.empty) { return true }
-    if (this.state === SWAP_L || this.state === SWAP_R || this.state === SWAPPING_L || this.state === SWAPPING_R) { return true }
+   
+    // swapping_panel should never be null, swapping panel can be static so !empty doesnt work
+    if (swapping_panel.kind !== null)
+      if (this.state === SWAP_L || this.state === SWAP_R || this.state === SWAPPING_L || this.state === SWAPPING_R) 
+        return true 
+    
     return false
   }
   /**
@@ -466,7 +479,7 @@ export default class ComponentPanel {
    *  and has no kind assigned
    * */
   get empty() {
-    return  this.state === STATIC && this.kind === null 
+    return this.kind === null && this.state === STATIC
   }
 
   get hidden_during_garbage_static(){
