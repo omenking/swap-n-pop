@@ -1,10 +1,12 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import controls             from 'core/controls'
+import WallState            from 'core/wall_state'
 import CountdownState       from 'core/countdown_state'
 import CoreInputs           from 'core/inputs'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
+import {px} from 'core/filters'
 
 import {
   STARTING,
@@ -23,14 +25,16 @@ export default class ModePuzzle extends CoreStage {
   private panels       : Array<number>
   public  flag_timer   : boolean
   private danger       : boolean
+  public  wall         : WallState
 
   constructor() {
     super()
+    this.wall         = new WallState()
   }
 
   public init(data) {
     this.seed        = 'puzzle'
-    this.inputs      = new CoreInputs(undefined,undefined,undefined)
+    this.inputs      = new CoreInputs(undefined,undefined,this)
     this.flag_timer  = data.timer
     super.init(data)
   }
@@ -45,10 +49,14 @@ export default class ModePuzzle extends CoreStage {
     stack.create(6,2,"average","many");
     this.playfield0.create(this, {
       push: true,
-      x     : 320,
-      y     : 80,
+      x     : px(159),
+      y     : px(24),
       panels: stack.panels
     })
+    this.wall.create(
+      this.callback_wall_rollup_exit.bind(this),
+      this.callback_wall_done.bind(this)
+    )
     this.countdown.create(true,this.callback_countdown.bind(this))
     this.playfield0.create_after()
     this.timer.create(this,180, 60)
@@ -63,6 +71,19 @@ export default class ModePuzzle extends CoreStage {
 
   protected callback_countdown(){
     super.callback_countdown()
+  }
+
+  protected callback_wall_rollup_exit(){
+    const stack = new Stack(this.rng)
+    stack.create(6,2,"average","many")
+    this.playfield0.reset()
+    this.playfield0.fill_panels(stack.panels)
+  }
+
+  protected callback_wall_done(){
+    this.countdown.reset()
+    this.timer.reset()
+    this.state = STARTING
   }
 
   game_over(pi) {
@@ -93,6 +114,9 @@ export default class ModePuzzle extends CoreStage {
   step(tick) {
     super.step(tick)
     this.timer.update()
+    if (this.state == GAMEOVER) {
+      this.wall.update()
+    }
   }
 
   render() {

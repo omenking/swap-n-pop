@@ -33,7 +33,7 @@ export default class ModePuzzle extends CoreStage {
 
   public init(data) {
     this.seed        = 'puzzle'
-    this.inputs      = new CoreInputs(undefined,undefined,undefined)
+    this.inputs      = new CoreInputs(undefined,undefined,this)
     this.level_index = data.chosen_index
     super.init(data)
   }

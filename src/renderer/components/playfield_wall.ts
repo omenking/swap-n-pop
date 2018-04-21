@@ -17,6 +17,7 @@ export default class ComponentPlayfieldWall {
   private sprite    : Phaser.Sprite
 
   create(playfield,x,y) {
+    console.log('playfield wall',playfield)
     this.playfield = playfield
     this.sprite    = game.add.sprite(x, y, `playfield_wall${this.playfield.pi}`)
   }

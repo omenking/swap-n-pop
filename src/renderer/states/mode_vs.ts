@@ -1,8 +1,8 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
-import WallState            from 'core/wall_state'
 import CoreStage            from 'core/stage'
 import Stack                from 'core/stack'
+import WallState            from 'core/wall_state'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
 import ComponentDebugFrame  from 'components/debug_frame'
@@ -41,7 +41,7 @@ export default class ModeVs extends CoreStage {
     this.playfield1   = new ComponentPlayfield(1)
     this.ping         = new ComponentPing()
     this.star_counter = new ComponentStarCounter()
-    this.wall = new WallState()
+    this.wall         = new WallState()
     this.levels = [
       new ComponentLevel(0),
       new ComponentLevel(1)
