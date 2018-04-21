@@ -1,3 +1,4 @@
+import assets from 'core/assets'
 import game     from 'core/game'
 import ComponentPlayfield from 'components/playfield'
 
@@ -296,6 +297,7 @@ export default class ComponentPlayfieldCursor {
       this.counter_flicker++;
       if (this.counter_flicker > 1)
         this.counter_flicker = 0;
+        assets.spritesheets.playfield_cursor.animations.flash[this.counter_flicker]
     }
   }
 
@@ -304,14 +306,15 @@ export default class ComponentPlayfieldCursor {
   }
 
   get frame(){
-    return Math.floor(this.playfield.stage.tick / 12) % 2
+    const value = Math.floor(this.playfield.stage.tick / 12) % 2
+    return assets.spritesheets.playfield_cursor.animations.pulse[value]
   }
 
   render_visible(){
     if (this.stage.state === GAMEOVER) {
       this.sprite.visible = false
     } else if (this.stage.state === STARTING) {
-      this.sprite.visible = this.counter_flicker === 1
+      this.sprite.visible = true
     } else {
       this.sprite.visible = true
     }

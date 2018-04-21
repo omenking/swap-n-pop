@@ -56,6 +56,7 @@ export default class ModeVs extends CoreStage {
     this.rounds_won = [0,0]
     this.cpu        = data.cpu
     this.online     = data.online
+    console.log('data',data.countdown)
     this.flag_countdown = (data.countdown || false)
     super.init(data)
   }

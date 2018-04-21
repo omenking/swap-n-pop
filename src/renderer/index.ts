@@ -52,12 +52,14 @@ ipc.on('play-single',(event,data) => {
   })
 })
 ipc.on('play-vs', (event,data) => {
+  console.log('play vs', data)
   fade.out(function(){
     game.state.start('mode_vs',true,false, {
       seed:    data.seed,
       online:  data.online,
       cpu:     data.cpu,
       garbage: data.garbage,
+      countdown: data.countdown,
       timer:   data.timer
     })
   })

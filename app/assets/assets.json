@@ -41,7 +41,12 @@
   "spritesheets" : {
      "ints_small"         : {"size": "16x16" , "frames": 18}
     ,"ints_large"         : {"size": "16x24" , "frames": 18}
-    ,"playfield_cursor"   : {"size": "76x44" , "frames": 2}
+    ,"playfield_cursor"   : {"size": "76x44" , "frames": 3,
+      "animations": {
+        "flash": [0,3],
+        "pulse": [0,1,2,2,1]
+      }
+    }
     ,"playfield_countdown": {"size": "124x76", "frames": 4}
     ,"panels"             : {"size": "32x32" , "frames": 56, "animations": {
       "clear"  : [

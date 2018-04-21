@@ -149,11 +149,12 @@ export default class ComponentMenuMain {
 
   mode_vs() {
     //this.stage.state = MENU_MAIN
+    console.log('mode vs')
     ipc.send('play-vs',{
       online: false,
       garbage: true,
       timer: false,
-      countdown: false,
+      countdown: true,
       cpu: [false,false]
     })
   }
