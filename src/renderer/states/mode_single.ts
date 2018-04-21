@@ -49,8 +49,8 @@ export default class ModePuzzle extends CoreStage {
     stack.create(6,2,"average","many");
     this.playfield0.create(this, {
       push: true,
-      x     : px(159),
-      y     : px(24),
+      x     : px(151),
+      y     : px(22),
       panels: stack.panels
     })
     this.wall.create(
