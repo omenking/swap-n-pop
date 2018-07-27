@@ -59,3 +59,7 @@ apply to these assets and is considered to be All rights reserved by
 Wish for the time being.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/omenking/swap-n-pop.svg?branch=master)](https://travis-ci.org/omenking/swap-n-pop) ![Test](https://ci.appveyor.com/api/projects/status/github/omenking/swap-n-pop?branch=master&svg=true) 
+
+#How to create custom Mac Icon
+https://www.youtube.com/watch?v=QbVni3ot76U
+iconutil -c icns myicon.iconset
