@@ -40,7 +40,7 @@
   ],
   "spritesheets" : {
      "ints_small"         : {"size": "16x16" , "frames": 18}
-    ,"ints_large"         : {"size": "16x28" , "frames": 18}
+    ,"ints_large"         : {"size": "16x24" , "frames": 18}
     ,"playfield_cursor"   : {"size": "76x44" , "frames": 3,
       "animations": {
         "flash": [0,3],

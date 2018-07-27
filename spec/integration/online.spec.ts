@@ -57,14 +57,14 @@ function press_up(n,key) {
 describe('Online Simulation', function() {
   beforeEach(function(){
     const init0 = {
-      countdown: false
+      countdown: false,
       seed     : 'puzzle',
       cpu      : [false,false],
       online   : true,
       controls : controls0
     }
     const init1 = {
-      countdown: false
+      countdown: false,
       seed     : 'puzzle',
       cpu      : [false,false],
       online   : true,

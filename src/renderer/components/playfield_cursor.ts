@@ -30,6 +30,8 @@ export default class ComponentPlayfieldCursor {
   public  mode            : string
   public  x               : number
   public  y               : number
+  public  px_x            : number
+  public  px_y            : number
   private  visible        : boolean
   /**
    * Initialises the Cursor's position in x & y, counter, and its sprite
@@ -66,16 +68,17 @@ export default class ComponentPlayfieldCursor {
     this.y = 6 + ROWS_INV
     let x,y, visible
     if(this.playfield.stage.countdown.state === MOVING){
-      x = ((COLS-2)*UNIT) - this.offset
-      y = 0               - this.offset
       visible = false
     } else {
-      x = (this.x * UNIT) - this.offset
-      y = (this.y * UNIT) - this.offset
       visible = true
       this.state = 'active'
       this.map_controls()
     }
+
+    x = (this.x * UNIT) - this.offset
+    y = (this.y * UNIT) - this.offset
+    this.px_x = x
+    this.px_y = y
     this.sprite.x = x
     this.sprite.x = y
     this.sprite.visible = visible
@@ -275,24 +278,28 @@ export default class ComponentPlayfieldCursor {
     let x = (this.x * UNIT) - this.offset
     let y = (this.y * UNIT) - this.offset
 
-    if(this.state === 'entering') {
-      // increases by STARTPOS_PANELCURSOR_SPEED until y is reached, then sets it to y
-      this.sprite.y = this.sprite.y < y ? this.sprite.y + STARTPOS_PANELCURSOR_SPEED : y;
+    this.update_entering(x,y)
 
-      // once sprite.y has reached its goal position move x the same way
-      if (this.sprite.y === y)
-        this.sprite.x = this.sprite.x > x ? this.sprite.x - STARTPOS_PANELCURSOR_SPEED : x;
-
-      if (this.sprite.x === x && this.sprite.y === y) {
-        this.map_controls();  // full control of moving
-        this.state = "preactive";
-      }
-    }
-    else if(this.state === 'preactive' || this.state === 'active') {
-      this.sprite.x = x
-      this.sprite.y = y
+    if(this.state === 'preactive' || this.state === 'active') {
+      this.px_x = x
+      this.px_y = y
     }
 
+    this.update_flickering()
+  }
+
+  update_entering(x,y){
+    if(this.state !== 'entering') { return }
+                        this.px_y = this.px_y < y ? this.px_y + STARTPOS_PANELCURSOR_SPEED : y;
+    if (this.y === y) { this.px_x = this.px_x > x ? this.px_x - STARTPOS_PANELCURSOR_SPEED : x; }
+
+    if (this.px_x === x && this.px_y === y) {
+      this.map_controls();  // full control of moving
+      this.state = "preactive";
+    }
+  }
+
+  update_flickering(){
     if (['entering','preactive'].includes(this.state)) {
       this.counter_flicker++;
       if (this.counter_flicker > 1)
@@ -300,6 +307,7 @@ export default class ComponentPlayfieldCursor {
         assets.spritesheets.playfield_cursor.animations.flash[this.counter_flicker]
     }
   }
+
 
   get stage(){
     return this.playfield.stage
@@ -319,11 +327,13 @@ export default class ComponentPlayfieldCursor {
       this.sprite.visible = true
     }
   }
-  
+
   /** updates the actual sprite position, almost the same as update() */
   render() {
     this.render_visible()
     this.sprite.frame = this.frame
+    this.sprite.x = this.px_x
+    this.sprite.y = this.px_y
   }
 
   /** empty */
