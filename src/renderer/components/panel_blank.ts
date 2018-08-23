@@ -18,6 +18,7 @@ class ComponentPanelBlank{
   public garbage           : any
   public chain             : number
   public swappable         : boolean
+  public fsm               : any
 
   constructor(){
     this.kind              = null
@@ -35,6 +36,7 @@ class ComponentPanelBlank{
     this.hidden_during_clear   = true
     this.garbage           = { 'group': -1, 'state': null, 'kind': null }
     this.chain             = null
+    this.fsm = null
   }
   
   get  left() { return blank }

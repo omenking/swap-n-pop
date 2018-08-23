@@ -75,6 +75,7 @@ export default class Playfield {
   public pushing  : boolean
   public push_counter  : number
   public garbage_landing : boolean
+  public level : number 
 
   constructor(pi){
     if (pi !== 0 && pi !== 1){
@@ -339,6 +340,7 @@ export default class Playfield {
     this.cursor.reset('vs')
     this.layer_block.x  = this.x
     this.layer_block.y  = this.y - (ROWS_INV*UNIT)
+    this.level = 0
   }
 
   /**
