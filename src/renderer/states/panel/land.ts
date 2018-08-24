@@ -2,11 +2,8 @@ import State from "states/panel/state"
 import {
   STATIC,
   HANG,
-  SWAPPING_L,
-  SWAPPING_R,
-  SWAP_L,
-  SWAP_R,
-  GARBAGE
+  GARBAGE,
+  MOVE
 } from 'common/data';
 import assets from 'core/assets'
 
@@ -36,7 +33,7 @@ export default class StateLand extends State {
       let under = this.p.neighbors["down"]
       let ground = true
       while (under !== undefined && under.fsm.state !== GARBAGE) {
-          if (under.kind === null || under.fsm.state === SWAP_L || under.fsm.state === SWAPPING_L || under.fsm.state === SWAP_R || under.fsm.state === SWAPPING_R) {
+          if (under.kind === null || under.fsm.state === MOVE) {
               ground = false
               break
           }

@@ -3,11 +3,8 @@ import {
   HANG,
   FALL,
   LAND,
-  SWAP_L,
-  SWAP_R,
-  SWAPPING_L,
-  SWAPPING_R,
   CLEAR,
+  MOVE,
   GARBAGE
 } from 'common/data'
 import {state} from 'devtools/common/data'
@@ -47,10 +44,7 @@ function select_state(){
     m('option', {value: HANG}     , "HANG"),
     m('option', {value: FALL}     , "FALL"),
     m('option', {value: LAND}     , "LAND"),
-    m('option', {value: SWAP_L}   , "SWAP_L"),
-    m('option', {value: SWAP_R}   , "SWAP_R"),
-    m('option', {value: SWAPPING_L}, "SWAPING_L"),
-    m('option', {value: SWAPPING_R}, "SWAPING_R"),
+    m('option', {value: MOVE}, "MOVE"),
     m('option', {value: CLEAR}    , "CLEAR"),
     m('option', {value: GARBAGE}  , "GARBAGE")
   ])

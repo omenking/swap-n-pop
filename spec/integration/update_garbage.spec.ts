@@ -7,10 +7,6 @@ import {
 
 import {
   PANELS,
-  SWAP_L,
-  SWAP_R,
-  SWAPPING_L,
-  SWAPPING_R,
   STATIC,
   HANG,
   FALL,

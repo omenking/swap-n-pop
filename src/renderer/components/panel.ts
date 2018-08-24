@@ -9,10 +9,7 @@ import * as ss from 'shuffle-seed'
 import {
   GAMEOVER,
   UNIT,
-  SWAP_L,
-  SWAP_R,
-  SWAPPING_L,
-  SWAPPING_R,
+  MOVE,
   STATIC,
   HANG,
   FALL,
@@ -50,7 +47,9 @@ export default class ComponentPanel {
   public clear_len      : number
 
   public fsm            : ComponentStateMachine
-  public neighbors : Map<String, any>
+  public neighbors      : Map<String, any>
+  public offset         : {x: number, y: number}
+  public move_dir       : number // 1 == right | -1 == left
 
   get kind ()   { return this._kind }
   set kind (val){ this._kind = val }
@@ -69,7 +68,20 @@ export default class ComponentPanel {
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get should_hang() { let under = this.neighbors["down"]; return under === undefined ? false : under.fsm.state === STATIC && under.kind === null; }
+  get should_hang() { 
+    let under = this.neighbors["down"]; 
+    return under === undefined ? false : under.fsm.state === STATIC && under.kind === null; 
+  }
+
+  get check_for_hang() {
+    let under = this.neighbors["down"]
+
+    if (under !== undefined) 
+      if (!this.empty && (under.empty || under.fsm.state === HANG))
+        return true
+
+    return false
+  }
 
   get absolute_center_x(){
     let x = this.playfield.layer_block.x
@@ -175,6 +187,7 @@ export default class ComponentPanel {
     this.chain = 0
     this.sprite.visible = false
     this.garbage.reset()
+    this.offset = {x: 0, y: 0}
   }
 
   create_after(){
@@ -247,7 +260,7 @@ export default class ComponentPanel {
    
     // swapping_panel should never be null, swapping panel can be static so !empty doesnt work
     if (swapping_panel.kind !== null)
-      if (this.fsm.state === SWAP_L || this.fsm.state === SWAP_R || this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R) 
+      if (this.fsm.state === MOVE) 
         return true 
     
     return false
@@ -283,7 +296,7 @@ export default class ComponentPanel {
   get static_stable() { return  this.fsm.state === STATIC && this.kind !== null }
 
   /** 
-   *  A panel is only considered empty if it is STATIC, SWAP_
+   *  A panel is only considered empty if it is STATIC
    *  and has no kind assigned
    * */
   get empty() {
@@ -296,10 +309,7 @@ export default class ComponentPanel {
   }
 
   get empty_when_swapping() {
-    return (this.fsm.state === SWAP_R     ||
-            this.fsm.state === SWAP_L     ||
-            this.fsm.state === SWAPPING_L ||
-            this.fsm.state === SWAPPING_R) && this.kind === null
+    return this.fsm.state === MOVE && this.kind === null
   }
   /**
    * A panel can be hidden but not empty this only happens in the case
@@ -317,9 +327,7 @@ export default class ComponentPanel {
    */
   get stable() {
     if (this.fsm.state === STATIC     && this.kind !== null) { return true }
-    if (this.fsm.state === SWAP_R     && this.kind !== null) { return true }
-    if (this.fsm.state === SWAPPING_R && this.kind !== null) { return true }
-    if (this.fsm.state === SWAPPING_L && this.kind !== null) { return true }
+    if (this.fsm.state === MOVE       && this.kind !== null) { return true }
     if (this.fsm.state === GARBAGE    && this.garbage.state === STATIC) { return true }
     return false
   }
@@ -416,15 +424,35 @@ export default class ComponentPanel {
    * Swaps the this panel with the panel to it's right.
    */
   swap() {
-    if (this.empty && this.neighbors["right"].empty) { return }
+    let right = this.neighbors["right"]
 
-    this.counter        = 0
-    this.neighbors["right"].counter  = 0
+    if (this.swappable(right) && right.swappable(this))
+      if (this.empty && right.empty) 
+        return false
 
-    this.fsm.change_state(SWAP_L)
-    this.neighbors["right"].fsm.change_state(SWAP_R)
+    // hardcoded offsets, to not make kinds show up for 1 frame
+    // in the wrong position
+    this.offset.x = UNIT
+		right.offset.x = -UNIT
+
+    // swap kinds instantly
+    let temp_kind = this.kind
+		this.kind = right.kind
+    right.kind = temp_kind
+    
+    // counter set to tween anim length
+    this.counter = TIME_SWAP
+    right.counter = TIME_SWAP
+
+    // set direction which will set the move animation direction
+		this.move_dir = 1
+		right.move_dir = -1
+
+    this.fsm.change_state(MOVE)
+    right.fsm.change_state(MOVE)
 
     game.sounds.swap()
+    return true
   }
 
   /**
@@ -538,8 +566,36 @@ export default class ComponentPanel {
     }
   }
 
-  comboable_with(kind){
-    return this.comboable && kind !== null && this.kind === kind
+  // wether this block is comboable and also matches with another kind
+  comboable_with(other_kind) : boolean {
+    return this.comboable && other_kind !== null && this.kind === other_kind
+  }
+
+  // returns an array of comboable blocks including this block
+  // wether 2 blocks have the same kind as this block - change state to CLEAR
+  // returns an empty array otherwhise
+  check_similar_blocks(panel1, panel2) : Array<ComponentPanel> {
+    if (this.comboable)
+      if (panel1 !== undefined && panel2 !== undefined)
+        if (panel1.is_comboable_with(this.kind) && panel2.is_comboable_with(this.kind))
+          return [this, panel1, panel2]
+        
+    return []
+  } 
+    
+  // wether up and down or left and right block are the same kind - apply clear
+  check_clear() : Array<ComponentPanel> {
+    let checks = new Array<ComponentPanel>()
+    
+    let r = this.neighbors["right"]
+    let rr = r !== undefined ? r.neighbors["right"] : undefined
+    let d = this.neighbors["down"]
+    let dd = d !== undefined ? d.neighbors["down"] : undefined
+
+    checks.push.apply(checks, this.check_similar_blocks(r, rr))
+    checks.push.apply(checks, this.check_similar_blocks(d, dd))
+    
+    return checks
   }
 
   /**
@@ -589,7 +645,7 @@ export default class ComponentPanel {
       const frames = assets.spritesheets.panels.animations.land
       const len    = frames.length
       this.frame = frames[len-this.counter]
-    } else if (this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R){
+    } /*else if (this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R){
       let v = (UNIT / TIME_SWAP) * this.counter
       switch (this.fsm.state) {
         case SWAPPING_L:
@@ -600,7 +656,7 @@ export default class ComponentPanel {
           break
       }
       this.frame = assets.spritesheets.panels.animations.live
-    } else if (this.danger){
+    } */else if (this.danger){
       const frames = assets.spritesheets.panels.animations.danger
       const len    = frames.length
       const i      = frames[len - this.counter+1]
@@ -616,8 +672,8 @@ export default class ComponentPanel {
     this.particles[2].render()
     this.particles[3].render()
 
-    this.sprite.x = this.x * UNIT
-    this.sprite.y = this.y * UNIT
+    this.sprite.x = this.x * UNIT + this.offset.x
+    this.sprite.y = this.y * UNIT + this.offset.y
     this.animate()
     this.render_visible()
     this.bauble.render()

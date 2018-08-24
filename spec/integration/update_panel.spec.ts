@@ -12,11 +12,9 @@ import {
 
 import {
   PANELS,
-  SWAP_L,
-  SWAP_R,
-  SWAPPING_L,
-  SWAPPING_R,
   STATIC,
+  MOVE,
+  TIME_SWAP,
   HANG,
   FALL,
   LAND,
@@ -29,7 +27,7 @@ const R = Symbol('random_panel')
 const T  = true
 const F  = 0
 const N  = null
-const NN = [null,null,null,null]
+const NN = [N,N,N,null]
 let playfield = null
 
 function load(...arr){ playfield_load(playfield,...arr)  }
@@ -47,85 +45,57 @@ describe('panel_actions', function() {
     playfield = playfield_helper({cpu: [false,null]})
   })
 
-  //todo - swapping should allow for a panel
+  // 2 blocks should switch their kinds (frames)
   it('#swap', function(){
-    // 1 0 N
-    // 1 4 N
-    // 2 3 N
-    load([0,20,1,STATIC,0,F], [1,20,0,STATIC,0,F], [2,20,N,STATIC,0,F],
-         [0,21,1,STATIC,0,F], [1,21,4,STATIC,0,F], [2,21,N,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,3,STATIC,0,F], [2,22,N,STATIC,0,F])
-    //################################################################
-    playfield.stack_xy(1, 20).swap()
-    chec([0,20,1,STATIC,0,F], [1,20,0,SWAP_L,0,F], [2,20,N,SWAP_R,0,F],
-         [0,21,1,STATIC,0,F], [1,21,4,STATIC,0,F], [2,21,N,STATIC,0,F],
-         [0,22,2,STATIC,0,F], [1,22,3,STATIC,0,F], [2,22,N,STATIC,0,F])
-  })
-
-  it('#swapping', function(){
-    // 0 N
-    load([0,22 ,0,SWAP_L,0,F], [1,22 ,N,SWAP_R,0,F])
-    //################################################################
-    update(); chec([0,22 ,N,SWAPPING_L,4,F], [1,22 ,0,SWAPPING_R,4,F])
-    update(); chec([0,22 ,N,SWAPPING_L,3,F], [1,22 ,0,SWAPPING_R,3,F])
-    update(); chec([0,22 ,N,SWAPPING_L,2,F], [1,22 ,0,SWAPPING_R,2,F])
-    update(); chec([0,22 ,N,SWAPPING_L,1,F], [1,22 ,0,SWAPPING_R,1,F])
-    update(); chec([0,22 ,N,STATIC    ,0,F], [1,22 ,0,STATIC    ,0,F])
-  })
-
-  // a panel with a real panel being swapped to should be allowed to be switched when falling
-  it('#swap_falling_real_panel', function() {
-    // 0 1 
-    // 1 N 
-
-    // jump to swapping
+    // 0 1 to 1 0
     load(
-      [0,21 ,0,SWAP_L,0,F], [1,21 ,1,SWAP_R,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+      [0, 22, 0, STATIC, 0, F], 
+      [1, 22, 1, STATIC, 0, F]
     )
-    // skip swapping
-    update(5)
+    
+    playfield.swap(0, 22)
+  
+    update()
 
-    // jump to fall
-    update(10)
     chec(
-      [0,21 ,1,STATIC,0,F], [1,21 ,0,FALL  ,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
-    )
-
-    // allow swapping since one of the blocks is is swappable
-    playfield.swap(0, 21) 
-    chec(
-      [0,21 ,1,SWAP_L,0,F], [1,21 ,0,SWAP_R,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+      [0, 22, 1, MOVE, TIME_SWAP - 1, F],
+      [1, 22, 0, MOVE, TIME_SWAP - 1, F],
     )
   })
 
-  // a panel without a real panel being swapped to shoulnt be allowed to be switched when falling
-  it('#dont_swap_falling_null_panel', function() {
-    // 0 N
-    // 1 N 
-
-    // jump to swapping
+  // swapping a real block thats falling is possible
+  // when one of the block's kind is not null
+  it('#swap_falling_panel', function() {
+    // 0 1
+    // 1 n
     load(
-      [0,21 ,0,SWAP_L,0,F], [1,21 ,N,SWAP_R,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+      [0, 21, 0, STATIC, 0, F], [1, 21, 1, FALL, 0, F],
+      [0, 22, 1, STATIC, 0, F], [1, 22, N, STATIC, 0, F],
     )
-    // skip swapping
-    update(5)
-
-    // jump to fall
-    update(10)
+    
+    playfield.swap(0, 21)
+    
     chec(
-      [0,21 ,N,STATIC,0,F], [1,21 ,0,FALL  ,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+      [0, 21, 1, MOVE, TIME_SWAP, F], [1, 21, 0, MOVE, TIME_SWAP, F],
+      [0, 22, 1, STATIC, 0, F], [1, 22, N, STATIC, 0, F],
     )
+  })
 
-    // not allow swapping since one of the blocks is null
-    playfield.swap(0, 21) 
+  // swapping a real block thats falling is not possible
+  // when one of the block's kind is null	
+  it('#dont_swap_null_block', function() {
+    // n 1
+    // 1 n
+    load(
+      [0, 21, N, STATIC, 0, F], [1, 21, 1, FALL, 0, F],
+      [0, 22, 1, STATIC, 0, F], [1, 22, N, STATIC, 0, F],
+    )
+    
+    playfield.swap(0, 21)
+    
     chec(
-      [0,21 ,N,STATIC,0,F], [1,21 ,0,FALL,0,F],
-      [0,22 ,1,STATIC,0,F], [1,22 ,N,STATIC,0,F]
+      [0, 21, N, STATIC, 0, F], [1, 21, 1, FALL, 0, F],
+      [0, 22, 1, STATIC, 0, F], [1, 22, N, STATIC, 0, F],
     )
   })
 
@@ -134,16 +104,35 @@ describe('panel_actions', function() {
     // 0 N
 
     // jump to swapping
-    load([0,22 ,0,SWAP_L,0,F], [1,22 ,N,SWAP_R,0,F])
+    load([0,22 ,0,MOVE,TIME_SWAP,F], [1,22 ,N,MOVE,TIME_SWAP,F])
     
-    update(1)
-
     // swap again while swapping
     playfield.swap(0, 22)
     
     // shouldnt be possible with one of the panels being null
-    chec([0,22 ,N,SWAPPING_L,4,F], [1,22 ,0,SWAPPING_R,4,F])
+    chec([0,22 ,0,MOVE,TIME_SWAP - 1,F], [1,22 ,N,MOVE,TIME_SWAP - 1,F])
   }) 
+
+  // can swap multiple times with 2 real blocks
+  it("#swap_multiple_with_real", function() {
+    load(
+      [0, 22, 0, STATIC, 0, F], 
+      [1, 22, 1, STATIC, 0, F],
+    )
+    
+    playfield.swap(0, 22)
+    chec(
+      [0, 22, 1, MOVE, TIME_SWAP, F], 
+      [1, 22, 0, MOVE, TIME_SWAP, F],
+    )
+    
+    update()
+    playfield.swap(0, 22)
+    chec(
+      [0, 22, 0, MOVE, TIME_SWAP, F], 
+      [1, 22, 1, MOVE, TIME_SWAP, F],
+    )
+  })
 
   it('#hang', function(){
     // 1
@@ -498,7 +487,7 @@ describe('panel_actions', function() {
          [0,19,1,STATIC,0,F], [1,19 ,N,STATIC,0,F], [2,19,1,STATIC,0,F],
          [0,20,0,STATIC,0,F], [1,20 ,N,STATIC,0,F], [2,20,0,STATIC,0,F],
          [0,21,3,STATIC,0,F], [1,21 ,N,STATIC,0,F], [2,21,2,STATIC,0,F],
-         [0,22,1,STATIC,0,F], [1,22 ,2,SWAP_L,0,F], [2,22,3,SWAP_R,0,F])
+         [0,22,1,STATIC,0,F], [1,22 ,2,MOVE,TIME_SWAP,F], [2,22,3,MOVE,TIME_SWAP,F])
   })
   it('#danger_fall', function(){
   // A danger panel should hang and fall just like a static panel
@@ -543,30 +532,20 @@ describe('panel_actions', function() {
   it.skip('#swap-ground-chain', function(){
       load(                                           [2,20,2,FALL,0,1],
             [0,21,2,STATIC,0,F], [1,21,2,STATIC,0,F], [2,21,N,STATIC,0,F],
-            [0,22,0,STATIC,0,F], [1,22,0,STATIC,0,F], [2,22,N,SWAP_L,0,F], [3,22,2,SWAP_R,0,F])
+            [0,22,0,STATIC,0,F], [1,22,0,STATIC,0,F], [2,22,N,MOVE,TIME_SWAP,F], [3,22,2,MOVE,TIME_SWAP,F])
       update()
       chec([2,21,2,FALL,0,1],
-           [2,22,2,SWAPPING_L,4,0], [3,22,N,SWAPPING_R,4,0])
+           [2,22,2,MOVE,TIME_SWAP - 1,0], [3,22,N,MOVE,TIME_SWAP - 1,0])
       update()
       chec([2,21,2,LAND,10,1])
       update()
       chec([0,21,2,CLEAR,78,2], [1,21,2,CLEAR,78,2], [2,21,2,CLEAR,78,2])
   })
-  it('#swap-falling-into-static-clear', function(){
-      load([0,20,0,STATIC,0,F],
-           [0,21,1,SWAP_L,0,F], [1,21,0,SWAP_R,0,1],
-           [0,22,0,STATIC,0,F], [1,22,N,STATIC,0,F])
-      update(); chec([0,21,0,SWAPPING_L,4,1], [1,21,1,SWAPPING_R,4,0])
-      update(); chec([0,21,0,SWAPPING_L,3,1], [1,21,1,SWAPPING_R,3,0])
-      update(); chec([0,21,0,SWAPPING_L,2,1], [1,21,1,SWAPPING_R,2,0])
-      update(); chec([0,21,0,SWAPPING_L,1,1], [1,21,1,SWAPPING_R,1,0])
-      update()
-      chec([0,20,0,CLEAR,78,2], [0,21,0,CLEAR,78,2], [0,22,0,CLEAR,78,2])
-  })
+  
   it.skip('#swap-time-hang-abuse', function(){
       load(                     [1,17,1,STATIC,0,F],
                                 [1,18,1,STATIC,0,F],
-           [0,19,1,SWAP_L,0,F], [1,19,5,SWAP_R,0,F],
+           [0,19,1,MOVE,TIME_SWAP,F], [1,19,5,MOVE,TIME_SWAP,F],
            [0,20,2,STATIC,0,F], [1,20,4,CLEAR,3,1],
            [0,21,3,STATIC,0,F], [1,21,4,CLEAR,3,1],
            [0,22,2,STATIC,0,F], [1,22,4,CLEAR,3,1])

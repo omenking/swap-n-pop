@@ -417,16 +417,11 @@ export default class Playfield {
     let panel_left   = this.stack_xy(x, y);
     let panel_right  = this.stack_xy(x + 1, y);
 
-    if (panel_left.swappable(panel_right)) {
-      if (panel_right.swappable(panel_left)) {
-        panel_left.swap();
-
-        if (!panel_left.empty && !panel_right.empty) {
-          this.swap_counter++;
-          return true;
-        }
+    if (panel_left.swap())
+      if (!panel_left.empty && !panel_right.empty) {
+        this.swap_counter++;
+        return true;
       }
-    }
   }
 
   danger(within) {

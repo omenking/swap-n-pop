@@ -5,10 +5,7 @@ import {
 	FALL,
 	LAND,
 	CLEAR,
-	SWAP_L,
-	SWAP_R,
-	SWAPPING_L,
-	SWAPPING_R,
+	MOVE,
 	GARBAGE
 } from 'common/data';
 import State from "states/panel/state"
@@ -17,10 +14,7 @@ import StateHang from "states/panel/hang"
 import StateFall from "states/panel/fall"
 import StateLand from "states/panel/land"
 import StateClear from "states/panel/clear"
-import StateSwapLeft from "states/panel/swap_left"
-import StateSwapRight from "states/panel/swap_right"
-import StateSwappingLeft from "states/panel/swapping_left"
-import StateSwappingRight from "states/panel/swapping_right"
+import StateMove from "states/panel/move"
 
 export default class StateMachine {
 	// reference
@@ -41,10 +35,7 @@ export default class StateMachine {
 			[FALL, new StateFall(parent)],
 			[LAND, new StateLand(parent)],
 			[CLEAR, new StateClear(parent)],
-			[SWAP_L, new StateSwapLeft(parent)],
-			[SWAP_R, new StateSwapRight(parent)],
-			[SWAPPING_L, new StateSwappingLeft(parent)],
-			[SWAPPING_R, new StateSwappingRight(parent)]
+			[MOVE, new StateMove(parent)]
 		])
 	}
 
@@ -65,9 +56,6 @@ export default class StateMachine {
 		if (this.state === GARBAGE)
 			return
 		
-		if (this.parent.counter > 0)
-			this.parent.counter -= 1
-
 		this.states.get(this.state).execute()
 
 		if (this.parent.counter <= 0)

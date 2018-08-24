@@ -6,13 +6,8 @@ import assets from 'core/assets'
 
 export default class StateStatic extends State {
 	execute() {
-		let under = this.p.neighbors["down"]
-
-		if (under !== undefined) {
-			if (!this.p.empty && (under.empty || under.fsm.state === HANG)) {
+		if (this.p.check_for_hang)
 				this.p.fsm.change_state(HANG)
-			}
-		}
 		else if (this.p.danger && this.p.counter === 0) {
 			// we add 1 otherwise we will miss out on one frame
 			// since counter can never really hit zero and render
