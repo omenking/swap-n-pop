@@ -9,25 +9,27 @@ import {
 	SWAP_R,
 	SWAPPING_L,
 	SWAPPING_R,
+	GARBAGE
 } from 'common/data';
-import State from "panel_states/state"
-import StateStatic from "panel_states/state_static"
-import StateHang from "panel_states/state_hang"
-import StateFall from "panel_states/state_fall"
-import StateLand from "panel_states/state_land"
-import StateClear from "panel_states/state_clear"
-import StateSwapL from "panel_states/state_swap_l"
-import StateSwapR from "panel_states/state_swap_r"
-import StateSwappingL from "panel_states/state_swapping_l"
-import StateSwappingR from "panel_states/state_swapping_r"
+import State from "states/panel/state"
+import StateStatic from "states/panel/static"
+import StateHang from "states/panel/hang"
+import StateFall from "states/panel/fall"
+import StateLand from "states/panel/land"
+import StateClear from "states/panel/clear"
+import StateSwapLeft from "states/panel/swap_left"
+import StateSwapRight from "states/panel/swap_right"
+import StateSwappingLeft from "states/panel/swapping_left"
+import StateSwappingRight from "states/panel/swapping_right"
 
 export default class StateMachine {
 	// reference
 	public parent : ComponentPanel
 
 	// inner variables
-	public state : ""
+	public state : String
 	public states : Map<String, State>
+	public timer : number
 
 	constructor(parent, first_state) {
 		this.parent = parent
@@ -39,30 +41,36 @@ export default class StateMachine {
 			[FALL, new StateFall(parent)],
 			[LAND, new StateLand(parent)],
 			[CLEAR, new StateClear(parent)],
-			[SWAP_L, new StateSwapL(parent)],
-			[SWAP_R, new StateSwapR(parent)],
-			[SWAPPING_L, new StateSwappingL(parent)],
-			[SWAPPING_R, new StateSwappingR(parent)]
+			[SWAP_L, new StateSwapLeft(parent)],
+			[SWAP_R, new StateSwapRight(parent)],
+			[SWAPPING_L, new StateSwappingLeft(parent)],
+			[SWAPPING_R, new StateSwappingRight(parent)]
 		])
 	}
 
 	change_state(new_state) {
+		if (new_state === GARBAGE)
+			return
+
 		if (this.state == new_state)
 			return
 
-		this.states[this.state].exit()
+		this.states.get(this.state).exit()
 
 		this.state = new_state
-		this.states[this.state].enter()
+		this.states.get(this.state).enter()
 	}
 
 	update() {
+		if (this.state === GARBAGE)
+			return
+		
 		if (this.parent.counter > 0)
 			this.parent.counter -= 1
 
-		this.states[this.state].execute()
+		this.states.get(this.state).execute()
 
-		//if (this.parent.counter <= 0)
-			//this.states[this.state].counter_end()
+		if (this.parent.counter <= 0)
+			this.states.get(this.state).counter_end()
 	}	
 }

@@ -144,14 +144,14 @@ export default class ComponentBauble {
 
   render_chain(x,y) {
     const chain = this.panel.chain
-    if (this.panel.state   === CLEAR &&
+    if (this.panel.fsm.state   === CLEAR &&
         this.panel.clear_i === 0     &&
         chain                > 1     &&
         this.panel.time_cur  > 0
     ){
     
       // Scoring
-      if (this.panel.state_timer === 1) {
+      if (this.panel.fsm.timer === 1) {
           this.panel.playfield.score_chain(chain)
       }  
     
@@ -227,13 +227,13 @@ export default class ComponentBauble {
     const combo = this.panel.clear_len
     const chain = this.panel.chain
     
-    if (this.panel.state   === CLEAR &&
+    if (this.panel.fsm.state   === CLEAR &&
         this.panel.clear_i === 0     &&
         combo                > 3     &&
         this.panel.time_cur  > 0
     ){
       // Scoring
-      if (this.panel.state_timer === 1) {
+      if (this.panel.fsm.timer === 1) {
           this.panel.playfield.score_combo(combo)
       }
     

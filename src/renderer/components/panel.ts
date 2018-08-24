@@ -1,13 +1,11 @@
 import game from 'core/game'
 import assets from 'core/assets'
-import blank                  from 'components/panel_blank'
 import ComponentBauble        from 'components/bauble'
 import ComponentPanelGarbage  from 'components/panel_garbage'
 import ComponentParticleClear from 'components/particle_clear'
 import ComponentPlayfield     from 'components/playfield'
 import ComponentStateMachine from 'components/state_machine'
 import * as ss from 'shuffle-seed'
-import { out_of_bounds } from 'core/filters';
 import {
   GAMEOVER,
   UNIT,
@@ -37,7 +35,6 @@ export default class ComponentPanel {
 
   private _kind         : number
   private _counter      : number
-  private _state        : string
   private _chain        : number
   private bauble        : ComponentBauble
   public garbage        : ComponentPanelGarbage
@@ -51,11 +48,9 @@ export default class ComponentPanel {
   public particles     : Array<ComponentParticleClear>
   public clear_i        : number
   public clear_len      : number
-  private _state_timer   : number
-  private state_enter   : any
-  private state_execute : any
-  private state_exit    : any
+
   public fsm            : ComponentStateMachine
+  public neighbors : Map<String, any>
 
   get kind ()   { return this._kind }
   set kind (val){ this._kind = val }
@@ -71,30 +66,10 @@ export default class ComponentPanel {
   get counter()    {return this._counter }
   set counter(val) {       this._counter = val }
 
-  get state()    {
-    return this._state 
-  }
-  set state(val) {
-    this._state = val 
-  }
-
-  get state_timer() { return this._state_timer }
-  set state_timer(val) { this._state_timer = val }
-
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get  left() { return out_of_bounds(this.x-1,this.y)   ? blank : this.playfield.stack_xy(this.x-1,this.y)   }
-  get right() { return out_of_bounds(this.x+1,this.y)   ? blank : this.playfield.stack_xy(this.x+1,this.y)   }
-  get under() { return out_of_bounds(this.x  ,this.y+1) ? blank : this.playfield.stack_xy(this.x  ,this.y+1) }
-  get above() { return out_of_bounds(this.x  ,this.y-1) ? blank : this.playfield.stack_xy(this.x  ,this.y-1) }
-
-  get  left2() { return out_of_bounds(this.x-2,this.y) ? blank : this.playfield.stack_xy(this.x-2,this.y)  }
-  get right2() { return out_of_bounds(this.x+2,this.y) ? blank : this.playfield.stack_xy(this.x+2,this.y)  }
-  get under2() { return out_of_bounds(this.x,this.y+2) ? blank : this.playfield.stack_xy(this.x  ,this.y+2)}
-  get above2() { return out_of_bounds(this.x,this.y-2) ? blank : this.playfield.stack_xy(this.x  ,this.y-2)}
-
-  get should_hang() { let under = this.under; return under === blank ? false : under.state === STATIC && under.kind === null; }
+  get should_hang() { let under = this.neighbors["down"]; return under === undefined ? false : under.fsm.state === STATIC && under.kind === null; }
 
   get absolute_center_x(){
     let x = this.playfield.layer_block.x
@@ -114,6 +89,7 @@ export default class ComponentPanel {
     this.bauble  = new ComponentBauble()
     this.garbage = new ComponentPanelGarbage()
     this.fsm = new ComponentStateMachine(this, STATIC)
+    this.neighbors = new Map()
 
     this.particles = [
       new ComponentParticleClear(0),
@@ -129,7 +105,7 @@ export default class ComponentPanel {
       this.x,
       this.y,
       this.kind,
-      this.state,
+      this.fsm.state,
       this.counter,
       this.chain,
       this.garbage.snap,
@@ -140,7 +116,7 @@ export default class ComponentPanel {
         this.particles[2].snap,
         this.particles[3].snap
       ],
-      this.state_timer
+      this.fsm.timer
     ]
   }
 
@@ -149,7 +125,7 @@ export default class ComponentPanel {
     this.x       = data[0]
     this.y       = data[1]
     this.kind    = data[2]
-    this.state   = data[3]
+    this.fsm.state   = data[3]
     this.counter = data[4]
     this.chain   = data[5]
     this.garbage.load(data[6])
@@ -160,7 +136,7 @@ export default class ComponentPanel {
       this.particles[2].load(data[8][2])
       this.particles[3].load(data[8][3])
     }
-    this.state_timer = data[9]
+    this.fsm.timer = data[9]
   }
 
   /** */
@@ -195,7 +171,7 @@ export default class ComponentPanel {
   public reset(){
     this.counter   = 0
     this.kind = null
-    this.state = STATIC
+    this.fsm.state = STATIC
     this.chain = 0
     this.sprite.visible = false
     this.garbage.reset()
@@ -235,7 +211,7 @@ export default class ComponentPanel {
   }
 
   set_garbage(group: number, kind: string){
-    this.state = GARBAGE
+    this.fsm.state = GARBAGE
     this.garbage.group = group
     this.garbage.state = FALL
     this.garbage.kind  = kind
@@ -244,7 +220,7 @@ export default class ComponentPanel {
   /** resets this panel to a normal state - stops animation usefull for stack resets */
   soft_reset() {
     this.counter = 0;
-    this.state = STATIC;
+    this.fsm.state = STATIC;
   }
 
   /*
@@ -258,20 +234,20 @@ export default class ComponentPanel {
    * */
   swappable(swapping_panel) {
     // if above is not stable, you can't swap
-    if (this.above.state === HANG ) { return false }
+    if (this.neighbors["up"] !== undefined && this.neighbors["up"].state === HANG) { return false }
     
     // only let swappable while falling be able when the swapping panel isnt empty
-    if (!swapping_panel.empty && this.state === FALL) { return true }
+    if (!swapping_panel.empty && this.fsm.state === FALL) { return true }
 
     // if static let this be swappable
-    if (this.state === STATIC) { return true }
+    if (this.fsm.state === STATIC) { return true }
         
-    if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
+    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     if (this.empty) { return true }
    
     // swapping_panel should never be null, swapping panel can be static so !empty doesnt work
     if (swapping_panel.kind !== null)
-      if (this.state === SWAP_L || this.state === SWAP_R || this.state === SWAPPING_L || this.state === SWAPPING_R) 
+      if (this.fsm.state === SWAP_L || this.fsm.state === SWAP_R || this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R) 
         return true 
     
     return false
@@ -284,47 +260,52 @@ export default class ComponentPanel {
    *
    * */
   get comboable() {
+    let down = this.neighbors["down"]
+
     // 1. check for support
-    if (this.under.state === FALL) {return false}
-    if (this.under.empty) { return false }
-    if (this.under.state === GARBAGE && this.under.garbage.state !== STATIC) { return false }
+    if (down !== undefined) {
+      if (down.state === FALL) {return false}
+      if (down.empty) { return false }
+      if (down.state === GARBAGE && down.garbage.state !== STATIC) { return false }
+    }
+
     // 2. be comboable
-    if (this.state === STATIC && this.kind !== null) { return true }
-    if (this.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
+    if (this.fsm.state === STATIC && this.kind !== null) { return true }
+    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
     // 3 already have been marked for being cleared on first frame
-    if (this.state === CLEAR && this.playfield.clearing.indexOf(this) !== -1 && this.state_timer === 0) { return true }
-    return false
+    if (this.fsm.state === CLEAR && this.playfield.clearing.indexOf(this) !== -1 && this.fsm.timer === 0) { return true }
+      return false
   }
 
   /** 
    *  A panel is only considered static stable if it is STATIC and has a kind assigned
    * */
-  get static_stable() { return  this.state === STATIC && this.kind !== null }
+  get static_stable() { return  this.fsm.state === STATIC && this.kind !== null }
 
   /** 
    *  A panel is only considered empty if it is STATIC, SWAP_
    *  and has no kind assigned
    * */
   get empty() {
-    return this.kind === null && this.state === STATIC
+    return this.kind === null && this.fsm.state === STATIC
   }
 
   get hidden_during_garbage_static(){
-    return this.state === GARBAGE &&
+    return this.fsm.state === GARBAGE &&
            this.garbage.state === STATIC
   }
 
   get empty_when_swapping() {
-    return (this.state === SWAP_R     ||
-            this.state === SWAP_L     ||
-            this.state === SWAPPING_L ||
-            this.state === SWAPPING_R) && this.kind === null
+    return (this.fsm.state === SWAP_R     ||
+            this.fsm.state === SWAP_L     ||
+            this.fsm.state === SWAPPING_L ||
+            this.fsm.state === SWAPPING_R) && this.kind === null
   }
   /**
    * A panel can be hidden but not empty this only happens in the case
    * when panels are clearing and are temporarily invisible
    * */
-  get hidden_during_clear() { return this.state === CLEAR && this.time_cur >= this.time_pop  }
+  get hidden_during_clear() { return this.fsm.state === CLEAR && this.time_cur >= this.time_pop  }
 
   /*
    * In order to determine danger is true we need a panel that is considered
@@ -335,11 +316,11 @@ export default class ComponentPanel {
    *   * garbage thats static
    */
   get stable() {
-    if (this.state === STATIC     && this.kind !== null) { return true }
-    if (this.state === SWAP_R     && this.kind !== null) { return true }
-    if (this.state === SWAPPING_R && this.kind !== null) { return true }
-    if (this.state === SWAPPING_L && this.kind !== null) { return true }
-    if (this.state === GARBAGE    && this.garbage.state === STATIC) { return true }
+    if (this.fsm.state === STATIC     && this.kind !== null) { return true }
+    if (this.fsm.state === SWAP_R     && this.kind !== null) { return true }
+    if (this.fsm.state === SWAPPING_R && this.kind !== null) { return true }
+    if (this.fsm.state === SWAPPING_L && this.kind !== null) { return true }
+    if (this.fsm.state === GARBAGE    && this.garbage.state === STATIC) { return true }
     return false
   }
 
@@ -349,14 +330,24 @@ export default class ComponentPanel {
     return `${k}`
   }
 
+  matched_pair(match_kind, n1, n2) {
+    if (this.neighbors[n1] !== undefined && this.neighbors[n2] !== undefined) 
+      if (this.neighbors[n1].kind === match_kind && this.neighbors[n2].kind === match_kind)
+        return true
+
+    return false
+  }
+
   /** */
   matched(kind) {
-    return ((this.left.kind  === kind) && (this.right.kind  === kind)) ||
-           ((this.above.kind === kind) && (this.under.kind  === kind)) ||
-           ((this.above.kind === kind) && (this.above2.kind === kind)) ||
-           ((this.under.kind === kind) && (this.under2.kind === kind)) ||
-           ((this.left.kind  === kind) && (this.left2.kind  === kind)) ||
-           ((this.right.kind === kind) && (this.right2.kind === kind))
+    return (
+      this.matched_pair(kind, "left", "right") ||
+      this.matched_pair(kind, "up", "down") ||
+      this.matched_pair(kind, "up", "up2") ||
+      this.matched_pair(kind, "down", "down2") ||
+      this.matched_pair(kind, "left", "left2") ||
+      this.matched_pair(kind, "right", "right2")
+    )
   }
   /** */
   get frame() { return this.sprite.frame }
@@ -397,15 +388,15 @@ export default class ComponentPanel {
     this.particles[2].update()
     this.particles[3].update()
 
-    if (this.state === GARBAGE) {
-      this.garbage.update()
+    if (this.fsm.state === GARBAGE) {
+      //this.garbage.update()
     } else {
       if (this.newline){ return; }
       if (this.counter > 0) { this.counter--}
 
       this.fsm.update()
     }
-    ++this.state_timer
+    ++this.fsm.timer
   }
 
   /**
@@ -425,13 +416,13 @@ export default class ComponentPanel {
    * Swaps the this panel with the panel to it's right.
    */
   swap() {
-    if (this.empty && this.right.empty) { return }
+    if (this.empty && this.neighbors["right"].empty) { return }
 
     this.counter        = 0
-    this.right.counter  = 0
+    this.neighbors["right"].counter  = 0
 
     this.fsm.change_state(SWAP_L)
-    this.right.fsm.change_state(SWAP_R)
+    this.neighbors["right"].fsm.change_state(SWAP_R)
 
     game.sounds.swap()
   }
@@ -464,7 +455,7 @@ export default class ComponentPanel {
   // TODO: fix
   nocombo() {
     const arr = [0, 1, 2, 3, 4]
-    if (this.above.kind){ arr.splice(arr.indexOf(this.above.kind), 1)}
+    if (this.neighbors["up"] !== undefined && this.neighbors["up"].kind){ arr.splice(arr.indexOf(this.neighbors["up"].kind), 1)}
     let values = ss.shuffle(arr,this.playfield.stage.rng())
     return this.kind = values.find((i)=> {
       return this.matched(i) === false
@@ -532,23 +523,23 @@ export default class ComponentPanel {
   chain_and_combo() {
     if (!this.comboable) { return }
 
-    if (this.left.comboable_with( this.kind) &&
-        this.right.comboable_with(this.kind)) {
-      this.left.clear()
+    if (this.neighbors["left"] !== undefined && this.neighbors["left"].comboable_with( this.kind) &&
+        this.neighbors["right"] !== undefined && this.neighbors["right"].comboable_with(this.kind)) {
+      this.neighbors["left"].clear()
       this.clear()
-      this.right.clear()
+      this.neighbors["right"].clear()
     }
 
-    if (this.above.comboable_with( this.kind) &&
-        this.under.comboable_with( this.kind)) {
-      this.above.clear()
+    if (this.neighbors["up"] !== undefined && this.neighbors["up"].comboable_with( this.kind) &&
+        this.neighbors["down"] !== undefined && this.neighbors["down"].comboable_with( this.kind)) {
+      this.neighbors["up"].clear()
       this.clear()
-      this.under.clear()
+      this.neighbors["down"].clear()
     }
   }
 
   comboable_with(kind){
-    return this.comboable && this.kind === kind
+    return this.comboable && kind !== null && this.kind === kind
   }
 
   /**
@@ -557,13 +548,13 @@ export default class ComponentPanel {
    @returns {array} - [index,length]
    */
   get clear_index(){
-    if (this.state !== CLEAR) {
+    if (this.fsm.state !== CLEAR) {
       throw(new Error('clear_index called on none CLEAR panel'))
     }
     let panels = []
     for (let p of this.playfield.stack){
       if (p.group === this.group &&
-          p.state === CLEAR) {
+          p.fsm.state === CLEAR) {
         panels.push(p)
       }
     }
@@ -588,19 +579,19 @@ export default class ComponentPanel {
       this.frame = assets.spritesheets.panels.animations.newline
     } else if (this.dead === true && this.playfield.stage.state === GAMEOVER){
       this.frame = assets.spritesheets.panels.animations.dead
-    } else if (this.state === CLEAR){
+    } else if (this.fsm.state === CLEAR){
       const frames = assets.spritesheets.panels.animations.clear
       const len = frames.length
       if (len > this.time_cur){
         this.frame = frames[this.time_cur]
       }
-    } else if (this.state === LAND){
+    } else if (this.fsm.state === LAND){
       const frames = assets.spritesheets.panels.animations.land
       const len    = frames.length
       this.frame = frames[len-this.counter]
-    } else if (this.state === SWAPPING_L || this.state === SWAPPING_R){
+    } else if (this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R){
       let v = (UNIT / TIME_SWAP) * this.counter
-      switch (this.state) {
+      switch (this.fsm.state) {
         case SWAPPING_L:
           this.sprite.x += v
           break
@@ -630,7 +621,7 @@ export default class ComponentPanel {
     this.animate()
     this.render_visible()
     this.bauble.render()
-    this.garbage.render()
+    //this.garbage.render()
   }
   /** */
   shutdown(){}

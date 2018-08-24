@@ -91,7 +91,6 @@ export default class Playfield {
     this.score_lbl       = new ComponentScore()
     this.ai              = new ComponentAi()
     this.character       = new ComponentCharacter()
-
   }
 
   get stack(){
@@ -175,7 +174,7 @@ export default class Playfield {
   get clear(){
     let clear = false
     for (let p of this.stack){
-      if (p.state === CLEAR) {
+      if (p.fsm.state === CLEAR) {
         clear = true
         break
       }
@@ -206,10 +205,29 @@ export default class Playfield {
       this.pi
     );
   }
-  create_stack(data){
+  create_stack(data) {
     this._stack = []
     this.create_panels()
     this.fill_panels(data)
+    this.create_neighbors()
+  }
+
+  // sets all neighbors for each block
+  // this is only necessary to be called once! panels never "move" they stay in the same place
+  create_neighbors() {
+    for (let i = 0; i < PANELS; i++) {
+      var b = this.stack[i]
+
+      b.neighbors["right"] = b.x < COLS - 1 ? this.stack[i + 1] : undefined
+      b.neighbors["left"] = b.x > 0 ? this.stack[i - 1] : undefined
+      b.neighbors["up"] = b.y > 0 ? this.stack[i - COLS] : undefined
+      b.neighbors["down"] = b.y < ROWS - 1 ? this.stack[i + COLS] : undefined
+
+      b.neighbors["right2"] = b.x < COLS - 2 ? this.stack[i + 2] : undefined
+      b.neighbors["left2"] = b.x > 1 ? this.stack[i - 2] : undefined
+      b.neighbors["up2"] = b.y > 1 ? this.stack[i - COLS * 2]: undefined
+      b.neighbors["down2"] = b.y < ROWS - 2 ? this.stack[i + COLS * 2] : undefined
+    }
   }
 
   get stack_len() {
@@ -220,10 +238,9 @@ export default class Playfield {
   }
 
   push() {
-    let i;
     // move all panels up the stack
     const stack = new Array(this.stack_len)
-    for (i = COLS; i < this.stack_len; i++) {
+    for (let i = COLS; i < this.stack_len; i++) {
       let [x,y] = Array.from(i2xy(i-COLS))
       stack[i-COLS] = this._stack[i]
       stack[i-COLS].x = x

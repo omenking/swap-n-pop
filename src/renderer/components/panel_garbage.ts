@@ -131,7 +131,7 @@ export default class ComponentPanelGarbage {
     }
     let panels = []
     for (let p of this.playfield.stack){
-      if (p.state === GARBAGE && p.garbage.group_clearing === this.group_clearing){
+      if (p.fsm.state === GARBAGE && p.garbage.group_clearing === this.group_clearing){
         panels.push(p.garbage)
       }
     }
@@ -139,7 +139,7 @@ export default class ComponentPanelGarbage {
   }
 
   public popping(){
-    if (this.panel.state    === GARBAGE &&
+    if (this.panel.fsm.state    === GARBAGE &&
         this.playfield.clearing_garbage.indexOf(this.group) !== -1){
       this.group_clearing = this.tick
       this.state          = CLEAR
@@ -191,15 +191,15 @@ export default class ComponentPanelGarbage {
 
   fall_execute() {
     if (this.fall_check()) {
-      this.panel.under.state = GARBAGE
-      this.panel.under.garbage.group = this.group
-      this.panel.under.garbage.state = this.state
+      this.panel.neighbors["down"].fsm.state = GARBAGE
+      this.panel.neighbors["down"].garbage.group = this.group
+      this.panel.neighbors["down"].garbage.fsm.state = this.state
 
       this.group = null
       this.state = null
 
       this.panel.kind    = null
-      this.panel.state   = STATIC
+      this.panel.fsm.state   = STATIC
       this.panel.counter = 0
       this.panel.chain   = 0
     } else {
@@ -220,7 +220,7 @@ export default class ComponentPanelGarbage {
     } else {
       this.state = STATIC
       this.group = null
-      this.panel.state = STATIC
+      this.panel.fsm.state = STATIC
     }
   }
 
@@ -250,10 +250,10 @@ export default class ComponentPanelGarbage {
   }
 
   any_touching_panel_is_clearing() : boolean {
-    return this.touching_clearing_panel(this.panel.under) ||
-           this.touching_clearing_panel(this.panel.above) ||
-           this.touching_clearing_panel(this.panel.left ) ||
-           this.touching_clearing_panel(this.panel.right)
+    return this.touching_clearing_panel(this.panel.neighbors["down"]) ||
+           this.touching_clearing_panel(this.panel.neighbors["up"]) ||
+           this.touching_clearing_panel(this.panel.neighbors["left"]) ||
+           this.touching_clearing_panel(this.panel.neighbors["right"])
   }
 
   /*
@@ -261,7 +261,7 @@ export default class ComponentPanelGarbage {
    * or its garbage group_clear matches this tick
    */
   touching_clearing_panel(panel) : boolean {
-    return panel.state === CLEAR || panel.garbage.group_clearing === this.tick
+    return panel.fsm.state === CLEAR || panel.garbage.group_clearing === this.tick
   }
   /**
    * This looks at the current row for panels that belong
@@ -273,9 +273,9 @@ export default class ComponentPanelGarbage {
     let fall = true
     for (let x = 0; x < COLS; x++){
       let panel = this.playfield.stack_xy(x,this.panel.y)
-      if (panel.state === GARBAGE &&
+      if (panel.fsm.state === GARBAGE &&
           panel.garbage.group === this.group) {
-        if (panel.under.empty === false || panel.under.state === HANG) { fall = false}
+        if (panel.neighbors["down"].empty === false || panel.neighbors["down"].fsm.state === HANG) { fall = false}
       }
     }
     return fall
@@ -285,7 +285,7 @@ export default class ComponentPanelGarbage {
     if (this.state === CLEAR){
       return this.time_cur < this.time_pop
     } else {
-      return this.panel.state === GARBAGE
+      return this.panel.fsm.state === GARBAGE
     }
   }
 
@@ -307,10 +307,10 @@ export default class ComponentPanelGarbage {
     if (this.state === CLEAR){
       this.sprite.frame = 13
     } else {
-      if (this.panel.left.state  === GARBAGE && this.panel.left.garbage.group  === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.right.state === GARBAGE && this.panel.right.garbage.group === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.above.state === GARBAGE && this.panel.above.garbage.group === this.group){ str += '1' } else { str += '0' }
-      if (this.panel.under.state === GARBAGE && this.panel.under.garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.neighbors["left"].state  === GARBAGE && this.panel.neighbors["left"].garbage.group  === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.neighbors["right"].state === GARBAGE && this.panel.neighbors["right"].garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.neighbors["up"].state === GARBAGE && this.panel.neighbors["up"].garbage.group === this.group){ str += '1' } else { str += '0' }
+      if (this.panel.neighbors["down"].state === GARBAGE && this.panel.neighbors["down"].garbage.group === this.group){ str += '1' } else { str += '0' }
 
       if      (str === '0000'){ this.sprite.frame = 0}
 
