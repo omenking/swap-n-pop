@@ -12,7 +12,6 @@
       "states/*"     : ["renderer/states/*"],
       "ui/*"         : ["renderer/ui/*"],
       "common/*"     : ["common/*"],
-      "panel_states/*" : ["renderer/panel_states/*"],
       "devtools/components/*" : ["devtools/components/*"],
       "devtools/common/*" : ["devtools/common/*"]
     }
