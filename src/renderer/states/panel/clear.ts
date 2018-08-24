@@ -6,7 +6,6 @@ import {
   TIME_CLEAR,
   TIME_POP
 } from 'common/data';
-import blank from 'components/panel_blank'
 
 export default class StateClear extends State {
   enter() {

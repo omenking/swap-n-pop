@@ -32,8 +32,3 @@ export function stack_log(s: number[]) {
   console.log(' 9 -',s[54],s[55],s[56],s[57],s[58],s[59]);
   console.log('10 -',s[60],s[61],s[62],s[63],s[64],s[65]);
 }
-
-export function out_of_bounds(x: number, y: number): boolean {
-  return x < 0 || x > (COLS-1) ||
-         y < 0 || y > (ROWS-1);
-}
