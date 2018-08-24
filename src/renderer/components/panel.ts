@@ -45,9 +45,9 @@ export default class ComponentPanel {
   public x              : number
   public y              : number
   private sprite        : Phaser.Sprite
-  private group         : number
+  public group         : number
   public time_cur       : number
-  private time_pop      : number
+  public time_pop      : number
   public particles     : Array<ComponentParticleClear>
   public clear_i        : number
   public clear_len      : number

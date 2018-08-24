@@ -8,7 +8,7 @@ import {
 } from 'common/data';
 import blank from 'components/panel_blank'
 
-export default class Clear extends State {
+export default class StateClear extends State {
   enter() {
     this.p.chain++
     this.p.playfield.clearing.push(this.p)

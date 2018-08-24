@@ -11,7 +11,7 @@ import {
 import assets from 'core/assets'
 import blank from 'components/panel_blank'
 
-export default class Land extends State {
+export default class StateLand extends State {
 	enter()	{ 
     this.p.counter = assets.spritesheets.panels.animations.land.length
     

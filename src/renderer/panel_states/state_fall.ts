@@ -5,12 +5,12 @@ import {
   HANG,
 } from 'common/data';
 
-export default class Fall extends State {
+export default class StateFall extends State {
 	execute() { 
     if (this.p.counter > 0) 
       return
 
-    if (this.p.p.under.empty) {
+    if (this.p.under.empty) {
       this.p.under.kind    = this.p.kind
       this.p.under.state   = this.p.state
       this.p.under.counter = this.p.counter

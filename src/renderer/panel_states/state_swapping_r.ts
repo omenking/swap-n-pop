@@ -5,18 +5,8 @@ import {
   TIME_SWAP
 } from 'common/data';
 
-export default class Swapping_L extends State {
+export default class StateSwappingR extends State {
   enter() {
-    // Swap kind
-    const i1 = this.p.kind
-    this.p.kind = this.p.right.kind
-    this.p.right.kind = i1
-
-    // Swap chain value
-    const chain = this.p.chain
-    this.p.chain = this.p.right.chain
-    this.p.right.chain = chain
-
     this.p.counter = TIME_SWAP
   }
   

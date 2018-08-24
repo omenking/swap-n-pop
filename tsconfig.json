@@ -4,16 +4,17 @@
     "target": "es5",
     "lib": ["es2015","es6","es7"],
     "sourceMap": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "main/*"       : ["src/main/*"],
-      "components/*" : ["src/renderer/components/*"],
-      "core/*"       : ["src/renderer/core/*"],
-      "states/*"     : ["src/renderer/states/*"],
-      "ui/*"         : ["src/renderer/ui/*"],
-      "common/*"     : ["src/common/*"],
-      "devtools/components/*" : ["src/devtools/components/*"],
-      "devtools/common/*" : ["src/devtools/common/*"]
+      "main/*"       : ["main/*"],
+      "components/*" : ["renderer/components/*"],
+      "core/*"       : ["renderer/core/*"],
+      "states/*"     : ["renderer/states/*"],
+      "ui/*"         : ["renderer/ui/*"],
+      "common/*"     : ["common/*"],
+      "panel_states/*" : ["renderer/panel_states/*"],
+      "devtools/components/*" : ["devtools/components/*"],
+      "devtools/common/*" : ["devtools/common/*"]
     }
   },
   "files": [

@@ -11,15 +11,15 @@ import {
 	SWAPPING_R,
 } from 'common/data';
 import State from "panel_states/state"
-import Static from "panel_states/static"
-import Hang from "panel_states/hang"
-import Fall from "panel_states/fall"
-import Land from "panel_states/land"
-import Clear from "panel_states/clear"
-import Swap_L from "panel_states/swap_l"
-import Swap_R from "panel_states/swap_r"
-import Swapping_L from "panel_states/swapping_l"
-import Swapping_R from "panel_states/swapping_r"
+import StateStatic from "panel_states/state_static"
+import StateHang from "panel_states/state_hang"
+import StateFall from "panel_states/state_fall"
+import StateLand from "panel_states/state_land"
+import StateClear from "panel_states/state_clear"
+import StateSwapL from "panel_states/state_swap_l"
+import StateSwapR from "panel_states/state_swap_r"
+import StateSwappingL from "panel_states/state_swapping_l"
+import StateSwappingR from "panel_states/state_swapping_r"
 
 export default class StateMachine {
 	// reference
@@ -34,15 +34,15 @@ export default class StateMachine {
 		this.state = first_state
 	
 		this.states = new Map([
-			[STATIC, new Static(parent)],
-			[HANG, new Hang(parent)],
-			[FALL, new Fall(parent)],
-			[LAND, new Land(parent)],
-			[CLEAR, new Clear(parent)],
-			[SWAP_L, new Swap_L(parent)],
-			[SWAP_R, new Swap_R(parent)],
-			[SWAPPING_L, new Swapping_L(parent)],
-			[SWAPPING_R, new Swapping_R(parent)]
+			[STATIC, new StateStatic(parent)],
+			[HANG, new StateHang(parent)],
+			[FALL, new StateFall(parent)],
+			[LAND, new StateLand(parent)],
+			[CLEAR, new StateClear(parent)],
+			[SWAP_L, new StateSwapL(parent)],
+			[SWAP_R, new StateSwapR(parent)],
+			[SWAPPING_L, new StateSwappingL(parent)],
+			[SWAPPING_R, new StateSwappingR(parent)]
 		])
 	}
 
