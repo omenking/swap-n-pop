@@ -33,6 +33,8 @@ export default class ComponentPlayfieldCursor {
   public  px_x            : number
   public  px_y            : number
   private  visible        : boolean
+  public y_offset           : number
+
   /**
    * Initialises the Cursor's position in x & y, counter, and its sprite
    * Also adds this sprite to a layer above the blocks
@@ -269,8 +271,10 @@ export default class ComponentPlayfieldCursor {
    */
   push(tick) {
     if (this.playfield.stage.state !== RUNNING)
-      return;
-    this.playfield.pushing = true;
+      return
+
+    if (!this.playfield.any_top_panels)
+      this.playfield.signal_raise = true
   }
 
   /** updates the internal x & y pos, animation for flickers, setting controls once entered */
@@ -333,7 +337,7 @@ export default class ComponentPlayfieldCursor {
     this.render_visible()
     this.sprite.frame = this.frame
     this.sprite.x = this.px_x
-    this.sprite.y = this.px_y
+    this.sprite.y = this.px_y + this.y_offset
   }
 
   /** empty */

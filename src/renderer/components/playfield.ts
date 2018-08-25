@@ -15,10 +15,12 @@ import { i2xy, xy2i } from 'core/filters';
 
 import {
   ROWS_INV,
+  ROWS_VIS,
   ROWS,
   COLS,
   PANELS,
   UNIT,
+  STATIC,
   TIME_PUSH,
   TIME_POP,
   TIME_FLASH,
@@ -31,8 +33,11 @@ import {
   GAMEOVER,
   CLEAR,
   SCORE_COMBO,
-  SCORE_CHAIN
+  SCORE_CHAIN,
+  RAISE_BLOCKED_TIME,
+  TIME_RAISE
 } from 'common/data';
+import PanelGenerator from 'core/panel_generator';
 
 export default class Playfield {
   get [Symbol.toStringTag](){ return 'Playfield' }
@@ -50,6 +55,7 @@ export default class Playfield {
   private score_lbl       : ComponentScore
   private ai              : ComponentAi
   public  character       : ComponentCharacter
+  public panel_generator  : PanelGenerator
   private bg : Phaser.Sprite
 
   public  should_push      : boolean
@@ -84,6 +90,15 @@ export default class Playfield {
   public last_chain : number
   public combo_counter : number // latest combo detected
 
+  // raise variables
+  public signal_raise : boolean
+  public any_clears : boolean
+  public any_top_panels : boolean
+  public smooth_raise : boolean
+  public raise_blocked_counter : number
+  public offset_counter : number
+  public raise_generated_panels : String // saves the latest generated blocks in string format
+
   constructor(pi){
     if (pi !== 0 && pi !== 1){
       throw new Error("player_number present and must be 0 or 1")
@@ -98,6 +113,7 @@ export default class Playfield {
     this.score_lbl       = new ComponentScore()
     this.ai              = new ComponentAi()
     this.character       = new ComponentCharacter()
+    this.panel_generator = new PanelGenerator()
   }
 
   get stack(){
@@ -150,6 +166,7 @@ export default class Playfield {
     }
 
     this.stage       = stage
+    this.panel_generator.create(this)
     this.should_push = opts.push || false
 
     this.height = (ROWS+1) * UNIT
@@ -307,9 +324,8 @@ export default class Playfield {
       this._stack[i] = new ComponentPanel()
       this.stack_i(i).create(this, x, y)
     }
-    for (let p of this.stack){
-      p.create_after()
-    }
+
+    this.stack.forEach(p => p.create_after())
   }
 
   /**
@@ -321,12 +337,12 @@ export default class Playfield {
   public fill_panels(data) {
     this.stack.forEach((panel, i) => { 
       panel.reset()
-      panel.set_kind(data[i]); 
+      panel.set_kind(data[i])
     });
 
     if (this.should_push)
       for (let i = PANELS; i < PANELS+COLS; i++)
-        this.stack_i(i).set_kind('unique');
+        this.stack_i(i).set_kind('unique')
   }
 
   update_stack() {
@@ -368,6 +384,15 @@ export default class Playfield {
     this.last_chain = 1
     this.clear_queue = new Array()
     this.combo_counter = 0
+
+    // raise values
+    this.signal_raise = false
+    this.any_clears = false
+    this.any_top_panels = false
+    this.smooth_raise = false
+    this.raise_blocked_counter = 0
+    this.offset_counter = 0
+    this.raise_generated_panels = "" // saves the latest generated blocks in string format
   }
 
   /**
@@ -468,6 +493,7 @@ export default class Playfield {
     }
     if (cols.length > 0) { return cols; } else { return false; }
   }
+
   /* The tick function is the main function of the TaGame object.
    * It gets called every tick and executes the other internal functions.
    * It will update the grid,
@@ -495,11 +521,13 @@ export default class Playfield {
   }
   
   add_score(value) {
-      this.score += value
+    this.score += value
   }
+
   score_combo(combo) {
     this.score += SCORE_COMBO[Math.min(combo - 1, SCORE_COMBO.length - 1)]
   }
+
   score_chain(chain) {
     this.score += SCORE_CHAIN[Math.min(chain - 1, SCORE_CHAIN.length - 1)]
   }
@@ -512,40 +540,93 @@ export default class Playfield {
     }
   }
 
-  render_stack() {
-    for (let panel of this.stack){
-      panel.render()
+  // visualizes an offset of the controller and all panels,
+  // each time they cross their size theyll get "teleported" to the new position in the grid
+  // since a visibility issue resolves out of this you have to disable offsets on 1 frame
+  visual_offset() : void {
+    if (this.signal_raise)
+      this.smooth_raise = true
+    
+    if (this.any_clears || this.any_top_panels) {
+      this.smooth_raise = false // deletes all smooth_raise signals
+      return
+    }
+
+    if (this.raise_blocked_counter > 0) {
+      this.raise_blocked_counter -= 1
+      this.smooth_raise = false // deletes all smooth_raise signals
+      return
+    }
+
+    if (this.offset_counter < -UNIT) {
+      this.offset_counter = 0
+      this.set_visual_offsets(0)
+      this.smooth_raise = false
+      this.raise_generated_panels = this.push_upwards()
+      this.raise_blocked_counter = RAISE_BLOCKED_TIME
+    }
+    else {
+      this.offset_counter -= this.smooth_raise ? 4 : TIME_RAISE[this.level]
+      this.set_visual_offsets(this.offset_counter)
     }
   }
 
-  render() {
-    this.countdown.render()
-    this.cursor.render()
-    this.wall.render()
-    this.render_stack()
-    this.character.render()
-    if (this.stage.flag_garbage === true) {
-      this.garbage_preview.render()
-    }
-
-    let shake = 0
-    if (this.shake >= 0 && this.counter > 0) {
-      const shake_i  = GARBAGE_SHAKE[this.shake].length-this.counter
-      shake = GARBAGE_SHAKE[shake][shake_i]
-    }
-
-    const y = this.y - (ROWS_INV*UNIT)
-    if (this.should_push) {
-      const lift = (this.push_counter / TIME_PUSH) * UNIT
-      this.layer_block.y  = y + lift + shake
-      this.layer_cursor.y = y + lift + shake
-    } else {
-      this.layer_block.y  = y + shake
-      this.layer_cursor.y = y + shake
-    }
+  // sets y offsets of the panels and the controller to the value put in
+  set_visual_offsets(value: number) : void {
+    for (let panel of this.stack)
+      panel.offset.y = value
+    
+    this.cursor.y_offset = value
   }
 
-  update_stoptime(){
+  // pushes all panels up in this platyfield and randomizes the bottom
+  // returns all panels spawned as a string
+  push_upwards() : String {
+    for (let panel of this.stack) 
+      if (panel.neighbors["up"] !== undefined)
+        panel.swap_properties("up")
+    
+    // TODO: dont havy any convert block data to string yet!
+    //let pushed_panels = ""
+    let created_kinds = this.panel_generator.create_rows()
+    for (let i = PANELS - COLS; i < PANELS; i++) {
+      let coords = i2xy(i)
+      let panel = this.stack_xy(coords[0], coords[1])
+      panel.kind = created_kinds.pop() // TODO array has no pop_front()
+      //pushed_panels += str(panel.save_in_replay_format())
+    }
+    
+    if (this.cursor.y > ROWS_VIS) 
+      this.cursor.y -= 1
+  
+    return "" // pushed_panels
+  }
+
+  // returns true if no blocks are currently clearing, allows pushing to happen to inputs
+  check_panels_clearing() : boolean {
+    // check if any blocks are clearing, if so then stop movement
+    for (let panel of this.stack)
+      if (panel.fsm.state == "CLEAR")// || panel.fsm.state == "GARBAGE_CLEAR":
+        return true
+
+    return false
+  }
+
+  // checks if any blocks are at the top or not, doesnt check for garbage tho
+  check_panels_at_top() : boolean {
+    for (let x = 0; x < COLS; x++) {
+      let p = this.stack_xy(x, ROWS_VIS)
+
+      // check for a non garbage block that is idle
+      // and check for garbage head with idle
+      if (p.kind != null && p.fsm.state === STATIC) // && !p.is_garbage || p.garbage_head && p.fsm.state === STATIC)
+        return true
+    }
+
+    return false
+  }
+
+  update_stoptime() {
     if (this.stage.state !== RUNNING){ return }
     if (this.danger(0) && this.push_counter <= 0) {
       this.stoptime--
@@ -557,18 +638,26 @@ export default class Playfield {
       this.stoptime = STOPTIME
     }
   }
+
   update() {
-    switch (this.stage.state){
+    switch (this.stage.state) {
       case STARTING:
         this.cursor.update()
         break;
+
       case RUNNING:
         this.cursor.update()
         this.character.update()
         this.update_stoptime()
 
         if (this.counter > 0) { this.counter-- }
-        this.update_push(this.danger(0))
+        //this.update_push(this.danger(0))
+        
+        // global checks so you dont have to always call the methods
+        this.any_clears = this.check_panels_clearing()
+        this.any_top_panels = this.check_panels_at_top()
+
+        this.visual_offset()
         this.clearing_garbage = []
 
         this.update_stack()
@@ -597,11 +686,40 @@ export default class Playfield {
           this.land = false
         }
         break;
+
       case PAUSE:
         break;
+
       case GAMEOVER:
         this.character.update()
         break;
+    }
+  }
+
+  render() {
+    this.countdown.render()
+    this.cursor.render()
+    this.wall.render()
+    this.stack.forEach(p => p.render())
+    this.character.render()
+    if (this.stage.flag_garbage === true) {
+      this.garbage_preview.render()
+    }
+
+    let shake = 0
+    if (this.shake >= 0 && this.counter > 0) {
+      const shake_i  = GARBAGE_SHAKE[this.shake].length-this.counter
+      shake = GARBAGE_SHAKE[shake][shake_i]
+    }
+
+    const y = this.y - (ROWS_INV*UNIT)
+    if (this.should_push) {
+      const lift = (this.push_counter / TIME_PUSH) * UNIT
+      this.layer_block.y  = y + lift + shake
+      this.layer_cursor.y = y + lift + shake
+    } else {
+      this.layer_block.y  = y + shake
+      this.layer_cursor.y = y + shake
     }
   }
 

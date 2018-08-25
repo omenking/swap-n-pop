@@ -128,7 +128,7 @@ export default class ComponentBauble {
     let y = this.panel.playfield.layer_block.y
     x    += (this.panel.x * UNIT)
     y    += (this.panel.y * UNIT)
-    y    -= BAUBLE_FLOAT[this.panel.time_cur]
+    //y    -= BAUBLE_FLOAT[this.panel.time_cur]
     this.render_chain(x,y)
     this.render_combo(x,y)
     if (this.stage.flag_garbage === true){
@@ -143,6 +143,7 @@ export default class ComponentBauble {
   }
 
   render_chain(x,y) {
+    /*
     const chain = this.panel.chain
     if (this.panel.fsm.state   === CLEAR &&
         this.panel.clear_i === 0     &&
@@ -221,9 +222,11 @@ export default class ComponentBauble {
     } else {
       this.chain.visible = false
     }
+    */
   }
 
   render_combo(x,y) {
+    /*
     const combo = this.panel.clear_len
     const chain = this.panel.chain
     
@@ -278,6 +281,7 @@ export default class ComponentBauble {
     } else {
       this.combo.visible = false
     }
+    */
   }
 
   shutdown() {}

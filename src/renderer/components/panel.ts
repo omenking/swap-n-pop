@@ -213,12 +213,13 @@ export default class ComponentPanel {
    * it represents an incoming garbage payload.
    *
    */
+  /*
   set_particle_garbage(clear_len) {
     if (!this.playfield.stage.flag_garbage) { return }
     if (!this.first_pop)                    { return }
     if (!this.sending_payload)              { return }
     this.bauble.particle_garbage.set_counter(COMBO, clear_len)
-  }
+  }*/
 
   /*
    * these are your standard popping particles
@@ -336,8 +337,10 @@ export default class ComponentPanel {
       this.matched_pair(kind, "right", "right2")
     )
   }
+
   /** */
   get frame() { return this.sprite.frame }
+  
   /**
    * Sets the current frame based on panel kind
    *
@@ -451,16 +454,17 @@ export default class ComponentPanel {
     })
   }
 
-  get sending_payload(){
-    return this.chain >= 2 || this.clear_len >= 4
-  }
+  /*
+  get sending_payload(clear_len){
+    return this.chain >= 2 || clear_len >= 4
+  }*/
 
   /*
    * if this is the first panel to have popped in a chain
    */
-  get first_pop(){
-    return this.time_cur === this.time_pop && this.clear_i === 0
-  }
+  /*get first_pop(){
+    return time_cur === this.time_pop && this.clear_i === 0
+  }*/
 
   /**
   * `danger()` will check if the this panel's column

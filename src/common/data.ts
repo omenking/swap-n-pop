@@ -190,3 +190,10 @@ export const BAUBLE_FLOAT = [
   10, 10, 10, 11, 11,
   11, 11, 11
 ];
+
+export const RAISE_BLOCKED_TIME = 5
+// temp decimal increase
+export const TIME_RAISE = [0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25]
+
+export const PANEL_COLORS = [[0, 1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]
+export const NUMBER_COLORS_VS = [0,  0,  0,  0,  0,  0,  0,  0,  1,  1]
