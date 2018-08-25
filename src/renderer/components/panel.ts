@@ -51,6 +51,20 @@ export default class ComponentPanel {
   public offset         : {x: number, y: number}
   public move_dir       : number // 1 == right | -1 == left
 
+  // clearing
+  public clear_time : number // time set by playfield, is higher when first detected in a combo 
+  public clear_counter : number // counter that runs down the clear_time
+  public clearing : boolean // turns of visiblity when currently clearing
+  public clear_start_counter : number // the amount of frames this block will take to clear
+  public chainable : boolean // wether a block is currently chainable
+
+  public is_garbage : boolean
+
+  // deals with animation
+  public anim_offset    : number
+  public anim_counter : number
+  public idle_counter : number
+
   get kind ()   { return this._kind }
   set kind (val){ this._kind = val }
 
@@ -153,11 +167,6 @@ export default class ComponentPanel {
 
   /** */
   create(playfield, x, y) {
-    /************************************************
-    * STATE MACHINE
-    ************************************************/
-    
-    
     this.playfield = playfield
     this.x = x;
     this.y = y;
@@ -172,10 +181,7 @@ export default class ComponentPanel {
 
     this.garbage.create(this,this.playfield)
     this.bauble.create(this)
-    this.particles[0].create(this,this.playfield.pi)
-    this.particles[1].create(this,this.playfield.pi)
-    this.particles[2].create(this,this.playfield.pi)
-    this.particles[3].create(this,this.playfield.pi)
+    this.particles.forEach(p => p.create(this, this.playfield.pi))
 
     this.reset()
   }
@@ -187,7 +193,23 @@ export default class ComponentPanel {
     this.chain = 0
     this.sprite.visible = false
     this.garbage.reset()
+    
     this.offset = {x: 0, y: 0}
+    this.move_dir = 0// 1 == right | -1 == left
+
+    // clearing
+    this.clear_time = 0
+    this.clear_counter = 0
+    this.clearing = false
+    this.clear_start_counter = 0
+    this.chainable = false
+
+    this.is_garbage = false
+  
+    // deals with animation
+    this.anim_offset  = 0
+    this.anim_counter = 0
+    this.idle_counter = 0
   }
 
   create_after(){
@@ -384,43 +406,6 @@ export default class ComponentPanel {
   }
 
   /**
-   * `update(i)` handles the states and its transition to other states.
-   * A panel's state will usually change when the panel's `counter`
-   * reaches zero.
-   *
-   */
-  update() {
-    this.bauble.update()
-    this.particles[0].update()
-    this.particles[1].update()
-    this.particles[2].update()
-    this.particles[3].update()
-
-    if (this.fsm.state === GARBAGE) {
-      //this.garbage.update()
-    } else {
-      if (this.newline){ return; }
-      if (this.counter > 0) { this.counter--}
-
-      this.fsm.update()
-    }
-    ++this.fsm.timer
-  }
-
-  /**
-   * Determines whether a panel should be visible or not
-   * at the time of render
-   */
-  render_visible() {
-    this.sprite.visible =  !(
-      this.empty               ||
-      this.hidden_during_clear ||
-      this.empty_when_swapping ||
-      this.hidden_during_garbage_static
-    )
-  }
-
-  /**
    * Swaps the this panel with the panel to it's right.
    */
   swap() {
@@ -531,41 +516,6 @@ export default class ComponentPanel {
     return this.playfield.should_push && this.y === ROWS
   }
 
-  /**
-  * `clear()` will change a panel's state to clear.
-  * it will also on the same tick push this panel to
-  * an array called `clearing`. This clearing array is used
-  * to help set the counter time for the entire duration of the clear.
-  * You can see this in `Playfield.chain_and_combo` where it will then
-  * call `Panel.popping` to set the counter.
-  */
-  clear() {
-    this.fsm.change_state(CLEAR)
-  }
-
-  /**
-   * Checks above and under and then left and right from the current panel.
-   * Panels will be added to playfield.clearing to determine combo and chain
-   *
-   * */
-  chain_and_combo() {
-    if (!this.comboable) { return }
-
-    if (this.neighbors["left"] !== undefined && this.neighbors["left"].comboable_with( this.kind) &&
-        this.neighbors["right"] !== undefined && this.neighbors["right"].comboable_with(this.kind)) {
-      this.neighbors["left"].clear()
-      this.clear()
-      this.neighbors["right"].clear()
-    }
-
-    if (this.neighbors["up"] !== undefined && this.neighbors["up"].comboable_with( this.kind) &&
-        this.neighbors["down"] !== undefined && this.neighbors["down"].comboable_with( this.kind)) {
-      this.neighbors["up"].clear()
-      this.clear()
-      this.neighbors["down"].clear()
-    }
-  }
-
   // wether this block is comboable and also matches with another kind
   comboable_with(other_kind) : boolean {
     return this.comboable && other_kind !== null && this.kind === other_kind
@@ -577,7 +527,7 @@ export default class ComponentPanel {
   check_similar_blocks(panel1, panel2) : Array<ComponentPanel> {
     if (this.comboable)
       if (panel1 !== undefined && panel2 !== undefined)
-        if (panel1.is_comboable_with(this.kind) && panel2.is_comboable_with(this.kind))
+        if (panel1.comboable_with(this.kind) && panel2.comboable_with(this.kind))
           return [this, panel1, panel2]
         
     return []
@@ -598,87 +548,59 @@ export default class ComponentPanel {
     return checks
   }
 
-  /**
-   *
-   Returns the index of the current panel clearing and amount of panels clearing
-   @returns {array} - [index,length]
-   */
-  get clear_index(){
-    if (this.fsm.state !== CLEAR) {
-      throw(new Error('clear_index called on none CLEAR panel'))
+  kind_visible() {
+    if (this.kind === null || this.clearing)
+      this.sprite.visible = false
+    else
+      this.sprite.visible = true
+
+    // decrease counter
+    if (this.anim_counter > 0)
+      this.anim_counter -= 1
+  
+    if (this.kind !== null) {
+      if (this.fsm.state != "IDLE" || this.is_garbage)
+        this.anim_offset = this.y === ROWS - 1 ? 6 : this.anim_offset
+      else
+        this.anim_offset = this.y === ROWS - 1 ? 6 : this.idle_counter
+        
+      this.sprite.frame = this.kind * 8 + this.anim_offset
     }
-    let panels = []
-    for (let p of this.playfield.stack){
-      if (p.group === this.group &&
-          p.fsm.state === CLEAR) {
-        panels.push(p)
-      }
-    }
-    return [panels.indexOf(this),panels.length]
   }
 
-  /**
-   * `animate()` is responsible for setting the panel's current sprite frame
-   *  and in the case of swapping adjusting the sprite's `x` and `y`
-   *
-   * * newline  - when a panel is on a new line and appears greyed out
-   * * dead     - when a panel shows a dead face
-   * * danger   - when a panel is in danger it bounces
-   * * clear    - when a panel is clearing it flashes and then vanishes
-   * * land     - when a panel lands
-   * * swapping - when two panels swap
-   * * live     - the panel's normal state
+   /**
+   * `update(i)` handles the states and its transition to other states.
+   * A panel's state will usually change when the panel's `counter`
+   * reaches zero.
    *
    */
-  animate(){
-    if (this.newline) {
-      this.frame = assets.spritesheets.panels.animations.newline
-    } else if (this.dead === true && this.playfield.stage.state === GAMEOVER){
-      this.frame = assets.spritesheets.panels.animations.dead
-    } else if (this.fsm.state === CLEAR){
-      const frames = assets.spritesheets.panels.animations.clear
-      const len = frames.length
-      if (len > this.time_cur){
-        this.frame = frames[this.time_cur]
-      }
-    } else if (this.fsm.state === LAND){
-      const frames = assets.spritesheets.panels.animations.land
-      const len    = frames.length
-      this.frame = frames[len-this.counter]
-    } /*else if (this.fsm.state === SWAPPING_L || this.fsm.state === SWAPPING_R){
-      let v = (UNIT / TIME_SWAP) * this.counter
-      switch (this.fsm.state) {
-        case SWAPPING_L:
-          this.sprite.x += v
-          break
-        case SWAPPING_R:
-          this.sprite.x -= v
-          break
-      }
-      this.frame = assets.spritesheets.panels.animations.live
-    } */else if (this.danger){
-      const frames = assets.spritesheets.panels.animations.danger
-      const len    = frames.length
-      const i      = frames[len - this.counter+1]
-      this.frame = i
+  update() {
+    this.bauble.update()
+    this.particles.forEach(p => p.update())
+
+    if (this.fsm.state === GARBAGE) {
+      //this.garbage.update()
     } else {
-      this.frame = assets.spritesheets.panels.animations.live
+      if (this.newline){ return; }
+      if (this.counter > 0) { this.counter--}
+
+      this.fsm.update()
     }
+    ++this.fsm.timer
   }
+
   /** */
-  render(){
-    this.particles[0].render()
-    this.particles[1].render()
-    this.particles[2].render()
-    this.particles[3].render()
+  render() {
+    this.particles.forEach(p => p.render())
 
     this.sprite.x = this.x * UNIT + this.offset.x
     this.sprite.y = this.y * UNIT + this.offset.y
-    this.animate()
-    this.render_visible()
+    this.kind_visible() 
+
     this.bauble.render()
     //this.garbage.render()
   }
+
   /** */
   shutdown(){}
 } // klass

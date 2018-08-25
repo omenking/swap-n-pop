@@ -20,6 +20,9 @@ import {
   PANELS,
   UNIT,
   TIME_PUSH,
+  TIME_POP,
+  TIME_FLASH,
+  TIME_FACE,
   STOPTIME,
   GARBAGE_SHAKE,
   STARTING,
@@ -75,7 +78,10 @@ export default class Playfield {
   public pushing  : boolean
   public push_counter  : number
   public garbage_landing : boolean
+
   public level : number 
+  public clear_queue : Array<ComponentPanel>
+  public combo_counter : number
 
   constructor(pi){
     if (pi !== 0 && pi !== 1){
@@ -371,6 +377,7 @@ export default class Playfield {
     return true;
   }
 
+  /*
   chain_and_combo() {
     let i, panel
     for (i = 0; i < this.stack_size; i++) {
@@ -403,6 +410,42 @@ export default class Playfield {
     }
     
     return [combo, chain]
+  }*/
+
+  // looks at all the "clears" found this frame 
+  // merges all together - looks if any neighboring blocks have the same colours
+  // then sets their state accordingly
+  check_combo_frame() {
+    this.stack.forEach(panel => {
+      panel.check_clear().forEach(clear_panel => {
+        if (!this.clear_queue.includes(clear_panel))
+          this.clear_queue.push(clear_panel)
+      }) 
+    })
+
+    if (this.clear_queue.length != 0) {
+      this.combo_counter = 0
+
+      // gather all times
+      let flash = TIME_FLASH[this.level]
+      let face = TIME_FACE[this.level]
+      let pop = TIME_POP[this.level]
+
+      let all_time = flash + face + pop * this.clear_queue.length
+
+      this.clear_queue.forEach(panel => {
+        let set_time = flash + face + pop * this.combo_counter
+        panel.clear_time = set_time 
+        this.combo_counter += 1
+        
+        // sets the time a block takes to clear from relative to its position
+        panel.counter = all_time
+        panel.clear_start_counter = all_time
+        panel.fsm.change_state(CLEAR)
+      })
+    }
+
+    this.clear_queue = new Array<ComponentPanel>()
   }
 
   /**
@@ -540,16 +583,17 @@ export default class Playfield {
         this.update_stack()
         if (this.has_ai) { this.ai.update() }
         // combo n chain
-        const cnc = this.chain_and_combo()
-        this.combo = cnc[0]
+        this.check_combo_frame()
+        //const cnc = this.chain_and_combo()
+        //this.combo = cnc[0]
         //this.chain = cnc[1]
-        if (cnc[1] > 1)
-          this.character.current_animation = "charge"
+        //if (cnc[1] > 1)
+          //this.character.current_animation = "charge"
 
 
         if (this.stage.flag_garbage === true) {
           this.update_garbage_clearing()
-          this.garbage.update(cnc[0],cnc[1])
+          //this.garbage.update(cnc[0],cnc[1])
           this.garbage_preview.update()
         }
 

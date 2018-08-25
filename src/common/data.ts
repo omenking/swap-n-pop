@@ -28,6 +28,7 @@ export const FALL       = 'fall'
 export const LAND       = 'land'
 export const MOVE       = 'move'
 export const CLEAR      = 'clear'
+export const CLEAR_NEW      = 'clear_new'
 export const GARBAGE    = 'garbage'
 // STAGE States
 export const STARTING = 'starting'
@@ -64,6 +65,8 @@ export const FRAME_STAR = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3,
 export const TIME_CLEAR = 60;
 /** When a panel is ready to pop is needs to wait for time_pop before popping. */
 export const TIME_POP = [9, 9, 8, 8, 8, 8, 8, 7, 7, 7];
+export const TIME_FLASH = [44, 44, 42, 42, 38, 36, 34, 32, 30, 28]
+export const TIME_FACE = [15, 14, 14, 13, 12, 11, 10, 10, 9, 8]
 /** How long to wait after popping last panel before panel falls. */
 export const TIME_FALL = 3;
 export const TIME_SWAP = 4;
