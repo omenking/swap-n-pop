@@ -99,7 +99,7 @@ export default class Playfield {
   public offset_counter : number
   public raise_generated_panels : String // saves the latest generated blocks in string format
 
-  constructor(pi){
+  constructor(pi) {
     if (pi !== 0 && pi !== 1){
       throw new Error("player_number present and must be 0 or 1")
     }
@@ -116,11 +116,11 @@ export default class Playfield {
     this.panel_generator = new PanelGenerator()
   }
 
-  get stack(){
+  get stack() {
     return this._stack
   }
 
-  stack_i(i){
+  stack_i(i) {
     return this._stack[i]
   }
 
@@ -143,6 +143,7 @@ export default class Playfield {
       this.garbage.snap
     ]
   }
+
   load(snapshot) {
     this.push_counter = snapshot[0]
     this.cursor.load(   snapshot[1])
@@ -153,6 +154,7 @@ export default class Playfield {
     this.character.load(snapshot[4])
     this.garbage.load(snapshot[5])
   }
+
   create(stage,opts) {
     if (stage === null) {
       throw new Error("must pass stage")
@@ -166,7 +168,7 @@ export default class Playfield {
     }
 
     this.stage       = stage
-    this.panel_generator.create(this)
+    this.panel_generator.create(stage.rng)
     this.should_push = opts.push || false
 
     this.height = (ROWS+1) * UNIT
@@ -229,6 +231,7 @@ export default class Playfield {
       this.pi
     );
   }
+
   create_stack(data) {
     this._stack = []
     this.create_panels()
@@ -257,56 +260,9 @@ export default class Playfield {
   get stack_len() {
     return this._stack.length
   }
+
   get stack_size() {
     return this.should_push ? this.stack_len-COLS : this.stack_len
-  }
-
-  push() {
-    // move all panels up the stack
-    const stack = new Array(this.stack_len)
-    for (let i = COLS; i < this.stack_len; i++) {
-      let [x,y] = Array.from(i2xy(i-COLS))
-      stack[i-COLS] = this._stack[i]
-      stack[i-COLS].x = x
-      stack[i-COLS].y = y
-    }
-    this._stack = stack
-
-    this.create_newline()
-
-    if (this.cursor.y > ROWS_INV) { this.cursor.y--; }
-    return 1
-  }
-
-  create_newline(){
-    if (!this.should_push) { return; }
-    const rows = (ROWS + (this.should_push ? 1 : 0 ))
-
-    // create panels
-    for (let i = PANELS; i < PANELS+COLS; i++){
-      const [x,y] = Array.from(i2xy(i))
-      this._stack[i] = new ComponentPanel()
-      this.stack_i(i).create(this, x, y)
-    }
-    for (let i = PANELS; i < PANELS+COLS; i++){
-      this.stack_i(i).create_after()
-    }
-    // fill panels
-    this.stack_i(PANELS).set_kind('unique')
-    let consecutive = 1
-    let kind = this.stack_i(PANELS).kind
-    for (let i = PANELS + 1; i < PANELS+COLS; i++){
-      this.stack_i(i).set_kind('unique')
-      if (this.stack_i(i).kind == kind) {
-          if (++consecutive === 3) {
-              // todo: num_kinds setting variable to signify if dark blues are included or not
-              this.stack_i(i).kind = (this.stack_i(i).kind + 1) % 6
-              consecutive = 1
-          }
-      }
-      else { consecutive = 1 }
-      kind = this.stack_i(i).kind
-    }
   }
 
   game_over() {
@@ -419,12 +375,10 @@ export default class Playfield {
   // merges all together - looks if any neighboring blocks have the same colours
   // then sets their state accordingly
   check_combo_frame() {
-    this.stack.forEach(panel => {
-      panel.check_clear().forEach(clear_panel => {
+    for (let panel of this.stack) 
+      for (let clear_panel of panel.check_clear())
         if (!this.clear_queue.includes(clear_panel))
           this.clear_queue.push(clear_panel)
-      }) 
-    })
 
     if (this.clear_queue.length !== 0) {
       this.combo_counter = 0
@@ -494,32 +448,6 @@ export default class Playfield {
     if (cols.length > 0) { return cols; } else { return false; }
   }
 
-  /* The tick function is the main function of the TaGame object.
-   * It gets called every tick and executes the other internal functions.
-   * It will update the grid,
-   * calculate the current score,
-   * spawn possible garbage,
-   * updates the sprites to the correct locations in the canvas.
-   */
-  update_push(danger) {
-    if (!this.should_push) {return}
-    if (this.clear) {return}
-    if (this.pushing) {
-      this.push_counter -= 100
-    } else {
-      this.push_counter--
-    }
-    /* ensure push_counter never goes into the negative */
-    if (this.push_counter < 0)
-      this.push_counter = 0
-
-    if (this.push_counter <= 0 && !danger) {
-      this.pushing        = false
-      this.push_counter   = TIME_PUSH
-      this.score         += this.push()
-    }
-  }
-  
   add_score(value) {
     this.score += value
   }
@@ -651,7 +579,6 @@ export default class Playfield {
         this.update_stoptime()
 
         if (this.counter > 0) { this.counter-- }
-        //this.update_push(this.danger(0))
         
         // global checks so you dont have to always call the methods
         this.any_clears = this.check_panels_clearing()
@@ -662,14 +589,12 @@ export default class Playfield {
 
         this.update_stack()
         if (this.has_ai) { this.ai.update() }
-        // combo n chain
         this.check_combo_frame()
-        //const cnc = this.chain_and_combo()
+        
         //this.combo = cnc[0]
         //this.chain = cnc[1]
         //if (cnc[1] > 1)
           //this.character.current_animation = "charge"
-
 
         if (this.stage.flag_garbage === true) {
           this.update_garbage_clearing()
@@ -702,9 +627,8 @@ export default class Playfield {
     this.wall.render()
     this.stack.forEach(p => p.render())
     this.character.render()
-    if (this.stage.flag_garbage === true) {
+    if (this.stage.flag_garbage === true)
       this.garbage_preview.render()
-    }
 
     let shake = 0
     if (this.shake >= 0 && this.counter > 0) {

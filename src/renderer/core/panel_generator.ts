@@ -33,9 +33,14 @@ export default class PanelGenerator {
   public rng : any
 
   // create reference
-  create(playfield) {
+  create(playfield, rng = null) {
     this.playfield = playfield
-    this.rng = playfield.stage.rng
+
+    // TODO: temporary fix - need to outsource panel generation in modes
+    if (rng === null)
+      this.rng = playfield.stage.rng
+    else
+      this.rng = rng
   }
 
   // returns a stack of PANELS where no numbers are the same next to each other

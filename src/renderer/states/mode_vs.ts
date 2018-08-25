@@ -1,7 +1,7 @@
 import * as seedrandom      from 'seedrandom'
 import game                 from 'core/game'
 import CoreStage            from 'core/stage'
-import Stack                from 'core/stack'
+import PanelGenerator       from 'core/panel_generator'
 import WallState            from 'core/wall_state'
 import ComponentPlayfield   from 'components/playfield'
 import ComponentPing        from 'components/ping'
@@ -99,15 +99,16 @@ export default class ModeVs extends CoreStage {
     super.create_enter()
     this.danger = false
     const offset = px(55)
-    const stack = new Stack(this.rng);
-    stack.create(6,2,"average","many");
+    const panel_gen = new PanelGenerator();
+    panel_gen.create(this.rng)
+    let new_panels = panel_gen.create_stack();
 
     if (this.online && game.server.pos === 1) {
-      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: stack.panels})
-      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
+      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: new_panels})
+      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: new_panels})
     } else {
-      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: stack.panels})
-      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: stack.panels})
+      this.playfield0.create(this, {push: true, x: offset+px(8  ), y: px(24), panels: new_panels})
+      this.playfield1.create(this, {push: true, x: offset+px(184), y: px(24), panels: new_panels})
     }
 
     this.create_frame(offset)
@@ -131,12 +132,13 @@ export default class ModeVs extends CoreStage {
   }
 
   protected callback_wall_rollup_exit(){
-    const stack = new Stack(this.rng)
-    stack.create(6,2,"average","many")
+    const panel_gen = new PanelGenerator();
+    panel_gen.create(this.rng)
+    let new_panels = panel_gen.create_stack();
     this.playfield0.reset()
     this.playfield1.reset()
-    this.playfield0.fill_panels(stack.panels)
-    this.playfield1.fill_panels(stack.panels)
+    this.playfield0.fill_panels(new_panels)
+    this.playfield1.fill_panels(new_panels)
   }
 
   protected callback_wall_done(){
