@@ -1,13 +1,12 @@
 import State from "states/panel/state"
-import {FALL} from "common/data"
+import {FALL, TIME_HOVER} from "common/data"
 
 export default class StateHang extends State {
 	enter()	{ 
-		this.p.counter = 10 
+		this.p.counter = TIME_HOVER[this.p.playfield.level] 
 	}
 	
-	execute() { 
-		if (this.p.counter <= 0)  
-			this.p.fsm.change_state(FALL) 
+	counter_end() { 
+		this.p.fsm.change_state(FALL) 
 	} 
 }

@@ -7,39 +7,33 @@ import {
 } from 'common/data';
 import assets from 'core/assets'
 
+var land_anim = [4, 4, 4, 2, 2, 2, 3, 3, 3, 0]
+
 export default class StateLand extends State {
 	enter()	{ 
     this.p.counter = assets.spritesheets.panels.animations.land.length
-    
-    // If chain is 0, it means the panel did not fall as a result of a clear and should not chain
-    if (this.p.chain > 0) { this.p.chain = this.p.playfield.chain }
+    this.p.anim_counter = assets.spritesheets.panels.animations.land.length
 	}
-	
+  
+  // set animation
 	execute() { 
-    if (this.p.counter <= 0) { 
-      let under = this.p.neighbors["down"]
+    // anim from left to right, 0 to 10
+    this.p.anim_offset = land_anim[assets.spritesheets.panels.animations.land.length - this.p.anim_counter - 1]
+  }
 
-      if (under !== undefined && under.fsm.state === HANG) {
-        this.p.fsm.change_state(HANG)
-        this.p.counter = under.counter
-      }
-      else {
-        this.p.fsm.change_state(STATIC) 
-      }
+  counter_end() {
+    let above = this.p.neighbors["up"]
+
+    if (above !== undefined && above.fsm.state === HANG) {
+      this.p.fsm.change_state(HANG)
+      this.p.counter = above.counter
     }
-    else if (this.p.counter < assets.spritesheets.panels.animations.land.length - 1) { 
-      // Don't reset chain value if a panel in column below is swapping, hanging, falling, or empty
-
-      let under = this.p.neighbors["down"]
-      let ground = true
-      while (under !== undefined && under.fsm.state !== GARBAGE) {
-          if (under.kind === null || under.fsm.state === MOVE) {
-              ground = false
-              break
-          }
-          under = under.neighbors["down"]
-      }
-      if (ground) { this.p.chain = 0 }
-    } 
-	} 
+    else
+      this.p.fsm.change_state(STATIC)
+  } 
+  
+  exit() {
+    this.p.anim_offset = 0
+    this.p.chainable = false
+  }
 }

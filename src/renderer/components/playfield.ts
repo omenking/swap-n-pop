@@ -40,8 +40,6 @@ export default class Playfield {
   public  pi                : number  // player number, used to detect input
   private rows              : number
   private cols              : number
-  public combo : number
-  public chain : number
 
   public  stage           : any //CoreStage
   public  garbage         : CoreGarbage
@@ -64,7 +62,6 @@ export default class Playfield {
 
   public swap_counter : number
 
-  public  clearing          : Array<ComponentPanel>
   /* array of panels grouped by number based on tick */
   public  clearing_garbage  : Array<number>
   private score             : number
@@ -80,8 +77,12 @@ export default class Playfield {
   public garbage_landing : boolean
 
   public level : number 
-  public clear_queue : Array<ComponentPanel>
-  public combo_counter : number
+
+  // combo and chaining variables
+  public clear_queue : Array<ComponentPanel> // holds all blocks currently clearing
+  public chain : number // latest chain detected, gets set to 1 which means a basic combo
+  public last_chain : number
+  public combo_counter : number // latest combo detected
 
   constructor(pi){
     if (pi !== 0 && pi !== 1){
@@ -348,13 +349,10 @@ export default class Playfield {
   }
 
   public reset(){
-    this.clearing = []
-    if (this.stage.flag_garbage === true){
+    if (this.stage.flag_garbage === true) {
       this.clearing_garbage = []
     }
     this.score        = 0
-    this.combo        = 0
-    this.chain        = 0
     this.push_counter = TIME_PUSH
     this.stoptime     = STOPTIME
     this.pushing      = false
@@ -363,7 +361,13 @@ export default class Playfield {
     this.cursor.reset('vs')
     this.layer_block.x  = this.x
     this.layer_block.y  = this.y - (ROWS_INV*UNIT)
+
+    // new
     this.level = 0
+    this.chain = 1
+    this.last_chain = 1
+    this.clear_queue = new Array()
+    this.combo_counter = 0
   }
 
   /**
@@ -377,40 +381,14 @@ export default class Playfield {
     return true;
   }
 
-  /*
-  chain_and_combo() {
-    let i, panel
-    for (i = 0; i < this.stack_size; i++) {
-      this.stack_i(i).chain_and_combo()
-    }
-
-    const combo = this.clearing.length
-    let   chain = 0
-    for (let panel of this.clearing){
-      panel.popping(this.clearing.length)
-      chain = Math.max(chain,panel.chain)
-    }
-    this.chain = Math.max(this.chain,chain)
-    
-    for (let panel of this.clearing){ panel.chain = chain }
-    
-    // Check if current chain has ended
-    if (this.chain > 0) {
-      let chain_active = false
-      for (i = 0; i < this.stack_size; i++) {
-        if (this.stack_i(i).chain === this.chain) { 
-            chain_active = true
-            break
-        }
-      }
-      if (!chain_active) {
-          // todo: fanfare if >= x4 chain
-          this.chain = 0
-      }
-    }
-    
-    return [combo, chain]
-  }*/
+  // returns true if any block is chainable
+  any_chainable_exists() {
+    for (let panel of this.clear_queue)
+      if (panel.chainable)
+        return true
+			
+	  return false
+  }
 
   // looks at all the "clears" found this frame 
   // merges all together - looks if any neighboring blocks have the same colours
@@ -423,7 +401,7 @@ export default class Playfield {
       }) 
     })
 
-    if (this.clear_queue.length != 0) {
+    if (this.clear_queue.length !== 0) {
       this.combo_counter = 0
 
       // gather all times
@@ -433,7 +411,20 @@ export default class Playfield {
 
       let all_time = flash + face + pop * this.clear_queue.length
 
-      this.clear_queue.forEach(panel => {
+      // check wether any of the blocks were chainable 
+      let had_chainable = this.any_chainable_exists()
+      
+      // increase the chain further
+      if (had_chainable) {
+        this.chain += 1
+        //this.clear_queue[0].popup.spawn(flash, chain, "chain")
+        this.last_chain = Math.max(this.chain, this.last_chain)
+      }
+      // otherwhise reset it
+      else
+        this.chain = 1
+
+      for (let panel of this.clear_queue) {
         let set_time = flash + face + pop * this.combo_counter
         panel.clear_time = set_time 
         this.combo_counter += 1
@@ -442,7 +433,7 @@ export default class Playfield {
         panel.counter = all_time
         panel.clear_start_counter = all_time
         panel.fsm.change_state(CLEAR)
-      })
+      }
     }
 
     this.clear_queue = new Array<ComponentPanel>()
@@ -513,7 +504,6 @@ export default class Playfield {
     this.score += SCORE_CHAIN[Math.min(chain - 1, SCORE_CHAIN.length - 1)]
   }
   
-  
   update_garbage_clearing(){
     if (this.clearing_garbage.length > 0){
       for (let panel of this.stack){
@@ -521,11 +511,13 @@ export default class Playfield {
       }
     }
   }
+
   render_stack() {
     for (let panel of this.stack){
       panel.render()
     }
   }
+
   render() {
     this.countdown.render()
     this.cursor.render()
@@ -577,7 +569,6 @@ export default class Playfield {
 
         if (this.counter > 0) { this.counter-- }
         this.update_push(this.danger(0))
-        this.clearing         = []
         this.clearing_garbage = []
 
         this.update_stack()

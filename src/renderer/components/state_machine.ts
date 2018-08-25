@@ -5,7 +5,6 @@ import {
 	FALL,
 	LAND,
 	CLEAR,
-	CLEAR_NEW,
 	MOVE,
 	GARBAGE
 } from 'common/data';
@@ -15,7 +14,6 @@ import StateHang from "states/panel/hang"
 import StateFall from "states/panel/fall"
 import StateLand from "states/panel/land"
 import StateClear from "states/panel/clear"
-import StateClearNew from "states/panel/clear_new"
 import StateMove from "states/panel/move"
 
 export default class StateMachine {
@@ -37,7 +35,6 @@ export default class StateMachine {
 			[FALL, new StateFall(parent)],
 			[LAND, new StateLand(parent)],
 			[CLEAR, new StateClear(parent)],
-			[CLEAR_NEW, new StateClearNew(parent)],
 			[MOVE, new StateMove(parent)]
 		])
 	}

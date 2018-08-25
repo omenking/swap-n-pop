@@ -68,7 +68,7 @@ export const TIME_POP = [9, 9, 8, 8, 8, 8, 8, 7, 7, 7];
 export const TIME_FLASH = [44, 44, 42, 42, 38, 36, 34, 32, 30, 28]
 export const TIME_FACE = [15, 14, 14, 13, 12, 11, 10, 10, 9, 8]
 /** How long to wait after popping last panel before panel falls. */
-export const TIME_FALL = 3;
+export const TIME_HOVER = [12, 12, 11, 10, 9, 6, 5, 4, 3, 6]
 export const TIME_SWAP = 4;
 
 

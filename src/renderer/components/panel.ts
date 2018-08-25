@@ -39,13 +39,9 @@ export default class ComponentPanel {
   public x              : number
   public y              : number
   private sprite        : Phaser.Sprite
-  public group         : number
-  public time_cur       : number
-  public time_pop      : number
   public particles     : Array<ComponentParticleClear>
-  public clear_i        : number
-  public clear_len      : number
 
+  // fsm
   public fsm            : ComponentStateMachine
   public neighbors      : Map<String, any>
   public offset         : {x: number, y: number}
@@ -55,8 +51,8 @@ export default class ComponentPanel {
   public clear_time : number // time set by playfield, is higher when first detected in a combo 
   public clear_counter : number // counter that runs down the clear_time
   public clearing : boolean // turns of visiblity when currently clearing
-  public clear_start_counter : number // the amount of frames this block will take to clear
-  public chainable : boolean // wether a block is currently chainable
+  public clear_start_counter : number // the amount of frames this panel will take to clear
+  public chainable : boolean // wether a panel is currently chainable
 
   public is_garbage : boolean
 
@@ -82,11 +78,6 @@ export default class ComponentPanel {
   get chain()    {return this._chain }
   set chain(val) { this._chain = val }
 
-  get should_hang() { 
-    let under = this.neighbors["down"]; 
-    return under === undefined ? false : under.fsm.state === STATIC && under.kind === null; 
-  }
-
   get check_for_hang() {
     let under = this.neighbors["down"]
 
@@ -103,6 +94,7 @@ export default class ComponentPanel {
     x += (UNIT / 2)
     return x
   }
+
   get absolute_center_y(){
     let y = this.playfield.layer_block.y
     y += (this.y * UNIT)
@@ -135,7 +127,6 @@ export default class ComponentPanel {
       this.counter,
       this.chain,
       this.garbage.snap,
-      this.group,
       [
         this.particles[0].snap,
         this.particles[1].snap,
@@ -155,7 +146,6 @@ export default class ComponentPanel {
     this.counter = data[4]
     this.chain   = data[5]
     this.garbage.load(data[6])
-    this.group   = data[7]
     if (data[8]){
       this.particles[0].load(data[8][0])
       this.particles[1].load(data[8][1])
@@ -173,11 +163,6 @@ export default class ComponentPanel {
 
     this.sprite = game.make.sprite(this.x * UNIT, this.y * UNIT, 'panels',0);
     this.playfield.layer_block.add(this.sprite)
-    // shouldn't have to call visible false
-    // here as it should be taken care of in render
-    // but without it here, it causes a flicker at
-    // start of match. If we can find someone way to
-    // move this in the render that would be ideal.
 
     this.garbage.create(this,this.playfield)
     this.bauble.create(this)
@@ -212,6 +197,12 @@ export default class ComponentPanel {
     this.idle_counter = 0
   }
 
+  /** resets this panel to a normal state - stops animation usefull for stack resets */
+  soft_reset() {
+    this.counter = 0;
+    this.fsm.state = STATIC;
+  }
+
   create_after(){
     this.garbage.face.create(this.garbage)
   }
@@ -222,27 +213,21 @@ export default class ComponentPanel {
    * it represents an incoming garbage payload.
    *
    */
-  set_particle_garbage(){
+  set_particle_garbage(clear_len) {
     if (!this.playfield.stage.flag_garbage) { return }
     if (!this.first_pop)                    { return }
     if (!this.sending_payload)              { return }
-    this.bauble.particle_garbage.set_counter(COMBO,this.clear_len)
+    this.bauble.particle_garbage.set_counter(COMBO, clear_len)
   }
 
   /*
    * these are your standard popping particles
    */
-  set_particles_clear(){
-    if (this.time_cur === this.time_pop) {
-      // Score 10 per pop
-      this.playfield.add_score(10)  
-        
-      this.particles[0].set_counter()
-      this.particles[1].set_counter()
-      this.particles[2].set_counter()
-      this.particles[3].set_counter()
-      game.sounds.pop(this.clear_i, this.clear_len)
-    }
+  set_particles_clear(clear_i, clear_len) {
+    // Score 10 per pop
+    this.playfield.add_score(10)  
+    this.particles.forEach(p => p.set_counter())
+    game.sounds.pop(clear_i, clear_len)
   }
 
   set_garbage(group: number, kind: string){
@@ -252,33 +237,26 @@ export default class ComponentPanel {
     this.garbage.kind  = kind
   }
 
-  /** resets this panel to a normal state - stops animation usefull for stack resets */
-  soft_reset() {
-    this.counter = 0;
-    this.fsm.state = STATIC;
-  }
-
-  /*
-   * In order for this panel to be swappable it must:
-   *   * not have a panel hanging over above
-   *   * swapping_panel isnt empty and current state is fall
-   *   * this panel needs to be static 
-   *   * during a land as long as 1 frame of land has been played out
-   *   * if its empty you can swap
-   *   * if swapping_panel isnt empty it can be switched while in switching states
-   * */
+  /**
+  when a panel above isnt hanging
+  other isnt empty and the panel is falling
+  state is static or kind is null
+  valid panels are swapping multiple times
+  */
   swappable(swapping_panel) {
     // if above is not stable, you can't swap
-    if (this.neighbors["up"] !== undefined && this.neighbors["up"].state === HANG) { return false }
+    if (this.neighbors["up"] !== undefined && this.neighbors["up"].state === HANG) 
+      return false
     
     // only let swappable while falling be able when the swapping panel isnt empty
-    if (!swapping_panel.empty && this.fsm.state === FALL) { return true }
+    if (!swapping_panel.empty && this.fsm.state === FALL)
+      return true
 
-    // if static let this be swappable
-    if (this.fsm.state === STATIC) { return true }
-        
-    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
-    if (this.empty) { return true }
+    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length)
+      return true
+
+    if (this.fsm.state === STATIC || this.kind === null)
+      return true
    
     // swapping_panel should never be null, swapping panel can be static so !empty doesnt work
     if (swapping_panel.kind !== null)
@@ -287,35 +265,22 @@ export default class ComponentPanel {
     
     return false
   }
-  /**
-   * In order for this panel to be valid for use in a combo it must:
-   *   1. have support underneath (not falling, static visible panel, or static garbage)
-   *   2. be swappable or...
-   *   3. already have been marked for being cleared on first frame
-   *
-   * */
+
+  // combo detectable when
+  // kind ISNT nothing and state is STATIC
+  // currently landing and in its last counter time
   get comboable() {
-    let down = this.neighbors["down"]
-
-    // 1. check for support
-    if (down !== undefined) {
-      if (down.state === FALL) {return false}
-      if (down.empty) { return false }
-      if (down.state === GARBAGE && down.garbage.state !== STATIC) { return false }
-    }
-
-    // 2. be comboable
-    if (this.fsm.state === STATIC && this.kind !== null) { return true }
-    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length) { return true }
-    // 3 already have been marked for being cleared on first frame
-    if (this.fsm.state === CLEAR && this.playfield.clearing.indexOf(this) !== -1 && this.fsm.timer === 0) { return true }
+    if (this.y === ROWS - 1)
       return false
-  }
+    
+    if (this.kind !== null && this.fsm.state === STATIC)
+      return true
 
-  /** 
-   *  A panel is only considered static stable if it is STATIC and has a kind assigned
-   * */
-  get static_stable() { return  this.fsm.state === STATIC && this.kind !== null }
+    if (this.fsm.state === LAND && this.counter < assets.spritesheets.panels.animations.land.length)
+      return true
+
+    return false
+  }
 
   /** 
    *  A panel is only considered empty if it is STATIC
@@ -325,19 +290,11 @@ export default class ComponentPanel {
     return this.kind === null && this.fsm.state === STATIC
   }
 
+  // TODO when garbage is reworked
   get hidden_during_garbage_static(){
     return this.fsm.state === GARBAGE &&
            this.garbage.state === STATIC
   }
-
-  get empty_when_swapping() {
-    return this.fsm.state === MOVE && this.kind === null
-  }
-  /**
-   * A panel can be hidden but not empty this only happens in the case
-   * when panels are clearing and are temporarily invisible
-   * */
-  get hidden_during_clear() { return this.fsm.state === CLEAR && this.time_cur >= this.time_pop  }
 
   /*
    * In order to determine danger is true we need a panel that is considered
@@ -439,6 +396,25 @@ export default class ComponentPanel {
     game.sounds.swap()
     return true
   }
+ 
+  // changes the contents of this panel with a neighbor specified by its name
+  // if other usecases are needed this can be modified
+  // panel neighbor references were changed because of this "universal" method
+  swap_properties(panel_name) {
+    let other = this.neighbors[panel_name]
+  
+    other.kind = this.kind
+    other.fsm.state = this.fsm.state
+    other.counter = this.counter
+
+    other.clear_start_counter = this.clear_start_counter
+    other.chainable = this.chainable
+    other.anim_counter = this.anim_counter
+    other.anim_offset = this.anim_offset
+    other.offset = this.offset 
+
+    this.reset()
+  }
 
   /**
     Calculates and set the counter for the panel to pop
@@ -516,15 +492,15 @@ export default class ComponentPanel {
     return this.playfield.should_push && this.y === ROWS
   }
 
-  // wether this block is comboable and also matches with another kind
+  // wether this panel is comboable and also matches with another kind
   comboable_with(other_kind) : boolean {
     return this.comboable && other_kind !== null && this.kind === other_kind
   }
 
-  // returns an array of comboable blocks including this block
-  // wether 2 blocks have the same kind as this block - change state to CLEAR
+  // returns an array of comboable panels including this panel
+  // wether 2 panels have the same kind as this panel - change state to CLEAR
   // returns an empty array otherwhise
-  check_similar_blocks(panel1, panel2) : Array<ComponentPanel> {
+  check_similar_panels(panel1, panel2) : Array<ComponentPanel> {
     if (this.comboable)
       if (panel1 !== undefined && panel2 !== undefined)
         if (panel1.comboable_with(this.kind) && panel2.comboable_with(this.kind))
@@ -533,7 +509,7 @@ export default class ComponentPanel {
     return []
   } 
     
-  // wether up and down or left and right block are the same kind - apply clear
+  // wether up and down or left and right panel are the same kind - apply clear
   check_clear() : Array<ComponentPanel> {
     let checks = new Array<ComponentPanel>()
     
@@ -542,8 +518,8 @@ export default class ComponentPanel {
     let d = this.neighbors["down"]
     let dd = d !== undefined ? d.neighbors["down"] : undefined
 
-    checks.push.apply(checks, this.check_similar_blocks(r, rr))
-    checks.push.apply(checks, this.check_similar_blocks(d, dd))
+    checks.push.apply(checks, this.check_similar_panels(r, rr))
+    checks.push.apply(checks, this.check_similar_panels(d, dd))
     
     return checks
   }
@@ -559,10 +535,10 @@ export default class ComponentPanel {
       this.anim_counter -= 1
   
     if (this.kind !== null) {
-      if (this.fsm.state != "IDLE" || this.is_garbage)
-        this.anim_offset = this.y === ROWS - 1 ? 6 : this.anim_offset
+      if (this.fsm.state !== STATIC || this.is_garbage)
+        this.anim_offset = this.y === ROWS - 1 ? 1 : this.anim_offset
       else
-        this.anim_offset = this.y === ROWS - 1 ? 6 : this.idle_counter
+        this.anim_offset = this.y === ROWS - 1 ? 1 : this.idle_counter
         
       this.sprite.frame = this.kind * 8 + this.anim_offset
     }
