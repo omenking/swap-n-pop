@@ -9,11 +9,11 @@ We all remember our favorite match three puzzle game. Swap'N'Pop brings it back,
 ## Project Info
 We use Phaser together Electron to be cross-compatible. We recently switched to Typescript since we want to ensure typesafety. Webpack is also used to bundle all our files. Test Code runs through Chai and Sinon.
 
-![](https://github.com/omenking/swap-n-pop/blob/screenshots/titlescreen.png)
+![](https://github.com/omenking/swap-n-pop/blob/master/screenshots/titlescreen.png)
 
-![](https://github.com/omenking/swap-n-pop/blob/screenshots/vs.png)
+![](https://github.com/omenking/swap-n-pop/blob/master/screenshots/vs.png)
 
-![](https://github.com/omenking/swap-n-pop/blob/screenshots/debugger.png)
+![](https://github.com/omenking/swap-n-pop/blob/master/screenshots/debugger.png)
 
 
 ## Current Team
